@@ -2,8 +2,6 @@ package com.chaemil.hgms.model;
 
 import com.orm.SugarRecord;
 
-import java.util.ArrayList;
-
 /**
  * Created by chaemil on 18.12.15.
  */
@@ -46,6 +44,16 @@ public class Video extends SugarRecord {
         this.descriptionCS = descriptionCS;
         this.descriptionEN = descriptionEN;
         this.downloaded = downloaded;
+    }
+
+    public boolean equals(Object other) {
+
+        if (other instanceof Video) {
+            return ((Video) other).getServerId() == this.serverId;
+        } else {
+            return false;
+        }
+
     }
 
     public void setDownloaded(boolean downloaded) {

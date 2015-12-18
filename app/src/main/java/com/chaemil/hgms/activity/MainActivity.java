@@ -37,7 +37,7 @@ public class MainActivity extends BaseActivity implements
         setContentView(R.layout.main_activity);
 
         getUI();
-        setupUI();
+        setupUI(savedInstanceState);
     }
 
     private void getUI() {
@@ -46,14 +46,18 @@ public class MainActivity extends BaseActivity implements
         playerFragment = ((PlayerFragment) getSupportFragmentManager().findFragmentByTag(PlayerFragment.TAG));
     }
 
-    private void setupUI() {
+    private void setupUI(Bundle savedInstanceState) {
 
-        mainFragment = new MainFragment();
+        if (savedInstanceState == null) {
+            mainFragment = new MainFragment();
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-        transaction.replace(R.id.main_fragment, mainFragment);
-        transaction.commit();
+            transaction.replace(R.id.main_fragment, mainFragment);
+            transaction.commit();
+        } else {
+            mainFragment = (MainFragment) getFragmentManager().findFragmentByTag(MainFragment.TAG);
+        }
 
         changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
 

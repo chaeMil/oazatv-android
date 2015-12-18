@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.utils.SmartLog;
 
 /**
  * Created by chaemil on 4.12.15.
@@ -20,14 +22,41 @@ import com.chaemil.hgms.R;
 public class MainFragment extends Fragment implements TabLayout.OnTabSelectedListener {
 
     public static final String TAG = "main_fragment";
+    private static final String PAGER_CURRENT_ITEM = "pager_current_item";
     private TabLayout tabLayout;
     private ViewPager pager;
     private FragmentActivity context;
+    private HomeFragment homeFragment;
+    private ArchiveFragment archiveFragment;
+    private DownloadedFragment downloadedFragment;
 
     @Override
     public void onAttach(Activity activity) {
         context = (FragmentActivity) activity;
         super.onAttach(activity);
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
+        if (savedInstanceState == null) {
+            SmartLog.Log(SmartLog.LogLevel.DEBUG, TAG + " savedInstanceState", "null");
+            homeFragment = new HomeFragment();
+            archiveFragment = new ArchiveFragment();
+            downloadedFragment = new DownloadedFragment();
+        } else {
+            pager.setCurrentItem(savedInstanceState.getInt(PAGER_CURRENT_ITEM));
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(PAGER_CURRENT_ITEM, pager.getCurrentItem());
     }
 
     @Override
@@ -38,7 +67,7 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
 
 
         getUI(rootView);
-        setupUI();
+        setupUI(savedInstanceState);
 
 
         return rootView;
@@ -53,10 +82,12 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
         pager = (ViewPager) rootView.findViewById(R.id.pager);
     }
 
-    private void setupUI() {
-        pager.setAdapter(new MainFragmentsAdapter(context.getSupportFragmentManager()));
-        pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
+    private void setupUI(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            pager.setAdapter(new MainFragmentsAdapter(context.getSupportFragmentManager()));
+            pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+            pager.setOffscreenPageLimit(2);
+        }
 
     }
 
@@ -75,7 +106,19 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
 
     }
 
-    private class MainFragmentsAdapter extends FragmentStatePagerAdapter {
+    public HomeFragment getHomeFragment() {
+        return homeFragment;
+    }
+
+    public ArchiveFragment getArchiveFragment() {
+        return archiveFragment;
+    }
+
+    public DownloadedFragment getDownloadedFragment() {
+        return downloadedFragment;
+    }
+
+    private class MainFragmentsAdapter extends FragmentPagerAdapter {
         public MainFragmentsAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -84,11 +127,11 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
         public android.support.v4.app.Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new HomeFragment();
+                    return getHomeFragment();
                 case 1:
-                    return new ArchiveFragment();
+                    return getArchiveFragment();
                 case 2:
-                    return new DownloadedFragment();
+                    return getDownloadedFragment();
             }
             return null;
         }
