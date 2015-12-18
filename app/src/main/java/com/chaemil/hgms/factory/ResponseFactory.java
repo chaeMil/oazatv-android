@@ -1,6 +1,7 @@
 package com.chaemil.hgms.factory;
 
 
+import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.Constants;
 
@@ -44,23 +45,34 @@ public class ResponseFactory {
 
     }
 
-    public static ArrayList<Objects> parseArchive(JSONObject response) {
+    public static ArrayList<ArchiveItem> parseArchive(JSONObject response) {
 
         try {
             if (response.has(Constants.JSON_ARCHIVE)) {
 
-                JSONArray archive = response.getJSONArray(Constants.JSON_ARCHIVE);
+                JSONArray archiveJson = response.getJSONArray(Constants.JSON_ARCHIVE);
 
-                for (int c = 0; c < archive.length(); c++) {
+                ArrayList<ArchiveItem> archive = new ArrayList<>();
 
+                for (int c = 0; c < archiveJson.length(); c++) {
 
+                    Video video = parseVideo(archiveJson.getJSONObject(c));
+
+                    ArchiveItem archiveItem = new ArchiveItem(ArchiveItem.Type.VIDEO);
+                    archiveItem.setVideo(video);
+
+                    archive.add(archiveItem);
 
                 }
+
+                return archive;
 
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        return null;
 
     }
 
