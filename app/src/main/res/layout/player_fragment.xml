@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/player_bg"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/placeholder"
+        android:alpha="0.85"/>
+
+    <android.support.v7.widget.Toolbar
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:id="@+id/toolbar"
+        android:background="@color/transparent_black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textStyle="bold"
+            android:id="@+id/player_title"
+            android:text="Show player"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:visibility="visible"
+        tools:visibility="visible"
+        android:id="@+id/mini_player"
+        android:background="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize">
+
+        <ImageView
+            android:scaleType="centerCrop"
+            android:id="@+id/mini_player_image"
+            android:layout_width="?android:attr/actionBarSize"
+            android:layout_height="?android:attr/actionBarSize" />
+
+        <at.markushi.ui.CircleButton
+            android:id="@+id/mini_play_pause"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:src="@android:drawable/ic_media_pause"
+            app:cb_color="@color/colorAccent"
+            app:cb_pressedRingWidth="3dip"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show player"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:id="@+id/mini_player_text"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/mini_player_image"
+            android:layout_toEndOf="@+id/mini_player_image"
+            android:layout_marginLeft="16dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_above="@+id/progressBar"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:id="@+id/controls_wrapper">
+
+        <TextView
+            android:text="0:14:15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/current_time"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:text="0:57:32"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/audio_time"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true" />
+
+        <at.markushi.ui.CircleButton
+            android:id="@+id/play_pause"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:src="@android:drawable/ic_media_pause"
+            app:cb_color="@color/colorAccent"
+            app:cb_pressedRingWidth="3dip"
+            android:layout_alignParentTop="false"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true" />
+
+        <at.markushi.ui.CircleButton
+            android:id="@+id/rew"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@android:drawable/ic_media_rew"
+            app:cb_color="@color/colorAccent"
+            app:cb_pressedRingWidth="3dip"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/play_pause"
+            android:layout_toStartOf="@+id/play_pause" />
+
+        <at.markushi.ui.CircleButton
+            android:id="@+id/ff"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@android:drawable/ic_media_ff"
+            app:cb_color="@color/colorAccent"
+            app:cb_pressedRingWidth="3dip"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/play_pause"
+            android:layout_toEndOf="@+id/play_pause" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/controls_wrapper"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_alignParentTop="true">
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/linearLayout">
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@android:drawable/toast_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/attr1_image" />
+
+                <TextView
+                    android:text="Sitting"
+                    android:gravity="center"
+                    android:id="@+id/attr1_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@android:drawable/toast_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/attr2_image" />
+
+                <TextView
+                    android:text="Body"
+                    android:gravity="center"
+                    android:id="@+id/attr2_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@android:drawable/toast_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/attr3_image" />
+
+                <TextView
+                    android:text="Easy"
+                    android:gravity="center"
+                    android:id="@+id/attr3_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@android:drawable/toast_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/attr4_image" />
+
+                <TextView
+                    android:text="Feeling"
+                    android:gravity="center"
+                    android:id="@+id/attr4_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/linearLayout"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:id="@+id/player_text"
+                android:lineSpacingMultiplier="1.4"
+                android:textSize="16sp"
+                android:shadowColor="@color/transparent_black"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="10"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed gravida sem quis blandit commodo. Curabitur massa libero, varius a commodo at, hendrerit at est. Donec molestie venenatis fermentum. Ut iaculis ante id diam consequat dignissim. Curabitur pulvinar gravida aliquet. Aliquam ornare, turpis eget luctus vehicula, mauris lorem scelerisque velit, ac molestie mi nulla nec odio. Suspendisse vitae neque pulvinar, tincidunt sem et, consequat risus. Etiam nunc nunc, posuere a velit eget, mattis porta urna. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent vulputate et purus et egestas. Cras id neque a lectus ullamcorper pellentesque."
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </ScrollView>
+
+
+    </RelativeLayout>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:progress="14"/>
+
+
+</RelativeLayout>

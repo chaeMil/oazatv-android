@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="bottom"
+    android:background="@color/white"
+    android:id="@+id/sliding_up_panel_layout"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    sothree:umanoPanelHeight="?android:attr/actionBarSize"
+    sothree:umanoShadowHeight="4dp"
+    sothree:umanoDragView="@+id/mini_player">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/main_layout">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/toolbar"
+            android:background="@color/colorPrimary">
+
+        </android.support.v7.widget.Toolbar>
+
+        <FrameLayout
+            android:name="cz.juicymo.contracts.android.meditationeasy.fragment.MainFragment"
+            android:tag="main_fragment"
+            android:id="@+id/main_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/main_fragment"
+            android:layout_below="@+id/toolbar">
+        </FrameLayout>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/player_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment
+            android:name="com.chaemil.hgms.fragment.PlayerFragment"
+            android:tag="player_fragment"
+            android:id="@+id/player_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/player_fragment">
+
+        </fragment>
+
+    </RelativeLayout>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>
