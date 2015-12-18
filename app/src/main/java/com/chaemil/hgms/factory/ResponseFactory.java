@@ -56,12 +56,24 @@ public class ResponseFactory {
 
                 for (int c = 0; c < archiveJson.length(); c++) {
 
-                    Video video = parseVideo(archiveJson.getJSONObject(c));
+                    switch (archiveJson.getJSONObject(c).getString(Constants.JSON_TYPE)) {
 
-                    ArchiveItem archiveItem = new ArchiveItem(ArchiveItem.Type.VIDEO);
-                    archiveItem.setVideo(video);
+                        case Constants.JSON_TYPE_VIDEO:
 
-                    archive.add(archiveItem);
+                            Video video = parseVideo(archiveJson.getJSONObject(c));
+
+                            ArchiveItem archiveItem = new ArchiveItem(ArchiveItem.Type.VIDEO);
+                            archiveItem.setVideo(video);
+
+                            archive.add(archiveItem);
+                            break;
+
+                        case Constants.JSON_TYPE_ALBUM:
+
+                            break;
+
+                    }
+
 
                 }
 

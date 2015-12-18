@@ -52,4 +52,7 @@ public class Constants {
     public static final String JSON_DESCRIPTION_CS = "description_cs";
     public static final String JSON_DESCRIPTION_EN = "description_en";
     public static final String JSON_ARCHIVE = "archive";
+    public static final String JSON_TYPE = "type";
+    public static final String JSON_TYPE_VIDEO = "video";
+    public static final String JSON_TYPE_ALBUM = "album";
 }
