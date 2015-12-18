@@ -16,11 +16,11 @@ public class Video extends SugarRecord {
     private String nameCS;
     private String nameEN;
     private String tags;
-    private String videoFileName;
-    private String audioFileName;
-    private String thumbFileName;
+    private String videoFile;
+    private String audioFile;
+    private String thumbFile;
     private int views;
-    private ArrayList<Integer> categories;
+    private String categories;
     private String descriptionCS;
     private String descriptionEN;
     private boolean downloaded;
@@ -29,8 +29,8 @@ public class Video extends SugarRecord {
     }
 
     public Video(int serverId, String hash, String date, String nameCS,
-                 String nameEN, String tags, String videoFileName, String audioFileName,
-                 String thumbFileName, int views, ArrayList<Integer> categories,
+                 String nameEN, String tags, String videoFile, String audioFile,
+                 String thumbFile, int views, String categories,
                  String descriptionCS, String descriptionEN, boolean downloaded) {
         this.serverId = serverId;
         this.hash = hash;
@@ -38,9 +38,9 @@ public class Video extends SugarRecord {
         this.nameCS = nameCS;
         this.nameEN = nameEN;
         this.tags = tags;
-        this.videoFileName = videoFileName;
-        this.audioFileName = audioFileName;
-        this.thumbFileName = thumbFileName;
+        this.videoFile = videoFile;
+        this.audioFile = audioFile;
+        this.thumbFile = thumbFile;
         this.views = views;
         this.categories = categories;
         this.descriptionCS = descriptionCS;
@@ -85,23 +85,23 @@ public class Video extends SugarRecord {
         return tags;
     }
 
-    public String getVideoFileName() {
-        return videoFileName;
+    public String getVideoFile() {
+        return videoFile;
     }
 
-    public String getAudioFileName() {
-        return audioFileName;
+    public String getAudioFile() {
+        return audioFile;
     }
 
-    public String getThumbFileName() {
-        return thumbFileName;
+    public String getThumbFile() {
+        return thumbFile;
     }
 
     public int getViews() {
         return views;
     }
 
-    public ArrayList<Integer> getCategories() {
+    public  String getCategories() {
         return categories;
     }
 

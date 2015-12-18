@@ -38,4 +38,18 @@ public class Constants {
     public static final String JSON_FAVORITE = "favorite";
     public static final String JSON_IMAGE = "image";
     public static final String JSON_URL = "url";
+    public static final String JSON_VIDEO = "video";
+    public static final String JSON_HASH = "hash";
+    public static final String JSON_DATE = "date";
+    public static final String JSON_NAME_CS = "name_cs";
+    public static final String JSON_NAME_EN = "name_en";
+    public static final String JSON_TAGS = "tags";
+    public static final String JSON_MP4_FILE = "mp4_file";
+    public static final String JSON_MP3_FILE = "mp3_file";
+    public static final String THUMB_FILE = "thumb_file";
+    public static final String JSON_VIEWS = "views";
+    public static final String JSON_CATEGORIES = "categories";
+    public static final String JSON_DESCRIPTION_CS = "description_cs";
+    public static final String JSON_DESCRIPTION_EN = "description_en";
+    public static final String JSON_ARCHIVE = "archive";
 }
