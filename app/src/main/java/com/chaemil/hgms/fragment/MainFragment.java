@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +18,9 @@ import com.chaemil.hgms.utils.SmartLog;
 /**
  * Created by chaemil on 4.12.15.
  */
-public class MainFragment extends Fragment implements TabLayout.OnTabSelectedListener {
+public class MainFragment extends Fragment {
 
     public static final String TAG = "main_fragment";
-    private static final String PAGER_CURRENT_ITEM = "pager_current_item";
     private TabLayout tabLayout;
     private ViewPager pager;
     private FragmentActivity context;
@@ -40,23 +38,14 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
 
         if (savedInstanceState == null) {
             SmartLog.Log(SmartLog.LogLevel.DEBUG, TAG + " savedInstanceState", "null");
             homeFragment = new HomeFragment();
             archiveFragment = new ArchiveFragment();
             downloadedFragment = new DownloadedFragment();
-        } else {
-            pager.setCurrentItem(savedInstanceState.getInt(PAGER_CURRENT_ITEM));
         }
 
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(PAGER_CURRENT_ITEM, pager.getCurrentItem());
     }
 
     @Override
@@ -65,10 +54,8 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.main_fragment, container, false);
 
-
         getUI(rootView);
         setupUI(savedInstanceState);
-
 
         return rootView;
     }
@@ -78,7 +65,6 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.home)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.archive)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.settings)));
-        tabLayout.setOnTabSelectedListener(this);
         pager = (ViewPager) rootView.findViewById(R.id.pager);
     }
 
@@ -88,21 +74,6 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
             pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
             pager.setOffscreenPageLimit(2);
         }
-
-    }
-
-    @Override
-    public void onTabSelected(TabLayout.Tab tab) {
-        pager.setCurrentItem(tab.getPosition(), true);
-    }
-
-    @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
-
-    }
-
-    @Override
-    public void onTabReselected(TabLayout.Tab tab) {
 
     }
 

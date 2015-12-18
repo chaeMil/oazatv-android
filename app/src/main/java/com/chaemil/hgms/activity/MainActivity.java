@@ -55,8 +55,6 @@ public class MainActivity extends BaseActivity implements
 
             transaction.replace(R.id.main_fragment, mainFragment);
             transaction.commit();
-        } else {
-            mainFragment = (MainFragment) getFragmentManager().findFragmentByTag(MainFragment.TAG);
         }
 
         changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -74,6 +72,7 @@ public class MainActivity extends BaseActivity implements
         super.onConfigurationChanged(newConfig);
 
         adjustLayout();
+        playerFragment.adjustLayout();
     }
 
     private void adjustLayout() {
@@ -153,5 +152,4 @@ public class MainActivity extends BaseActivity implements
             window.setStatusBarColor(color);
         }
     }
-
 }

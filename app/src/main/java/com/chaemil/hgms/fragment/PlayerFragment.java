@@ -90,7 +90,7 @@ public class PlayerFragment extends Fragment {
         resizeAndBlurBg();
     }
 
-    private void adjustLayout() {
+    public void adjustLayout() {
         int currentOrientation = getResources().getConfiguration().orientation;
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
             playerText.setVisibility(View.GONE);
