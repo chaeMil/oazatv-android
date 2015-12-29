@@ -234,7 +234,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         }
     }
 
-    public void playNewVideo(Video video) {
+    public void playNewVideo(final Video video) {
 
         this.currentVideo = video;
 
@@ -243,15 +243,23 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         ((MainActivity) getActivity()).expandPanel();
 
-        videoView.stopPlayback();
-        videoView.setVideoPath(video.getVideoFile());
-        videoView.start();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
 
-        imagesAlreadyBlurred = false;
-        miniPlayerDrawable = null;
-        bgDrawable = null;
+                imagesAlreadyBlurred = false;
+                miniPlayerDrawable = null;
+                bgDrawable = null;
 
-        resizeAndBlurBg();
+                resizeAndBlurBg();
+
+                videoView.stopPlayback();
+                videoView.setVideoPath(video.getVideoFile());
+                videoView.start();
+
+            }
+        }, 500);
 
     }
 
@@ -308,7 +316,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 Bitmap originalBitmap = thumb;
                 Bitmap blurredPlayerBitmap = BitmapUtils.blur(getContext(), originalBitmap, 25);
                 Bitmap resizedBitmap = BitmapUtils.resizeImageForImageView(blurredPlayerBitmap, 255);
-                miniPlayerDrawable = new BitmapDrawable(getResources(), BitmapUtils.resizeImageForImageView(originalBitmap, 255));
+                miniPlayerDrawable = new BitmapDrawable(getResources(), BitmapUtils.resizeImageForImageView(originalBitmap, 320));
                 bgDrawable = new BitmapDrawable(getResources(), resizedBitmap);
             }
 
