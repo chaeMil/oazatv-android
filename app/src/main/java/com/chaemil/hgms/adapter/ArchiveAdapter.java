@@ -10,7 +10,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.fragment.ArchiveFragment;
 import com.chaemil.hgms.fragment.PlayerFragment;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.Video;
@@ -76,7 +75,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                 holder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        playerFragment.playVideo(video);
+                        playerFragment.playNewVideo(video);
                     }
                 });
                 holder.name.setText(video.getName());

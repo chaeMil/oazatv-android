@@ -13,7 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -24,8 +23,6 @@ import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.BitmapUtils;
 import com.chaemil.hgms.utils.SmartLog;
-
-import java.util.logging.Handler;
 
 import at.markushi.ui.CircleButton;
 
@@ -56,6 +53,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private int duration;
     private int currentTimeInt;
     private SeekBar progressBar;
+    private Bitmap thumb;
+    private Video currentVideo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,7 +111,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     }
 
     private void setupUI() {
-        resizeAndBlurBg();
+        //resizeAndBlurBg();
         playPause.setOnClickListener(this);
         rew.setOnClickListener(this);
         ff.setOnClickListener(this);
@@ -223,13 +222,21 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         }
     }
 
-    public void playVideo(Video video) {
+    public void playNewVideo(Video video) {
+
+        this.currentVideo = video;
 
         ((MainActivity) getActivity()).expandPanel();
 
         videoView.stopPlayback();
         videoView.setVideoPath(video.getVideoFile());
         videoView.start();
+
+        imagesAlreadyBlurred = false;
+        miniPlayerDrawable = null;
+        bgDrawable = null;
+
+        resizeAndBlurBg();
 
     }
 
@@ -266,11 +273,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private class ComputeImage extends AsyncTask {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            thumb = BitmapUtils.getBitmapFromURL(currentVideo.getThumbFile());
+        }
+
+        @Override
         protected Object doInBackground(Object[] params) {
 
-            if (!imagesAlreadyBlurred && miniPlayerDrawable == null || playerBg == null) {
+            if (!imagesAlreadyBlurred && thumb != null && miniPlayerDrawable == null || playerBg == null) {
                 SmartLog.Log(SmartLog.LogLevel.DEBUG, "resizeAndBlurBg", "blurring bg image");
-                Bitmap originalBitmap = BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.placeholder));
+                Bitmap originalBitmap = thumb;
                 Bitmap blurredPlayerBitmap = BitmapUtils.blur(getContext(), originalBitmap, 25);
                 Bitmap resizedBitmap = BitmapUtils.resizeImageForImageView(blurredPlayerBitmap, 255);
                 miniPlayerDrawable = new BitmapDrawable(getResources(), BitmapUtils.resizeImageForImageView(originalBitmap, 255));
