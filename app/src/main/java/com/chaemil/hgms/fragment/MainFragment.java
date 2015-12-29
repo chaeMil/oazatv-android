@@ -8,13 +8,13 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.utils.HidingScrollListener;
 import com.chaemil.hgms.utils.SmartLog;
 
 /**
@@ -29,7 +29,8 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
     private HomeFragment homeFragment;
     private ArchiveFragment archiveFragment;
     private DownloadedFragment downloadedFragment;
-    private RecyclerView archiveRecyclerView;
+    private Toolbar toolbar;
+    private LinearLayout appBar;
 
     @Override
     public void onAttach(Activity activity) {
@@ -67,9 +68,11 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
         tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.home)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.archive)));
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.settings)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.downloaded)));
         tabLayout.setOnTabSelectedListener(this);
+        appBar = (LinearLayout) rootView.findViewById(R.id.app_bar);
         pager = (ViewPager) rootView.findViewById(R.id.pager);
+        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -78,6 +81,8 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
             pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
             pager.setOffscreenPageLimit(2);
         }
+
+        toolbar.setTitle(getString(R.string.app_name));
     }
 
     public HomeFragment getHomeFragment() {
@@ -90,6 +95,18 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
 
     public DownloadedFragment getDownloadedFragment() {
         return downloadedFragment;
+    }
+
+    public TabLayout getTabLayout() {
+        return tabLayout;
+    }
+
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
+
+    public LinearLayout getAppBar() {
+        return appBar;
     }
 
     @Override

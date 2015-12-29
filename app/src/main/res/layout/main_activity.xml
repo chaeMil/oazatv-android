@@ -16,14 +16,6 @@
         android:layout_height="match_parent"
         android:id="@+id/main_layout">
 
-        <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/toolbar"
-            android:background="@color/colorPrimary">
-
-        </android.support.v7.widget.Toolbar>
-
         <FrameLayout
             android:name="com.chaemil.hgms.fragment.MainFragment"
             android:tag="main_fragment"

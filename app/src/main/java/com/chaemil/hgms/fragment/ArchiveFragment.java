@@ -1,19 +1,20 @@
 package com.chaemil.hgms.fragment;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.ArchiveAdapter;
-import com.chaemil.hgms.R;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.ArchiveItem;
@@ -35,19 +36,23 @@ public class ArchiveFragment extends BaseFragment {
     private RecyclerView archiveRecyclerView;
     private ProgressBar progress;
     private ArchiveAdapter archiveAdapter;
+    private int actionBarHeight;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         getData(savedInstanceState);
+
+        TypedValue tv = new TypedValue();
+        getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
+        actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(
-                R.layout.archive_fragment, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.archive_fragment, container, false);
 
 
         getUI(rootView);
@@ -68,11 +73,36 @@ public class ArchiveFragment extends BaseFragment {
         archiveAdapter = new ArchiveAdapter(getContext(), archive);
         archiveRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         archiveRecyclerView.setAdapter(archiveAdapter);
+
+        setupToolbarHiding();
     }
 
     private void getUI(ViewGroup rootView) {
         archiveRecyclerView = (RecyclerView) rootView.findViewById(R.id.archive_recycler_view);
         progress = (ProgressBar) rootView.findViewById(R.id.progress);
+    }
+
+    public void setupToolbarHiding() {
+
+
+        final LinearLayout appBar = ((MainActivity) getActivity()).getMainFragment().getAppBar();
+
+        archiveRecyclerView.setOnScrollListener(new HidingScrollListener(actionBarHeight) {
+            @Override
+            public void onHide() {
+
+            }
+
+            @Override
+            public void onShow() {
+
+            }
+
+            @Override
+            public void onMoved(int distance) {
+                appBar.setTranslationY(-distance);
+            }
+        });
     }
 
     @Override

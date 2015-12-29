@@ -6,30 +6,34 @@ import android.support.v7.widget.RecyclerView;
  * Created by chaemil on 29.12.15.
  */
 public abstract class HidingScrollListener extends RecyclerView.OnScrollListener {
-    private static final int HIDE_THRESHOLD = 20;
-    private int scrolledDistance = 0;
-    private boolean controlsVisible = true;
+    private int toolbarOffset = 0;
+    private int toolbarHeight;
+
+    public HidingScrollListener(int toolbarHeight) {
+        this.toolbarHeight = toolbarHeight;
+    }
 
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
 
-        if (scrolledDistance > HIDE_THRESHOLD && controlsVisible) {
-            onHide();
-            controlsVisible = false;
-            scrolledDistance = 0;
-        } else if (scrolledDistance < -HIDE_THRESHOLD && !controlsVisible) {
-            onShow();
-            controlsVisible = true;
-            scrolledDistance = 0;
-        }
+        clipToolbarOffset();
+        onMoved(toolbarOffset);
 
-        if((controlsVisible && dy>0) || (!controlsVisible && dy<0)) {
-            scrolledDistance += dy;
+        if((toolbarOffset < toolbarHeight && dy>0) || (toolbarOffset >0 && dy<0)) {
+            toolbarOffset += dy;
+        }
+    }
+
+    private void clipToolbarOffset() {
+        if(toolbarOffset > toolbarHeight) {
+            toolbarOffset = toolbarHeight;
+        } else if(toolbarOffset < 0) {
+            toolbarOffset = 0;
         }
     }
 
     public abstract void onHide();
     public abstract void onShow();
-
+    public abstract void onMoved(int distance);
 }

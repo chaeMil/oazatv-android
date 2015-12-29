@@ -21,7 +21,6 @@ public class MainActivity extends BaseActivity implements
         SlidingUpPanelLayout.PanelSlideListener, View.OnClickListener {
 
     private SlidingUpPanelLayout panelLayout;
-    private Toolbar toolbar;
     private PlayerFragment playerFragment;
     private MainFragment mainFragment;
 
@@ -42,7 +41,6 @@ public class MainActivity extends BaseActivity implements
 
     private void getUI() {
         panelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_up_panel_layout);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         playerFragment = ((PlayerFragment) getSupportFragmentManager().findFragmentByTag(PlayerFragment.TAG));
     }
 
@@ -58,11 +56,6 @@ public class MainActivity extends BaseActivity implements
         }
 
         changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
-
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(getString(R.string.app_name));
-        }
 
         panelLayout.setPanelSlideListener(this);
     }
@@ -151,5 +144,9 @@ public class MainActivity extends BaseActivity implements
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(color);
         }
+    }
+
+    public MainFragment getMainFragment() {
+        return mainFragment;
     }
 }
