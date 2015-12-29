@@ -6,13 +6,21 @@
     android:background="@color/dark_gray"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
+    <RelativeLayout
+        android:id="@+id/player_bg_wrapper"
+        android:alpha="0.5"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/player_bg"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/placeholder"
-        android:alpha="0.5"/>
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/player_bg"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/placeholder" />
+
+    </RelativeLayout>
+
 
     <android.support.v7.widget.Toolbar
         android:visibility="gone"
