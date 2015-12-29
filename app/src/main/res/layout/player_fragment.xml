@@ -61,6 +61,7 @@
             android:layout_height="wrap_content"
             android:text="Show player"
             android:textSize="18dp"
+            android:textColor="@color/white"
             android:textStyle="bold"
             android:id="@+id/mini_player_text"
             android:layout_centerVertical="true"
@@ -79,6 +80,9 @@
         android:id="@+id/controls_wrapper">
 
         <TextView
+            android:textColor="@color/white"
+            android:shadowColor="@color/black"
+            android:shadowRadius="5"
             android:text="0:14:15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -88,6 +92,9 @@
             android:layout_alignParentStart="true" />
 
         <TextView
+            android:textColor="@color/white"
+            android:shadowColor="@color/black"
+            android:shadowRadius="5"
             android:text="0:57:32"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -142,127 +149,10 @@
         android:layout_marginBottom="16dp"
         android:layout_alignParentTop="true">
 
-
-        <LinearLayout
-            android:orientation="horizontal"
+        <VideoView
+            android:id="@+id/video"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:id="@+id/linearLayout">
-
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:src="@android:drawable/toast_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/attr1_image" />
-
-                <TextView
-                    android:text="Sitting"
-                    android:gravity="center"
-                    android:id="@+id/attr1_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:src="@android:drawable/toast_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/attr2_image" />
-
-                <TextView
-                    android:text="Body"
-                    android:gravity="center"
-                    android:id="@+id/attr2_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:src="@android:drawable/toast_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/attr3_image" />
-
-                <TextView
-                    android:text="Easy"
-                    android:gravity="center"
-                    android:id="@+id/attr3_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:src="@android:drawable/toast_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/attr4_image" />
-
-                <TextView
-                    android:text="Feeling"
-                    android:gravity="center"
-                    android:id="@+id/attr4_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/scrollView"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_above="@+id/linearLayout"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="12dp">
-
-            <TextView
-                android:id="@+id/player_text"
-                android:lineSpacingMultiplier="1.4"
-                android:textSize="16sp"
-                android:shadowColor="@color/transparent_black"
-                android:shadowDx="0"
-                android:shadowDy="0"
-                android:shadowRadius="10"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed gravida sem quis blandit commodo. Curabitur massa libero, varius a commodo at, hendrerit at est. Donec molestie venenatis fermentum. Ut iaculis ante id diam consequat dignissim. Curabitur pulvinar gravida aliquet. Aliquam ornare, turpis eget luctus vehicula, mauris lorem scelerisque velit, ac molestie mi nulla nec odio. Suspendisse vitae neque pulvinar, tincidunt sem et, consequat risus. Etiam nunc nunc, posuere a velit eget, mattis porta urna. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent vulputate et purus et egestas. Cras id neque a lectus ullamcorper pellentesque."
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </ScrollView>
+            android:layout_height="wrap_content" />
 
 
     </RelativeLayout>

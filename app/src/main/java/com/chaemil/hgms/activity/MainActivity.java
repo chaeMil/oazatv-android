@@ -47,6 +47,8 @@ public class MainActivity extends BaseActivity implements
     private void setupUI(Bundle savedInstanceState) {
 
         if (savedInstanceState == null) {
+            hidePanel();
+
             mainFragment = new MainFragment();
 
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -129,6 +131,18 @@ public class MainActivity extends BaseActivity implements
 
     }
 
+    public void expandPanel() {
+        panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+    }
+
+    public void colapsePanel() {
+        panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
+    public void hidePanel() {
+        panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+    }
+
     @Override
     public void onBackPressed() {
         if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
@@ -148,5 +162,9 @@ public class MainActivity extends BaseActivity implements
 
     public MainFragment getMainFragment() {
         return mainFragment;
+    }
+
+    public PlayerFragment getPlayerFragment() {
+        return playerFragment;
     }
 }

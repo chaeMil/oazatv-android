@@ -70,7 +70,11 @@ public class ArchiveFragment extends BaseFragment {
     }
 
     private void setupUI() {
-        archiveAdapter = new ArchiveAdapter(getContext(), archive);
+        archiveAdapter = new ArchiveAdapter(
+                getContext(),
+                ((MainActivity) getActivity()).getPlayerFragment(),
+                archive);
+
         archiveRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         archiveRecyclerView.setAdapter(archiveAdapter);
 

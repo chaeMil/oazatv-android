@@ -13,8 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.BitmapUtils;
 import com.chaemil.hgms.utils.SmartLog;
 
@@ -30,13 +33,13 @@ public class PlayerFragment extends Fragment {
     private ImageView playerBg;
     private RelativeLayout miniPlayer;
     private ImageView miniPlayerImageView;
-    private TextView playerText;
     private Toolbar playerToolbar;
     private boolean imagesAlreadyBlurred = false;
     private BitmapDrawable miniPlayerDrawable;
     private BitmapDrawable bgDrawable;
     private TextView miniPlayerText;
     private TextView playerTitle;
+    private VideoView videoView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,9 +83,9 @@ public class PlayerFragment extends Fragment {
         playerBg = (ImageView) rootView.findViewById(R.id.player_bg);
         miniPlayerImageView = (ImageView) rootView.findViewById(R.id.mini_player_image);
         miniPlayerText = (TextView) rootView.findViewById(R.id.mini_player_text);
-        playerText = (TextView) rootView.findViewById(R.id.player_text);
         playerToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         playerTitle = (TextView) rootView.findViewById(R.id.player_title);
+        videoView = (VideoView) rootView.findViewById(R.id.video);
 
     }
 
@@ -93,10 +96,10 @@ public class PlayerFragment extends Fragment {
     public void adjustLayout() {
         int currentOrientation = getResources().getConfiguration().orientation;
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            playerText.setVisibility(View.GONE);
+
         }
         else {
-            playerText.setVisibility(View.VISIBLE);
+
         }
     }
 
@@ -108,6 +111,16 @@ public class PlayerFragment extends Fragment {
             playerToolbar.setVisibility(View.VISIBLE);
             miniPlayer.setVisibility(View.GONE);
         }
+    }
+
+    public void playVideo(Video video) {
+
+        ((MainActivity) getActivity()).expandPanel();
+
+        videoView.stopPlayback();
+        videoView.setVideoPath(video.getVideoFile());
+        videoView.start();
+
     }
 
     private void resizeAndBlurBg() {

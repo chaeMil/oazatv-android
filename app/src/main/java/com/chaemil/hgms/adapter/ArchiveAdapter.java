@@ -6,9 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.fragment.ArchiveFragment;
+import com.chaemil.hgms.fragment.PlayerFragment;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.Video;
 import com.squareup.picasso.Picasso;
@@ -21,10 +24,12 @@ import java.util.ArrayList;
 public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHolder> {
 
     private final Context context;
+    private final PlayerFragment playerFragment;
     private ArrayList<ArchiveItem> archive;
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
+        private final RelativeLayout mainView;
         public ImageView thumb;
         public TextView name;
         public TextView date;
@@ -32,6 +37,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
 
         public ViewHolder(View itemView) {
             super(itemView);
+            mainView = (RelativeLayout) itemView.findViewById(R.id.main_view);
             thumb = (ImageView) itemView.findViewById(R.id.thumb);
             name = (TextView) itemView.findViewById(R.id.name);
             date = (TextView) itemView.findViewById(R.id.date);
@@ -40,8 +46,9 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
 
     }
 
-    public ArchiveAdapter(Context context, ArrayList<ArchiveItem> archive) {
+    public ArchiveAdapter(Context context, PlayerFragment playerFragment, ArrayList<ArchiveItem> archive) {
         this.context = context;
+        this.playerFragment = playerFragment;
         this.archive = archive;
     }
 
@@ -57,15 +64,21 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
 
         ArchiveItem archiveItem = archive.get(position);
 
         switch (archiveItem.getType()) {
             case ArchiveItem.Type.VIDEO:
 
-                Video video = archiveItem.getVideo();
+                final Video video = archiveItem.getVideo();
 
+                holder.mainView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        playerFragment.playVideo(video);
+                    }
+                });
                 holder.name.setText(video.getName());
                 holder.date.setText(video.getDate());
                 holder.views.setText(video.getViews() + " " + context.getString(R.string.views));
