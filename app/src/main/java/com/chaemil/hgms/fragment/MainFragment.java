@@ -8,11 +8,13 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.utils.HidingScrollListener;
 import com.chaemil.hgms.utils.SmartLog;
 
 /**
@@ -27,6 +29,7 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
     private HomeFragment homeFragment;
     private ArchiveFragment archiveFragment;
     private DownloadedFragment downloadedFragment;
+    private RecyclerView archiveRecyclerView;
 
     @Override
     public void onAttach(Activity activity) {
@@ -75,7 +78,6 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
             pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
             pager.setOffscreenPageLimit(2);
         }
-
     }
 
     public HomeFragment getHomeFragment() {

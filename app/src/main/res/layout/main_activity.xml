@@ -25,7 +25,7 @@
         </android.support.v7.widget.Toolbar>
 
         <FrameLayout
-            android:name="cz.juicymo.contracts.android.meditationeasy.fragment.MainFragment"
+            android:name="com.chaemil.hgms.fragment.MainFragment"
             android:tag="main_fragment"
             android:id="@+id/main_fragment"
             android:layout_width="match_parent"
@@ -33,7 +33,6 @@
             tools:layout="@layout/main_fragment"
             android:layout_below="@+id/toolbar">
         </FrameLayout>
-
 
     </RelativeLayout>
 

@@ -24,24 +24,27 @@
                 android:id="@+id/thumb"
                 android:background="@color/dark_gray"
                 android:layout_margin="8dp"
-                android:layout_width="160dp"
+                android:layout_width="120dp"
                 android:layout_height="match_parent" />
 
             <TextView
                 tools:text="Video name sooooo long"
                 android:id="@+id/name"
                 android:textSize="16sp"
+                android:textColor="@color/dark_gray"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/thumb"
                 android:layout_toRightOf="@+id/thumb"
-                android:layout_toEndOf="@+id/thumb" />
+                android:layout_toEndOf="@+id/thumb"
+                android:layout_marginRight="8dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="29.12.2015"
                 android:id="@+id/date"
+                android:textColor="@color/dark_gray"
                 android:layout_below="@+id/name"
                 android:layout_toRightOf="@+id/thumb"
                 android:layout_toEndOf="@+id/thumb"
@@ -52,11 +55,11 @@
                 android:layout_height="wrap_content"
                 tools:text="532 views"
                 android:id="@+id/views"
+                android:textColor="@color/dark_gray"
                 android:layout_alignTop="@+id/date"
                 android:layout_toRightOf="@+id/date"
                 android:layout_alignRight="@+id/name"
                 android:layout_alignEnd="@+id/name"
-                android:layout_marginRight="8dp"
                 android:layout_marginLeft="20dp"
                 android:gravity="right" />
 
