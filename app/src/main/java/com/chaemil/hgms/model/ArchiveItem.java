@@ -8,14 +8,13 @@ public class ArchiveItem {
     private int type;
     private Video video;
 
-    public static class Type {
-        public static int VIDEO = 0;
-        public static int AUDIO = 1;
-        public static int ALBUM = 2;
+    public static abstract class Type {
+        public static final int VIDEO = 0;
+        public static final int AUDIO = 1;
+        public static final int ALBUM = 2;
     }
 
-    public ArchiveItem(int type) {
-        this.type = type;
+    public ArchiveItem() {
     }
 
     public boolean equals(Object other) {

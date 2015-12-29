@@ -1,6 +1,9 @@
 package com.chaemil.hgms.model;
 
+import com.chaemil.hgms.utils.Constants;
 import com.orm.SugarRecord;
+
+import java.util.Locale;
 
 /**
  * Created by chaemil on 18.12.15.
@@ -54,6 +57,20 @@ public class Video extends SugarRecord {
             return false;
         }
 
+    }
+
+    public String getName() {
+        switch (Locale.getDefault().getLanguage()) {
+
+            case Constants.SK:
+                return getNameCS();
+            case Constants.CS:
+                return getNameCS();
+            case Constants.EN:
+                return getNameEN();
+            default:
+                return getNameEN();
+        }
     }
 
     public void setDownloaded(boolean downloaded) {

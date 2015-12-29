@@ -2,6 +2,10 @@ package com.chaemil.hgms.utils;
 
 public class Constants {
 
+    public static final String EN = "en";
+    public static final String CS = "cs";
+    public static final String SK = "sk";
+
     public static final String JSON_POST_HEADER_ACCEPT = "Content-type:";
     public static final String JSON_POST_HEADER_APPLICATION_JSON = "application/json";
     public static final String JSON_POST_CHARSET = "charset=";

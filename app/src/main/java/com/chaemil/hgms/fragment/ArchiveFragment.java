@@ -1,12 +1,16 @@
 package com.chaemil.hgms.fragment;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.adapter.ArchiveAdapter;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.ResponseFactory;
@@ -25,6 +29,9 @@ import java.util.ArrayList;
 public class ArchiveFragment extends BaseFragment {
 
     private ArrayList<ArchiveItem> archive = new ArrayList<>();
+    private RecyclerView archiveRecyclerView;
+    private ProgressBar progress;
+    private ArchiveAdapter archiveAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,11 +62,15 @@ public class ArchiveFragment extends BaseFragment {
     }
 
     private void setupUI() {
+        archiveAdapter = new ArchiveAdapter(getContext(), archive);
+        archiveRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        archiveRecyclerView.setAdapter(archiveAdapter);
 
     }
 
     private void getUI(ViewGroup rootView) {
-
+        archiveRecyclerView = (RecyclerView) rootView.findViewById(R.id.archive_recycler_view);
+        progress = (ProgressBar) rootView.findViewById(R.id.progress);
     }
 
     @Override
@@ -74,6 +85,7 @@ public class ArchiveFragment extends BaseFragment {
 
                 if (newItems != null) {
                     archive.addAll(newItems);
+                    archiveAdapter.notifyDataSetChanged();
                 }
 
                 break;
