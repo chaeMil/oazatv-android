@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/dark_gray"
     xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
@@ -19,12 +20,13 @@
         android:id="@+id/toolbar"
         android:background="@color/transparent_black"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="?android:attr/actionBarSize">
 
         <TextView
+            android:textColor="@color/white"
             android:textStyle="bold"
             android:id="@+id/player_title"
-            android:text="Show player"
+            tools:text="Show player"
             android:textSize="18sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -59,7 +61,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Show player"
+            tools:text="Show player"
             android:textSize="18dp"
             android:textColor="@color/white"
             android:textStyle="bold"

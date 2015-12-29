@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -23,8 +24,13 @@ import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.BitmapUtils;
 import com.chaemil.hgms.utils.SmartLog;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+import com.squareup.picasso.Picasso;
 
 import at.markushi.ui.CircleButton;
+
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 /**
  * Created by chaemil on 2.12.15.
@@ -55,6 +61,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private SeekBar progressBar;
     private Bitmap thumb;
     private Video currentVideo;
+    private CircleButton miniPlayerPause;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +115,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         totalTime = (TextView) rootView.findViewById(R.id.total_time);
         progressBar = (SeekBar) rootView.findViewById(R.id.progress_bar);
         progressBar.setOnSeekBarChangeListener(this);
+        miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
     }
 
     private void setupUI() {
@@ -117,6 +125,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         ff.setOnClickListener(this);
         videoView.setOnTouchListener(this);
         videoView.setOnPreparedListener(this);
+        miniPlayerPause.setOnClickListener(this);
     }
 
     @Override
@@ -134,6 +143,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 if (videoView.canSeekForward()) {
                     videoView.seekTo(videoView.getCurrentPosition() + 10000);
                 }
+                break;
+            case R.id.mini_play_pause:
+                playPauseVideo();
                 break;
         }
     }
@@ -226,6 +238,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         this.currentVideo = video;
 
+        miniPlayerText.setText(video.getName());
+        playerTitle.setText(video.getName());
+
         ((MainActivity) getActivity()).expandPanel();
 
         videoView.stopPlayback();
@@ -304,8 +319,20 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
 
-            playerBg.setImageDrawable(bgDrawable);
-            miniPlayerImageView.setImageDrawable(miniPlayerDrawable);
+            YoYo.with(Techniques.FadeOut).duration(400).playOn(playerBg);
+            YoYo.with(Techniques.FadeOut).duration(400).playOn(miniPlayerImageView);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    playerBg.setImageDrawable(bgDrawable);
+                    miniPlayerImageView.setImageDrawable(miniPlayerDrawable);
+
+                    YoYo.with(Techniques.FadeIn).duration(400).playOn(playerBg);
+                    YoYo.with(Techniques.FadeIn).duration(400).playOn(miniPlayerImageView);
+                }
+            }, 400);
 
             imagesAlreadyBlurred = true;
         }
