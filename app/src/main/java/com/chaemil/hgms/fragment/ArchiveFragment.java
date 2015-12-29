@@ -88,6 +88,8 @@ public class ArchiveFragment extends BaseFragment {
                     archiveAdapter.notifyDataSetChanged();
                 }
 
+                progress.setVisibility(View.GONE);
+
                 break;
 
         }

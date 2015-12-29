@@ -18,7 +18,7 @@ import com.chaemil.hgms.utils.SmartLog;
 /**
  * Created by chaemil on 4.12.15.
  */
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements TabLayout.OnTabSelectedListener {
 
     public static final String TAG = "main_fragment";
     private TabLayout tabLayout;
@@ -65,6 +65,7 @@ public class MainFragment extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.home)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.archive)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.settings)));
+        tabLayout.setOnTabSelectedListener(this);
         pager = (ViewPager) rootView.findViewById(R.id.pager);
     }
 
@@ -87,6 +88,21 @@ public class MainFragment extends Fragment {
 
     public DownloadedFragment getDownloadedFragment() {
         return downloadedFragment;
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        pager.setCurrentItem(tab.getPosition());
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
     }
 
     private class MainFragmentsAdapter extends FragmentPagerAdapter {
