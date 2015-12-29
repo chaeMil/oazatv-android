@@ -12,7 +12,7 @@
         android:id="@+id/player_bg"
         android:scaleType="centerCrop"
         tools:src="@drawable/placeholder"
-        android:alpha="0.85"/>
+        android:alpha="0.5"/>
 
     <android.support.v7.widget.Toolbar
         android:visibility="gone"
