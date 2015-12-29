@@ -275,7 +275,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            thumb = BitmapUtils.getBitmapFromURL(currentVideo.getThumbFile());
+            try {
+                thumb = BitmapUtils.getBitmapFromURL(currentVideo.getThumbFile());
+                if (thumb == null) {
+                    thumb = BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.placeholder));
+                }
+            } catch (Exception e) {
+                SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
+            }
         }
 
         @Override
