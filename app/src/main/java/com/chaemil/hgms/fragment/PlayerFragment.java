@@ -3,15 +3,19 @@ package com.chaemil.hgms.fragment;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -21,10 +25,14 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.BitmapUtils;
 import com.chaemil.hgms.utils.SmartLog;
 
+import java.util.logging.Handler;
+
+import at.markushi.ui.CircleButton;
+
 /**
  * Created by chaemil on 2.12.15.
  */
-public class PlayerFragment extends Fragment {
+public class PlayerFragment extends Fragment implements View.OnClickListener, View.OnTouchListener, MediaPlayer.OnPreparedListener, SeekBar.OnSeekBarChangeListener {
 
     public static final String TAG = "player_fragment";
     private static final String IMAGES_ALREADY_BLURRED = "images_already_blurred";
@@ -40,6 +48,14 @@ public class PlayerFragment extends Fragment {
     private TextView miniPlayerText;
     private TextView playerTitle;
     private VideoView videoView;
+    private CircleButton playPause;
+    private CircleButton rew;
+    private CircleButton ff;
+    private TextView currentTime;
+    private TextView totalTime;
+    private int duration;
+    private int currentTimeInt;
+    private SeekBar progressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,11 +102,52 @@ public class PlayerFragment extends Fragment {
         playerToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         playerTitle = (TextView) rootView.findViewById(R.id.player_title);
         videoView = (VideoView) rootView.findViewById(R.id.video);
-
+        playPause = (CircleButton) rootView.findViewById(R.id.play_pause);
+        rew = (CircleButton) rootView.findViewById(R.id.rew);
+        ff = (CircleButton) rootView.findViewById(R.id.ff);
+        currentTime = (TextView) rootView.findViewById(R.id.current_time);
+        totalTime = (TextView) rootView.findViewById(R.id.total_time);
+        progressBar = (SeekBar) rootView.findViewById(R.id.progress_bar);
+        progressBar.setOnSeekBarChangeListener(this);
     }
 
     private void setupUI() {
         resizeAndBlurBg();
+        playPause.setOnClickListener(this);
+        rew.setOnClickListener(this);
+        ff.setOnClickListener(this);
+        videoView.setOnTouchListener(this);
+        videoView.setOnPreparedListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.play_pause:
+                playPauseVideo();
+                break;
+            case R.id.rew:
+                if (videoView.canSeekBackward()) {
+                    videoView.seekTo(videoView.getCurrentPosition() - 10000);
+                }
+                break;
+            case R.id.ff:
+                if (videoView.canSeekForward()) {
+                    videoView.seekTo(videoView.getCurrentPosition() + 10000);
+                }
+                break;
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch(v.getId()) {
+            case R.id.video:
+                //do nothing
+                break;
+        }
+
+        return true;
     }
 
     public void adjustLayout() {
@@ -100,6 +157,59 @@ public class PlayerFragment extends Fragment {
         }
         else {
 
+        }
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        duration = videoView.getDuration();
+        progressBar.setMax(duration);
+        progressBar.postDelayed(onEverySecond, 1000);
+    }
+
+    private Runnable onEverySecond = new Runnable() {
+        @Override
+        public void run(){
+            if (progressBar != null) {
+                progressBar.setProgress(videoView.getCurrentPosition());
+            }
+
+            if (videoView.isPlaying()) {
+                if (progressBar != null) {
+                    progressBar.postDelayed(onEverySecond, 1000);
+                }
+                updateTime();
+            }
+        }
+    };
+
+    private void updateTime() {
+        currentTimeInt = videoView.getCurrentPosition();
+        int dSeconds = (duration / 1000) % 60 ;
+        int dMinutes = ((duration / (1000*60)) % 60);
+        int dHours   = ((duration / (1000*60*60)) % 24);
+
+        int cSeconds = (currentTimeInt / 1000) % 60 ;
+        int cMinutes = ((currentTimeInt / (1000*60)) % 60);
+        int cHours   = ((currentTimeInt / (1000*60*60)) % 24);
+
+        if(dHours == 0){
+            currentTime.setText(String.format("%02d:%02d", cMinutes, cSeconds));
+            totalTime.setText(String.format("%02d:%02d", dMinutes, dSeconds));
+        }else{
+            currentTime.setText(String.format("%02d:%02d:%02d", cHours, cMinutes, cSeconds));
+            totalTime.setText(String.format("%02d:%02d:%02d", dHours, dMinutes, dSeconds));
+        }
+    }
+
+    private void playPauseVideo() {
+        if (videoView.isPlaying()) {
+            videoView.pause();
+        } else {
+            videoView.start();
+            if (progressBar != null) {
+                progressBar.postDelayed(onEverySecond, 1000);
+            }
         }
     }
 
@@ -135,6 +245,23 @@ public class PlayerFragment extends Fragment {
         return miniPlayer;
     }
 
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (fromUser) {
+            videoView.seekTo(progress);
+            updateTime();
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
 
     private class ComputeImage extends AsyncTask {
 
