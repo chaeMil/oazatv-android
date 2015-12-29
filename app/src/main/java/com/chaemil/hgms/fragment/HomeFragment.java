@@ -16,9 +16,21 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(
-                R.layout.home_fragment, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.home_fragment, container, false);
+
+
+        getUI(rootView);
+        setupUI();
 
         return rootView;
+
+    }
+
+    private void setupUI() {
+
+    }
+
+    private void getUI(ViewGroup rootView) {
+
     }
 }

@@ -68,7 +68,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
 
                 holder.name.setText(video.getName());
                 holder.date.setText(video.getDate());
-                holder.views.setText(video.getViews() + context.getString(R.string.views));
+                holder.views.setText(video.getViews() + " " + context.getString(R.string.views));
                 Picasso.with(context).load(video.getThumbFile()).into(holder.thumb);
                 break;
         }
