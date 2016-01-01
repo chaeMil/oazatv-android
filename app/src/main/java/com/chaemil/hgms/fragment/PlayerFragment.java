@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -62,6 +63,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private Bitmap thumb;
     private Video currentVideo;
     private CircleButton miniPlayerPause;
+    private ProgressBar bufferBar;
+    private int bufferFail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,6 +119,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         progressBar = (SeekBar) rootView.findViewById(R.id.progress_bar);
         progressBar.setOnSeekBarChangeListener(this);
         miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
+        bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
     }
 
     private void setupUI() {
@@ -176,6 +180,30 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         duration = videoView.getDuration();
         progressBar.setMax(duration);
         progressBar.postDelayed(onEverySecond, 1000);
+
+        mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+            @Override
+            public void onBufferingUpdate(MediaPlayer mp, int percent) {
+                float temp = ((float) mp.getCurrentPosition() / (float) mp.getDuration()) * 100;
+                if (Math.abs(percent - temp) < 1) {
+                    bufferFail++;
+                    if (bufferFail == 15) {
+                        SmartLog.Log(SmartLog.LogLevel.WARN, "bufferFail", "buffering failed");
+                    }
+                }
+            }
+        });
+
+        mp.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+            @Override
+            public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START)
+                    bufferBar.setVisibility(View.VISIBLE);
+                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END)
+                    bufferBar.setVisibility(View.GONE);
+                return false;
+            }
+        });
     }
 
     private Runnable onEverySecond = new Runnable() {
