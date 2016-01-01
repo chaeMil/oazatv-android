@@ -27,6 +27,7 @@ import com.chaemil.hgms.utils.BitmapUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.squareup.picasso.Picasso;
 
 import at.markushi.ui.CircleButton;
 
@@ -62,6 +63,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private CircleButton miniPlayerPause;
     private ProgressBar bufferBar;
     private int bufferFail;
+    private boolean playAudio;
+    private ImageView audioThumb;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -117,6 +120,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         progressBar.setOnSeekBarChangeListener(this);
         miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
+        audioThumb = (ImageView) rootView.findViewById(R.id.audio_thumb);
     }
 
     private void setupUI() {
@@ -177,7 +181,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         duration = videoView.getDuration();
         progressBar.setMax(duration);
         progressBar.postDelayed(onEverySecond, 1000);
-        YoYo.with(Techniques.FadeIn).duration(350).delay(250).playOn(videoView);
+        if (!playAudio) {
+            YoYo.with(Techniques.FadeIn).duration(350).delay(250).playOn(videoView);
+        }
 
         mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
             @Override
@@ -263,10 +269,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     public void playNewVideo(final Video video) {
 
         this.currentVideo = video;
+        playAudio = false;
 
         miniPlayerText.setText(video.getName());
         playerTitle.setText(video.getName());
         videoView.setAlpha(0);
+        audioThumb.setAlpha(0);
+        bufferBar.setVisibility(View.VISIBLE);
 
         ((MainActivity) getActivity()).expandPanel();
 
@@ -285,6 +294,40 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 videoView.setVideoPath(video.getVideoFile());
                 videoView.start();
 
+            }
+        }, 500);
+
+    }
+
+    public void playNewAudio(final Video video) {
+
+        this.currentVideo = video;
+        playAudio = true;
+
+        miniPlayerText.setText(video.getName());
+        playerTitle.setText(video.getName());
+        videoView.setAlpha(0);
+        audioThumb.setAlpha(255);
+        bufferBar.setVisibility(View.GONE);
+        Picasso.with(getActivity()).load(video.getThumbFile()).into(audioThumb);
+        YoYo.with(Techniques.FadeIn).duration(350).playOn(audioThumb);
+
+                ((MainActivity) getActivity()).expandPanel();
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                imagesAlreadyBlurred = false;
+                miniPlayerDrawable = null;
+                bgDrawable = null;
+
+                resizeAndBlurBg();
+
+                videoView.stopPlayback();
+                videoView.setVideoPath(video.getAudioFile());
+                videoView.start();
             }
         }, 500);
 

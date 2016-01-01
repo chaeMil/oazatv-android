@@ -33,6 +33,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
         public TextView name;
         public TextView date;
         public TextView views;
+        public ImageView playAudio;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -41,6 +42,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
             name = (TextView) itemView.findViewById(R.id.name);
             date = (TextView) itemView.findViewById(R.id.date);
             views = (TextView) itemView.findViewById(R.id.views);
+            playAudio = (ImageView) itemView.findViewById(R.id.play_audio);
         }
 
     }
@@ -81,6 +83,12 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                 holder.name.setText(video.getName());
                 holder.date.setText(video.getDate());
                 holder.views.setText(video.getViews() + " " + context.getString(R.string.views));
+                holder.playAudio.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        playerFragment.playNewAudio(video);
+                    }
+                });
                 Picasso.with(context).load(video.getThumbFile()).into(holder.thumb);
                 break;
         }
