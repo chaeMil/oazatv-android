@@ -167,12 +167,14 @@
             android:layout_marginTop="16dp">
 
             <VideoView
+                android:alpha="0"
                 android:id="@+id/video_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true" />
 
             <ImageView
+                android:alpha="0"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/audio_thumb"

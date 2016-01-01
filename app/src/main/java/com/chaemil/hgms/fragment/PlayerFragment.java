@@ -307,10 +307,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         miniPlayerText.setText(video.getName());
         playerTitle.setText(video.getName());
         videoView.setAlpha(0);
-        audioThumb.setAlpha(255);
+        audioThumb.setAlpha(0);
         bufferBar.setVisibility(View.GONE);
         Picasso.with(getActivity()).load(video.getThumbFile()).into(audioThumb);
-        YoYo.with(Techniques.FadeIn).duration(350).playOn(audioThumb);
 
                 ((MainActivity) getActivity()).expandPanel();
 
@@ -328,6 +327,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 videoView.stopPlayback();
                 videoView.setVideoPath(video.getAudioFile());
                 videoView.start();
+
+                audioThumb.setAlpha(255);
+                YoYo.with(Techniques.FadeIn).duration(350).playOn(audioThumb);
             }
         }, 500);
 
