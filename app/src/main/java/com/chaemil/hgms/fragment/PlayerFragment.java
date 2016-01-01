@@ -27,11 +27,8 @@ import com.chaemil.hgms.utils.BitmapUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.squareup.picasso.Picasso;
 
 import at.markushi.ui.CircleButton;
-
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 /**
  * Created by chaemil on 2.12.15.
@@ -110,7 +107,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         miniPlayerText = (TextView) rootView.findViewById(R.id.mini_player_text);
         playerToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         playerTitle = (TextView) rootView.findViewById(R.id.player_title);
-        videoView = (VideoView) rootView.findViewById(R.id.video);
+        videoView = (VideoView) rootView.findViewById(R.id.video_view);
         playPause = (CircleButton) rootView.findViewById(R.id.play_pause);
         rew = (CircleButton) rootView.findViewById(R.id.rew);
         ff = (CircleButton) rootView.findViewById(R.id.ff);
@@ -157,7 +154,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch(v.getId()) {
-            case R.id.video:
+            case R.id.video_view:
                 //do nothing
                 break;
         }
@@ -180,6 +177,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         duration = videoView.getDuration();
         progressBar.setMax(duration);
         progressBar.postDelayed(onEverySecond, 1000);
+        YoYo.with(Techniques.FadeIn).duration(350).delay(250).playOn(videoView);
 
         mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
             @Override
@@ -268,6 +266,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         miniPlayerText.setText(video.getName());
         playerTitle.setText(video.getName());
+        videoView.setAlpha(0);
 
         ((MainActivity) getActivity()).expandPanel();
 
