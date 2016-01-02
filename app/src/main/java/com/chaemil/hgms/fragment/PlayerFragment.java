@@ -26,6 +26,7 @@ import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.BitmapUtils;
+import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -73,6 +74,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private ViewGroup rootView;
     private RelativeLayout mainLayout;
     private ImageView fullscreen;
+    private RelativeLayout.LayoutParams videoWrapperParamsFullscreen;
+    private RelativeLayout.LayoutParams videoWrapperParamsNormal;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -167,6 +170,18 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         videoView.setOnPreparedListener(this);
         miniPlayerPause.setOnClickListener(this);
         fullscreen.setOnClickListener(this);
+
+        int bottomMargin = (int) DimensUtils.pxFromDp(getActivity(),
+                getResources().getInteger(R.integer.video_player_wrapper_bottom_margin));
+
+        videoWrapperParamsNormal = (RelativeLayout.LayoutParams) videoWrapper.getLayoutParams();
+        videoWrapperParamsNormal.setMargins(16, 16, 16, bottomMargin);  // left, top, right, bottom
+        videoWrapper.setLayoutParams(videoWrapperParamsNormal);
+
+        videoWrapperParamsFullscreen = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        videoWrapperParamsFullscreen.setMargins(0, 0, 0, 0);  // left, top, right, bottom
+
     }
 
     @Override
@@ -225,7 +240,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             if(!playAudio) {
                 if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
 
-                    //((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(false);
                     ((BaseActivity) getActivity()).setFullscreen(true);
                     ((MainActivity) getActivity()).getPanelLayout().setTouchEnabled(false);
 
@@ -234,13 +248,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                     progressBar.setVisibility(View.GONE);
                     playerBg.setVisibility(View.GONE);
 
-                    RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) videoWrapper.getLayoutParams();
-                    relativeParams.setMargins(0, 0, 0, 0);  // left, top, right, bottom
-                    videoWrapper.setLayoutParams(relativeParams);
+                    videoWrapper.setLayoutParams(videoWrapperParamsFullscreen);
 
                 } else {
 
-                    //((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(true);
                     ((BaseActivity) getActivity()).setFullscreen(false);
                     ((MainActivity) getActivity()).getPanelLayout().setTouchEnabled(true);
 
@@ -249,9 +260,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                     progressBar.setVisibility(View.VISIBLE);
                     playerBg.setVisibility(View.VISIBLE);
 
-                    RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) videoWrapper.getLayoutParams();
-                    relativeParams.setMargins(16, 16, 16, 16);  // left, top, right, bottom
-                    videoWrapper.setLayoutParams(relativeParams);
+                    videoWrapper.setLayoutParams(videoWrapperParamsNormal);
                 }
             }
         }

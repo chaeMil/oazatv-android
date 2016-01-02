@@ -106,6 +106,38 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/video_wrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_below="@+id/toolbars_wrapper"
+            android:layout_alignParentBottom="true">
+
+            <VideoView
+                android:alpha="0"
+                android:id="@+id/video_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true" />
+
+            <ImageView
+                android:alpha="0"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/audio_thumb"
+                android:layout_alignParentBottom="true" />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/buffer_bar"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="85dp"
             android:layout_above="@+id/seek_bar"
@@ -173,43 +205,10 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/video_wrapper"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/controls_wrapper"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:layout_below="@+id/toolbars_wrapper">
-
-            <VideoView
-                android:alpha="0"
-                android:id="@+id/video_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true" />
-
-            <ImageView
-                android:alpha="0"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/audio_thumb"
-                android:layout_alignParentBottom="true" />
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/buffer_bar"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
-
-        </RelativeLayout>
-
         <android.support.v7.widget.AppCompatSeekBar
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="24dp"
             android:id="@+id/seek_bar"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
