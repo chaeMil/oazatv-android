@@ -40,6 +40,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private static final String IMAGES_ALREADY_BLURRED = "images_already_blurred";
     private static final String MINI_PLAYER_DRAWABLE = "mini_player_drawable";
     private static final String BG_DRAWABLE = "bg_drawable";
+    private static final String CURRENT_TIME = "current_time";
     private ImageView playerBg;
     private RelativeLayout miniPlayer;
     private ImageView miniPlayerImageView;
@@ -73,6 +74,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+        videoView.pause();
+    }
+
+
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
@@ -101,6 +111,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         outState.putBoolean(IMAGES_ALREADY_BLURRED, imagesAlreadyBlurred);
         outState.putParcelable(MINI_PLAYER_DRAWABLE, BitmapUtils.drawableToBitmap(miniPlayerDrawable));
         outState.putParcelable(BG_DRAWABLE, BitmapUtils.drawableToBitmap(bgDrawable));
+        outState.putInt(CURRENT_TIME, videoView.getCurrentPosition());
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            videoView.seekTo(savedInstanceState.getInt(CURRENT_TIME));
+        }
     }
 
     private void getUI(ViewGroup rootView) {
@@ -311,7 +330,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         bufferBar.setVisibility(View.GONE);
         Picasso.with(getActivity()).load(video.getThumbFile()).into(audioThumb);
 
-                ((MainActivity) getActivity()).expandPanel();
+        ((MainActivity) getActivity()).expandPanel();
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

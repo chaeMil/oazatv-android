@@ -1,6 +1,8 @@
 package com.chaemil.hgms.fragment;
 
+import android.app.DownloadManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -20,6 +22,7 @@ import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.utils.EndlessRecyclerOnScrollListener;
 import com.chaemil.hgms.utils.HidingScrollListener;
 
 import org.json.JSONObject;
@@ -37,6 +40,7 @@ public class ArchiveFragment extends BaseFragment {
     private ProgressBar progress;
     private ArchiveAdapter archiveAdapter;
     private int actionBarHeight;
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,10 +79,29 @@ public class ArchiveFragment extends BaseFragment {
                 ((MainActivity) getActivity()).getPlayerFragment(),
                 archive);
 
-        archiveRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        archiveRecyclerView.setLayoutManager(linearLayoutManager);
         archiveRecyclerView.setAdapter(archiveAdapter);
+        archiveRecyclerView.addOnScrollListener(onScrollListener(linearLayoutManager));
 
         setupToolbarHiding();
+    }
+
+    private EndlessRecyclerOnScrollListener onScrollListener(LinearLayoutManager linearLayoutManager) {
+        return new EndlessRecyclerOnScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(final int currentPage) {
+                progress.setVisibility(View.VISIBLE);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        JsonObjectRequest loadMoreArchive = RequestFactory.getArchive(ArchiveFragment.this, currentPage);
+                        MyRequestService.getRequestQueue().add(loadMoreArchive);
+                    }
+                }, 2000);
+            }
+        };
     }
 
     private void getUI(ViewGroup rootView) {
@@ -87,7 +110,6 @@ public class ArchiveFragment extends BaseFragment {
     }
 
     public void setupToolbarHiding() {
-
 
         final LinearLayout appBar = ((MainActivity) getActivity()).getMainFragment().getAppBar();
 
