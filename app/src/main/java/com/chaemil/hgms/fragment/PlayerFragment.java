@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -67,6 +68,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private int bufferFail;
     private boolean playAudio;
     private ImageView audioThumb;
+    private RelativeLayout controlsWrapper;
+    private RelativeLayout videoWrapper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,7 +84,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         videoView.pause();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
 
+        playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -141,6 +151,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
         audioThumb = (ImageView) rootView.findViewById(R.id.audio_thumb);
+        controlsWrapper = (RelativeLayout) rootView.findViewById(R.id.controls_wrapper);
+        videoWrapper = (RelativeLayout) rootView.findViewById(R.id.video_wrapper);
     }
 
     private void setupUI() {
@@ -188,11 +200,27 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
     public void adjustLayout() {
         int currentOrientation = getResources().getConfiguration().orientation;
-        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
 
-        }
-        else {
+        if(!playAudio) {
+            if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                playerToolbar.setVisibility(View.GONE);
+                controlsWrapper.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+                playerBg.setVisibility(View.GONE);
 
+                RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) videoWrapper.getLayoutParams();
+                relativeParams.setMargins(0, 0, 0, 0);  // left, top, right, bottom
+                videoWrapper.setLayoutParams(relativeParams);
+            } else {
+                playerToolbar.setVisibility(View.VISIBLE);
+                controlsWrapper.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+                playerBg.setVisibility(View.VISIBLE);
+
+                RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) videoWrapper.getLayoutParams();
+                relativeParams.setMargins(16, 16, 16, 16);  // left, top, right, bottom
+                videoWrapper.setLayoutParams(relativeParams);
+            }
         }
     }
 

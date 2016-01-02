@@ -1,9 +1,11 @@
 package com.chaemil.hgms.activity;
 
 import android.app.FragmentTransaction;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
@@ -23,11 +25,15 @@ public class MainActivity extends BaseActivity implements
     private SlidingUpPanelLayout panelLayout;
     private PlayerFragment playerFragment;
     private MainFragment mainFragment;
+    private int currentOrientation;
 
     @Override
     protected void onResume() {
         super.onResume();
         adjustLayout();
+
+        currentOrientation = getResources().getConfiguration().orientation;
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
     }
 
     @Override
@@ -68,6 +74,8 @@ public class MainActivity extends BaseActivity implements
 
         adjustLayout();
         playerFragment.adjustLayout();
+
+        currentOrientation = getResources().getConfiguration().orientation;
     }
 
     private void adjustLayout() {
@@ -145,10 +153,24 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void onBackPressed() {
-        if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
-            panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) { //if player in fullscreen rotate screen to portrait
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+            //this will reset orientation back to sensor after 2 sec
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                }
+            }, 2000);
+
         } else {
-            super.onBackPressed();
+            if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
+                panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 

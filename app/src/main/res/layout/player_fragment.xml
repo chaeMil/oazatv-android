@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_gray"
+    android:background="@color/black"
     xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
@@ -151,38 +151,26 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/video_wrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
         android:layout_above="@+id/controls_wrapper"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:layout_alignParentTop="true">
+        android:layout_margin="16dp">
 
-
-        <RelativeLayout
-            android:id="@+id/video_wrapper"
-            android:layout_width="wrap_content"
+        <VideoView
+            android:alpha="0"
+            android:id="@+id/video_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_alignParentBottom="true" />
 
-            <VideoView
-                android:alpha="0"
-                android:id="@+id/video_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true" />
-
-            <ImageView
-                android:alpha="0"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/audio_thumb"
-                android:layout_alignParentBottom="true" />
-
-        </RelativeLayout>
-
+        <ImageView
+            android:alpha="0"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/audio_thumb"
+            android:layout_alignParentBottom="true" />
 
         <ProgressBar
             android:layout_width="wrap_content"
@@ -207,9 +195,7 @@
         android:progressTint="@color/transparent_white"
         android:thumbTint="@color/white"
         android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp" />
+        android:layout_marginBottom="24dp" />
 
 
 </RelativeLayout>
