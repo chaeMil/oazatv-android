@@ -30,6 +30,7 @@ import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.github.johnpersano.supertoasts.SuperToast;
 import com.squareup.picasso.Picasso;
 
 import at.markushi.ui.CircleButton;
@@ -90,10 +91,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         super.onPause();
 
         videoView.pause();
-        if (videoView != null && currentVideo != null) {
-            currentVideo.setCurrentTime(videoView.getCurrentPosition());
-            currentVideo.save();
-        }
 
     }
 
@@ -422,7 +419,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         }
     }
 
+    public void saveCurrentVideoTime() {
+        if (videoView != null && currentVideo != null) {
+            currentVideo.setCurrentTime(videoView.getCurrentPosition());
+            currentVideo.save();
+        }
+    }
+
     private void playNew(Video video, boolean playAudio) {
+
+        saveCurrentVideoTime();
+
         Video savedVideo = null;
 
         try {
@@ -433,6 +440,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         if (savedVideo != null) {
             this.currentVideo = savedVideo;
+
+            SuperToast.create(getActivity(),
+                    getString(R.string.resuming_from_saved_time),
+                    SuperToast.Duration.SHORT).show();
         } else {
             this.currentVideo = video;
         }

@@ -35,11 +35,13 @@
                 android:textColor="@color/dark_gray"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/thumb"
-                android:layout_toRightOf="@+id/thumb"
-                android:layout_toEndOf="@+id/thumb"
-                android:layout_marginRight="8dp"
-                android:maxLines="2"/>
+                android:maxLines="2"
+                android:layout_alignParentTop="true"
+                android:layout_alignLeft="@+id/date"
+                android:layout_alignStart="@+id/date"
+                android:layout_marginTop="8dp"
+                android:layout_toLeftOf="@+id/play_audio"
+                android:layout_toStartOf="@+id/play_audio" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -58,23 +60,21 @@
                 tools:text="532 views"
                 android:id="@+id/views"
                 android:textColor="@color/dark_gray"
-                android:layout_alignTop="@+id/date"
-                android:layout_toRightOf="@+id/date"
-                android:layout_alignRight="@+id/name"
-                android:layout_alignEnd="@+id/name"
-                android:layout_marginLeft="20dp"
-                android:gravity="right" />
+                android:gravity="right"
+                android:layout_below="@+id/date"
+                android:layout_toRightOf="@+id/thumb"
+                android:layout_toEndOf="@+id/thumb"
+                android:layout_marginTop="8dp" />
 
             <ImageView
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:id="@+id/play_audio"
-                android:layout_alignParentBottom="true"
+                android:src="@drawable/play_audio"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
-                android:src="@drawable/play_audio" />
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="2dp" />
 
         </RelativeLayout>
 

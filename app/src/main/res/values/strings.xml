@@ -13,4 +13,5 @@
     <string name="tutorial">Tutorial</string>
     <string name="views">views</string>
     <string name="downloaded">Downloaded</string>
+    <string name="resuming_from_saved_time">Resuming from saved time</string>
 </resources>
