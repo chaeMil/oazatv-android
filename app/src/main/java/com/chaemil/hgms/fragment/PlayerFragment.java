@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +22,7 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.BitmapUtils;
@@ -70,6 +70,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private ImageView audioThumb;
     private RelativeLayout controlsWrapper;
     private RelativeLayout videoWrapper;
+    private ViewGroup rootView;
+    private RelativeLayout mainLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +98,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(
+        rootView = (ViewGroup) inflater.inflate(
                 R.layout.player_fragment, container, false);
 
         if (savedInstanceState != null) {
@@ -146,13 +148,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         ff = (CircleButton) rootView.findViewById(R.id.ff);
         currentTime = (TextView) rootView.findViewById(R.id.current_time);
         totalTime = (TextView) rootView.findViewById(R.id.total_time);
-        progressBar = (AppCompatSeekBar) rootView.findViewById(R.id.progress_bar);
+        progressBar = (AppCompatSeekBar) rootView.findViewById(R.id.seek_bar);
         progressBar.setOnSeekBarChangeListener(this);
         miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
         audioThumb = (ImageView) rootView.findViewById(R.id.audio_thumb);
         controlsWrapper = (RelativeLayout) rootView.findViewById(R.id.controls_wrapper);
         videoWrapper = (RelativeLayout) rootView.findViewById(R.id.video_wrapper);
+        mainLayout = (RelativeLayout) rootView.findViewById(R.id.main_layout);
     }
 
     private void setupUI() {
@@ -203,6 +206,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         if(!playAudio) {
             if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+                if (mainLayout != null) {
+                    RelativeLayout.LayoutParams rootViewParams = (RelativeLayout.LayoutParams) mainLayout.getLayoutParams();
+                    rootViewParams.setMargins(0, 0, 0, 0);  // left, top, right, bottom
+                    mainLayout.setLayoutParams(rootViewParams);
+                }
+
+                ((BaseActivity) getActivity()).setFullscreen(true);
+
                 playerToolbar.setVisibility(View.GONE);
                 controlsWrapper.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);
@@ -211,7 +223,19 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) videoWrapper.getLayoutParams();
                 relativeParams.setMargins(0, 0, 0, 0);  // left, top, right, bottom
                 videoWrapper.setLayoutParams(relativeParams);
+
             } else {
+                if (mainLayout != null) {
+                    int statusBarHeight = ((BaseActivity) getActivity()).getStatusBarHeight();
+                    int navigationBarHeight = ((BaseActivity) getActivity()).getNavigationBarHeight();
+
+                    RelativeLayout.LayoutParams rootViewParams = (RelativeLayout.LayoutParams) mainLayout.getLayoutParams();
+                    rootViewParams.setMargins(0, statusBarHeight, 0, navigationBarHeight);  // left, top, right, bottom
+                    mainLayout.setLayoutParams(rootViewParams);
+                }
+
+                ((BaseActivity) getActivity()).setFullscreen(false);
+
                 playerToolbar.setVisibility(View.VISIBLE);
                 controlsWrapper.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.VISIBLE);

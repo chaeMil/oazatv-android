@@ -189,4 +189,8 @@ public class MainActivity extends BaseActivity implements
     public PlayerFragment getPlayerFragment() {
         return playerFragment;
     }
+
+    public SlidingUpPanelLayout getPanelLayout() {
+        return panelLayout;
+    }
 }

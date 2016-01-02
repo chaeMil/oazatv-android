@@ -12,6 +12,7 @@
     sothree:umanoDragView="@+id/mini_player">
 
     <RelativeLayout
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/main_layout">
