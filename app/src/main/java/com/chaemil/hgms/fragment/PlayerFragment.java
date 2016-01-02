@@ -1,5 +1,6 @@
 package com.chaemil.hgms.fragment;
 
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -29,6 +30,7 @@ import com.chaemil.hgms.utils.BitmapUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
 
 import at.markushi.ui.CircleButton;
@@ -46,7 +48,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private ImageView playerBg;
     private RelativeLayout miniPlayer;
     private ImageView miniPlayerImageView;
-    private Toolbar playerToolbar;
+    private RelativeLayout playerToolbar;
     private boolean imagesAlreadyBlurred = false;
     private BitmapDrawable miniPlayerDrawable;
     private BitmapDrawable bgDrawable;
@@ -72,6 +74,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private RelativeLayout videoWrapper;
     private ViewGroup rootView;
     private RelativeLayout mainLayout;
+    private ImageView fullscreen;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,8 +101,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = (ViewGroup) inflater.inflate(
-                R.layout.player_fragment, container, false);
+        rootView = (ViewGroup) inflater.inflate(R.layout.player_fragment, container, false);
 
         if (savedInstanceState != null) {
             imagesAlreadyBlurred = savedInstanceState.getBoolean(IMAGES_ALREADY_BLURRED);
@@ -140,7 +142,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         playerBg = (ImageView) rootView.findViewById(R.id.player_bg);
         miniPlayerImageView = (ImageView) rootView.findViewById(R.id.mini_player_image);
         miniPlayerText = (TextView) rootView.findViewById(R.id.mini_player_text);
-        playerToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        playerToolbar = (RelativeLayout) rootView.findViewById(R.id.toolbar);
         playerTitle = (TextView) rootView.findViewById(R.id.player_title);
         videoView = (VideoView) rootView.findViewById(R.id.video_view);
         playPause = (CircleButton) rootView.findViewById(R.id.play_pause);
@@ -156,16 +158,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         controlsWrapper = (RelativeLayout) rootView.findViewById(R.id.controls_wrapper);
         videoWrapper = (RelativeLayout) rootView.findViewById(R.id.video_wrapper);
         mainLayout = (RelativeLayout) rootView.findViewById(R.id.main_layout);
+        fullscreen = (ImageView) rootView.findViewById(R.id.fullscreen);
     }
 
     private void setupUI() {
-        //resizeAndBlurBg();
         playPause.setOnClickListener(this);
         rew.setOnClickListener(this);
         ff.setOnClickListener(this);
         videoView.setOnTouchListener(this);
         videoView.setOnPreparedListener(this);
         miniPlayerPause.setOnClickListener(this);
+        fullscreen.setOnClickListener(this);
     }
 
     @Override
@@ -187,6 +190,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             case R.id.mini_play_pause:
                 playPauseVideo();
                 break;
+            case R.id.fullscreen:
+                requestFullscreenPlayer();
+                break;
         }
     }
 
@@ -201,49 +207,54 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         return true;
     }
 
+    private void requestFullscreenPlayer() {
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        //this will reset orientation back to sensor after 2 sec
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+            }
+        }, 2000);
+    }
+
     public void adjustLayout() {
         int currentOrientation = getResources().getConfiguration().orientation;
 
-        if(!playAudio) {
-            if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (((MainActivity) getActivity()).getPanelState()) {
+            if(!playAudio) {
+                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
 
-                if (mainLayout != null) {
-                    RelativeLayout.LayoutParams rootViewParams = (RelativeLayout.LayoutParams) mainLayout.getLayoutParams();
-                    rootViewParams.setMargins(0, 0, 0, 0);  // left, top, right, bottom
-                    mainLayout.setLayoutParams(rootViewParams);
+                    //((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(false);
+                    ((BaseActivity) getActivity()).setFullscreen(true);
+                    ((MainActivity) getActivity()).getPanelLayout().setTouchEnabled(false);
+
+                    playerToolbar.setVisibility(View.GONE);
+                    controlsWrapper.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                    playerBg.setVisibility(View.GONE);
+
+                    RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) videoWrapper.getLayoutParams();
+                    relativeParams.setMargins(0, 0, 0, 0);  // left, top, right, bottom
+                    videoWrapper.setLayoutParams(relativeParams);
+
+                } else {
+
+                    //((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(true);
+                    ((BaseActivity) getActivity()).setFullscreen(false);
+                    ((MainActivity) getActivity()).getPanelLayout().setTouchEnabled(true);
+
+                    playerToolbar.setVisibility(View.VISIBLE);
+                    controlsWrapper.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
+                    playerBg.setVisibility(View.VISIBLE);
+
+                    RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) videoWrapper.getLayoutParams();
+                    relativeParams.setMargins(16, 16, 16, 16);  // left, top, right, bottom
+                    videoWrapper.setLayoutParams(relativeParams);
                 }
-
-                ((BaseActivity) getActivity()).setFullscreen(true);
-
-                playerToolbar.setVisibility(View.GONE);
-                controlsWrapper.setVisibility(View.GONE);
-                progressBar.setVisibility(View.GONE);
-                playerBg.setVisibility(View.GONE);
-
-                RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) videoWrapper.getLayoutParams();
-                relativeParams.setMargins(0, 0, 0, 0);  // left, top, right, bottom
-                videoWrapper.setLayoutParams(relativeParams);
-
-            } else {
-                if (mainLayout != null) {
-                    int statusBarHeight = ((BaseActivity) getActivity()).getStatusBarHeight();
-                    int navigationBarHeight = ((BaseActivity) getActivity()).getNavigationBarHeight();
-
-                    RelativeLayout.LayoutParams rootViewParams = (RelativeLayout.LayoutParams) mainLayout.getLayoutParams();
-                    rootViewParams.setMargins(0, statusBarHeight, 0, navigationBarHeight);  // left, top, right, bottom
-                    mainLayout.setLayoutParams(rootViewParams);
-                }
-
-                ((BaseActivity) getActivity()).setFullscreen(false);
-
-                playerToolbar.setVisibility(View.VISIBLE);
-                controlsWrapper.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.VISIBLE);
-                playerBg.setVisibility(View.VISIBLE);
-
-                RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) videoWrapper.getLayoutParams();
-                relativeParams.setMargins(16, 16, 16, 16);  // left, top, right, bottom
-                videoWrapper.setLayoutParams(relativeParams);
             }
         }
     }
@@ -415,7 +426,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         new ComputeImage().execute(null);
     }
 
-    public Toolbar getPlayerToolbar() {
+    public RelativeLayout getPlayerToolbar() {
         return playerToolbar;
     }
 
@@ -439,6 +450,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+    public boolean isPlayingAudio() {
+        return playAudio;
     }
 
     private class ComputeImage extends AsyncTask {

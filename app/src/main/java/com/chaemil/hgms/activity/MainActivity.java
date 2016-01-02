@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.fragment.MainFragment;
@@ -26,6 +27,7 @@ public class MainActivity extends BaseActivity implements
     private PlayerFragment playerFragment;
     private MainFragment mainFragment;
     private int currentOrientation;
+    private RelativeLayout mainRelativeLayout;
 
     @Override
     protected void onResume() {
@@ -48,6 +50,7 @@ public class MainActivity extends BaseActivity implements
     private void getUI() {
         panelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_up_panel_layout);
         playerFragment = ((PlayerFragment) getSupportFragmentManager().findFragmentByTag(PlayerFragment.TAG));
+        mainRelativeLayout = (RelativeLayout) findViewById(R.id.main_relative_layout);
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -121,12 +124,17 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void onPanelCollapsed(View panel) {
+        getPlayerFragment().adjustLayout();
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
 
+        } else {
+
+        }
     }
 
     @Override
     public void onPanelExpanded(View panel) {
-
+        getPlayerFragment().adjustLayout();
     }
 
     @Override
@@ -141,10 +149,12 @@ public class MainActivity extends BaseActivity implements
 
     public void expandPanel() {
         panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+        getPlayerFragment().adjustLayout();
     }
 
     public void colapsePanel() {
         panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        getPlayerFragment().adjustLayout();
     }
 
     public void hidePanel() {
@@ -153,7 +163,9 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void onBackPressed() {
-        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) { //if player in fullscreen rotate screen to portrait
+
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE
+                && !getPlayerFragment().isPlayingAudio()) { //if player in fullscreen rotate screen to portrait
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
             //this will reset orientation back to sensor after 2 sec
@@ -165,12 +177,10 @@ public class MainActivity extends BaseActivity implements
                 }
             }, 2000);
 
-        } else {
-            if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
+        } else if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
                 panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-            } else {
-                super.onBackPressed();
-            }
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -192,5 +202,21 @@ public class MainActivity extends BaseActivity implements
 
     public SlidingUpPanelLayout getPanelLayout() {
         return panelLayout;
+    }
+
+    public RelativeLayout getMainRelativeLayout() {
+        return mainRelativeLayout;
+    }
+
+    public boolean getPanelState() {
+        if (panelLayout != null) {
+            if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }
