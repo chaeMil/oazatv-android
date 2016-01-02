@@ -125,11 +125,6 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onPanelCollapsed(View panel) {
         getPlayerFragment().adjustLayout();
-        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-        } else {
-
-        }
     }
 
     @Override

@@ -37,7 +37,8 @@ import at.markushi.ui.CircleButton;
 /**
  * Created by chaemil on 2.12.15.
  */
-public class PlayerFragment extends Fragment implements View.OnClickListener, View.OnTouchListener, MediaPlayer.OnPreparedListener, SeekBar.OnSeekBarChangeListener {
+public class PlayerFragment extends Fragment implements View.OnClickListener, View.OnTouchListener,
+        MediaPlayer.OnPreparedListener, SeekBar.OnSeekBarChangeListener {
 
     public static final String TAG = "player_fragment";
     private static final String IMAGES_ALREADY_BLURRED = "images_already_blurred";
@@ -61,7 +62,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private TextView totalTime;
     private int duration;
     private int currentTimeInt;
-    private AppCompatSeekBar progressBar;
+    private AppCompatSeekBar seekBar;
     private Bitmap thumb;
     private Video currentVideo;
     private CircleButton miniPlayerPause;
@@ -76,6 +77,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private ImageView fullscreen;
     private RelativeLayout.LayoutParams videoWrapperParamsFullscreen;
     private RelativeLayout.LayoutParams videoWrapperParamsNormal;
+    private int currentOrientation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -151,8 +153,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         ff = (CircleButton) rootView.findViewById(R.id.ff);
         currentTime = (TextView) rootView.findViewById(R.id.current_time);
         totalTime = (TextView) rootView.findViewById(R.id.total_time);
-        progressBar = (AppCompatSeekBar) rootView.findViewById(R.id.seek_bar);
-        progressBar.setOnSeekBarChangeListener(this);
+        seekBar = (AppCompatSeekBar) rootView.findViewById(R.id.seek_bar);
+        seekBar.setOnSeekBarChangeListener(this);
         miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
         audioThumb = (ImageView) rootView.findViewById(R.id.audio_thumb);
@@ -213,7 +215,23 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     public boolean onTouch(View v, MotionEvent event) {
         switch(v.getId()) {
             case R.id.video_view:
-                //do nothing
+                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    toggleControls(true);
+
+                    if (videoView.isPlaying()) {
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                                    ((BaseActivity) getActivity()).setFullscreen(true);
+                                    toggleControls(false);
+                                }
+                            }
+                        }, 4000);
+                    }
+                }
                 break;
         }
 
@@ -222,6 +240,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
     private void requestFullscreenPlayer() {
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        toggleControls(false);
 
         //this will reset orientation back to sensor after 2 sec
         Handler handler = new Handler();
@@ -234,34 +254,65 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     }
 
     public void adjustLayout() {
-        int currentOrientation = getResources().getConfiguration().orientation;
+        currentOrientation = getResources().getConfiguration().orientation;
 
         if (((MainActivity) getActivity()).isPanelExpanded()) {
+
+            videoWrapper.setVisibility(View.VISIBLE);
+
             if(!playAudio) {
                 if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
 
                     ((BaseActivity) getActivity()).setFullscreen(true);
-                    ((MainActivity) getActivity()).getPanelLayout().setTouchEnabled(false);
+                    getActivity().getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.black));
 
                     playerToolbar.setVisibility(View.GONE);
-                    controlsWrapper.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.GONE);
                     playerBg.setVisibility(View.GONE);
 
                     videoWrapper.setLayoutParams(videoWrapperParamsFullscreen);
+                    toggleControls(false);
 
                 } else {
 
                     ((BaseActivity) getActivity()).setFullscreen(false);
-                    ((MainActivity) getActivity()).getPanelLayout().setTouchEnabled(true);
+                    getActivity().getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.white));
 
                     playerToolbar.setVisibility(View.VISIBLE);
-                    controlsWrapper.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.VISIBLE);
                     playerBg.setVisibility(View.VISIBLE);
 
                     videoWrapper.setLayoutParams(videoWrapperParamsNormal);
+                    toggleControls(true);
                 }
+            }
+        } else {
+
+            if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                videoWrapper.setVisibility(View.GONE);
+            } else {
+                videoWrapper.setVisibility(View.VISIBLE);
+            }
+
+        }
+    }
+
+    private void toggleControls(boolean visible) {
+        if (visible) {
+            if (controlsWrapper.getVisibility() != View.VISIBLE) {
+                controlsWrapper.setVisibility(View.VISIBLE);
+                YoYo.with(Techniques.BounceInUp).duration(400).playOn(controlsWrapper);
+            }
+        } else {
+            if (controlsWrapper.getVisibility() != View.GONE) {
+                YoYo.with(Techniques.FadeOutDown).duration(400).playOn(controlsWrapper);
+                YoYo.with(Techniques.FadeIn).duration(400).playOn(seekBar);
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        controlsWrapper.setVisibility(View.GONE);
+                    }
+                }, 400);
             }
         }
     }
@@ -269,8 +320,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     @Override
     public void onPrepared(MediaPlayer mp) {
         duration = videoView.getDuration();
-        progressBar.setMax(duration);
-        progressBar.postDelayed(onEverySecond, 1000);
+        seekBar.setMax(duration);
+        seekBar.postDelayed(onEverySecond, 1000);
         if (!playAudio) {
             YoYo.with(Techniques.FadeIn).duration(350).delay(250).playOn(videoView);
         }
@@ -303,13 +354,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private Runnable onEverySecond = new Runnable() {
         @Override
         public void run(){
-            if (progressBar != null) {
-                progressBar.setProgress(videoView.getCurrentPosition());
+            if (seekBar != null) {
+                seekBar.setProgress(videoView.getCurrentPosition());
             }
 
             if (videoView.isPlaying()) {
-                if (progressBar != null) {
-                    progressBar.postDelayed(onEverySecond, 1000);
+                if (seekBar != null) {
+                    seekBar.postDelayed(onEverySecond, 1000);
                 }
                 updateTime();
             }
@@ -344,8 +395,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             videoView.start();
             playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
             miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-            if (progressBar != null) {
-                progressBar.postDelayed(onEverySecond, 1000);
+            if (seekBar != null) {
+                seekBar.postDelayed(onEverySecond, 1000);
             }
         }
     }
