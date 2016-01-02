@@ -7,6 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
+        android:clickable="true"
         android:id="@+id/player_bg_wrapper"
         android:alpha="0.5"
         android:layout_width="match_parent"
@@ -59,8 +60,8 @@
             android:id="@+id/mini_play_pause"
             android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:src="@android:drawable/ic_media_pause"
-            app:cb_color="@color/colorAccent"
+            android:src="@drawable/pause"
+            app:cb_color="@color/transparent_white"
             app:cb_pressedRingWidth="3dip"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
@@ -118,8 +119,8 @@
             android:id="@+id/play_pause"
             android:layout_width="85dp"
             android:layout_height="85dp"
-            android:src="@android:drawable/ic_media_pause"
-            app:cb_color="@color/colorAccent"
+            android:src="@drawable/pause"
+            app:cb_color="@color/transparent_white"
             app:cb_pressedRingWidth="3dip"
             android:layout_alignParentTop="false"
             android:layout_centerHorizontal="true"
@@ -129,8 +130,8 @@
             android:id="@+id/rew"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@android:drawable/ic_media_rew"
-            app:cb_color="@color/colorAccent"
+            android:src="@drawable/rew"
+            app:cb_color="@color/transparent_white"
             app:cb_pressedRingWidth="3dip"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/play_pause"
@@ -140,8 +141,8 @@
             android:id="@+id/ff"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@android:drawable/ic_media_ff"
-            app:cb_color="@color/colorAccent"
+            android:src="@drawable/ff"
+            app:cb_color="@color/transparent_white"
             app:cb_pressedRingWidth="3dip"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/play_pause"
@@ -192,7 +193,7 @@
 
     </RelativeLayout>
 
-    <SeekBar
+    <android.support.v7.widget.AppCompatSeekBar
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -203,6 +204,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         tools:progress="14"
+        android:progressTint="@color/transparent_white"
+        android:thumbTint="@color/white"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp"
         android:layout_marginLeft="2dp"

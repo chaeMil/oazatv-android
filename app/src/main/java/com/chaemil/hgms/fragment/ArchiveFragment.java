@@ -81,6 +81,7 @@ public class ArchiveFragment extends BaseFragment {
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
         archiveRecyclerView.setLayoutManager(linearLayoutManager);
+        archiveRecyclerView.setHasFixedSize(true);
         archiveRecyclerView.setAdapter(archiveAdapter);
         archiveRecyclerView.addOnScrollListener(onScrollListener(linearLayoutManager));
 

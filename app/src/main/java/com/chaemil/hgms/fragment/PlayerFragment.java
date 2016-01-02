@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -58,7 +59,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private TextView totalTime;
     private int duration;
     private int currentTimeInt;
-    private SeekBar progressBar;
+    private AppCompatSeekBar progressBar;
     private Bitmap thumb;
     private Video currentVideo;
     private CircleButton miniPlayerPause;
@@ -135,7 +136,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         ff = (CircleButton) rootView.findViewById(R.id.ff);
         currentTime = (TextView) rootView.findViewById(R.id.current_time);
         totalTime = (TextView) rootView.findViewById(R.id.total_time);
-        progressBar = (SeekBar) rootView.findViewById(R.id.progress_bar);
+        progressBar = (AppCompatSeekBar) rootView.findViewById(R.id.progress_bar);
         progressBar.setOnSeekBarChangeListener(this);
         miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
@@ -267,8 +268,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private void playPauseVideo() {
         if (videoView.isPlaying()) {
             videoView.pause();
+            playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
         } else {
             videoView.start();
+            playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
             if (progressBar != null) {
                 progressBar.postDelayed(onEverySecond, 1000);
             }
