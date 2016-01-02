@@ -290,10 +290,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         }
     }
 
-    public void playNewVideo(final Video video) {
-
+    private void playNew(Video video, boolean playAudio) {
         this.currentVideo = video;
-        playAudio = false;
+        this.playAudio = playAudio;
+
+        playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
 
         miniPlayerText.setText(video.getName());
         playerTitle.setText(video.getName());
@@ -302,6 +304,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         bufferBar.setVisibility(View.VISIBLE);
 
         ((MainActivity) getActivity()).expandPanel();
+    }
+
+    public void playNewVideo(final Video video) {
+
+        playNew(video, false);
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -325,17 +332,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
     public void playNewAudio(final Video video) {
 
-        this.currentVideo = video;
-        playAudio = true;
+        playNew(video, true);
 
-        miniPlayerText.setText(video.getName());
-        playerTitle.setText(video.getName());
-        videoView.setAlpha(0);
-        audioThumb.setAlpha(0);
         bufferBar.setVisibility(View.GONE);
         Picasso.with(getActivity()).load(video.getThumbFile()).into(audioThumb);
-
-        ((MainActivity) getActivity()).expandPanel();
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
