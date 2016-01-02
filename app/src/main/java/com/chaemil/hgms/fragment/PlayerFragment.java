@@ -90,6 +90,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         super.onPause();
 
         videoView.pause();
+        if (videoView != null && currentVideo != null) {
+            currentVideo.setCurrentTime(videoView.getCurrentPosition());
+            currentVideo.save();
+        }
+
     }
 
     @Override
@@ -98,6 +103,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+
+        if (currentVideo != null) {
+            videoView.seekTo(currentVideo.getCurrentTime());
+        }
 
     }
 
@@ -264,7 +273,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
 
                     ((BaseActivity) getActivity()).setFullscreen(true);
-                    getActivity().getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.black));
+                    getActivity().getWindow().getDecorView()
+                            .setBackgroundColor(getResources().getColor(R.color.black));
 
                     playerToolbar.setVisibility(View.GONE);
                     playerBg.setVisibility(View.GONE);
@@ -275,7 +285,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 } else {
 
                     ((BaseActivity) getActivity()).setFullscreen(false);
-                    getActivity().getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.white));
+                    getActivity().getWindow().getDecorView()
+                            .setBackgroundColor(getResources().getColor(R.color.white));
 
                     playerToolbar.setVisibility(View.VISIBLE);
                     playerBg.setVisibility(View.VISIBLE);
@@ -380,7 +391,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         if(dHours == 0){
             currentTime.setText(String.format("%02d:%02d", cMinutes, cSeconds));
             totalTime.setText(String.format("%02d:%02d", dMinutes, dSeconds));
-        }else{
+        } else{
             currentTime.setText(String.format("%02d:%02d:%02d", cHours, cMinutes, cSeconds));
             totalTime.setText(String.format("%02d:%02d:%02d", dHours, dMinutes, dSeconds));
         }
@@ -412,7 +423,20 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     }
 
     private void playNew(Video video, boolean playAudio) {
-        this.currentVideo = video;
+        Video savedVideo = null;
+
+        try {
+            savedVideo = Video.findByServerId(video.getServerId());
+        } catch (Exception e) {
+            SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
+        }
+
+        if (savedVideo != null) {
+            this.currentVideo = savedVideo;
+        } else {
+            this.currentVideo = video;
+        }
+
         this.playAudio = playAudio;
 
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
@@ -446,6 +470,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 videoView.stopPlayback();
                 videoView.setVideoPath(video.getVideoFile());
                 videoView.start();
+                videoView.seekTo(currentVideo.getCurrentTime());
 
             }
         }, 500);
@@ -474,6 +499,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 videoView.stopPlayback();
                 videoView.setVideoPath(video.getAudioFile());
                 videoView.start();
+                videoView.seekTo(currentVideo.getCurrentTime());
 
                 audioThumb.setAlpha(255);
                 YoYo.with(Techniques.FadeIn).duration(350).playOn(audioThumb);

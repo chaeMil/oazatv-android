@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.chaemil.hgms.service.MyRequestService;
+import com.orm.SugarContext;
 
 /**
  * Created by chaemil on 3.12.15.
@@ -16,5 +17,6 @@ public class OazaApp extends Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
         MyRequestService.init(this);
+        SugarContext.init(this);
     }
 }

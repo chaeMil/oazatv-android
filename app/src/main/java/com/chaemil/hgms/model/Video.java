@@ -3,6 +3,7 @@ package com.chaemil.hgms.model;
 import com.chaemil.hgms.utils.Constants;
 import com.orm.SugarRecord;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -25,6 +26,7 @@ public class Video extends SugarRecord {
     private String descriptionCS;
     private String descriptionEN;
     private boolean downloaded;
+    private int currentTime;
 
     public Video() {
     }
@@ -57,6 +59,11 @@ public class Video extends SugarRecord {
             return false;
         }
 
+    }
+
+    public static Video findByServerId(int serverId) {
+        List<Video> videos = Video.find(Video.class, "server_id = ?", String.valueOf(serverId));
+        return videos.get(0);
     }
 
     public String getName() {
@@ -140,5 +147,13 @@ public class Video extends SugarRecord {
 
     public boolean isDownloaded() {
         return downloaded;
+    }
+
+    public int getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(int currentTime) {
+        this.currentTime = currentTime;
     }
 }
