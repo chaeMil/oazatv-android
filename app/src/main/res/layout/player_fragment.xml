@@ -29,75 +29,80 @@
 
 
         <RelativeLayout
-            android:visibility="gone"
-            tools:visibility="visible"
-            android:id="@+id/toolbar"
-            android:background="@color/transparent_black"
+            android:id="@+id/toolbars_wrapper"
             android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:id="@+id/player_title"
-                tools:text="Show player"
-                android:textSize="18sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="16dp" />
+            <RelativeLayout
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:id="@+id/toolbar"
+                android:background="@color/transparent_black"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize">
 
-            <ImageView
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:id="@+id/fullscreen"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="8dp"
-                android:background="@drawable/fullscreen" />
+                <TextView
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:id="@+id/player_title"
+                    tools:text="Show player"
+                    android:textSize="18sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp" />
 
-        </RelativeLayout>
+                <ImageView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:id="@+id/fullscreen"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="8dp"
+                    android:background="@drawable/fullscreen" />
 
+            </RelativeLayout>
 
-        <RelativeLayout
-            android:visibility="visible"
-            tools:visibility="gone"
-            android:id="@+id/mini_player"
-            android:background="@color/black"
-            android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize">
+            <RelativeLayout
+                android:visibility="visible"
+                tools:visibility="gone"
+                android:id="@+id/mini_player"
+                android:background="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize">
 
-            <ImageView
-                android:scaleType="centerCrop"
-                android:id="@+id/mini_player_image"
-                android:layout_width="?android:attr/actionBarSize"
-                android:layout_height="?android:attr/actionBarSize" />
+                <ImageView
+                    android:scaleType="centerCrop"
+                    android:id="@+id/mini_player_image"
+                    android:layout_width="?android:attr/actionBarSize"
+                    android:layout_height="?android:attr/actionBarSize" />
 
-            <at.markushi.ui.CircleButton
-                android:id="@+id/mini_play_pause"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/pause"
-                app:cb_color="@color/transparent_white"
-                app:cb_pressedRingWidth="3dip"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                <at.markushi.ui.CircleButton
+                    android:id="@+id/mini_play_pause"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/pause"
+                    app:cb_color="@color/transparent_white"
+                    app:cb_pressedRingWidth="3dip"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="Show player"
-                android:textSize="18dp"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:id="@+id/mini_player_text"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/mini_player_image"
-                android:layout_toEndOf="@+id/mini_player_image"
-                android:layout_marginLeft="16dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Show player"
+                    android:textSize="18dp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:id="@+id/mini_player_text"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/mini_player_image"
+                    android:layout_toEndOf="@+id/mini_player_image"
+                    android:layout_marginLeft="16dp" />
 
+            </RelativeLayout>
         </RelativeLayout>
 
         <RelativeLayout
@@ -170,13 +175,13 @@
 
         <RelativeLayout
             android:id="@+id/video_wrapper"
-            android:layout_marginTop="?android:attr/actionBarSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/controls_wrapper"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            android:layout_below="@+id/toolbars_wrapper">
 
             <VideoView
                 android:alpha="0"

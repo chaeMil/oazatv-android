@@ -208,7 +208,7 @@ public class MainActivity extends BaseActivity implements
         return mainRelativeLayout;
     }
 
-    public boolean getPanelState() {
+    public boolean isPanelExpanded() {
         if (panelLayout != null) {
             if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
                 return true;

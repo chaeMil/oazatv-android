@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSeekBar;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,7 +29,6 @@ import com.chaemil.hgms.utils.BitmapUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
 
 import at.markushi.ui.CircleButton;
@@ -223,7 +221,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     public void adjustLayout() {
         int currentOrientation = getResources().getConfiguration().orientation;
 
-        if (((MainActivity) getActivity()).getPanelState()) {
+        if (((MainActivity) getActivity()).isPanelExpanded()) {
             if(!playAudio) {
                 if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
 
@@ -372,6 +370,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     public void playNewVideo(final Video video) {
 
         playNew(video, false);
+        fullscreen.setVisibility(View.VISIBLE);
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -396,6 +395,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     public void playNewAudio(final Video video) {
 
         playNew(video, true);
+        fullscreen.setVisibility(View.GONE);
 
         bufferBar.setVisibility(View.GONE);
         Picasso.with(getActivity()).load(video.getThumbFile()).into(audioThumb);
