@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.fragment.ArchiveFragment;
 import com.chaemil.hgms.fragment.MainFragment;
 import com.chaemil.hgms.fragment.PlayerFragment;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -82,7 +83,8 @@ public class MainActivity extends BaseActivity implements
         super.onConfigurationChanged(newConfig);
 
         adjustLayout();
-        playerFragment.adjustLayout();
+        getPlayerFragment().adjustLayout();
+        getMainFragment().getArchiveFragment().adjustLayout();
 
         currentOrientation = getResources().getConfiguration().orientation;
     }

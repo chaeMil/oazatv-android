@@ -1,8 +1,8 @@
 package com.chaemil.hgms.fragment;
 
-import android.app.DownloadManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -40,7 +40,8 @@ public class ArchiveFragment extends BaseFragment {
     private ProgressBar progress;
     private ArchiveAdapter archiveAdapter;
     private int actionBarHeight;
-    private LinearLayoutManager linearLayoutManager;
+    private LinearLayoutManager gridLayoutManager;
+    private LinearLayout appBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,13 +80,23 @@ public class ArchiveFragment extends BaseFragment {
                 ((MainActivity) getActivity()).getPlayerFragment(),
                 archive);
 
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        archiveRecyclerView.setLayoutManager(linearLayoutManager);
+        gridLayoutManager = new GridLayoutManager(getActivity(), 1);
+        archiveRecyclerView.setLayoutManager(gridLayoutManager);
         archiveRecyclerView.setHasFixedSize(true);
         archiveRecyclerView.setAdapter(archiveAdapter);
-        archiveRecyclerView.addOnScrollListener(onScrollListener(linearLayoutManager));
+        archiveRecyclerView.addOnScrollListener(onScrollListener(gridLayoutManager));
 
         setupToolbarHiding();
+
+        adjustLayout();
+    }
+
+    public void adjustLayout() {
+
+        final int columns = getResources().getInteger(R.integer.archive_columns);
+        gridLayoutManager = new GridLayoutManager(getActivity(), columns);
+        archiveRecyclerView.setLayoutManager(gridLayoutManager);
+
     }
 
     private EndlessRecyclerOnScrollListener onScrollListener(LinearLayoutManager linearLayoutManager) {
@@ -108,11 +119,10 @@ public class ArchiveFragment extends BaseFragment {
     private void getUI(ViewGroup rootView) {
         archiveRecyclerView = (RecyclerView) rootView.findViewById(R.id.archive_recycler_view);
         progress = (ProgressBar) rootView.findViewById(R.id.progress);
+        appBar = ((MainActivity) getActivity()).getMainFragment().getAppBar();
     }
 
     public void setupToolbarHiding() {
-
-        final LinearLayout appBar = ((MainActivity) getActivity()).getMainFragment().getAppBar();
 
         archiveRecyclerView.setOnScrollListener(new HidingScrollListener(actionBarHeight) {
             @Override
