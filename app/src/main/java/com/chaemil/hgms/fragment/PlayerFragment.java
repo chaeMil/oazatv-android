@@ -642,7 +642,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         @Override
         protected Object doInBackground(Object[] params) {
 
-            if (!imagesAlreadyBlurred && thumb != null && playerBg == null) {
+            if (!imagesAlreadyBlurred && thumb != null) {
                 SmartLog.Log(SmartLog.LogLevel.DEBUG, "resizeAndBlurBg", "blurring bg image");
                 Bitmap originalBitmap = thumb;
                 Bitmap blurredPlayerBitmap = BitmapUtils.blur(getContext(), originalBitmap, 25);
