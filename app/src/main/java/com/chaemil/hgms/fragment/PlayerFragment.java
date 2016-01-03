@@ -246,7 +246,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                                     toggleControls(false);
                                 }
                             }
-                        }, 4000);
+                        }, 5000);
                     }
                 }
                 break;
