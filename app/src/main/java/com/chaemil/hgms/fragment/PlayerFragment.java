@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,6 +33,8 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 
 import at.markushi.ui.CircleButton;
 
@@ -79,6 +82,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private RelativeLayout.LayoutParams videoWrapperParamsFullscreen;
     private RelativeLayout.LayoutParams videoWrapperParamsNormal;
     private int currentOrientation;
+    private MediaPlayer audioPlayer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,8 +137,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(IMAGES_ALREADY_BLURRED, imagesAlreadyBlurred);
-        outState.putParcelable(MINI_PLAYER_DRAWABLE, BitmapUtils.drawableToBitmap(miniPlayerDrawable));
-        outState.putParcelable(BG_DRAWABLE, BitmapUtils.drawableToBitmap(bgDrawable));
+        if (miniPlayerDrawable != null) {
+            outState.putParcelable(MINI_PLAYER_DRAWABLE, BitmapUtils.drawableToBitmap(miniPlayerDrawable));
+        }
+        if (bgDrawable != null) {
+            outState.putParcelable(BG_DRAWABLE, BitmapUtils.drawableToBitmap(bgDrawable));
+        }
         outState.putInt(CURRENT_TIME, videoView.getCurrentPosition());
     }
 
@@ -199,13 +207,21 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 playPauseVideo();
                 break;
             case R.id.rew:
-                if (videoView.canSeekBackward()) {
-                    videoView.seekTo(videoView.getCurrentPosition() - 10000);
+                if (audioPlayer != null) {
+                    audioPlayer.seekTo(audioPlayer.getCurrentPosition() - 10000);
+                } else {
+                    if (videoView.canSeekBackward()) {
+                        videoView.seekTo(videoView.getCurrentPosition() - 10000);
+                    }
                 }
                 break;
             case R.id.ff:
-                if (videoView.canSeekForward()) {
-                    videoView.seekTo(videoView.getCurrentPosition() + 10000);
+                if (audioPlayer != null) {
+                    audioPlayer.seekTo(audioPlayer.getCurrentPosition() + 10000);
+                } else {
+                    if (videoView.canSeekForward()) {
+                        videoView.seekTo(videoView.getCurrentPosition() + 10000);
+                    }
                 }
                 break;
             case R.id.mini_play_pause:
@@ -327,7 +343,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        duration = videoView.getDuration();
+        if (audioPlayer != null) {
+            audioPlayer.start();
+            audioPlayer.seekTo(currentVideo.getCurrentTime());
+            duration = audioPlayer.getDuration();
+        } else {
+            duration = videoView.getDuration();
+        }
+
         seekBar.setMax(duration);
         seekBar.postDelayed(onEverySecond, 1000);
         if (!playAudio) {
@@ -337,6 +360,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
             @Override
             public void onBufferingUpdate(MediaPlayer mp, int percent) {
+
                 float temp = ((float) mp.getCurrentPosition() / (float) mp.getDuration()) * 100;
                 if (Math.abs(percent - temp) < 1) {
                     bufferFail++;
@@ -363,10 +387,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         @Override
         public void run(){
             if (seekBar != null) {
-                seekBar.setProgress(videoView.getCurrentPosition());
+                if (audioPlayer != null) {
+                    seekBar.setProgress(audioPlayer.getCurrentPosition());
+                } else {
+                    seekBar.setProgress(videoView.getCurrentPosition());
+                }
             }
 
-            if (videoView.isPlaying()) {
+            if (videoView.isPlaying() || (audioPlayer != null && audioPlayer.isPlaying())) {
                 if (seekBar != null) {
                     seekBar.postDelayed(onEverySecond, 1000);
                 }
@@ -376,7 +404,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     };
 
     private void updateTime() {
-        currentTimeInt = videoView.getCurrentPosition();
+        if (audioPlayer != null) {
+            currentTimeInt = audioPlayer.getCurrentPosition();
+        } else {
+            currentTimeInt = videoView.getCurrentPosition();
+        }
+
         int dSeconds = (duration / 1000) % 60 ;
         int dMinutes = ((duration / (1000*60)) % 60);
         int dHours   = ((duration / (1000*60*60)) % 24);
@@ -395,16 +428,31 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     }
 
     private void playPauseVideo() {
-        if (videoView.isPlaying()) {
-            videoView.pause();
-            playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
-            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+        if (audioPlayer != null) {
+            if (audioPlayer.isPlaying()) {
+                audioPlayer.pause();
+                playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+                miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+            } else {
+                audioPlayer.start();
+                playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+                miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+                if (seekBar != null) {
+                    seekBar.postDelayed(onEverySecond, 1000);
+                }
+            }
         } else {
-            videoView.start();
-            playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-            if (seekBar != null) {
-                seekBar.postDelayed(onEverySecond, 1000);
+            if (videoView.isPlaying()) {
+                videoView.pause();
+                playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+                miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+            } else {
+                videoView.start();
+                playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+                miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+                if (seekBar != null) {
+                    seekBar.postDelayed(onEverySecond, 1000);
+                }
             }
         }
     }
@@ -421,7 +469,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
     public void saveCurrentVideoTime() {
         if (videoView != null && currentVideo != null) {
-            currentVideo.setCurrentTime(videoView.getCurrentPosition());
+            if (audioPlayer != null) {
+                currentVideo.setCurrentTime(audioPlayer.getCurrentPosition());
+            } else {
+                currentVideo.setCurrentTime(videoView.getCurrentPosition());
+            }
             currentVideo.save();
         }
     }
@@ -429,6 +481,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private void playNew(Video video, boolean playAudio) {
 
         saveCurrentVideoTime();
+
+        if (audioPlayer != null) {
+            audioPlayer.stop();
+        }
+        audioPlayer = null;
 
         Video savedVideo = null;
 
@@ -458,6 +515,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         videoView.setAlpha(0);
         audioThumb.setAlpha(0);
         bufferBar.setVisibility(View.VISIBLE);
+
+        currentTime.setText("00:00:00");
+        totalTime.setText("???");
 
         ((MainActivity) getActivity()).expandPanel();
     }
@@ -508,9 +568,21 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 resizeAndBlurBg();
 
                 videoView.stopPlayback();
-                videoView.setVideoPath(video.getAudioFile());
-                videoView.start();
-                videoView.seekTo(currentVideo.getCurrentTime());
+
+                audioPlayer = new MediaPlayer();
+                try {
+                    audioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    audioPlayer.setDataSource(video.getAudioFile());
+                    audioPlayer.prepare();
+                    audioPlayer.setLooping(false);
+
+                    audioPlayer.setOnPreparedListener(PlayerFragment.this);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    SuperToast.create(getActivity(),
+                            getString(R.string.cannot_play_audio_file),
+                            SuperToast.Duration.SHORT).show();
+                }
 
                 audioThumb.setAlpha(255);
                 YoYo.with(Techniques.FadeIn).duration(350).playOn(audioThumb);
@@ -534,7 +606,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (fromUser) {
-            videoView.seekTo(progress);
+            if (audioPlayer != null) {
+                audioPlayer.seekTo(progress);
+            } else {
+                videoView.seekTo(progress);
+            }
             updateTime();
         }
     }
