@@ -54,7 +54,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     private ImageView miniPlayerImageView;
     private RelativeLayout playerToolbar;
     private boolean imagesAlreadyBlurred = false;
-    private BitmapDrawable miniPlayerDrawable;
     private BitmapDrawable bgDrawable;
     private TextView miniPlayerText;
     private TextView playerTitle;
@@ -102,8 +101,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     public void onResume() {
         super.onResume();
 
-        playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+        if (audioPlayer == null) {
+            playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+        }
 
         if (currentVideo != null) {
             videoView.seekTo(currentVideo.getCurrentTime());
@@ -118,9 +119,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         if (savedInstanceState != null) {
             imagesAlreadyBlurred = savedInstanceState.getBoolean(IMAGES_ALREADY_BLURRED);
-
-            miniPlayerDrawable = new BitmapDrawable(getResources(),
-                    (Bitmap) savedInstanceState.getParcelable(MINI_PLAYER_DRAWABLE));
 
             bgDrawable = new BitmapDrawable(getResources(),
                     (Bitmap) savedInstanceState.getParcelable(BG_DRAWABLE));
@@ -137,9 +135,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(IMAGES_ALREADY_BLURRED, imagesAlreadyBlurred);
-        if (miniPlayerDrawable != null) {
-            outState.putParcelable(MINI_PLAYER_DRAWABLE, BitmapUtils.drawableToBitmap(miniPlayerDrawable));
-        }
         if (bgDrawable != null) {
             outState.putParcelable(BG_DRAWABLE, BitmapUtils.drawableToBitmap(bgDrawable));
         }
@@ -507,6 +502,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
 
         this.playAudio = playAudio;
 
+        Picasso.with(getActivity()).load(currentVideo.getThumbFile()).centerCrop().resize(320, 320).into(miniPlayerImageView);
+
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
 
@@ -533,7 +530,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             public void run() {
 
                 imagesAlreadyBlurred = false;
-                miniPlayerDrawable = null;
                 bgDrawable = null;
 
                 resizeAndBlurBg();
@@ -562,7 +558,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             public void run() {
 
                 imagesAlreadyBlurred = false;
-                miniPlayerDrawable = null;
                 bgDrawable = null;
 
                 resizeAndBlurBg();
@@ -647,12 +642,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         @Override
         protected Object doInBackground(Object[] params) {
 
-            if (!imagesAlreadyBlurred && thumb != null && miniPlayerDrawable == null || playerBg == null) {
+            if (!imagesAlreadyBlurred && thumb != null && playerBg == null) {
                 SmartLog.Log(SmartLog.LogLevel.DEBUG, "resizeAndBlurBg", "blurring bg image");
                 Bitmap originalBitmap = thumb;
                 Bitmap blurredPlayerBitmap = BitmapUtils.blur(getContext(), originalBitmap, 25);
                 Bitmap resizedBitmap = BitmapUtils.resizeImageForImageView(blurredPlayerBitmap, 255);
-                miniPlayerDrawable = new BitmapDrawable(getResources(), BitmapUtils.resizeImageForImageView(originalBitmap, 320));
                 bgDrawable = new BitmapDrawable(getResources(), resizedBitmap);
             }
 
@@ -671,7 +665,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
                 @Override
                 public void run() {
                     playerBg.setImageDrawable(bgDrawable);
-                    miniPlayerImageView.setImageDrawable(miniPlayerDrawable);
 
                     YoYo.with(Techniques.FadeIn).duration(400).playOn(playerBg);
                     YoYo.with(Techniques.FadeIn).duration(400).playOn(miniPlayerImageView);

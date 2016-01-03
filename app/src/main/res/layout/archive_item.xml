@@ -22,10 +22,11 @@
             android:layout_height="match_parent">
 
             <ImageView
+                android:scaleType="centerCrop"
                 android:id="@+id/thumb"
                 android:background="@color/dark_gray"
                 android:layout_margin="8dp"
-                android:layout_width="120dp"
+                android:layout_width="150dp"
                 android:layout_height="match_parent" />
 
             <TextView
