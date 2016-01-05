@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.fragment.MainFragment;
 import com.chaemil.hgms.fragment.VideoPlayerFragment;
 import com.chaemil.hgms.model.Video;
@@ -25,9 +26,11 @@ public class MainActivity extends BaseActivity implements
 
     private SlidingUpPanelLayout panelLayout;
     private VideoPlayerFragment videoPlayerFragment;
+    private AudioPlayerFragment audioPlayerFragment;
     private MainFragment mainFragment;
     private int currentOrientation;
     private RelativeLayout mainRelativeLayout;
+
 
     @Override
     protected void onResume() {
@@ -95,6 +98,24 @@ public class MainActivity extends BaseActivity implements
 
     }
 
+    public void playNewAudio(final Video video) {
+
+        audioPlayerFragment = new AudioPlayerFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.player_fragment, audioPlayerFragment);
+        transaction.commit();
+        expandPanel();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getAudioPlayerFragment().playNewAudio(video);
+            }
+        }, 600);
+
+    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -109,15 +130,21 @@ public class MainActivity extends BaseActivity implements
     private void adjustLayout() {
         if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
             changeStatusBarColor(getResources().getColor(R.color.black));
+            adjustPlayersLayout();
             if (videoPlayerFragment != null) {
-                videoPlayerFragment.switchMiniPlayer(false);
                 panelLayout.setDragView(videoPlayerFragment.getPlayerToolbar());
+            }
+            if (audioPlayerFragment != null) {
+                panelLayout.setDragView(audioPlayerFragment.getPlayerToolbar());
             }
         } else {
             changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            adjustPlayersLayout();
             if (videoPlayerFragment != null) {
-                videoPlayerFragment.switchMiniPlayer(true);
                 panelLayout.setDragView(videoPlayerFragment.getMiniPlayer());
+            }
+            if (audioPlayerFragment != null) {
+                panelLayout.setDragView(audioPlayerFragment.getMiniPlayer());
             }
         }
     }
@@ -128,7 +155,6 @@ public class MainActivity extends BaseActivity implements
             case R.id.mini_player:
                 if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
                     panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                    videoPlayerFragment.switchMiniPlayer(false);
                 }
                 break;
         }
@@ -145,9 +171,21 @@ public class MainActivity extends BaseActivity implements
         }
 
         if (slideOffset < 0.2) {
-            videoPlayerFragment.switchMiniPlayer(true);
+            adjustPlayersLayout();
+            if (videoPlayerFragment != null) {
+                videoPlayerFragment.switchMiniPlayer(true);
+            }
+            if (audioPlayerFragment != null) {
+                audioPlayerFragment.switchMiniPlayer(true);
+            }
         } else {
-            videoPlayerFragment.switchMiniPlayer(false);
+            adjustPlayersLayout();
+            if (videoPlayerFragment != null) {
+                videoPlayerFragment.switchMiniPlayer(false);
+            }
+            if (audioPlayerFragment != null) {
+                audioPlayerFragment.switchMiniPlayer(false);
+            }
         }
     }
 
@@ -173,12 +211,21 @@ public class MainActivity extends BaseActivity implements
 
     public void expandPanel() {
         panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-        getVideoPlayerFragment().adjustLayout();
+        adjustPlayersLayout();
     }
 
     public void colapsePanel() {
         panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        getVideoPlayerFragment().adjustLayout();
+        adjustPlayersLayout();
+    }
+
+    private void adjustPlayersLayout() {
+        if (videoPlayerFragment != null) {
+            videoPlayerFragment.adjustLayout();
+        }
+        if (audioPlayerFragment != null) {
+            audioPlayerFragment.adjustLayout();
+        }
     }
 
     public void hidePanel() {
@@ -223,6 +270,10 @@ public class MainActivity extends BaseActivity implements
         return videoPlayerFragment;
     }
 
+    public AudioPlayerFragment getAudioPlayerFragment() {
+        return audioPlayerFragment;
+    }
+
     public SlidingUpPanelLayout getPanelLayout() {
         return panelLayout;
     }
@@ -242,4 +293,6 @@ public class MainActivity extends BaseActivity implements
             return false;
         }
     }
+
+
 }

@@ -1,6 +1,9 @@
 package com.chaemil.hgms.fragment;
 
-import android.content.pm.ActivityInfo;
+/**
+ * Created by chaemil on 5.1.16.
+ */
+
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -11,7 +14,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,10 +21,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.BitmapUtils;
@@ -33,15 +33,17 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+
 import at.markushi.ui.CircleButton;
 
 /**
  * Created by chaemil on 2.12.15.
  */
-public class VideoPlayerFragment extends Fragment implements View.OnClickListener, View.OnTouchListener,
+public class AudioPlayerFragment extends Fragment implements View.OnClickListener,
         MediaPlayer.OnPreparedListener, SeekBar.OnSeekBarChangeListener {
 
-    public static final String TAG = "player_fragment";
+    public static final String TAG = "audio_player_fragment";
     private static final String IMAGES_ALREADY_BLURRED = "images_already_blurred";
     private static final String BG_DRAWABLE = "bg_drawable";
     private static final String CURRENT_TIME = "current_time";
@@ -53,7 +55,6 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     private BitmapDrawable bgDrawable;
     private TextView miniPlayerText;
     private TextView playerTitle;
-    private VideoView videoView;
     private CircleButton playPause;
     private CircleButton rew;
     private CircleButton ff;
@@ -63,22 +64,22 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     private int currentTimeInt;
     private AppCompatSeekBar seekBar;
     private Bitmap thumb;
-    private Video currentVideo;
+    private Video currentAudio;
     private CircleButton miniPlayerPause;
     private ProgressBar bufferBar;
     private int bufferFail;
-    private RelativeLayout controlsWrapper;
     private RelativeLayout videoWrapper;
     private ViewGroup rootView;
-    private ImageView fullscreen;
-    private RelativeLayout.LayoutParams videoWrapperParamsFullscreen;
-    private RelativeLayout.LayoutParams videoWrapperParamsNormal;
     private int currentOrientation;
+    private MediaPlayer audioPlayer;
+    private ImageView audioThumb;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        audioPlayer = new MediaPlayer();
     }
 
 
@@ -86,7 +87,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     public void onPause() {
         super.onPause();
 
-        videoView.pause();
+        audioPlayer.pause();
 
     }
 
@@ -94,14 +95,12 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     public void onResume() {
         super.onResume();
 
-        if (currentVideo != null) {
-            videoView.seekTo(currentVideo.getCurrentTime());
+        if (currentAudio != null) {
+            audioPlayer.seekTo(currentAudio.getCurrentTime());
         }
 
         if (isAdded()) {
             adjustLayout();
-
-
         }
 
     }
@@ -109,7 +108,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = (ViewGroup) inflater.inflate(R.layout.video_player_fragment, container, false);
+        rootView = (ViewGroup) inflater.inflate(R.layout.audio_player_fragment, container, false);
 
         if (savedInstanceState != null) {
             imagesAlreadyBlurred = savedInstanceState.getBoolean(IMAGES_ALREADY_BLURRED);
@@ -132,14 +131,14 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         if (bgDrawable != null) {
             outState.putParcelable(BG_DRAWABLE, BitmapUtils.drawableToBitmap(bgDrawable));
         }
-        outState.putInt(CURRENT_TIME, videoView.getCurrentPosition());
+        outState.putInt(CURRENT_TIME, audioPlayer.getCurrentPosition());
     }
 
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
-            videoView.seekTo(savedInstanceState.getInt(CURRENT_TIME));
+            audioPlayer.seekTo(savedInstanceState.getInt(CURRENT_TIME));
         }
     }
 
@@ -150,7 +149,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         miniPlayerText = (TextView) rootView.findViewById(R.id.mini_player_text);
         playerToolbar = (RelativeLayout) rootView.findViewById(R.id.toolbar);
         playerTitle = (TextView) rootView.findViewById(R.id.player_title);
-        videoView = (VideoView) rootView.findViewById(R.id.video_view);
+        audioThumb = (ImageView) rootView.findViewById(R.id.audio_thumb);
         playPause = (CircleButton) rootView.findViewById(R.id.play_pause);
         rew = (CircleButton) rootView.findViewById(R.id.rew);
         ff = (CircleButton) rootView.findViewById(R.id.ff);
@@ -160,98 +159,32 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         seekBar.setOnSeekBarChangeListener(this);
         miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
-        controlsWrapper = (RelativeLayout) rootView.findViewById(R.id.controls_wrapper);
         videoWrapper = (RelativeLayout) rootView.findViewById(R.id.thumb_wrapper);
-        fullscreen = (ImageView) rootView.findViewById(R.id.fullscreen);
     }
 
     private void setupUI() {
         playPause.setOnClickListener(this);
         rew.setOnClickListener(this);
         ff.setOnClickListener(this);
-        videoView.setOnTouchListener(this);
-        videoView.setOnPreparedListener(this);
         miniPlayerPause.setOnClickListener(this);
-        fullscreen.setOnClickListener(this);
-
-        int bottomMargin = (int) DimensUtils.pxFromDp(getActivity(),
-                getResources().getInteger(R.integer.video_player_wrapper_bottom_margin));
-
-        videoWrapperParamsNormal = (RelativeLayout.LayoutParams) videoWrapper.getLayoutParams();
-        videoWrapperParamsNormal.setMargins(16, 16, 16, bottomMargin);  // left, top, right, bottom
-        videoWrapper.setLayoutParams(videoWrapperParamsNormal);
-
-        videoWrapperParamsFullscreen = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
-        videoWrapperParamsFullscreen.setMargins(0, 0, 0, 0);  // left, top, right, bottom
-
     }
 
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.play_pause:
-                playPauseVideo();
+                playPauseAudio();
                 break;
             case R.id.rew:
-                if (videoView.canSeekBackward()) {
-                    videoView.seekTo(videoView.getCurrentPosition() - 10000);
-                }
+                audioPlayer.seekTo(audioPlayer.getCurrentPosition() - 10000);
                 break;
             case R.id.ff:
-                if (videoView.canSeekForward()) {
-                    videoView.seekTo(videoView.getCurrentPosition() + 10000);
-                }
+                audioPlayer.seekTo(audioPlayer.getCurrentPosition() + 10000);
                 break;
             case R.id.mini_play_pause:
-                playPauseVideo();
-                break;
-            case R.id.fullscreen:
-                requestFullscreenPlayer();
+                playPauseAudio();
                 break;
         }
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        switch(v.getId()) {
-            case R.id.video_view:
-                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    toggleControls(true);
-
-                    if (videoView.isPlaying()) {
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                                    ((BaseActivity) getActivity()).setFullscreen(true);
-                                    toggleControls(false);
-                                }
-                            }
-                        }, 5000);
-                    }
-                }
-                break;
-        }
-
-        return true;
-    }
-
-    private void requestFullscreenPlayer() {
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-        toggleControls(false);
-
-        //this will reset orientation back to sensor after 2 sec
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-            }
-        }, 2000);
     }
 
     public void adjustLayout() {
@@ -260,32 +193,8 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
             if (((MainActivity) getActivity()).isPanelExpanded()) {
 
-                videoWrapper.setVisibility(View.VISIBLE);
-
-                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-                    ((BaseActivity) getActivity()).setFullscreen(true);
-                    getActivity().getWindow().getDecorView()
-                            .setBackgroundColor(getResources().getColor(R.color.black));
-
-                    playerToolbar.setVisibility(View.GONE);
-                    playerBg.setVisibility(View.GONE);
-
-                    videoWrapper.setLayoutParams(videoWrapperParamsFullscreen);
-                    toggleControls(false);
-
-                } else {
-
-                    ((BaseActivity) getActivity()).setFullscreen(false);
-                    getActivity().getWindow().getDecorView()
-                            .setBackgroundColor(getResources().getColor(R.color.white));
-
-                    playerToolbar.setVisibility(View.VISIBLE);
-                    playerBg.setVisibility(View.VISIBLE);
-
-                    videoWrapper.setLayoutParams(videoWrapperParamsNormal);
-                    toggleControls(true);
-                }
+                playerToolbar.setVisibility(View.VISIBLE);
+                playerBg.setVisibility(View.VISIBLE);
             } else {
 
                 if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -298,34 +207,12 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void toggleControls(boolean visible) {
-        if (visible) {
-            if (controlsWrapper.getVisibility() != View.VISIBLE) {
-                controlsWrapper.setVisibility(View.VISIBLE);
-                YoYo.with(Techniques.BounceInUp).duration(400).playOn(controlsWrapper);
-            }
-        } else {
-            if (controlsWrapper.getVisibility() != View.GONE) {
-                YoYo.with(Techniques.FadeOutDown).duration(400).playOn(controlsWrapper);
-                YoYo.with(Techniques.FadeIn).duration(400).playOn(seekBar);
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        controlsWrapper.setVisibility(View.GONE);
-                    }
-                }, 400);
-            }
-        }
-    }
-
     @Override
     public void onPrepared(MediaPlayer mp) {
-        duration = videoView.getDuration();
+        duration = audioPlayer.getDuration();
         seekBar.setMax(duration);
         seekBar.postDelayed(onEverySecond, 1000);
-        YoYo.with(Techniques.FadeIn).duration(350).delay(250).playOn(videoView);
+        YoYo.with(Techniques.FadeIn).duration(350).delay(250).playOn(audioThumb);
 
         mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
             @Override
@@ -357,10 +244,10 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         @Override
         public void run(){
             if (seekBar != null) {
-                seekBar.setProgress(videoView.getCurrentPosition());
+                seekBar.setProgress(audioPlayer.getCurrentPosition());
             }
 
-            if (videoView.isPlaying()) {
+            if (audioPlayer.isPlaying()) {
                 if (seekBar != null) {
                     seekBar.postDelayed(onEverySecond, 1000);
                 }
@@ -370,7 +257,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     };
 
     private void updateTime() {
-        currentTimeInt = videoView.getCurrentPosition();
+        currentTimeInt = audioPlayer.getCurrentPosition();
 
         int dSeconds = (duration / 1000) % 60 ;
         int dMinutes = ((duration / (1000*60)) % 60);
@@ -389,13 +276,13 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void playPauseVideo() {
-        if (videoView.isPlaying()) {
-            videoView.pause();
+    private void playPauseAudio() {
+        if (audioPlayer.isPlaying()) {
+            audioPlayer.pause();
             playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
             miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
         } else {
-            videoView.start();
+            audioPlayer.start();
             playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
             miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
             if (seekBar != null) {
@@ -417,42 +304,42 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     public void saveCurrentVideoTime() {
-        if (videoView != null && currentVideo != null) {
-            currentVideo.setCurrentTime(videoView.getCurrentPosition());
-            currentVideo.save();
+        if (audioPlayer != null && currentAudio != null) {
+            currentAudio.setCurrentTime(audioPlayer.getCurrentPosition());
+            currentAudio.save();
         }
     }
 
-    public void playNewVideo(final Video video) {
+    public void playNewAudio(final Video audio) {
 
         saveCurrentVideoTime();
 
-        Video savedVideo = null;
+        Video savedAudio = null;
 
         try {
-            savedVideo = Video.findByServerId(video.getServerId());
+            savedAudio = Video.findByServerId(audio.getServerId());
         } catch (Exception e) {
             SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
         }
 
-        if (savedVideo != null) {
-            this.currentVideo = savedVideo;
+        if (savedAudio != null) {
+            this.currentAudio = savedAudio;
 
             SuperToast.create(getActivity(),
                     getString(R.string.resuming_from_saved_time),
                     SuperToast.Duration.SHORT).show();
         } else {
-            this.currentVideo = video;
+            this.currentAudio = audio;
         }
 
-        Picasso.with(getActivity()).load(currentVideo.getThumbFile()).centerCrop().resize(320, 320).into(miniPlayerImageView);
+        Picasso.with(getActivity()).load(currentAudio.getThumbFile()).into(audioThumb);
+        Picasso.with(getActivity()).load(currentAudio.getThumbFile()).centerCrop().resize(320, 320).into(miniPlayerImageView);
 
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
 
-        miniPlayerText.setText(video.getName());
-        playerTitle.setText(video.getName());
-        videoView.setAlpha(0);
+        miniPlayerText.setText(audio.getName());
+        playerTitle.setText(audio.getName());
 
         currentTime.setText("00:00:00");
         totalTime.setText("???");
@@ -469,10 +356,15 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
                 resizeAndBlurBg();
 
-                videoView.stopPlayback();
-                videoView.setVideoPath(video.getVideoFile());
-                videoView.start();
-                videoView.seekTo(currentVideo.getCurrentTime());
+                try {
+                    audioPlayer.setDataSource(currentAudio.getAudioFile());
+                    audioPlayer.prepare();
+                    audioPlayer.setOnPreparedListener(AudioPlayerFragment.this);
+                    audioPlayer.start();
+                    audioPlayer.seekTo(currentAudio.getCurrentTime());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             }
         }, 500);
@@ -494,7 +386,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (fromUser) {
-            videoView.seekTo(progress);
+            audioPlayer.seekTo(progress);
             updateTime();
         }
     }
@@ -515,7 +407,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         protected void onPreExecute() {
             super.onPreExecute();
             try {
-                thumb = BitmapUtils.getBitmapFromURL(currentVideo.getThumbFile());
+                thumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
                 if (thumb == null) {
                     thumb = BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.placeholder));
                 }
@@ -560,3 +452,4 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         }
     }
 }
+
