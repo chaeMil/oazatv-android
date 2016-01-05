@@ -230,19 +230,19 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private Runnable onEverySecond = new Runnable() {
         @Override
         public void run(){
-            if (seekBar != null && audioPlayer != null) {
-                try {
+            try {
+                if (seekBar != null && audioPlayer != null) {
                     seekBar.setProgress(audioPlayer.getCurrentPosition());
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
 
-            if (audioPlayer != null && audioPlayer.isPlaying()) {
-                if (seekBar != null) {
-                    seekBar.postDelayed(onEverySecond, 1000);
+                if (audioPlayer != null && audioPlayer.isPlaying()) {
+                    if (seekBar != null) {
+                        seekBar.postDelayed(onEverySecond, 1000);
+                    }
+                    updateTime();
                 }
-                updateTime();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     };
@@ -414,37 +414,58 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         switch (focusChange) {
             case AudioManager.AUDIOFOCUS_GAIN:
                 // resume playback
-                if (audioPlayer == null) {
-                    playNewAudio(currentAudio);
+                try {
+                    if (audioPlayer == null) {
+                        playNewAudio(currentAudio);
+                    } else if (!audioPlayer.isPlaying()) {
+                        audioPlayer.start();
+                    }
+                    audioPlayer.setVolume(1.0f, 1.0f);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                else if (!audioPlayer.isPlaying()) {
-                    audioPlayer.start();
-                }
-                audioPlayer.setVolume(1.0f, 1.0f);
                 break;
             case AudioManager.AUDIOFOCUS_LOSS:
                 // Lost focus for an unbounded amount of time: stop playback and release media player
-                if (audioPlayer.isPlaying()) {
-                    audioPlayer.stop();
+                if (audioPlayer != null) {
+                    try {
+                        if (audioPlayer.isPlaying()) {
+                            audioPlayer.stop();
+                        }
+                        audioPlayer.release();
+                        audioPlayer = null;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-                audioPlayer.release();
-                audioPlayer = null;
                 break;
 
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                 // Lost focus for a short time, but we have to stop
                 // playback. We don't release the media player because playback
                 // is likely to resume
-                if (audioPlayer.isPlaying()) {
-                    audioPlayer.pause();
+                if (audioPlayer != null) {
+                    try {
+                        if (audioPlayer.isPlaying()) {
+                            audioPlayer.pause();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
 
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 // Lost focus for a short time, but it's ok to keep playing
                 // at an attenuated level
-                if (audioPlayer.isPlaying()) {
-                    audioPlayer.setVolume(0.1f, 0.1f);
+                if (audioPlayer != null) {
+                    try {
+                        if (audioPlayer.isPlaying()) {
+                            audioPlayer.setVolume(0.1f, 0.1f);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
         }
