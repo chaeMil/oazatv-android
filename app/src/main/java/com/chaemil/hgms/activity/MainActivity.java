@@ -121,7 +121,6 @@ public class MainActivity extends BaseActivity implements
         super.onConfigurationChanged(newConfig);
 
         adjustLayout();
-        getVideoPlayerFragment().adjustLayout();
         getMainFragment().getArchiveFragment().adjustLayout();
 
         currentOrientation = getResources().getConfiguration().orientation;
