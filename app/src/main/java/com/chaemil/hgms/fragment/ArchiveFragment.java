@@ -24,6 +24,7 @@ import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.EndlessScrollListener;
+import com.chaemil.hgms.utils.SmartLog;
 
 import org.json.JSONObject;
 
@@ -41,12 +42,13 @@ public class ArchiveFragment extends BaseFragment {
     private ArchiveAdapter archiveAdapter;
     private int actionBarHeight;
     private LinearLayout appBar;
+    private ProgressBar endlessProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        getData(savedInstanceState);
+        getArchivePage(1);
 
         TypedValue tv = new TypedValue();
         getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
@@ -66,14 +68,8 @@ public class ArchiveFragment extends BaseFragment {
 
     }
 
-    private void getData(Bundle savedInstanceState) {
-        if (archive.size() == 0 || savedInstanceState == null) {
-            JsonObjectRequest getArchive = RequestFactory.getArchive(this, 0);
-            MyRequestService.getRequestQueue().add(getArchive);
-        }
-    }
-
     private void getArchivePage(int pageNumber) {
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "getArchivePage", String.valueOf(pageNumber));
         JsonObjectRequest getArchivePage = RequestFactory.getArchive(this, pageNumber);
         MyRequestService.getRequestQueue().add(getArchivePage);
     }
@@ -85,20 +81,30 @@ public class ArchiveFragment extends BaseFragment {
                 archive);
 
         archiveGridView.setAdapter(archiveAdapter);
-        archiveGridView.setOnScrollListener(endlessScrollListener(archiveGridView));
+        archiveGridView.setOnScrollListener(endlessScrollListener());
 
         setupToolbarHiding();
 
         adjustLayout();
     }
 
-    private EndlessScrollListener endlessScrollListener(GridView gridView) {
-        return new EndlessScrollListener(gridView, new EndlessScrollListener.RefreshList() {
+    private EndlessScrollListener endlessScrollListener() {
+        return new EndlessScrollListener(0, 0) {
             @Override
-            public void onRefresh(int pageNumber) {
-                getArchivePage(pageNumber);
+            public void onLoadMore(final int page, int totalItemsCount) {
+
+                endlessProgress.setVisibility(View.VISIBLE);
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getArchivePage(page);
+                    }
+                }, 2000);
+
             }
-        });
+        };
     }
 
     public void adjustLayout() {
@@ -112,6 +118,7 @@ public class ArchiveFragment extends BaseFragment {
         archiveGridView = (GridView) rootView.findViewById(R.id.archive_grid_view);
         progress = (ProgressBar) rootView.findViewById(R.id.progress);
         appBar = ((MainActivity) getActivity()).getMainFragment().getAppBar();
+        endlessProgress = (ProgressBar) rootView.findViewById(R.id.endless_progress);
     }
 
     public void setupToolbarHiding() {
@@ -150,6 +157,7 @@ ic void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int old
                 }
 
                 progress.setVisibility(View.GONE);
+                endlessProgress.setVisibility(View.GONE);
 
                 break;
 

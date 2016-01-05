@@ -40,8 +40,6 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
 
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "getView", String.valueOf(position));
-
         if (convertView == null) {
             LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.archive_item, null);
