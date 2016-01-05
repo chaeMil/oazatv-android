@@ -425,7 +425,11 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
     public void saveCurrentVideoTime() {
         if (videoView != null && currentVideo != null) {
-            currentVideo.setCurrentTime(videoView.getCurrentPosition());
+            try {
+                currentVideo.setCurrentTime(videoView.getCurrentPosition());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             currentVideo.save();
         }
     }

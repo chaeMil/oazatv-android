@@ -308,7 +308,11 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
     public void saveCurrentVideoTime() {
         if (audioPlayer != null && currentAudio != null) {
-            currentAudio.setCurrentTime(audioPlayer.getCurrentPosition());
+            try {
+                currentAudio.setCurrentTime(audioPlayer.getCurrentPosition());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             currentAudio.save();
         }
     }
