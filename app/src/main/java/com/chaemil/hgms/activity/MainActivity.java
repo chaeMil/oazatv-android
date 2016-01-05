@@ -41,7 +41,9 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-        getVideoPlayerFragment().saveCurrentVideoTime();
+        if (getVideoPlayerFragment() != null) {
+            getVideoPlayerFragment().saveCurrentVideoTime();
+        }
     }
 
     @Override
@@ -151,12 +153,12 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public void onPanelCollapsed(View panel) {
-        getVideoPlayerFragment().adjustLayout();
+        adjustLayout();
     }
 
     @Override
     public void onPanelExpanded(View panel) {
-        getVideoPlayerFragment().adjustLayout();
+        adjustLayout();
     }
 
     @Override
