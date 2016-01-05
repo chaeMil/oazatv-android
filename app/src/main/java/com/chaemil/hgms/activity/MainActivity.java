@@ -82,6 +82,9 @@ public class MainActivity extends BaseActivity implements
 
     public void playNewVideo(final Video video) {
 
+        if (audioPlayerFragment != null) {
+            audioPlayerFragment.releasePlayer();
+        }
         audioPlayerFragment = null;
         videoPlayerFragment = new VideoPlayerFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -101,6 +104,9 @@ public class MainActivity extends BaseActivity implements
 
     public void playNewAudio(final Video video) {
 
+        if (audioPlayerFragment != null) {
+            audioPlayerFragment.releasePlayer();
+        }
         videoPlayerFragment = null;
         audioPlayerFragment = new AudioPlayerFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

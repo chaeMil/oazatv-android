@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
+import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.service.MyRequestService;
 import com.orm.SugarContext;
 

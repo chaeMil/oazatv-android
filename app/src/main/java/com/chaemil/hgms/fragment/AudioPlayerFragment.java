@@ -4,13 +4,16 @@ package com.chaemil.hgms.fragment;
  * Created by chaemil on 5.1.16.
  */
 
-import android.content.res.Configuration;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.view.LayoutInflater;
@@ -26,7 +29,6 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.BitmapUtils;
-import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -41,7 +43,8 @@ import at.markushi.ui.CircleButton;
  * Created by chaemil on 2.12.15.
  */
 public class AudioPlayerFragment extends Fragment implements View.OnClickListener,
-        MediaPlayer.OnPreparedListener, SeekBar.OnSeekBarChangeListener {
+        MediaPlayer.OnPreparedListener, SeekBar.OnSeekBarChangeListener,
+        AudioManager.OnAudioFocusChangeListener {
 
     public static final String TAG = "audio_player_fragment";
     private static final String IMAGES_ALREADY_BLURRED = "images_already_blurred";
@@ -68,11 +71,11 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private CircleButton miniPlayerPause;
     private ProgressBar bufferBar;
     private int bufferFail;
-    private RelativeLayout videoWrapper;
     private ViewGroup rootView;
-    private int currentOrientation;
     private MediaPlayer audioPlayer;
     private ImageView audioThumb;
+    private WifiManager.WifiLock wifiLock;
+    private AudioManager audioManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,25 +83,33 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         setRetainInstance(true);
 
         audioPlayer = new MediaPlayer();
-    }
 
+        wifiLock = ((WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE))
+                .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
 
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        audioPlayer.pause();
-
+        audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        if (currentAudio != null) {
-            audioPlayer.seekTo(currentAudio.getCurrentTime());
+        int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);
+
+        if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            SuperToast.create(getActivity(),
+                    getString(R.string.audio_focus_not_granted),
+                    SuperToast.Duration.SHORT).show();
         }
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        releasePlayer();
     }
 
     @Override
@@ -154,7 +165,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         seekBar.setOnSeekBarChangeListener(this);
         miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
-        videoWrapper = (RelativeLayout) rootView.findViewById(R.id.thumb_wrapper);
     }
 
     private void setupUI() {
@@ -184,6 +194,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onPrepared(MediaPlayer mp) {
+        audioPlayer.start();
+        audioPlayer.seekTo(currentAudio.getCurrentTime());
         duration = audioPlayer.getDuration();
         seekBar.setMax(duration);
         seekBar.postDelayed(onEverySecond, 1000);
@@ -254,10 +266,12 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private void playPauseAudio() {
         if (audioPlayer.isPlaying()) {
             audioPlayer.pause();
+            wifiLock.release();
             playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
             miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
         } else {
             audioPlayer.start();
+            wifiLock.acquire();
             playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
             miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
             if (seekBar != null) {
@@ -331,12 +345,14 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
                 resizeAndBlurBg();
 
+                wifiLock.acquire();
+
                 try {
+                    audioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     audioPlayer.setDataSource(currentAudio.getAudioFile());
-                    audioPlayer.prepare();
+                    audioPlayer.setWakeMode(getActivity(), PowerManager.PARTIAL_WAKE_LOCK);
+                    audioPlayer.prepareAsync();
                     audioPlayer.setOnPreparedListener(AudioPlayerFragment.this);
-                    audioPlayer.start();
-                    audioPlayer.seekTo(currentAudio.getCurrentTime());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -344,6 +360,15 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             }
         }, 500);
 
+    }
+
+    public void releasePlayer() {
+        if (audioPlayer != null) {
+            audioPlayer.release();
+        }
+        if (wifiLock != null) {
+            wifiLock.release();
+        }
     }
 
     private void resizeAndBlurBg() {
@@ -374,6 +399,47 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+        switch (focusChange) {
+            case AudioManager.AUDIOFOCUS_GAIN:
+                // resume playback
+                if (audioPlayer == null) {
+                    playNewAudio(currentAudio);
+                }
+                else if (!audioPlayer.isPlaying()) {
+                    audioPlayer.start();
+                }
+                audioPlayer.setVolume(1.0f, 1.0f);
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS:
+                // Lost focus for an unbounded amount of time: stop playback and release media player
+                if (audioPlayer.isPlaying()) {
+                    audioPlayer.stop();
+                }
+                audioPlayer.release();
+                audioPlayer = null;
+                break;
+
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                // Lost focus for a short time, but we have to stop
+                // playback. We don't release the media player because playback
+                // is likely to resume
+                if (audioPlayer.isPlaying()) {
+                    audioPlayer.pause();
+                }
+                break;
+
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                // Lost focus for a short time, but it's ok to keep playing
+                // at an attenuated level
+                if (audioPlayer.isPlaying()) {
+                    audioPlayer.setVolume(0.1f, 0.1f);
+                }
+                break;
+        }
     }
 
     private class ComputeImage extends AsyncTask {

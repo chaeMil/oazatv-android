@@ -15,4 +15,5 @@
     <string name="downloaded">Downloaded</string>
     <string name="resuming_from_saved_time">Resuming from saved time</string>
     <string name="cannot_play_audio_file">Can\'t play audio file</string>
+    <string name="audio_focus_not_granted">ERROR: Audio focus not granted!</string>
 </resources>
