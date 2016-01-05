@@ -88,6 +88,8 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
         videoView.pause();
 
+        saveCurrentVideoTime();
+
     }
 
     @Override
@@ -345,10 +347,14 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         mp.setOnInfoListener(new MediaPlayer.OnInfoListener() {
             @Override
             public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START)
+                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
                     bufferBar.setVisibility(View.VISIBLE);
-                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END)
+                    saveCurrentVideoTime();
+                }
+                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
                     bufferBar.setVisibility(View.GONE);
+                    saveCurrentVideoTime();
+                }
                 return false;
             }
         });

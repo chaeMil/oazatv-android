@@ -110,6 +110,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         super.onDestroy();
 
         releasePlayer();
+
+        saveCurrentVideoTime();
     }
 
     @Override
@@ -218,10 +220,14 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         mp.setOnInfoListener(new MediaPlayer.OnInfoListener() {
             @Override
             public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START)
+                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
                     bufferBar.setVisibility(View.VISIBLE);
-                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END)
+                    saveCurrentVideoTime();
+                }
+                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
                     bufferBar.setVisibility(View.GONE);
+                    saveCurrentVideoTime();
+                }
                 return false;
             }
         });
@@ -268,6 +274,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     private void playPauseAudio() {
+        saveCurrentVideoTime();
+
         if (audioPlayer.isPlaying()) {
             audioPlayer.pause();
             if (wifiLock.isHeld()) {

@@ -42,14 +42,6 @@ public class MainActivity extends BaseActivity implements
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        if (getVideoPlayerFragment() != null) {
-            getVideoPlayerFragment().saveCurrentVideoTime();
-        }
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
