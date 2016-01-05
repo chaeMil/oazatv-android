@@ -230,11 +230,11 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private Runnable onEverySecond = new Runnable() {
         @Override
         public void run(){
-            if (seekBar != null) {
+            if (seekBar != null && audioPlayer != null) {
                 seekBar.setProgress(audioPlayer.getCurrentPosition());
             }
 
-            if (audioPlayer.isPlaying()) {
+            if (audioPlayer != null && audioPlayer.isPlaying()) {
                 if (seekBar != null) {
                     seekBar.postDelayed(onEverySecond, 1000);
                 }
