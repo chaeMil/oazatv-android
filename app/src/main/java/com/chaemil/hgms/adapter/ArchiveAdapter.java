@@ -1,7 +1,6 @@
 package com.chaemil.hgms.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +11,8 @@ import android.widget.TextView;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
-import com.chaemil.hgms.fragment.PlayerFragment;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.Video;
-import com.chaemil.hgms.utils.SmartLog;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -26,14 +23,14 @@ import java.util.ArrayList;
 public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
 
     private final Context context;
-    private final PlayerFragment playerFragment;
+    private final MainActivity mainActivity;
     private ArrayList<ArchiveItem> archive;
 
-    public ArchiveAdapter(Context context, int resource, PlayerFragment playerFragment, ArrayList<ArchiveItem> archive) {
+    public ArchiveAdapter(Context context, int resource, MainActivity mainActivity, ArrayList<ArchiveItem> archive) {
         super(context, resource);
         this.context = context;
         this.archive = archive;
-        this.playerFragment = playerFragment;
+        this.mainActivity = mainActivity;
     }
 
 
@@ -69,7 +66,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                       playerFragment.playNewVideo(video);
+                       mainActivity.playNewVideo(video);
                     }
                 });
                 holder.name.setText(video.getName());

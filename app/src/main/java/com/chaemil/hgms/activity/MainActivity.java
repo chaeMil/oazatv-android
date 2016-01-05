@@ -13,7 +13,8 @@ import android.widget.RelativeLayout;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.fragment.MainFragment;
-import com.chaemil.hgms.fragment.PlayerFragment;
+import com.chaemil.hgms.fragment.VideoPlayerFragment;
+import com.chaemil.hgms.model.Video;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
@@ -23,7 +24,7 @@ public class MainActivity extends BaseActivity implements
         SlidingUpPanelLayout.PanelSlideListener, View.OnClickListener {
 
     private SlidingUpPanelLayout panelLayout;
-    private PlayerFragment playerFragment;
+    private VideoPlayerFragment videoPlayerFragment;
     private MainFragment mainFragment;
     private int currentOrientation;
     private RelativeLayout mainRelativeLayout;
@@ -40,7 +41,7 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-        getPlayerFragment().saveCurrentVideoTime();
+        getVideoPlayerFragment().saveCurrentVideoTime();
     }
 
     @Override
@@ -54,7 +55,6 @@ public class MainActivity extends BaseActivity implements
 
     private void getUI() {
         panelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_up_panel_layout);
-        playerFragment = ((PlayerFragment) getSupportFragmentManager().findFragmentByTag(PlayerFragment.TAG));
         mainRelativeLayout = (RelativeLayout) findViewById(R.id.main_relative_layout);
     }
 
@@ -66,7 +66,6 @@ public class MainActivity extends BaseActivity implements
             mainFragment = new MainFragment();
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
             transaction.replace(R.id.main_fragment, mainFragment);
             transaction.commit();
         }
@@ -76,12 +75,30 @@ public class MainActivity extends BaseActivity implements
         panelLayout.setPanelSlideListener(this);
     }
 
+    public void playNewVideo(final Video video) {
+
+        videoPlayerFragment = new VideoPlayerFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.player_fragment, videoPlayerFragment);
+        transaction.commit();
+        expandPanel();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getVideoPlayerFragment().playNewVideo(video);
+            }
+        }, 600);
+
+    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
         adjustLayout();
-        getPlayerFragment().adjustLayout();
+        getVideoPlayerFragment().adjustLayout();
         getMainFragment().getArchiveFragment().adjustLayout();
 
         currentOrientation = getResources().getConfiguration().orientation;
@@ -90,12 +107,16 @@ public class MainActivity extends BaseActivity implements
     private void adjustLayout() {
         if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
             changeStatusBarColor(getResources().getColor(R.color.black));
-            playerFragment.switchMiniPlayer(false);
-            panelLayout.setDragView(playerFragment.getPlayerToolbar());
+            if (videoPlayerFragment != null) {
+                videoPlayerFragment.switchMiniPlayer(false);
+                panelLayout.setDragView(videoPlayerFragment.getPlayerToolbar());
+            }
         } else {
             changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
-            playerFragment.switchMiniPlayer(true);
-            panelLayout.setDragView(playerFragment.getMiniPlayer());
+            if (videoPlayerFragment != null) {
+                videoPlayerFragment.switchMiniPlayer(true);
+                panelLayout.setDragView(videoPlayerFragment.getMiniPlayer());
+            }
         }
     }
 
@@ -105,7 +126,7 @@ public class MainActivity extends BaseActivity implements
             case R.id.mini_player:
                 if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
                     panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                    playerFragment.switchMiniPlayer(false);
+                    videoPlayerFragment.switchMiniPlayer(false);
                 }
                 break;
         }
@@ -122,20 +143,20 @@ public class MainActivity extends BaseActivity implements
         }
 
         if (slideOffset < 0.2) {
-            playerFragment.switchMiniPlayer(true);
+            videoPlayerFragment.switchMiniPlayer(true);
         } else {
-            playerFragment.switchMiniPlayer(false);
+            videoPlayerFragment.switchMiniPlayer(false);
         }
     }
 
     @Override
     public void onPanelCollapsed(View panel) {
-        getPlayerFragment().adjustLayout();
+        getVideoPlayerFragment().adjustLayout();
     }
 
     @Override
     public void onPanelExpanded(View panel) {
-        getPlayerFragment().adjustLayout();
+        getVideoPlayerFragment().adjustLayout();
     }
 
     @Override
@@ -150,12 +171,12 @@ public class MainActivity extends BaseActivity implements
 
     public void expandPanel() {
         panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-        getPlayerFragment().adjustLayout();
+        getVideoPlayerFragment().adjustLayout();
     }
 
     public void colapsePanel() {
         panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        getPlayerFragment().adjustLayout();
+        getVideoPlayerFragment().adjustLayout();
     }
 
     public void hidePanel() {
@@ -196,8 +217,8 @@ public class MainActivity extends BaseActivity implements
         return mainFragment;
     }
 
-    public PlayerFragment getPlayerFragment() {
-        return playerFragment;
+    public VideoPlayerFragment getVideoPlayerFragment() {
+        return videoPlayerFragment;
     }
 
     public SlidingUpPanelLayout getPanelLayout() {

@@ -77,7 +77,7 @@ public class ArchiveFragment extends BaseFragment {
     private void setupUI() {
         archiveAdapter = new ArchiveAdapter(getActivity(),
                 R.layout.archive_item,
-                ((MainActivity) getActivity()).getPlayerFragment(),
+                (MainActivity) getActivity(),
                 archive);
 
         archiveGridView.setAdapter(archiveAdapter);

@@ -38,7 +38,7 @@ import at.markushi.ui.CircleButton;
 /**
  * Created by chaemil on 2.12.15.
  */
-public class PlayerFragment extends Fragment implements View.OnClickListener, View.OnTouchListener,
+public class VideoPlayerFragment extends Fragment implements View.OnClickListener, View.OnTouchListener,
         MediaPlayer.OnPreparedListener, SeekBar.OnSeekBarChangeListener {
 
     public static final String TAG = "player_fragment";
@@ -81,6 +81,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         setRetainInstance(true);
     }
 
+
     @Override
     public void onPause() {
         super.onPause();
@@ -97,12 +98,16 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
             videoView.seekTo(currentVideo.getCurrentTime());
         }
 
+        if (isAdded()) {
+            adjustLayout();
+        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = (ViewGroup) inflater.inflate(R.layout.player_fragment, container, false);
+        rootView = (ViewGroup) inflater.inflate(R.layout.video_player_fragment, container, false);
 
         if (savedInstanceState != null) {
             imagesAlreadyBlurred = savedInstanceState.getBoolean(IMAGES_ALREADY_BLURRED);
@@ -248,44 +253,46 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     }
 
     public void adjustLayout() {
-        currentOrientation = getResources().getConfiguration().orientation;
+        if (isAdded()) {
+            currentOrientation = getResources().getConfiguration().orientation;
 
-        if (((MainActivity) getActivity()).isPanelExpanded()) {
+            if (((MainActivity) getActivity()).isPanelExpanded()) {
 
-            videoWrapper.setVisibility(View.VISIBLE);
-
-            if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-                ((BaseActivity) getActivity()).setFullscreen(true);
-                getActivity().getWindow().getDecorView()
-                        .setBackgroundColor(getResources().getColor(R.color.black));
-
-                playerToolbar.setVisibility(View.GONE);
-                playerBg.setVisibility(View.GONE);
-
-                videoWrapper.setLayoutParams(videoWrapperParamsFullscreen);
-                toggleControls(false);
-
-            } else {
-
-                ((BaseActivity) getActivity()).setFullscreen(false);
-                getActivity().getWindow().getDecorView()
-                        .setBackgroundColor(getResources().getColor(R.color.white));
-
-                playerToolbar.setVisibility(View.VISIBLE);
-                playerBg.setVisibility(View.VISIBLE);
-
-                videoWrapper.setLayoutParams(videoWrapperParamsNormal);
-                toggleControls(true);
-            }
-        } else {
-
-            if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                videoWrapper.setVisibility(View.GONE);
-            } else {
                 videoWrapper.setVisibility(View.VISIBLE);
-            }
 
+                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+                    ((BaseActivity) getActivity()).setFullscreen(true);
+                    getActivity().getWindow().getDecorView()
+                            .setBackgroundColor(getResources().getColor(R.color.black));
+
+                    playerToolbar.setVisibility(View.GONE);
+                    playerBg.setVisibility(View.GONE);
+
+                    videoWrapper.setLayoutParams(videoWrapperParamsFullscreen);
+                    toggleControls(false);
+
+                } else {
+
+                    ((BaseActivity) getActivity()).setFullscreen(false);
+                    getActivity().getWindow().getDecorView()
+                            .setBackgroundColor(getResources().getColor(R.color.white));
+
+                    playerToolbar.setVisibility(View.VISIBLE);
+                    playerBg.setVisibility(View.VISIBLE);
+
+                    videoWrapper.setLayoutParams(videoWrapperParamsNormal);
+                    toggleControls(true);
+                }
+            } else {
+
+                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    videoWrapper.setVisibility(View.GONE);
+                } else {
+                    videoWrapper.setVisibility(View.VISIBLE);
+                }
+
+            }
         }
     }
 
@@ -396,12 +403,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
     }
 
     public void switchMiniPlayer(boolean show) {
-        if (show) {
-            playerToolbar.setVisibility(View.GONE);
-            miniPlayer.setVisibility(View.VISIBLE);
-        } else {
-            playerToolbar.setVisibility(View.VISIBLE);
-            miniPlayer.setVisibility(View.GONE);
+        if (isAdded()) {
+            if (show) {
+                playerToolbar.setVisibility(View.GONE);
+                miniPlayer.setVisibility(View.VISIBLE);
+            } else {
+                playerToolbar.setVisibility(View.VISIBLE);
+                miniPlayer.setVisibility(View.GONE);
+            }
         }
     }
 
