@@ -1,19 +1,17 @@
 package com.chaemil.hgms.activity;
 
-import android.app.FragmentTransaction;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.fragment.ArchiveFragment;
 import com.chaemil.hgms.fragment.MainFragment;
 import com.chaemil.hgms.fragment.PlayerFragment;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -67,7 +65,7 @@ public class MainActivity extends BaseActivity implements
 
             mainFragment = new MainFragment();
 
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
             transaction.replace(R.id.main_fragment, mainFragment);
             transaction.commit();

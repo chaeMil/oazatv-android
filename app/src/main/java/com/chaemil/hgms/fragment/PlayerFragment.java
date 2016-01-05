@@ -4,7 +4,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,8 +32,6 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.squareup.picasso.Picasso;
-
-import java.io.IOException;
 
 import at.markushi.ui.CircleButton;
 

@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.fragment.PlayerFragment;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.Video;
@@ -31,8 +32,8 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
     public ArchiveAdapter(Context context, int resource, PlayerFragment playerFragment, ArrayList<ArchiveItem> archive) {
         super(context, resource);
         this.context = context;
-        this.playerFragment = playerFragment;
         this.archive = archive;
+        this.playerFragment = playerFragment;
     }
 
 
@@ -68,7 +69,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        playerFragment.playNewVideo(video);
+                       playerFragment.playNewVideo(video);
                     }
                 });
                 holder.name.setText(video.getName());
