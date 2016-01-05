@@ -8,7 +8,8 @@
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="12dp" />
 
     <GridView
         android:paddingTop="?android:attr/actionBarSize"
