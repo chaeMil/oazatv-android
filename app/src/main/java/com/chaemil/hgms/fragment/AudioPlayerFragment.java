@@ -99,10 +99,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             audioPlayer.seekTo(currentAudio.getCurrentTime());
         }
 
-        if (isAdded()) {
-            adjustLayout();
-        }
-
     }
 
     @Override
@@ -119,7 +115,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
         getUI(rootView);
         setupUI();
-        adjustLayout();
 
         return rootView;
     }
@@ -184,26 +179,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             case R.id.mini_play_pause:
                 playPauseAudio();
                 break;
-        }
-    }
-
-    public void adjustLayout() {
-        if (isAdded()) {
-            currentOrientation = getResources().getConfiguration().orientation;
-
-            if (((MainActivity) getActivity()).isPanelExpanded()) {
-
-                playerToolbar.setVisibility(View.VISIBLE);
-                playerBg.setVisibility(View.VISIBLE);
-            } else {
-
-                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    videoWrapper.setVisibility(View.GONE);
-                } else {
-                    videoWrapper.setVisibility(View.VISIBLE);
-                }
-
-            }
         }
     }
 

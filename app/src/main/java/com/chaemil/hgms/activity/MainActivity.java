@@ -22,7 +22,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
  * Created by chaemil on 2.12.15.
  */
 public class MainActivity extends BaseActivity implements
-        SlidingUpPanelLayout.PanelSlideListener, View.OnClickListener {
+        SlidingUpPanelLayout.PanelSlideListener {
 
     private SlidingUpPanelLayout panelLayout;
     private VideoPlayerFragment videoPlayerFragment;
@@ -82,6 +82,7 @@ public class MainActivity extends BaseActivity implements
 
     public void playNewVideo(final Video video) {
 
+        audioPlayerFragment = null;
         videoPlayerFragment = new VideoPlayerFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.player_fragment, videoPlayerFragment);
@@ -100,6 +101,7 @@ public class MainActivity extends BaseActivity implements
 
     public void playNewAudio(final Video video) {
 
+        videoPlayerFragment = null;
         audioPlayerFragment = new AudioPlayerFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.player_fragment, audioPlayerFragment);
@@ -145,17 +147,6 @@ public class MainActivity extends BaseActivity implements
             if (audioPlayerFragment != null) {
                 panelLayout.setDragView(audioPlayerFragment.getMiniPlayer());
             }
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.mini_player:
-                if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
-                    panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                }
-                break;
         }
     }
 
@@ -221,9 +212,6 @@ public class MainActivity extends BaseActivity implements
     private void adjustPlayersLayout() {
         if (videoPlayerFragment != null) {
             videoPlayerFragment.adjustLayout();
-        }
-        if (audioPlayerFragment != null) {
-            audioPlayerFragment.adjustLayout();
         }
     }
 
