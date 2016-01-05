@@ -321,7 +321,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         seekBar.postDelayed(onEverySecond, 1000);
         YoYo.with(Techniques.FadeIn).duration(350).delay(250).playOn(videoView);
 
-
         mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
             @Override
             public void onBufferingUpdate(MediaPlayer mp, int percent) {
@@ -446,7 +445,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, Vi
         miniPlayerText.setText(video.getName());
         playerTitle.setText(video.getName());
         videoView.setAlpha(0);
-        //bufferBar.setVisibility(View.VISIBLE);
 
         currentTime.setText("00:00:00");
         totalTime.setText("???");

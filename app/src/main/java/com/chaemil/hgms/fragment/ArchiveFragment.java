@@ -2,13 +2,13 @@ package com.chaemil.hgms.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -22,8 +22,8 @@ import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.MyRequestService;
-import com.chaemil.hgms.utils.EndlessRecyclerOnScrollListener;
-import com.chaemil.hgms.utils.HidingScrollListener;
+import com.chaemil.hgms.utils.DimensUtils;
+import com.chaemil.hgms.utils.EndlessScrollListener;
 
 import org.json.JSONObject;
 
@@ -36,11 +36,10 @@ import java.util.ArrayList;
 public class ArchiveFragment extends BaseFragment {
 
     private ArrayList<ArchiveItem> archive = new ArrayList<>();
-    private RecyclerView archiveRecyclerView;
+    private GridView archiveGridView;
     private ProgressBar progress;
     private ArchiveAdapter archiveAdapter;
     private int actionBarHeight;
-    private LinearLayoutManager gridLayoutManager;
     private LinearLayout appBar;
 
     @Override
@@ -74,72 +73,65 @@ public class ArchiveFragment extends BaseFragment {
         }
     }
 
+    private void getArchivePage(int pageNumber) {
+        JsonObjectRequest getArchivePage = RequestFactory.getArchive(this, pageNumber);
+        MyRequestService.getRequestQueue().add(getArchivePage);
+    }
+
     private void setupUI() {
-        archiveAdapter = new ArchiveAdapter(
-                getContext(),
+        archiveAdapter = new ArchiveAdapter(getActivity(),
+                R.layout.archive_item,
                 ((MainActivity) getActivity()).getPlayerFragment(),
                 archive);
 
-        gridLayoutManager = new GridLayoutManager(getActivity(), 1);
-        archiveRecyclerView.setLayoutManager(gridLayoutManager);
-        archiveRecyclerView.setHasFixedSize(true);
-        archiveRecyclerView.setAdapter(archiveAdapter);
-        archiveRecyclerView.addOnScrollListener(onScrollListener(gridLayoutManager));
+        archiveGridView.setAdapter(archiveAdapter);
+        archiveGridView.setOnScrollListener(endlessScrollListener(archiveGridView));
 
         setupToolbarHiding();
 
         adjustLayout();
     }
 
+    private EndlessScrollListener endlessScrollListener(GridView gridView) {
+        return new EndlessScrollListener(gridView, new EndlessScrollListener.RefreshList() {
+            @Override
+            public void onRefresh(int pageNumber) {
+                getArchivePage(pageNumber);
+            }
+        });
+    }
+
     public void adjustLayout() {
 
         final int columns = getResources().getInteger(R.integer.archive_columns);
-        gridLayoutManager = new GridLayoutManager(getActivity(), columns);
-        archiveRecyclerView.setLayoutManager(gridLayoutManager);
+        archiveGridView.setNumColumns(columns);
 
-    }
-
-    private EndlessRecyclerOnScrollListener onScrollListener(LinearLayoutManager linearLayoutManager) {
-        return new EndlessRecyclerOnScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(final int currentPage) {
-                progress.setVisibility(View.VISIBLE);
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        JsonObjectRequest loadMoreArchive = RequestFactory.getArchive(ArchiveFragment.this, currentPage);
-                        MyRequestService.getRequestQueue().add(loadMoreArchive);
-                    }
-                }, 2000);
-            }
-        };
     }
 
     private void getUI(ViewGroup rootView) {
-        archiveRecyclerView = (RecyclerView) rootView.findViewById(R.id.archive_recycler_view);
+        archiveGridView = (GridView) rootView.findViewById(R.id.archive_grid_view);
         progress = (ProgressBar) rootView.findViewById(R.id.progress);
         appBar = ((MainActivity) getActivity()).getMainFragment().getAppBar();
     }
 
     public void setupToolbarHiding() {
 
-        archiveRecyclerView.setOnScrollListener(new HidingScrollListener(actionBarHeight) {
+        /*archiveGridView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
-            public void onHide() {
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 
-            }
+                int distance = oldScrollY - scrollY;
+ic void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 
-            @Override
-            public void onShow() {
+                int distance = oldScrollY - scrollY;
 
-            }
-
-            @Override
-            public void onMoved(int distance) {
-                appBar.setTranslationY(-distance);
+                appBar.setTranslationY(distance);
             }
         });
+    }
+                appBar.setTranslationY(distance);
+            }
+        });*/
     }
 
     @Override
