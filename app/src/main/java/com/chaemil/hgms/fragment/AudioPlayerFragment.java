@@ -266,7 +266,9 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private void playPauseAudio() {
         if (audioPlayer.isPlaying()) {
             audioPlayer.pause();
-            wifiLock.release();
+            if (wifiLock.isHeld()) {
+                wifiLock.release();
+            }
             playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
             miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
         } else {
@@ -367,7 +369,9 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             audioPlayer.release();
         }
         if (wifiLock != null) {
-            wifiLock.release();
+            if (wifiLock.isHeld()) {
+                wifiLock.release();
+            }
         }
     }
 
