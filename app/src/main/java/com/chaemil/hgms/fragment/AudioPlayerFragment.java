@@ -231,7 +231,11 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         @Override
         public void run(){
             if (seekBar != null && audioPlayer != null) {
-                seekBar.setProgress(audioPlayer.getCurrentPosition());
+                try {
+                    seekBar.setProgress(audioPlayer.getCurrentPosition());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             if (audioPlayer != null && audioPlayer.isPlaying()) {

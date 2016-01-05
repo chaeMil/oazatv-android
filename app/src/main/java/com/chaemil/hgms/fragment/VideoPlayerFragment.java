@@ -100,9 +100,10 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
         if (isAdded()) {
             adjustLayout();
-
-
         }
+
+        playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
 
     }
 
