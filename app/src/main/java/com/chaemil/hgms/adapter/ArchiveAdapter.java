@@ -86,7 +86,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                 holder.playAudio.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        playerFragment.playNewAudio(video);
+
                     }
                 });
                 Picasso.with(context).load(video.getThumbFile()).into(holder.thumb);

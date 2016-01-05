@@ -167,8 +167,7 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onBackPressed() {
 
-        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE
-                && !getPlayerFragment().isPlayingAudio()) { //if player in fullscreen rotate screen to portrait
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) { //if player in fullscreen rotate screen to portrait
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
             //this will reset orientation back to sensor after 2 sec
