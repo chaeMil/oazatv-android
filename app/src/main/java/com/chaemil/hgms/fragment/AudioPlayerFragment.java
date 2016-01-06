@@ -4,9 +4,16 @@ package com.chaemil.hgms.fragment;
  * Created by chaemil on 5.1.16.
  */
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
@@ -15,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.RemoteViews;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -50,6 +59,9 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private static final String IMAGES_ALREADY_BLURRED = "images_already_blurred";
     private static final String BG_DRAWABLE = "bg_drawable";
     private static final String CURRENT_TIME = "current_time";
+    private static final int NOTIFICATION_ID = 1111;
+    public static final String NOTIFY_PLAY_PAUSE = "notify_play_pause";
+    private static final String NOTIFY_FF = "notify_ff";
     private ImageView playerBg;
     private RelativeLayout miniPlayer;
     private ImageView miniPlayerImageView;
@@ -306,6 +318,42 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    private void createNotification() {
+        RemoteViews simpleNotificationView = new RemoteViews(getActivity()
+                .getPackageName(),R.layout.audio_mini_notification);
+
+        Notification notification = new NotificationCompat.Builder(getActivity())
+                .setSmallIcon(R.drawable.white_logo)
+                .setContentTitle(currentAudio.getName()).build();
+
+        NotificationManager notificationManager = (NotificationManager) getActivity()
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notification.contentView = simpleNotificationView;
+        notification.contentView.setImageViewBitmap(R.id.thumb, thumb);
+        notification.contentView.setTextViewText(R.id.audio_name, currentAudio.getName());
+        notification.contentView.setTextViewText(R.id.date, currentAudio.getDate());
+
+        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+
+        notificationManager.notify(NOTIFICATION_ID, notification);
+
+        setNotificationListeners(simpleNotificationView);
+    }
+
+    public void setNotificationListeners(RemoteViews view) {
+        Intent pause = new Intent(NOTIFY_PLAY_PAUSE);
+        Intent next = new Intent(NOTIFY_FF);
+
+        PendingIntent pPause = PendingIntent.getBroadcast(getActivity(), 0, pause, PendingIntent.FLAG_UPDATE_CURRENT);
+        view.setOnClickPendingIntent(R.id.play_pause, pPause);
+
+        PendingIntent pNext = PendingIntent.getBroadcast(getActivity(), 0, next, PendingIntent.FLAG_UPDATE_CURRENT);
+        view.setOnClickPendingIntent(R.id.ff, pNext);
+
+    }
+
+
     public void saveCurrentVideoTime() {
         if (audioPlayer != null && currentAudio != null) {
             try {
@@ -362,6 +410,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                 bgDrawable = null;
 
                 resizeAndBlurBg();
+
+                createNotification();
 
                 wifiLock.acquire();
 
