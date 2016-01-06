@@ -1,5 +1,9 @@
 package com.chaemil.hgms.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -30,6 +34,7 @@ public class MainActivity extends BaseActivity implements
     private MainFragment mainFragment;
     private int currentOrientation;
     private RelativeLayout mainRelativeLayout;
+    private AudioPlaybackControlsReceiver audioPlaybackReceiver;
 
 
     @Override
@@ -48,6 +53,19 @@ public class MainActivity extends BaseActivity implements
 
         getUI();
         setupUI(savedInstanceState);
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(AudioPlayerFragment.NOTIFY_PLAY_PAUSE);
+
+        audioPlaybackReceiver = new AudioPlaybackControlsReceiver();
+
+        registerReceiver(audioPlaybackReceiver, filter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(audioPlaybackReceiver);
     }
 
     private void getUI() {
@@ -270,6 +288,22 @@ public class MainActivity extends BaseActivity implements
             }
         } else {
             return false;
+        }
+    }
+
+    private class AudioPlaybackControlsReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            switch (intent.getAction()) {
+
+                case AudioPlayerFragment.NOTIFY_PLAY_PAUSE:
+                    getAudioPlayerFragment().playPauseAudio();
+                    break;
+
+            }
+
         }
     }
 

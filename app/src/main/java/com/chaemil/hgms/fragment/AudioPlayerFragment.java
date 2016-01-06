@@ -7,13 +7,11 @@ package com.chaemil.hgms.fragment;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
@@ -285,7 +283,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void playPauseAudio() {
+    public void playPauseAudio() {
         saveCurrentVideoTime();
 
         if (audioPlayer.isPlaying()) {
@@ -336,9 +334,9 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
 
-        notificationManager.notify(NOTIFICATION_ID, notification);
-
         setNotificationListeners(simpleNotificationView);
+
+        notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
     public void setNotificationListeners(RemoteViews view) {
@@ -352,7 +350,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         view.setOnClickPendingIntent(R.id.ff, pNext);
 
     }
-
 
     public void saveCurrentVideoTime() {
         if (audioPlayer != null && currentAudio != null) {
