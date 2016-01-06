@@ -36,6 +36,12 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
         setupUI();
     }
 
+    private void startMainActivity() {
+        Intent mainActivity = new Intent(TutorialActivity.this, MainActivity.class);
+        mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(mainActivity);
+    }
+
     private void getUI() {
         viewPager = (ViewPager) findViewById(R.id.tutorial_pager);
         indicator = (com.viewpagerindicator.CirclePageIndicator) findViewById(R.id.viewpager_indicator);
@@ -91,8 +97,8 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.finish:
                 finish();
-                Intent mainActivity = new Intent(TutorialActivity.this, MainActivity.class);
-                startActivity(mainActivity);
+                startMainActivity();
+                break;
             case R.id.back:
                 viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
                 break;

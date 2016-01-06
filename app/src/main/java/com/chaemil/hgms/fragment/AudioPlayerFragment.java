@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.view.LayoutInflater;
@@ -60,7 +61,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private static final String CURRENT_TIME = "current_time";
     private static final int NOTIFICATION_ID = 1111;
     public static final String NOTIFY_PLAY_PAUSE = "notify_play_pause";
-    private static final String NOTIFY_FF = "notify_ff";
+    public static final String NOTIFY_FF = "notify_ff";
+    public static final String NOTIFY_OPEN = "notify_open";
     private ImageView playerBg;
     private RelativeLayout miniPlayer;
     private ImageView miniPlayerImageView;
@@ -89,8 +91,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private AudioManager audioManager;
     private Notification notification;
     private NotificationManager notificationManager;
-    private AppWidgetManager appWidgetManager;
     private RemoteViews simpleNotificationView;
+    private FragmentActivity mainActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,6 +105,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                 .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
 
         audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+
+        mainActivity = getActivity();
     }
 
     @Override
@@ -345,8 +349,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     private void createNotification() {
-        appWidgetManager = AppWidgetManager.getInstance(getActivity());
-
         simpleNotificationView = new RemoteViews(getActivity()
                 .getPackageName(),R.layout.audio_mini_notification);
 
@@ -372,12 +374,15 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     public void setNotificationListeners(RemoteViews view) {
         Intent pause = new Intent(NOTIFY_PLAY_PAUSE);
         Intent next = new Intent(NOTIFY_FF);
+        Intent open = new Intent(NOTIFY_OPEN);
 
-        PendingIntent pPause = PendingIntent.getBroadcast(getActivity(), 0, pause, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pPause = PendingIntent.getBroadcast(mainActivity, 0, pause, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pNext = PendingIntent.getBroadcast(mainActivity, 0, next, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pOpen = PendingIntent.getBroadcast(mainActivity, 0, open, PendingIntent.FLAG_UPDATE_CURRENT);
+
         view.setOnClickPendingIntent(R.id.play_pause, pPause);
-
-        PendingIntent pNext = PendingIntent.getBroadcast(getActivity(), 0, next, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.ff, pNext);
+        view.setOnClickPendingIntent(R.id.name, pOpen);
 
     }
 
@@ -465,6 +470,9 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             if (wifiLock.isHeld()) {
                 wifiLock.release();
             }
+        }
+        if (notificationManager != null) {
+            notificationManager.cancel(NOTIFICATION_ID);
         }
     }
 

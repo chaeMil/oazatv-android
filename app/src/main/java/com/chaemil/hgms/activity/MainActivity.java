@@ -20,6 +20,7 @@ import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.fragment.MainFragment;
 import com.chaemil.hgms.fragment.VideoPlayerFragment;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.utils.SmartLog;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
@@ -58,7 +59,6 @@ public class MainActivity extends BaseActivity implements
         filter.addAction(AudioPlayerFragment.NOTIFY_PLAY_PAUSE);
 
         audioPlaybackReceiver = new AudioPlaybackControlsReceiver();
-
         registerReceiver(audioPlaybackReceiver, filter);
     }
 
@@ -66,6 +66,12 @@ public class MainActivity extends BaseActivity implements
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(audioPlaybackReceiver);
+    }
+
+    private void bringToFront() {
+        Intent i = new Intent(getBaseContext(), MainActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getBaseContext().startActivity(i);
     }
 
     private void getUI() {
@@ -296,12 +302,25 @@ public class MainActivity extends BaseActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
 
+            SmartLog.Log(SmartLog.LogLevel.DEBUG, "onReceive", intent.getAction());
+
             switch (intent.getAction()) {
 
                 case AudioPlayerFragment.NOTIFY_PLAY_PAUSE:
                     getAudioPlayerFragment().playPauseAudio();
                     break;
+                case AudioPlayerFragment.NOTIFY_OPEN:
 
+                    bringToFront();
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            expandPanel();
+                        }
+                    }, 2000);
+                    break;
             }
 
         }
