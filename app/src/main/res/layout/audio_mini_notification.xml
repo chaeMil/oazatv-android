@@ -68,7 +68,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginLeft="8dp">
 
-        <Button
+        <ImageView
             android:id="@+id/play_pause"
             android:layout_width="32dp"
             android:layout_height="32dp"
@@ -77,7 +77,7 @@
             android:layout_toLeftOf="@+id/ff"
             android:layout_marginRight="10dp" />
 
-        <Button
+        <ImageView
             android:id="@+id/ff"
             android:layout_width="32dp"
             android:layout_height="32dp"

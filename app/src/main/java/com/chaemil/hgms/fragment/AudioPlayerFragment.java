@@ -7,6 +7,7 @@ package com.chaemil.hgms.fragment;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -86,6 +87,10 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private ImageView audioThumb;
     private WifiManager.WifiLock wifiLock;
     private AudioManager audioManager;
+    private Notification notification;
+    private NotificationManager notificationManager;
+    private AppWidgetManager appWidgetManager;
+    private RemoteViews simpleNotificationView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -287,20 +292,43 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         saveCurrentVideoTime();
 
         if (audioPlayer.isPlaying()) {
-            audioPlayer.pause();
-            if (wifiLock.isHeld()) {
-                wifiLock.release();
-            }
-            playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
-            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+            pauseAudio();
         } else {
-            audioPlayer.start();
-            wifiLock.acquire();
-            playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-            if (seekBar != null) {
-                seekBar.postDelayed(onEverySecond, 1000);
-            }
+            playAudio();
+        }
+    }
+
+    public void pauseAudio() {
+        audioPlayer.pause();
+
+        if (wifiLock.isHeld()) {
+            wifiLock.release();
+        }
+
+        playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+
+        if (notification != null) {
+            notification.contentView.setImageViewBitmap(R.id.play_pause,
+                    BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.pause)));
+        }
+    }
+
+    public void playAudio() {
+        audioPlayer.start();
+
+        wifiLock.acquire();
+
+        playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+
+        if (seekBar != null) {
+            seekBar.postDelayed(onEverySecond, 1000);
+        }
+
+        if (notification != null) {
+            notification.contentView.setImageViewBitmap(R.id.play_pause,
+                    BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.pause)));
         }
     }
 
@@ -317,14 +345,16 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     private void createNotification() {
-        RemoteViews simpleNotificationView = new RemoteViews(getActivity()
+        appWidgetManager = AppWidgetManager.getInstance(getActivity());
+
+        simpleNotificationView = new RemoteViews(getActivity()
                 .getPackageName(),R.layout.audio_mini_notification);
 
-        Notification notification = new NotificationCompat.Builder(getActivity())
+        notification = new NotificationCompat.Builder(getActivity())
                 .setSmallIcon(R.drawable.white_logo)
                 .setContentTitle(currentAudio.getName()).build();
 
-        NotificationManager notificationManager = (NotificationManager) getActivity()
+        notificationManager = (NotificationManager) getActivity()
                 .getSystemService(Context.NOTIFICATION_SERVICE);
 
         notification.contentView = simpleNotificationView;
@@ -477,7 +507,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                     if (audioPlayer == null) {
                         playNewAudio(currentAudio);
                     } else if (!audioPlayer.isPlaying()) {
-                        audioPlayer.start();
+                        playAudio();
                     }
                     audioPlayer.setVolume(1.0f, 1.0f);
                 } catch (Exception e) {
@@ -489,7 +519,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                 if (audioPlayer != null) {
                     try {
                         if (audioPlayer.isPlaying()) {
-                            audioPlayer.stop();
+                            pauseAudio();
                         }
                         audioPlayer.release();
                         audioPlayer = null;
@@ -506,7 +536,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                 if (audioPlayer != null) {
                     try {
                         if (audioPlayer.isPlaying()) {
-                            audioPlayer.pause();
+                            pauseAudio();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
