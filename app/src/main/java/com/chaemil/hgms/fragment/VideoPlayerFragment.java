@@ -228,11 +228,12 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                             @Override
                             public void run() {
 
-                                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                                    if (getActivity() != null) {
+                                if (getActivity() != null) {
+                                    if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE
+                                            && ((MainActivity) getActivity()).isPanelExpanded()) {
                                         ((BaseActivity) getActivity()).setFullscreen(true);
+                                        toggleControls(false);
                                     }
-                                    toggleControls(false);
                                 }
                             }
                         }, 5000);
