@@ -139,15 +139,17 @@ public class MainActivity extends BaseActivity implements
         super.onConfigurationChanged(newConfig);
 
         adjustLayout();
-        getMainFragment().getArchiveFragment().adjustLayout();
 
         currentOrientation = getResources().getConfiguration().orientation;
     }
 
     private void adjustLayout() {
+
+        adjustPlayersLayout();
+        getMainFragment().getArchiveFragment().adjustLayout();
+
         if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
             changeStatusBarColor(getResources().getColor(R.color.black));
-            adjustPlayersLayout();
             if (videoPlayerFragment != null) {
                 panelLayout.setDragView(videoPlayerFragment.getPlayerToolbar());
             }
@@ -156,7 +158,6 @@ public class MainActivity extends BaseActivity implements
             }
         } else {
             changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
-            adjustPlayersLayout();
             if (videoPlayerFragment != null) {
                 panelLayout.setDragView(videoPlayerFragment.getMiniPlayer());
             }
