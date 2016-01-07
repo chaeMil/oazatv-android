@@ -164,7 +164,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
         controlsWrapper = (RelativeLayout) rootView.findViewById(R.id.controls_wrapper);
-        videoWrapper = (RelativeLayout) rootView.findViewById(R.id.thumb_wrapper);
+        videoWrapper = (RelativeLayout) rootView.findViewById(R.id.video_wrapper);
         fullscreen = (ImageView) rootView.findViewById(R.id.fullscreen);
     }
 
@@ -229,7 +229,9 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                             public void run() {
 
                                 if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                                    ((BaseActivity) getActivity()).setFullscreen(true);
+                                    if (getActivity() != null) {
+                                        ((BaseActivity) getActivity()).setFullscreen(true);
+                                    }
                                     toggleControls(false);
                                 }
                             }

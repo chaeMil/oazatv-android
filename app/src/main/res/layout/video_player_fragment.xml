@@ -111,7 +111,8 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/thumb_wrapper"
+            android:fitsSystemWindows="false"
+            android:id="@+id/video_wrapper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -121,6 +122,7 @@
 
             <VideoView
                 android:alpha="0"
+                android:fitsSystemWindows="false"
                 android:id="@+id/video_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
