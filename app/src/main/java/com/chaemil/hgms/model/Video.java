@@ -3,6 +3,8 @@ package com.chaemil.hgms.model;
 import com.chaemil.hgms.utils.Constants;
 import com.orm.SugarRecord;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -73,6 +75,14 @@ public class Video extends SugarRecord {
 
     public static List<Video> getAllVideoFromLocalDB() {
         return Video.findWithQuery(Video.class, "SELECT * FROM Video");
+    }
+
+    public static ArrayList<Video> getAllDownloadedVideos() {
+        List<Video> list = Video.find(Video.class, "downloaded = ?", String.valueOf(1));
+        ArrayList<Video> downloadedVideos = new ArrayList<>();
+        downloadedVideos.addAll(list);
+
+        return downloadedVideos;
     }
 
     public String getName() {
