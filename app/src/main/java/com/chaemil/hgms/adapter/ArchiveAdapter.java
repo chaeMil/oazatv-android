@@ -49,6 +49,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
             holder.date = (TextView) convertView.findViewById(R.id.date);
             holder.views = (TextView) convertView.findViewById(R.id.views);
             holder.playAudio = (ImageView) convertView.findViewById(R.id.play_audio);
+            holder.download = (ImageView) convertView.findViewById(R.id.download_audio);
 
             convertView.setTag(holder);
         }
@@ -78,6 +79,12 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                         mainActivity.playNewAudio(video);
                     }
                 });
+                holder.download.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mainActivity.addToDownloadQueue(video);
+                    }
+                });
                 Picasso.with(context).load(video.getThumbFile()).into(holder.thumb);
                 break;
         }
@@ -98,6 +105,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
         public TextView date;
         public TextView views;
         public ImageView playAudio;
+        public ImageView download;
 
     }
 

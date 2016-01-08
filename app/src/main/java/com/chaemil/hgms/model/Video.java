@@ -26,6 +26,7 @@ public class Video extends SugarRecord {
     private String descriptionCS;
     private String descriptionEN;
     private boolean downloaded;
+    private boolean inDownloadQueue;
     private int currentTime;
 
     public Video() {
@@ -66,6 +67,14 @@ public class Video extends SugarRecord {
         return videos.get(0);
     }
 
+    public static List<Video> getDownloadQueue() {
+        return Video.find(Video.class, "in_download_queue = ?", String.valueOf(1));
+    }
+
+    public static List<Video> getAllVideoFromLocalDB() {
+        return Video.findWithQuery(Video.class, "SELECT * FROM Video");
+    }
+
     public String getName() {
         switch (Locale.getDefault().getLanguage()) {
 
@@ -86,6 +95,18 @@ public class Video extends SugarRecord {
 
     public void setViews(int views) {
         this.views = views;
+    }
+
+    public void setInDownloadQueue(boolean inDownloadQueue) {
+        this.inDownloadQueue = inDownloadQueue;
+    }
+
+    public boolean isInDownloadQueue() {
+        return inDownloadQueue;
+    }
+
+    public void setCurrentTime(int currentTime) {
+        this.currentTime = currentTime;
     }
 
     @Override
@@ -151,9 +172,5 @@ public class Video extends SugarRecord {
 
     public int getCurrentTime() {
         return currentTime;
-    }
-
-    public void setCurrentTime(int currentTime) {
-        this.currentTime = currentTime;
     }
 }

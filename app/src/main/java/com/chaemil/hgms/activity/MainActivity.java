@@ -298,6 +298,27 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
+    public void addToDownloadQueue(Video video) {
+        Video savedVideo = video;
+
+        try {
+            savedVideo = Video.findByServerId(video.getServerId());
+        } catch (Exception e) {
+            SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
+        }
+
+        if (savedVideo != null) {
+            savedVideo.setInDownloadQueue(true);
+            savedVideo.save();
+
+            SmartLog.Log(SmartLog.LogLevel.DEBUG, "isInDownloadQueue", String.valueOf(savedVideo.isInDownloadQueue()));
+        }
+
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "downloadQueue", String.valueOf(Video.getDownloadQueue().size()));
+
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "getAllVideosFromLocalDB", String.valueOf(Video.getAllVideoFromLocalDB().size()));
+    }
+
     private class AudioPlaybackControlsReceiver extends BroadcastReceiver {
 
         @Override

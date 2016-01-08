@@ -77,6 +77,17 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="2dp" />
 
+            <ImageView
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:id="@+id/download_audio"
+                android:src="@drawable/download"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="4dp" />
+
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
