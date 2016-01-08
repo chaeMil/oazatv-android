@@ -83,7 +83,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.download.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((OazaApp) context.getApplicationContext()).addToDownloadQueue(video);
+                        ((OazaApp) mainActivity.getApplication()).addToDownloadQueue(video);
                     }
                 });
                 Picasso.with(context).load(video.getThumbFile()).into(holder.thumb);

@@ -58,7 +58,7 @@ public class OazaApp extends Application {
         }
     }
 
-    public void restartBackgroundService() {
+    public void restartDownloadService() {
         downloadServiceIntent = new Intent(this, DownloadService.class);
         stopService(downloadServiceIntent);
         startService(downloadServiceIntent);
@@ -77,7 +77,6 @@ public class OazaApp extends Application {
 
         public void onServiceConnected(ComponentName className, IBinder service) {
             downloadServiceConnection = (ServiceConnection) ((DownloadService.MyBinder)service).getService();
-            downloadService = ((DownloadService.MyBinder) service).getService();
         }
 
         public void onServiceDisconnected(ComponentName className) {

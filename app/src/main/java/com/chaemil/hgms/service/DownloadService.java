@@ -23,6 +23,7 @@ import java.util.List;
  * Created by chaemil on 8.1.16.
  */
 public class DownloadService extends Service {
+    public static final String EXTRA_MESSENGER = "EXTRA_MESSENGER";
     private static final int NOTIFICATION_ID = 5000;
     private List<Video> downloadQueue;
     private boolean downloadingNow = false;
