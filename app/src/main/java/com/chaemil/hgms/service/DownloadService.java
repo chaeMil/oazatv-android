@@ -1,10 +1,15 @@
 package com.chaemil.hgms.service;
 
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v7.app.NotificationCompat;
 
+import com.chaemil.hgms.R;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.SmartLog;
 import com.koushikdutta.async.future.FutureCallback;
@@ -18,9 +23,14 @@ import java.util.List;
  * Created by chaemil on 8.1.16.
  */
 public class DownloadService extends Service {
+    private static final int NOTIFICATION_ID = 5000;
     private List<Video> downloadQueue;
     private boolean downloadingNow = false;
     private Video currentDownload;
+    private NotificationCompat.Builder builder;
+    private NotificationManager notificationManager;
+    private long percentDownloaded;
+    private Thread notificationThread;
 
     @Nullable
     @Override
@@ -28,8 +38,34 @@ public class DownloadService extends Service {
         return null;
     }
 
+    public class MyBinder extends Binder {
+        public DownloadService getService() {
+            return DownloadService.this;
+        }
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        init();
+
+        return START_STICKY;
+    }
+
+    private void init() {
+
+        notificationThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(downloadingNow) {
+                    updateNotificationPercent(percentDownloaded, 100);
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
 
         downloadQueue = getDownloadQueue();
         if (!downloadingNow) {
@@ -38,12 +74,19 @@ public class DownloadService extends Service {
                 startDownload();
             }
         }
+    }
 
-
-        return super.onStartCommand(intent, flags, startId);
+    public void notifyQueueUpdated() {
+        init();
     }
 
     private void startDownload() {
+        createNotification();
+
+        notificationThread.start();
+
+        downloadingNow = true;
+
         Ion.with(getApplication())
                 .load(currentDownload.getThumbFile())
                 .write(new File(getExternalFilesDir(null), currentDownload.getHash() + ".jpg"));
@@ -53,7 +96,8 @@ public class DownloadService extends Service {
                 .progress(new ProgressCallback() {
                     @Override
                     public void onProgress(long downloaded, long total) {
-                        SmartLog.Log(SmartLog.LogLevel.DEBUG, "download", String.valueOf(downloaded + " / " + total));
+                        percentDownloaded = (long) ((float) downloaded / total * 100);
+                        SmartLog.Log(SmartLog.LogLevel.DEBUG, "download", String.valueOf(percentDownloaded));
                     }
                 })
                 .write(new File(getExternalFilesDir(null), currentDownload.getHash() + ".mp3"))
@@ -68,9 +112,40 @@ public class DownloadService extends Service {
                             SmartLog.Log(SmartLog.LogLevel.DEBUG, "fileDownloaded", file.getAbsolutePath());
                         }
 
+                        notificationThread.interrupt();
+
                         videoDownloaded(currentDownload.getId());
+                        updateNotificationComplete();
+                        downloadingNow = false;
+
+                        init();
                     }
                 });
+    }
+
+    private void updateNotificationPercent(double downloaded, double total) {
+        percentDownloaded = (long) ((float) downloaded / total * 100);
+        builder.setProgress(100, (int) percentDownloaded, false);
+        notificationManager.notify(5000, builder.build());
+    }
+
+    private void updateNotificationComplete() {
+        builder.setProgress(0, 0, false);
+        builder.setContentText(getString(R.string.download_completed));
+        builder.setOngoing(false);
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
+    }
+
+    private void createNotification() {
+        builder = new NotificationCompat.Builder(this);
+        builder.setContentTitle(currentDownload.getName())
+                .setContentText(getResources().getString(R.string.downloading_audio))
+                .setProgress(100, 0, false)
+                .setOngoing(true)
+                .setSmallIcon(R.drawable.download);
+
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
     private List<Video> getDownloadQueue() {

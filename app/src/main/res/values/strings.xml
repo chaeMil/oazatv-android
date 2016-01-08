@@ -18,4 +18,6 @@
     <string name="audio_focus_not_granted">ERROR: Audio focus not granted!</string>
     <string name="play">play</string>
     <string name="pause">pause</string>
+    <string name="downloading_audio">Downloading audio</string>
+    <string name="download_completed">Download completed</string>
 </resources>

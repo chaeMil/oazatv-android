@@ -299,28 +299,6 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
-    public void addToDownloadQueue(Video video) {
-        Video savedVideo = video;
-
-        try {
-            savedVideo = Video.findByServerId(video.getServerId());
-        } catch (Exception e) {
-            SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
-        }
-
-        if (savedVideo != null) {
-            savedVideo.setInDownloadQueue(true);
-            savedVideo.save();
-        }
-
-        startDownloadService();
-    }
-
-    private void startDownloadService() {
-        Intent downloadService = new Intent(this, DownloadService.class);
-        startService(downloadService);
-    }
-
     private class AudioPlaybackControlsReceiver extends BroadcastReceiver {
 
         @Override

@@ -68,7 +68,7 @@ public class Video extends SugarRecord {
     }
 
     public static List<Video> getDownloadQueue() {
-        return Video.find(Video.class, "in_download_queue = ?", String.valueOf(1));
+        return Video.find(Video.class, "in_download_queue = ? AND downloaded = ?", String.valueOf(1), String.valueOf(0));
     }
 
     public static List<Video> getAllVideoFromLocalDB() {

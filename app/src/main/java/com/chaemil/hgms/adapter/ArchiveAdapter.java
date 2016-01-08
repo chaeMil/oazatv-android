@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.ArchiveItem;
@@ -82,7 +83,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.download.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mainActivity.addToDownloadQueue(video);
+                        ((OazaApp) context.getApplicationContext()).addToDownloadQueue(video);
                     }
                 });
                 Picasso.with(context).load(video.getThumbFile()).into(holder.thumb);
