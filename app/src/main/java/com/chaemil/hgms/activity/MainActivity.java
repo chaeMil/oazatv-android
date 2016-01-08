@@ -148,6 +148,7 @@ public class MainActivity extends BaseActivity implements
 
         adjustPlayersLayout();
         getMainFragment().getArchiveFragment().adjustLayout();
+        getMainFragment().getDownloadedFragment().adjustLayout();
 
         if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
             changeStatusBarColor(getResources().getColor(R.color.black));

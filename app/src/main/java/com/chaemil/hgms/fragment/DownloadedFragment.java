@@ -51,5 +51,16 @@ public class DownloadedFragment extends BaseFragment {
                 downloadedItems);
 
         downloadedGridView.setAdapter(downloadedAdapter);
+
+        adjustLayout();
+    }
+
+    public void adjustLayout() {
+
+        if (isAdded()) {
+            final int columns = getResources().getInteger(R.integer.archive_columns);
+            downloadedGridView.setNumColumns(columns);
+        }
+
     }
 }
