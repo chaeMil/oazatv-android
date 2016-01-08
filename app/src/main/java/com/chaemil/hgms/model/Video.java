@@ -107,6 +107,10 @@ public class Video extends SugarRecord {
         }
     }
 
+    public void setAudioFile(String audioFile) {
+        this.audioFile = audioFile;
+    }
+
     public void setDownloaded(boolean downloaded) {
         this.downloaded = downloaded;
     }

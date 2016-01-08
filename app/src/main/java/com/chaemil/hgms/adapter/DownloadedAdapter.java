@@ -56,11 +56,12 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Video video = videos.get(position);
+        final Video video = videos.get(position);
+        video.setAudioFile(context.getExternalFilesDir(null) + "/" + video.getHash() + ".mp3");
         holder.mainView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mainActivity.playNewAudio(video);
             }
         });
         holder.name.setText(video.getName());
