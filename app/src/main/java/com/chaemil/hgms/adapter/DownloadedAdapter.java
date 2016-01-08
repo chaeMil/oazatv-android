@@ -1,7 +1,8 @@
 package com.chaemil.hgms.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.net.Uri;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import android.widget.TextView;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
-import com.chaemil.hgms.utils.SmartLog;
 import com.chaemil.hgms.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 
@@ -49,6 +49,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.date = (TextView) convertView.findViewById(R.id.date);
             holder.size = (TextView) convertView.findViewById(R.id.size);
+            holder.delete = (ImageView) convertView.findViewById(R.id.delete);
 
             convertView.setTag(holder);
         }
@@ -62,6 +63,12 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
             @Override
             public void onClick(View v) {
                 mainActivity.playNewAudio(video);
+            }
+        });
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createDeleteDialog(video, videos, DownloadedAdapter.this).show();
             }
         });
         holder.name.setText(video.getName());
@@ -88,6 +95,34 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
         public TextView name;
         public TextView date;
         public TextView size;
+        public ImageView delete;
 
+    }
+
+    private AlertDialog createDeleteDialog(final Video video, final ArrayList<Video> adapterData,
+                                           final DownloadedAdapter adapter) {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        Video.deleteDownloadedVideo(getContext(), video);
+                        dialog.dismiss();
+                        adapterData.remove(adapterData.indexOf(video));
+                        adapter.notifyDataSetChanged();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener);
+
+        return builder.create();
     }
 }

@@ -93,6 +93,15 @@ public class Video extends SugarRecord {
         return file.length();
     }
 
+    public static boolean deleteDownloadedVideo(Context context, Video video) {
+        File audio = new File(context.getExternalFilesDir(null) + "/" + video.getHash() + ".mp3");
+        File thumb = new File(context.getExternalFilesDir(null) + "/" + video.getHash() + ".jpg");
+        audio.delete();
+        thumb.delete();
+        return Video.delete(video);
+
+    }
+
     public String getName() {
         switch (Locale.getDefault().getLanguage()) {
 
