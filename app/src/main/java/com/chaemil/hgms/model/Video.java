@@ -1,8 +1,11 @@
 package com.chaemil.hgms.model;
 
+import android.content.Context;
+
 import com.chaemil.hgms.utils.Constants;
 import com.orm.SugarRecord;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +86,11 @@ public class Video extends SugarRecord {
         downloadedVideos.addAll(list);
 
         return downloadedVideos;
+    }
+
+    public static long getDownloadedAudioSize(Context context, Video video) {
+        File file = new File(context.getExternalFilesDir(null) + "/" + video.getHash() + ".mp3");
+        return file.length();
     }
 
     public String getName() {

@@ -14,6 +14,7 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.SmartLog;
+import com.chaemil.hgms.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -47,6 +48,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
             holder.thumb = (ImageView) convertView.findViewById(R.id.thumb);
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.date = (TextView) convertView.findViewById(R.id.date);
+            holder.size = (TextView) convertView.findViewById(R.id.size);
 
             convertView.setTag(holder);
         }
@@ -63,10 +65,9 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
         });
         holder.name.setText(video.getName());
         holder.date.setText(video.getDate());
+        holder.size.setText(StringUtils.getStringSizeLengthFile(Video.getDownloadedAudioSize(context, video)));
 
-        File thumbFile = new File(context.getExternalFilesDir(null).toString() + "/" + video.getHash() + ".jpg");
-
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "thumbPath", String.valueOf(thumbFile));
+        File thumbFile = new File(String.valueOf(context.getExternalFilesDir(null)) + "/" + video.getHash() + ".jpg");
 
         Picasso.with(context).load(thumbFile).into(holder.thumb);
 
@@ -85,6 +86,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
         public ImageView thumb;
         public TextView name;
         public TextView date;
+        public TextView size;
 
     }
 }
