@@ -20,6 +20,7 @@ import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.fragment.MainFragment;
 import com.chaemil.hgms.fragment.VideoPlayerFragment;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.utils.SmartLog;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -310,13 +311,14 @@ public class MainActivity extends BaseActivity implements
         if (savedVideo != null) {
             savedVideo.setInDownloadQueue(true);
             savedVideo.save();
-
-            SmartLog.Log(SmartLog.LogLevel.DEBUG, "isInDownloadQueue", String.valueOf(savedVideo.isInDownloadQueue()));
         }
 
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "downloadQueue", String.valueOf(Video.getDownloadQueue().size()));
+        startDownloadService();
+    }
 
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "getAllVideosFromLocalDB", String.valueOf(Video.getAllVideoFromLocalDB().size()));
+    private void startDownloadService() {
+        Intent downloadService = new Intent(this, DownloadService.class);
+        startService(downloadService);
     }
 
     private class AudioPlaybackControlsReceiver extends BroadcastReceiver {

@@ -24,6 +24,10 @@
 
         </activity>
 
+        <service android:name=".service.DownloadService">
+
+        </service>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="4a9f379c8de34396a9eecacff9b374cdf8cd8083" />
