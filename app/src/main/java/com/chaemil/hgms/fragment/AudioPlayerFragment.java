@@ -93,6 +93,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private NotificationManager notificationManager;
     private RemoteViews simpleNotificationView;
     private FragmentActivity mainActivity;
+    private boolean downloaded;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -401,6 +402,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
         saveCurrentVideoTime();
 
+        this.downloaded = downloaded;
+
         Video savedAudio = null;
 
         try {
@@ -517,8 +520,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                 // resume playback
                 try {
                     if (audioPlayer == null) {
-                        //TODO
-                        //playNewAudio(currentAudio);
+                        playNewAudio(currentAudio, downloaded);
                     } else if (!audioPlayer.isPlaying()) {
                         playAudio();
                     }
