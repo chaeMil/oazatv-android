@@ -7,8 +7,6 @@ package com.chaemil.hgms.fragment;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.appwidget.AppWidgetManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -428,8 +426,13 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
 
-        miniPlayerText.setText(audio.getName());
-        playerTitle.setText(audio.getName());
+        String downloadedString = "";
+        if (downloaded) {
+            downloadedString = "[" + getString(R.string.downloaded) + "] ";
+        }
+
+        miniPlayerText.setText(downloadedString + audio.getName());
+        playerTitle.setText(downloadedString + audio.getName());
 
         currentTime.setText("00:00:00");
         totalTime.setText("???");
