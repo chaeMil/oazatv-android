@@ -77,7 +77,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.playAudio.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mainActivity.playNewAudio(video);
+                        mainActivity.playNewAudio(video, false);
                     }
                 });
                 holder.download.setOnClickListener(new View.OnClickListener() {

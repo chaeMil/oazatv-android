@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity implements
 
     }
 
-    public void playNewAudio(final Video video) {
+    public void playNewAudio(final Video video, final boolean downloaded) {
 
         videoPlayerFragment = null;
         audioPlayerFragment = new AudioPlayerFragment();
@@ -129,7 +129,7 @@ public class MainActivity extends BaseActivity implements
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                getAudioPlayerFragment().playNewAudio(video);
+                getAudioPlayerFragment().playNewAudio(video, downloaded);
             }
         }, 600);
 

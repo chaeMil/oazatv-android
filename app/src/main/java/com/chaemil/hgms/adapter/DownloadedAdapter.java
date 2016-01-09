@@ -58,11 +58,10 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
         }
 
         final Video video = videos.get(position);
-        video.setAudioFile(context.getExternalFilesDir(null) + "/" + video.getHash() + ".mp3");
         holder.mainView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.playNewAudio(video);
+                mainActivity.playNewAudio(video, true);
             }
         });
         holder.delete.setOnClickListener(new View.OnClickListener() {

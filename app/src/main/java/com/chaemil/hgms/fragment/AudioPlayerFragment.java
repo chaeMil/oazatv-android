@@ -397,7 +397,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    public void playNewAudio(final Video audio) {
+    public void playNewAudio(final Video audio, final boolean downloaded) {
 
         saveCurrentVideoTime();
 
@@ -449,7 +449,11 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
                 try {
                     audioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    audioPlayer.setDataSource(currentAudio.getAudioFile());
+                    if (downloaded) {
+                        audioPlayer.setDataSource(getContext().getExternalFilesDir(null) + "/" + currentAudio.getHash() + ".mp3");
+                    } else {
+                        audioPlayer.setDataSource(currentAudio.getAudioFile());
+                    }
                     audioPlayer.setWakeMode(getActivity(), PowerManager.PARTIAL_WAKE_LOCK);
                     audioPlayer.prepareAsync();
                     audioPlayer.setOnPreparedListener(AudioPlayerFragment.this);
@@ -513,7 +517,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                 // resume playback
                 try {
                     if (audioPlayer == null) {
-                        playNewAudio(currentAudio);
+                        //TODO
+                        //playNewAudio(currentAudio);
                     } else if (!audioPlayer.isPlaying()) {
                         playAudio();
                     }
