@@ -299,6 +299,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         } else {
             playAudio();
         }
+
+
     }
 
     public void pauseAudio() {
@@ -311,9 +313,9 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
 
-        if (notification != null) {
-            notification.contentView.setImageViewBitmap(R.id.play_pause,
-                    BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.pause)));
+        if (simpleNotificationView != null) {
+            simpleNotificationView.setImageViewBitmap(R.id.play_pause,
+                    BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.play)));
         }
     }
 
@@ -329,8 +331,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             seekBar.postDelayed(onEverySecond, 1000);
         }
 
-        if (notification != null) {
-            notification.contentView.setImageViewBitmap(R.id.play_pause,
+        if (simpleNotificationView != null) {
+            simpleNotificationView.setImageViewBitmap(R.id.play_pause,
                     BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.pause)));
         }
     }
@@ -372,16 +374,13 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
     public void setNotificationListeners(RemoteViews view) {
         Intent pause = new Intent(NOTIFY_PLAY_PAUSE);
-        Intent next = new Intent(NOTIFY_FF);
         Intent open = new Intent(NOTIFY_OPEN);
 
         PendingIntent pPause = PendingIntent.getBroadcast(mainActivity, 0, pause, PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent pNext = PendingIntent.getBroadcast(mainActivity, 0, next, PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent pOpen = PendingIntent.getBroadcast(mainActivity, 0, open, PendingIntent.FLAG_UPDATE_CURRENT);
 
         view.setOnClickPendingIntent(R.id.play_pause, pPause);
-        view.setOnClickPendingIntent(R.id.ff, pNext);
-        view.setOnClickPendingIntent(R.id.name, pOpen);
+        view.setOnClickPendingIntent(R.id.main_layout, pOpen);
 
     }
 

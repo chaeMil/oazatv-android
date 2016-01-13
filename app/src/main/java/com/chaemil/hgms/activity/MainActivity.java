@@ -58,6 +58,8 @@ public class MainActivity extends BaseActivity implements
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(AudioPlayerFragment.NOTIFY_PLAY_PAUSE);
+        filter.addAction(AudioPlayerFragment.NOTIFY_OPEN);
+        filter.addAction(AudioPlayerFragment.NOTIFY_FF);
 
         audioPlaybackReceiver = new AudioPlaybackControlsReceiver();
         registerReceiver(audioPlaybackReceiver, filter);
@@ -71,7 +73,7 @@ public class MainActivity extends BaseActivity implements
 
     private void bringToFront() {
         Intent i = new Intent(getBaseContext(), MainActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.setFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Intent.FLAG_ACTIVITY_NEW_TASK);
         getBaseContext().startActivity(i);
     }
 
@@ -314,6 +316,9 @@ public class MainActivity extends BaseActivity implements
                     break;
                 case AudioPlayerFragment.NOTIFY_OPEN:
 
+                    Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+                    context.sendBroadcast(it);
+
                     bringToFront();
 
                     Handler handler = new Handler();
@@ -322,9 +327,12 @@ public class MainActivity extends BaseActivity implements
                         public void run() {
                             expandPanel();
                         }
-                    }, 2000);
+                    }, 1000);
+
+
                     break;
             }
+
 
         }
     }
