@@ -52,7 +52,7 @@ public class DownloadService extends IntentService {
                     while (((OazaApp) getApplication()).isDownloadingNow()) {
                         updateNotificationPercent(percentDownloaded, 100);
                         try {
-                            Thread.sleep(500);
+                            Thread.sleep(2000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }

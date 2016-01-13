@@ -39,19 +39,13 @@ public class OazaApp extends Application {
     }
 
     public void addToDownloadQueue(Video video) {
-        Video savedVideo = video;
+        Video savedVideo = Video.findByServerId(video.getServerId());
 
-        try {
-            savedVideo = Video.findByServerId(video.getServerId());
-        } catch (Exception e) {
-            SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
+        if (savedVideo == null) {
+            savedVideo = video;
         }
 
-        if (savedVideo != null) {
-            savedVideo.setInDownloadQueue(true);
-            savedVideo.save();
-        }
-
-        SuperToast.create(this, getString(R.string.added_to_queue), SuperToast.Duration.SHORT);
+        savedVideo.setInDownloadQueue(true);
+        savedVideo.save();
     }
 }

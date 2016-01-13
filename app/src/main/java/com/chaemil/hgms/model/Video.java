@@ -16,6 +16,10 @@ import java.util.Locale;
  */
 public class Video extends SugarRecord {
 
+    public static int NOT_DOWNLOADED = 0;
+    public static int IN_DOWNLOAD_QUEUE = 1;
+    public static int DOWNLOADED = 2;
+
     private Long id;
     private int serverId;
     private String hash;
@@ -67,9 +71,27 @@ public class Video extends SugarRecord {
 
     }
 
+    public static int getDownloadStatus(int serverId) {
+        Video savedVideo = findByServerId(serverId);
+        if (savedVideo != null) {
+            if (savedVideo.isInDownloadQueue()) {
+                return IN_DOWNLOAD_QUEUE;
+            }
+            if (savedVideo.isDownloaded()) {
+                return DOWNLOADED;
+            }
+            return NOT_DOWNLOADED;
+        }
+        return NOT_DOWNLOADED;
+    }
+
     public static Video findByServerId(int serverId) {
         List<Video> videos = Video.find(Video.class, "server_id = ?", String.valueOf(serverId));
-        return videos.get(0);
+        if (videos.size() <= 0) {
+            return null;
+        } else {
+            return videos.get(0);
+        }
     }
 
     public static List<Video> getDownloadQueue() {

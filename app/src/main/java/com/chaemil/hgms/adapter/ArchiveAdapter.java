@@ -70,7 +70,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                       mainActivity.playNewVideo(video);
+                        mainActivity.playNewVideo(video);
                     }
                 });
                 holder.name.setText(video.getName());
@@ -85,16 +85,29 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.download.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((OazaApp) mainActivity.getApplication()).addToDownloadQueue(video);
-                        Intent downloadService = new Intent(mainActivity, DownloadService.class);
-                        mainActivity.startService(downloadService);
+                        downloadAudio(video);
                     }
                 });
                 Picasso.with(context).load(video.getThumbFile()).into(holder.thumb);
+
+                int downloadStatus = Video.getDownloadStatus(video.getServerId());
+
+                /*if (downloadStatus == Video.DOWNLOADED || downloadStatus == Video.IN_DOWNLOAD_QUEUE) {
+                    holder.download.setVisibility(View.GONE);
+                } else {
+                    holder.download.setVisibility(View.VISIBLE);
+                }*/
                 break;
         }
 
         return convertView;
+    }
+
+    private void downloadAudio(Video video) {
+        ((OazaApp) mainActivity.getApplication()).addToDownloadQueue(video);
+        Intent downloadService = new Intent(mainActivity, DownloadService.class);
+        mainActivity.startService(downloadService);
+        notifyDataSetChanged();
     }
 
     @Override
