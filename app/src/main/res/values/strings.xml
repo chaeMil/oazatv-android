@@ -20,4 +20,5 @@
     <string name="pause">pause</string>
     <string name="downloading_audio">Downloading audio</string>
     <string name="download_completed">Download completed</string>
+    <string name="added_to_queue">Added to queue</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.chaemil.hgms.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.service.DownloadService;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -84,6 +86,8 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                     @Override
                     public void onClick(View v) {
                         ((OazaApp) mainActivity.getApplication()).addToDownloadQueue(video);
+                        Intent downloadService = new Intent(mainActivity, DownloadService.class);
+                        mainActivity.startService(downloadService);
                     }
                 });
                 Picasso.with(context).load(video.getThumbFile()).into(holder.thumb);

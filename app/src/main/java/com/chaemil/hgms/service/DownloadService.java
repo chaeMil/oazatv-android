@@ -1,5 +1,6 @@
 package com.chaemil.hgms.service;
 
+import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.SmartLog;
@@ -22,54 +24,44 @@ import java.util.List;
 /**
  * Created by chaemil on 8.1.16.
  */
-public class DownloadService extends Service {
-    public static final String EXTRA_MESSENGER = "EXTRA_MESSENGER";
+public class DownloadService extends IntentService {
+    public static final String NAME = "DownloadService";
     private static final int NOTIFICATION_ID = 5000;
     private List<Video> downloadQueue;
-    private boolean downloadingNow = false;
     private Video currentDownload;
     private NotificationCompat.Builder builder;
     private NotificationManager notificationManager;
     private long percentDownloaded;
     private Thread notificationThread;
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    public class MyBinder extends Binder {
-        public DownloadService getService() {
-            return DownloadService.this;
-        }
+    public DownloadService() {
+        super(NAME);
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    protected void onHandleIntent(Intent intent) {
         init();
-
-        return START_STICKY;
     }
 
     private void init() {
 
-        notificationThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(downloadingNow) {
-                    updateNotificationPercent(percentDownloaded, 100);
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+        if (!((OazaApp) getApplication()).isDownloadingNow()) {
+            notificationThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (((OazaApp) getApplication()).isDownloadingNow()) {
+                        updateNotificationPercent(percentDownloaded, 100);
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        downloadQueue = getDownloadQueue();
-        if (!downloadingNow) {
+            downloadQueue = getDownloadQueue();
+
             if (getDownloadQueueSize(downloadQueue) > 0) {
                 currentDownload = getFirstToDownload(downloadQueue);
                 startDownload();
@@ -77,16 +69,12 @@ public class DownloadService extends Service {
         }
     }
 
-    public void notifyQueueUpdated() {
-        init();
-    }
-
     private void startDownload() {
         createNotification();
 
         notificationThread.start();
 
-        downloadingNow = true;
+        ((OazaApp) getApplication()).setDownloadingNow(true);
 
         Ion.with(getApplication())
                 .load(currentDownload.getThumbFile())
@@ -117,7 +105,7 @@ public class DownloadService extends Service {
 
                         videoDownloaded(currentDownload.getId());
                         updateNotificationComplete();
-                        downloadingNow = false;
+                        ((OazaApp) getApplication()).setDownloadingNow(false);
 
                         init();
                     }

@@ -12,6 +12,7 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.SmartLog;
+import com.github.johnpersano.supertoasts.SuperToast;
 import com.orm.SugarContext;
 
 /**
@@ -19,16 +20,7 @@ import com.orm.SugarContext;
  */
 public class OazaApp extends Application {
 
-    private Intent downloadServiceIntent;
-    private DownloadService downloadService;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        downloadServiceIntent = new Intent(this, DownloadService.class);
-        startService(downloadServiceIntent);
-        bindService(downloadServiceIntent, downloadServiceConnection, BIND_AUTO_CREATE);
-    }
+    private boolean downloadingNow = false;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -38,6 +30,13 @@ public class OazaApp extends Application {
         SugarContext.init(this);
     }
 
+    public boolean isDownloadingNow() {
+        return downloadingNow;
+    }
+
+    public void setDownloadingNow(boolean downloadingNow) {
+        this.downloadingNow = downloadingNow;
+    }
 
     public void addToDownloadQueue(Video video) {
         Video savedVideo = video;
@@ -53,34 +52,6 @@ public class OazaApp extends Application {
             savedVideo.save();
         }
 
-        if (downloadService != null) {
-            downloadService.notifyQueueUpdated();
-        }
+        SuperToast.create(this, getString(R.string.added_to_queue), SuperToast.Duration.SHORT);
     }
-
-    public void restartDownloadService() {
-        downloadServiceIntent = new Intent(this, DownloadService.class);
-        stopService(downloadServiceIntent);
-        startService(downloadServiceIntent);
-    }
-
-    public Intent getDownloadServiceIntent() {
-        return downloadServiceIntent;
-    }
-
-    public ServiceConnection getDownloadServiceConnection() {
-        return downloadServiceConnection;
-    }
-
-
-    private ServiceConnection downloadServiceConnection = new ServiceConnection() {
-
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            downloadServiceConnection = (ServiceConnection) ((DownloadService.MyBinder)service).getService();
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            downloadServiceIntent = null;
-        }
-    };
 }
