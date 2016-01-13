@@ -92,9 +92,11 @@
                     android:textStyle="bold"
                     android:id="@+id/mini_player_text"
                     android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/mini_play_pause"
                     android:layout_toRightOf="@+id/mini_player_image"
-                    android:layout_toEndOf="@+id/mini_player_image"
-                    android:layout_marginLeft="16dp" />
+                    android:singleLine="true"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginLeft="8dp" />
 
             </RelativeLayout>
         </RelativeLayout>
