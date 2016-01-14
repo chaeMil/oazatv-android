@@ -60,6 +60,7 @@ public class MainActivity extends BaseActivity implements
         filter.addAction(AudioPlayerFragment.NOTIFY_PLAY_PAUSE);
         filter.addAction(AudioPlayerFragment.NOTIFY_OPEN);
         filter.addAction(AudioPlayerFragment.NOTIFY_FF);
+        filter.addAction(AudioPlayerFragment.NOTIFY_REW);
 
         audioPlaybackReceiver = new AudioPlaybackControlsReceiver();
         registerReceiver(audioPlaybackReceiver, filter);
@@ -328,8 +329,12 @@ public class MainActivity extends BaseActivity implements
                             expandPanel();
                         }
                     }, 500);
-
-
+                    break;
+                case AudioPlayerFragment.NOTIFY_FF:
+                    getAudioPlayerFragment().seekFF();
+                    break;
+                case AudioPlayerFragment.NOTIFY_REW:
+                    getAudioPlayerFragment().seekREW();
                     break;
             }
 

@@ -59,6 +59,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private static final String CURRENT_TIME = "current_time";
     private static final int NOTIFICATION_ID = 1111;
     public static final String NOTIFY_PLAY_PAUSE = "notify_play_pause";
+    public static final String NOTIFY_REW = "notify_rew";
     public static final String NOTIFY_FF = "notify_ff";
     public static final String NOTIFY_OPEN = "notify_open";
     private ImageView playerBg;
@@ -201,10 +202,10 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                 playPauseAudio();
                 break;
             case R.id.rew:
-                audioPlayer.seekTo(audioPlayer.getCurrentPosition() - 10000);
+                seekREW();
                 break;
             case R.id.ff:
-                audioPlayer.seekTo(audioPlayer.getCurrentPosition() + 10000);
+                seekFF();
                 break;
             case R.id.mini_play_pause:
                 playPauseAudio();
@@ -303,6 +304,14 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
     }
 
+    public void seekFF() {
+        audioPlayer.seekTo(audioPlayer.getCurrentPosition() + 10000);
+    }
+
+    public void seekREW() {
+        audioPlayer.seekTo(audioPlayer.getCurrentPosition() - 10000);
+    }
+
     public void pauseAudio() {
         audioPlayer.pause();
 
@@ -312,11 +321,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
-
-        /*if (simpleNotificationView != null) {
-            simpleNotificationView.setImageViewBitmap(R.id.play_pause,
-                    BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.play)));
-        }*/
     }
 
     public void playAudio() {
@@ -330,11 +334,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         if (seekBar != null) {
             seekBar.postDelayed(onEverySecond, 1000);
         }
-
-        /*if (simpleNotificationView != null) {
-            simpleNotificationView.setImageViewBitmap(R.id.play_pause,
-                    BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.pause)));
-        }*/
     }
 
     public void switchMiniPlayer(boolean show) {
@@ -359,6 +358,12 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         Intent pause = new Intent(NOTIFY_PLAY_PAUSE);
         PendingIntent pPause = PendingIntent.getBroadcast(mainActivity, 0, pause, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        Intent ff = new Intent(NOTIFY_FF);
+        PendingIntent pFf = PendingIntent.getBroadcast(mainActivity, 0, ff, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent rew = new Intent(NOTIFY_REW);
+        PendingIntent pRew = PendingIntent.getBroadcast(mainActivity, 0, rew, PendingIntent.FLAG_UPDATE_CURRENT);
+
         notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getActivity())
                 .setContentTitle(currentAudio.getName())
                 .setContentText(currentAudio.getDate())
@@ -366,9 +371,11 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                 .setLargeIcon(thumb)
                 .setContentIntent(pOpen)
                 .setOngoing(true)
-                .addAction(R.drawable.pause, getString(R.string.pause), pPause)
+                .addAction(R.drawable.rew, "", pRew)
+                .addAction(R.drawable.pause, "", pPause)
+                .addAction(R.drawable.ff, "", pFf)
                 .setStyle(new NotificationCompat.MediaStyle()
-                    .setShowActionsInCompactView(0)
+                                .setShowActionsInCompactView(0, 1, 2)
                 );
 
         int sdk = android.os.Build.VERSION.SDK_INT;
