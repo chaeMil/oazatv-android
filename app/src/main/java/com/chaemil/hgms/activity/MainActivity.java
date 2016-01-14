@@ -327,7 +327,7 @@ public class MainActivity extends BaseActivity implements
                         public void run() {
                             expandPanel();
                         }
-                    }, 1000);
+                    }, 500);
 
 
                     break;

@@ -15,12 +15,13 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +29,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.RemoteViews;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -87,11 +87,11 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private ImageView audioThumb;
     private WifiManager.WifiLock wifiLock;
     private AudioManager audioManager;
-    private Notification notification;
-    private NotificationManager notificationManager;
-    private RemoteViews simpleNotificationView;
     private FragmentActivity mainActivity;
     private boolean downloaded;
+    private NotificationManager notificationManager;
+    private Notification notification;
+    private NotificationCompat.Builder notificationBuilder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -313,10 +313,10 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
 
-        if (simpleNotificationView != null) {
+        /*if (simpleNotificationView != null) {
             simpleNotificationView.setImageViewBitmap(R.id.play_pause,
                     BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.play)));
-        }
+        }*/
     }
 
     public void playAudio() {
@@ -331,10 +331,10 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             seekBar.postDelayed(onEverySecond, 1000);
         }
 
-        if (simpleNotificationView != null) {
+        /*if (simpleNotificationView != null) {
             simpleNotificationView.setImageViewBitmap(R.id.play_pause,
                     BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.pause)));
-        }
+        }*/
     }
 
     public void switchMiniPlayer(boolean show) {
@@ -350,38 +350,33 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     private void createNotification() {
-        simpleNotificationView = new RemoteViews(getActivity()
-                .getPackageName(),R.layout.audio_mini_notification);
 
-        notification = new NotificationCompat.Builder(getActivity())
-                .setSmallIcon(R.drawable.white_logo)
-                .setContentTitle(currentAudio.getName()).build();
+        notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager = (NotificationManager) getActivity()
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-
-        notification.contentView = simpleNotificationView;
-        notification.contentView.setImageViewBitmap(R.id.thumb, thumb);
-        notification.contentView.setTextViewText(R.id.audio_name, currentAudio.getName());
-        notification.contentView.setTextViewText(R.id.date, currentAudio.getDate());
-
-        notification.flags |= Notification.FLAG_ONGOING_EVENT;
-
-        setNotificationListeners(simpleNotificationView);
-
-        notificationManager.notify(NOTIFICATION_ID, notification);
-    }
-
-    public void setNotificationListeners(RemoteViews view) {
-        Intent pause = new Intent(NOTIFY_PLAY_PAUSE);
         Intent open = new Intent(NOTIFY_OPEN);
-
-        PendingIntent pPause = PendingIntent.getBroadcast(mainActivity, 0, pause, PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent pOpen = PendingIntent.getBroadcast(mainActivity, 0, open, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        view.setOnClickPendingIntent(R.id.play_pause, pPause);
-        view.setOnClickPendingIntent(R.id.main_layout, pOpen);
+        Intent pause = new Intent(NOTIFY_PLAY_PAUSE);
+        PendingIntent pPause = PendingIntent.getBroadcast(mainActivity, 0, pause, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getActivity())
+                .setContentTitle(currentAudio.getName())
+                .setContentText(currentAudio.getDate())
+                .setSmallIcon(R.drawable.white_logo)
+                .setLargeIcon(thumb)
+                .setContentIntent(pOpen)
+                .setOngoing(true)
+                .addAction(R.drawable.pause, getString(R.string.pause), pPause)
+                .setStyle(new NotificationCompat.MediaStyle()
+                    .setShowActionsInCompactView(0)
+                );
+
+        int sdk = android.os.Build.VERSION.SDK_INT;
+        if (sdk >= Build.VERSION_CODES.LOLLIPOP) {
+            notificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
+        }
+
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
 
     public void saveCurrentVideoTime() {
