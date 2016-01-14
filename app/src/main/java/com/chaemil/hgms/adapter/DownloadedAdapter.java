@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -50,6 +51,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
             holder.date = (TextView) convertView.findViewById(R.id.date);
             holder.size = (TextView) convertView.findViewById(R.id.size);
             holder.delete = (ImageView) convertView.findViewById(R.id.delete);
+            holder.downloadCover = (RelativeLayout) convertView.findViewById(R.id.download_cover);
 
             convertView.setTag(holder);
         }
@@ -78,6 +80,12 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
 
         Picasso.with(context).load(thumbFile).into(holder.thumb);
 
+        if (!video.isDownloaded() && video.isInDownloadQueue()) {
+            holder.downloadCover.setVisibility(View.VISIBLE);
+        } else {
+            holder.downloadCover.setVisibility(View.GONE);
+        }
+
 
         return convertView;
     }
@@ -95,6 +103,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
         public TextView date;
         public TextView size;
         public ImageView delete;
+        public RelativeLayout downloadCover;
 
     }
 

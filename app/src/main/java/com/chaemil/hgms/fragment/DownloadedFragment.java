@@ -40,7 +40,7 @@ public class DownloadedFragment extends BaseFragment {
 
     private void getData() {
         downloadedItems.clear();
-        downloadedItems.addAll(Video.getAllDownloadedVideos());
+        downloadedItems.addAll(Video.getWholeDownloadQueue());
     }
 
     private void getUI(ViewGroup rootView) {
@@ -68,10 +68,7 @@ public class DownloadedFragment extends BaseFragment {
     }
 
     public void notifyDownloadFinished() {
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "notifyDownloadFinished", "now");
         getData();
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "downloadedItems.size()", String.valueOf(downloadedItems.size()));
         downloadedAdapter.notifyDataSetChanged();
-        downloadedGridView.invalidate();
     }
 }

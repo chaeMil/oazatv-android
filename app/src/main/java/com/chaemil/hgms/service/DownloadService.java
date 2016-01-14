@@ -29,6 +29,7 @@ public class DownloadService extends IntentService {
     public static final String NAME = "DownloadService";
     private static final int NOTIFICATION_ID = 5000;
     public static final String DOWNLOAD_COMPLETE = "downloadComplete";
+    public static final String DOWNLOAD_STARTED = "downloadStarted";
     private List<Video> downloadQueue;
     private Video currentDownload;
     private NotificationCompat.Builder builder;
@@ -73,6 +74,9 @@ public class DownloadService extends IntentService {
 
     private void startDownload() {
         createNotification();
+
+        Intent i = new Intent(DOWNLOAD_STARTED);
+        sendBroadcast(i);
 
         notificationThread.start();
 
