@@ -10,9 +10,9 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.DownloadedAdapter;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.utils.SmartLog;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by chaemil on 2.12.15.
@@ -29,6 +29,8 @@ public class DownloadedFragment extends BaseFragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.downloaded_fragment, container, false);
 
+        downloadedItems = new ArrayList<>();
+
         getUI(rootView);
         getData();
         setupUI();
@@ -37,7 +39,8 @@ public class DownloadedFragment extends BaseFragment {
     }
 
     private void getData() {
-        downloadedItems = Video.getAllDownloadedVideos();
+        downloadedItems.clear();
+        downloadedItems.addAll(Video.getAllDownloadedVideos());
     }
 
     private void getUI(ViewGroup rootView) {
@@ -62,5 +65,13 @@ public class DownloadedFragment extends BaseFragment {
             downloadedGridView.setNumColumns(columns);
         }
 
+    }
+
+    public void notifyDownloadFinished() {
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "notifyDownloadFinished", "now");
+        getData();
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "downloadedItems.size()", String.valueOf(downloadedItems.size()));
+        downloadedAdapter.notifyDataSetChanged();
+        downloadedGridView.invalidate();
     }
 }

@@ -12,6 +12,7 @@ import android.support.v7.app.NotificationCompat;
 
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.SmartLog;
 import com.koushikdutta.async.future.FutureCallback;
@@ -27,6 +28,7 @@ import java.util.List;
 public class DownloadService extends IntentService {
     public static final String NAME = "DownloadService";
     private static final int NOTIFICATION_ID = 5000;
+    public static final String DOWNLOAD_COMPLETE = "downloadComplete";
     private List<Video> downloadQueue;
     private Video currentDownload;
     private NotificationCompat.Builder builder;
@@ -86,7 +88,6 @@ public class DownloadService extends IntentService {
                     @Override
                     public void onProgress(long downloaded, long total) {
                         percentDownloaded = (long) ((float) downloaded / total * 100);
-                        SmartLog.Log(SmartLog.LogLevel.DEBUG, "download", String.valueOf(percentDownloaded));
                     }
                 })
                 .write(new File(getExternalFilesDir(null), currentDownload.getHash() + ".mp3"))
@@ -106,6 +107,9 @@ public class DownloadService extends IntentService {
                         videoDownloaded(currentDownload.getId());
                         updateNotificationComplete();
                         ((OazaApp) getApplication()).setDownloadingNow(false);
+
+                        Intent i = new Intent(DOWNLOAD_COMPLETE);
+                        sendBroadcast(i);
 
                         init();
                     }

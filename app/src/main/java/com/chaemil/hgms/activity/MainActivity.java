@@ -61,6 +61,7 @@ public class MainActivity extends BaseActivity implements
         filter.addAction(AudioPlayerFragment.NOTIFY_OPEN);
         filter.addAction(AudioPlayerFragment.NOTIFY_FF);
         filter.addAction(AudioPlayerFragment.NOTIFY_REW);
+        filter.addAction(DownloadService.DOWNLOAD_COMPLETE);
 
         audioPlaybackReceiver = new AudioPlaybackControlsReceiver();
         registerReceiver(audioPlaybackReceiver, filter);
@@ -303,6 +304,10 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
+    public void notifyDownloadFinished() {
+        getMainFragment().getDownloadedFragment().notifyDownloadFinished();
+    }
+
     private class AudioPlaybackControlsReceiver extends BroadcastReceiver {
 
         @Override
@@ -335,6 +340,9 @@ public class MainActivity extends BaseActivity implements
                     break;
                 case AudioPlayerFragment.NOTIFY_REW:
                     getAudioPlayerFragment().seekREW();
+                    break;
+                case DownloadService.DOWNLOAD_COMPLETE:
+                    notifyDownloadFinished();
                     break;
             }
 
