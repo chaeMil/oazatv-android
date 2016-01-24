@@ -7,11 +7,11 @@ public class ArchiveItem {
 
     private int type;
     private Video video;
+    private PhotoAlbum album;
 
     public static abstract class Type {
         public static final int VIDEO = 0;
-        public static final int AUDIO = 1;
-        public static final int ALBUM = 2;
+        public static final int ALBUM = 1;
     }
 
     public ArchiveItem() {
@@ -31,7 +31,9 @@ public class ArchiveItem {
                         }
                         break;
                     case 1:
-                        //TODO!!!
+                        if (((ArchiveItem) other).getAlbum().getServerId() == this.getAlbum().getServerId()) {
+                            return true;
+                        }
                         break;
                     default:
                         return false;
@@ -55,5 +57,13 @@ public class ArchiveItem {
 
     public void setVideo(Video video) {
         this.video = video;
+    }
+
+    public PhotoAlbum getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(PhotoAlbum album) {
+        this.album = album;
     }
 }
