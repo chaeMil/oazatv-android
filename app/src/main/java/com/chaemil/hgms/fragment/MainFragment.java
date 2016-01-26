@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.utils.SmartLog;
 
 /**
@@ -121,6 +122,10 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
+
+    }
+
+    public void openAlbum(PhotoAlbum album) {
 
     }
 

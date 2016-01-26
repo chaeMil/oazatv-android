@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.fragment.MainFragment;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
@@ -107,7 +108,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO!!!
+
                     }
                 });
                 holder.name.setText(photoAlbum.getName());
@@ -126,6 +127,10 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
         Intent downloadService = new Intent(mainActivity, DownloadService.class);
         mainActivity.startService(downloadService);
         notifyDataSetChanged();
+    }
+
+    private void openAlbum(PhotoAlbum album) {
+        mainActivity.getMainFragment().openAlbum(album);
     }
 
     @Override
