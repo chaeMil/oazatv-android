@@ -16,6 +16,7 @@ public class Constants {
     public static final String DOMAIN = "oaza.tv/beta/oazatv-server/web-project/www/";
     public static final String API = HTTP + DOMAIN + "api/v2/";
     public static final String API_GET_ARCHIVE = API + "archive/";
+    public static final String API_GET_PHOTO_ALBUM = API + "album/";
 
     public static final String JSON_POST_NICK = "nick";
     public static final String JSON_POST_EMAIL = "email";

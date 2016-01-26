@@ -53,6 +53,10 @@ public class PhotoAlbum {
         }
     }
 
+    public void setPhotos(ArrayList<Photo> photos) {
+        this.photos = photos;
+    }
+
     public int getServerId() {
         return serverId;
     }
