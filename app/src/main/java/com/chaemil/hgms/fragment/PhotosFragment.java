@@ -8,24 +8,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.adapter.PhotosAdapter;
+import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.utils.SmartLog;
 
-import java.util.ArrayList;
-
 public class PhotosFragment extends Fragment {
+    private final PhotoAlbum album;
     private PhotosAdapter adapter;
     private GridView grid;
-    private TextView photoHint;
-    private ImageView arrowToCamera;
 
     private int thumbWidth;
-    private ArrayList<String> filepaths = new ArrayList();
-    private ArrayList<String> filenames = new ArrayList();
+
+    public PhotosFragment(PhotoAlbum album) {
+        super();
+        this.album = album;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +54,7 @@ public class PhotosFragment extends Fragment {
             thumbWidth = getThumbWidth();
             grid.setColumnWidth(getThumbWidth());
         }
-        adapter = new PhotosAdapter(getActivity(), thumbWidth, filepaths, filenames);
+        adapter = new PhotosAdapter(getActivity(), thumbWidth, album.getPhotos());
         grid.setAdapter(adapter);
     }
 
@@ -71,12 +70,5 @@ public class PhotosFragment extends Fragment {
         } else {
             return height / 4;
         }
-    }
-
-    public static PhotosFragment newInstance() {
-        PhotosFragment fragment = new PhotosFragment();
-        Bundle bundle = new Bundle();
-        fragment.setArguments(bundle);
-        return fragment;
     }
 }

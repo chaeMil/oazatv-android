@@ -108,7 +108,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        openAlbum(photoAlbum);
                     }
                 });
                 holder.name.setText(photoAlbum.getName());

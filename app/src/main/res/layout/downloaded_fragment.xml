@@ -4,7 +4,6 @@
     android:layout_height="match_parent">
 
     <GridView
-        android:paddingTop="?android:attr/actionBarSize"
         android:clipToPadding="false"
         android:id="@+id/downloaded_grid_view"
         android:scrollbars="vertical"

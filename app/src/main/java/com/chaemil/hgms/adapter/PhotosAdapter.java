@@ -2,32 +2,31 @@ package com.chaemil.hgms.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.view.SquareImageView;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class PhotosAdapter extends BaseAdapter {
+    private final ArrayList<Photo> photos;
     private Activity activity;
-    private ArrayList<String> filepaths;
     private int thumbWidth;
 
-    public PhotosAdapter(Activity activity, int thumbWidth, ArrayList filepaths, ArrayList filenames) {
+    public PhotosAdapter(Activity activity, int thumbWidth, ArrayList<Photo> photos) {
         this.activity = activity;
-        this.filepaths = filepaths;
         this.thumbWidth = thumbWidth;
+        this.photos = photos;
     }
 
     public int getCount() {
-        return filepaths.size();
+        return photos.size();
     }
 
     public Object getItem(int position) {
@@ -60,7 +59,7 @@ public class PhotosAdapter extends BaseAdapter {
         });
 
         Picasso.with(activity.getApplicationContext())
-                .load(new File(filepaths.get(position)))
+                .load(photos.get(position).getThumb512())
                 .resize(thumbWidth, thumbWidth)
                 .centerCrop()
                 .into(holder.image);

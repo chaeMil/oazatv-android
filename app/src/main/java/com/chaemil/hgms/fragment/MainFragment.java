@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -126,7 +127,10 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
     }
 
     public void openAlbum(PhotoAlbum album) {
-
+        /*FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id., new PhotosFragment(album));
+        transaction.addToBackStack(null);
+        transaction.commit();*/
     }
 
     private class MainFragmentsAdapter extends FragmentPagerAdapter {

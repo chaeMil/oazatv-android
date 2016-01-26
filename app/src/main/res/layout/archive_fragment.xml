@@ -12,7 +12,6 @@
         android:layout_marginBottom="12dp" />
 
     <GridView
-        android:paddingTop="?android:attr/actionBarSize"
         android:clipToPadding="false"
         android:id="@+id/archive_grid_view"
         android:scrollbars="vertical"
