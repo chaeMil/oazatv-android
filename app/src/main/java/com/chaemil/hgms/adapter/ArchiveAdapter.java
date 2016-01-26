@@ -115,6 +115,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.date.setText(photoAlbum.getDate());
                 holder.views.setText(context.getString(R.string.photo_album));
                 holder.download.setVisibility(View.GONE);
+                holder.playAudio.setVisibility(View.GONE);
                 Picasso.with(context).load(photoAlbum.getThumbs().getThumb512()).into(holder.thumb);
                 break;
         }
