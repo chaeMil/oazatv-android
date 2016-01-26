@@ -14,6 +14,7 @@ import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.ArchiveItem;
+import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
 import com.squareup.picasso.Picasso;
@@ -97,6 +98,23 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 } else {
                     holder.download.setVisibility(View.VISIBLE);
                 }*/
+                break;
+
+            case ArchiveItem.Type.ALBUM:
+
+                final PhotoAlbum photoAlbum = archiveItem.getAlbum();
+
+                holder.mainView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO!!!
+                    }
+                });
+                holder.name.setText(photoAlbum.getName());
+                holder.date.setText(photoAlbum.getDate());
+                holder.views.setText(context.getString(R.string.photo_album));
+                holder.download.setVisibility(View.GONE);
+                Picasso.with(context).load(photoAlbum.getThumbs().getThumb512()).into(holder.thumb);
                 break;
         }
 

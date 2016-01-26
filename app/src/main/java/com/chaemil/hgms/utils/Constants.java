@@ -63,4 +63,5 @@ public class Constants {
     public static final String JSON_THUMB = "thumb";
     public static final String JSON_ORDER = "order";
     public static final String JSON_PHOTOS = "photos";
+    public static final String JSON_THUMBS = "thumbs";
 }

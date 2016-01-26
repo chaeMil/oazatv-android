@@ -57,6 +57,7 @@ public class ArchiveItem {
 
     public void setVideo(Video video) {
         this.video = video;
+        this.type = Type.VIDEO;
     }
 
     public PhotoAlbum getAlbum() {
@@ -65,5 +66,6 @@ public class ArchiveItem {
 
     public void setAlbum(PhotoAlbum album) {
         this.album = album;
+        this.type = Type.ALBUM;
     }
 }

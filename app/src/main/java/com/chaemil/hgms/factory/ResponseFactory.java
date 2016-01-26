@@ -61,7 +61,11 @@ public class ResponseFactory {
                 String tags = response.getString(Constants.JSON_TAGS);
                 String descriptionCS = response.getString(Constants.JSON_DESCRIPTION_CS);
                 String descriptionEN = response.getString(Constants.JSON_DESCRIPTION_EN);
-                JSONArray jsonPhotos = response.getJSONArray(Constants.JSON_PHOTOS);
+                Photo thumb = parsePhoto(response.getJSONObject(Constants.JSON_THUMBS));
+                JSONArray jsonPhotos = new JSONArray();
+                if (response.has(Constants.JSON_PHOTOS)) {
+                    jsonPhotos = response.getJSONArray(Constants.JSON_PHOTOS);
+                }
 
                 ArrayList<Photo> photos = new ArrayList<>();
 
@@ -73,7 +77,7 @@ public class ResponseFactory {
                 }
 
                 return new PhotoAlbum(serverId, hash, date, nameCS, nameEN, tags, descriptionCS,
-                        descriptionEN, photos);
+                        descriptionEN, thumb, photos);
 
             }
         } catch (JSONException e) {
@@ -88,8 +92,14 @@ public class ResponseFactory {
 
         try {
 
-            String descriptionCS = response.getString(Constants.JSON_DESCRIPTION_CS);
-            String descriptionEN = response.getString(Constants.JSON_DESCRIPTION_EN);
+            String descriptionCS = "";
+            if (response.has(Constants.JSON_DESCRIPTION_CS)) {
+                descriptionCS = response.getString(Constants.JSON_DESCRIPTION_CS);
+            }
+            String descriptionEN = "";
+            if (response.has(Constants.JSON_DESCRIPTION_EN)) {
+                descriptionEN = response.getString(Constants.JSON_DESCRIPTION_EN);
+            }
             String originalFile = response.getString(Constants.JSON_ORIGINAL_FILE);
             String thumb128 = response.getString(Constants.JSON_THUMB + "_128");
             String thumb256 = response.getString(Constants.JSON_THUMB + "_256");
@@ -118,13 +128,14 @@ public class ResponseFactory {
 
                 for (int c = 0; c < archiveJson.length(); c++) {
 
+                    ArchiveItem archiveItem = new ArchiveItem();
+
                     switch (archiveJson.getJSONObject(c).getString(Constants.JSON_TYPE)) {
 
                         case Constants.JSON_TYPE_VIDEO:
 
                             Video video = parseVideo(archiveJson.getJSONObject(c));
 
-                            ArchiveItem archiveItem = new ArchiveItem();
                             archiveItem.setVideo(video);
 
                             archive.add(archiveItem);
@@ -132,6 +143,11 @@ public class ResponseFactory {
 
                         case Constants.JSON_TYPE_ALBUM:
 
+                            PhotoAlbum photoAlbum = parseAlbum(archiveJson.getJSONObject(c));
+
+                            archiveItem.setAlbum(photoAlbum);
+
+                            archive.add(archiveItem);
                             break;
 
                     }

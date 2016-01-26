@@ -1,6 +1,9 @@
 package com.chaemil.hgms.model;
 
+import com.chaemil.hgms.utils.Constants;
+
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by chaemil on 24.1.16.
@@ -16,12 +19,14 @@ public class PhotoAlbum {
     private String descriptionCS;
     private String descriptionEN;
     private ArrayList<Photo> photos;
+    private Photo thumbs;
 
     public PhotoAlbum() {
     }
 
     public PhotoAlbum(int serverId, String hash, String date, String nameCS, String nameEN,
-                      String tags, String descriptionCS, String descriptionEN, ArrayList<Photo> photos) {
+                      String tags, String descriptionCS, String descriptionEN, Photo thumbs,
+                      ArrayList<Photo> photos) {
         this.serverId = serverId;
         this.hash = hash;
         this.date = date;
@@ -30,7 +35,22 @@ public class PhotoAlbum {
         this.tags = tags;
         this.descriptionCS = descriptionCS;
         this.descriptionEN = descriptionEN;
+        this.thumbs = thumbs;
         this.photos = photos;
+    }
+
+    public String getName() {
+        switch (Locale.getDefault().getLanguage()) {
+
+            case Constants.SK:
+                return getNameCS();
+            case Constants.CS:
+                return getNameCS();
+            case Constants.EN:
+                return getNameEN();
+            default:
+                return getNameEN();
+        }
     }
 
     public int getServerId() {
@@ -63,6 +83,10 @@ public class PhotoAlbum {
 
     public String getDescriptionEN() {
         return descriptionEN;
+    }
+
+    public Photo getThumbs() {
+        return thumbs;
     }
 
     public ArrayList<Photo> getPhotos() {
