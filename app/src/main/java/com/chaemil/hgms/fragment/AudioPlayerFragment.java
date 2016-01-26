@@ -321,7 +321,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             wifiLock.release();
         }
 
-        notificationBuilder.setOngoing(false);
+        notificationBuilder.setOngoing(false)
+                .setLargeIcon(thumb);
         notificationManager.notify(NOTIFICATION_ID,
                 notificationBuilder.build());
 
@@ -332,7 +333,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     public void playAudio() {
         audioPlayer.start();
 
-        notificationBuilder.setOngoing(true);
+        notificationBuilder.setOngoing(true)
+                .setLargeIcon(thumb);
         notificationManager.notify(NOTIFICATION_ID,
                 notificationBuilder.build());
 
