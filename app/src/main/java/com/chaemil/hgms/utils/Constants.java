@@ -59,4 +59,8 @@ public class Constants {
     public static final String JSON_TYPE = "type";
     public static final String JSON_TYPE_VIDEO = "video";
     public static final String JSON_TYPE_ALBUM = "album";
+    public static final String JSON_ORIGINAL_FILE = "original_file";
+    public static final String JSON_THUMB = "thumb";
+    public static final String JSON_ORDER = "order";
+    public static final String JSON_PHOTOS = "photos";
 }
