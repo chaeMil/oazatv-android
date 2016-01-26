@@ -15,6 +15,7 @@ import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.utils.SmartLog;
 
 public class PhotosFragment extends Fragment {
+    public static final String TAG = "PhotosFragment";
     private final PhotoAlbum album;
     private PhotosAdapter adapter;
     private GridView grid;

@@ -261,7 +261,9 @@ public class MainActivity extends BaseActivity implements
             }, 2000);
 
         } else if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
-                panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        } else if (getMainFragment().getPhotoalbumWrapper().getVisibility() == View.VISIBLE) {
+            getMainFragment().closeAlbum();
         } else {
             super.onBackPressed();
         }

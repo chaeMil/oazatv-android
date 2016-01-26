@@ -11,6 +11,16 @@
 
     </android.support.v4.view.ViewPager>
 
+    <FrameLayout
+        android:layout_marginTop="?android:attr/actionBarSize"
+        android:background="@color/white"
+        android:id="@+id/photoalbum_wrapper"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
     <LinearLayout
         android:id="@+id/app_bar"
         android:orientation="vertical"

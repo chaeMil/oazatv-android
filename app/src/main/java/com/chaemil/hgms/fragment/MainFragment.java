@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.chaemil.hgms.R;
@@ -33,6 +34,7 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
     private DownloadedFragment downloadedFragment;
     private Toolbar toolbar;
     private LinearLayout appBar;
+    private FrameLayout photoalbumWrapper;
 
     @Override
     public void onAttach(Activity activity) {
@@ -75,6 +77,7 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
         appBar = (LinearLayout) rootView.findViewById(R.id.app_bar);
         pager = (ViewPager) rootView.findViewById(R.id.pager);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        photoalbumWrapper = (FrameLayout) rootView.findViewById(R.id.photoalbum_wrapper);
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -111,6 +114,10 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
         return appBar;
     }
 
+    public FrameLayout getPhotoalbumWrapper() {
+        return photoalbumWrapper;
+    }
+
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         pager.setCurrentItem(tab.getPosition());
@@ -127,10 +134,21 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
     }
 
     public void openAlbum(PhotoAlbum album) {
-        /*FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id., new PhotosFragment(album));
-        transaction.addToBackStack(null);
-        transaction.commit();*/
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.photoalbum_wrapper, new PhotosFragment(album), PhotosFragment.TAG);
+        transaction.commit();
+        photoalbumWrapper.setVisibility(View.VISIBLE);
+        tabLayout.setVisibility(View.GONE);
+        pager.setActivated(false);
+    }
+
+    public void closeAlbum() {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.remove(getFragmentManager().findFragmentByTag(PhotosFragment.TAG));
+        transaction.commit();
+        photoalbumWrapper.setVisibility(View.GONE);
+        tabLayout.setVisibility(View.VISIBLE);
+        pager.setActivated(true);
     }
 
     private class MainFragmentsAdapter extends FragmentPagerAdapter {
