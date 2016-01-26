@@ -1,5 +1,6 @@
 package com.chaemil.hgms.fragment;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,15 +24,15 @@ import com.chaemil.hgms.utils.SmartLog;
 
 import org.json.JSONObject;
 
-public class PhotosFragment extends Fragment implements RequestFactoryListener {
-    public static final String TAG = "PhotosFragment";
-    private final PhotoAlbum album;
+public class PhotoAlbumFragment extends Fragment implements RequestFactoryListener {
+    public static final String TAG = "PhotoAlbumFragment";
+    private PhotoAlbum album;
     private PhotosAdapter adapter;
     private GridView grid;
 
     private int thumbWidth;
 
-    public PhotosFragment(PhotoAlbum album) {
+    public PhotoAlbumFragment(PhotoAlbum album) {
         super();
         this.album = album;
     }
@@ -39,28 +40,30 @@ public class PhotosFragment extends Fragment implements RequestFactoryListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "PhotosFragment", "onCreate");
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "PhotoAlbumFragment", "onCreate");
         setRetainInstance(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "PhotosFragment", "onCreateView");
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "PhotoAlbumFragment", "onCreateView");
 
         View view = inflater.inflate(R.layout.photos_fragment, container, false);
 
-        getData();
         getUI(view);
-        setupUI();
 
         return view;
     }
 
+    public void setAlbum(PhotoAlbum album) {
+        this.album = album;
+        getData();
+    }
+
     private void getData() {
-        if (album.getPhotos().size() <= 0) {
-            JsonObjectRequest getPhotos = RequestFactory.getPhotoAlbum(this, album.getHash());
-            MyRequestService.getRequestQueue().add(getPhotos);
-        }
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "getData", album.getHash());
+        JsonObjectRequest getPhotos = RequestFactory.getPhotoAlbum(this, album.getHash());
+        MyRequestService.getRequestQueue().add(getPhotos);
     }
 
     private void getUI(View rootView) {
@@ -68,12 +71,8 @@ public class PhotosFragment extends Fragment implements RequestFactoryListener {
     }
 
     private void setupUI() {
-        if (thumbWidth == 0) {
-            thumbWidth = getThumbWidth();
-            grid.setColumnWidth(getThumbWidth());
-        }
-        adapter = new PhotosAdapter(getActivity(), thumbWidth, album.getPhotos());
-        grid.setAdapter(adapter);
+        thumbWidth = getThumbWidth();
+        grid.setColumnWidth(getThumbWidth());
     }
 
     private int getThumbWidth() {
@@ -96,9 +95,12 @@ public class PhotosFragment extends Fragment implements RequestFactoryListener {
             case GET_PHOTO_ALBUM:
                 PhotoAlbum photoAlbum = ResponseFactory.parseAlbum(response);
                 if (photoAlbum != null && photoAlbum.getPhotos().size() > 0) {
+                    setupUI();
                     album.setPhotos(photoAlbum.getPhotos());
-                    adapter.notifyDataSetChanged();
+                    adapter = new PhotosAdapter(getActivity(), thumbWidth, album.getPhotos());
+                    grid.setAdapter(adapter);
                 }
+                break;
         }
     }
 
