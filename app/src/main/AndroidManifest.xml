@@ -45,7 +45,7 @@
             android:name="io.fabric.ApiKey"
             android:value="4a9f379c8de34396a9eecacff9b374cdf8cd8083" />
         <meta-data android:name="DATABASE" android:value="oazatv.db" />
-        <meta-data android:name="VERSION" android:value="2" />
+        <meta-data android:name="VERSION" android:value="3" />
         <meta-data android:name="QUERY_LOG" android:value="true" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.chaemil.hgms" />
 
