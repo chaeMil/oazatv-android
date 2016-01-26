@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.fragment.MainFragment;
+import com.chaemil.hgms.fragment.PhotoAlbumFragment;
 import com.chaemil.hgms.fragment.VideoPlayerFragment;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
@@ -61,6 +62,7 @@ public class MainActivity extends BaseActivity implements
         filter.addAction(AudioPlayerFragment.NOTIFY_OPEN);
         filter.addAction(AudioPlayerFragment.NOTIFY_FF);
         filter.addAction(AudioPlayerFragment.NOTIFY_REW);
+        filter.addAction(AudioPlayerFragment.NOTIFY_DELETE);
         filter.addAction(DownloadService.DOWNLOAD_COMPLETE);
         filter.addAction(DownloadService.DOWNLOAD_STARTED);
 
@@ -107,7 +109,7 @@ public class MainActivity extends BaseActivity implements
         audioPlayerFragment = null;
         videoPlayerFragment = new VideoPlayerFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.player_fragment, videoPlayerFragment);
+        transaction.replace(R.id.player_fragment, videoPlayerFragment, VideoPlayerFragment.TAG);
         transaction.commit();
         expandPanel();
 
@@ -126,7 +128,7 @@ public class MainActivity extends BaseActivity implements
         videoPlayerFragment = null;
         audioPlayerFragment = new AudioPlayerFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.player_fragment, audioPlayerFragment);
+        transaction.replace(R.id.player_fragment, audioPlayerFragment, AudioPlayerFragment.TAG);
         transaction.commit();
         expandPanel();
 
@@ -262,6 +264,8 @@ public class MainActivity extends BaseActivity implements
             panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         } else if (getMainFragment().getPhotoalbumWrapper().getVisibility() == View.VISIBLE) {
             getMainFragment().closeAlbum();
+        } else if (getAudioPlayerFragment().getAudioPlayer().isPlaying()) {
+            moveTaskToBack(true);
         } else {
             super.onBackPressed();
         }
@@ -347,6 +351,9 @@ public class MainActivity extends BaseActivity implements
                     break;
                 case AudioPlayerFragment.NOTIFY_REW:
                     getAudioPlayerFragment().seekREW();
+                    break;
+                case AudioPlayerFragment.NOTIFY_DELETE:
+                    hidePanel();
                     break;
                 case DownloadService.DOWNLOAD_COMPLETE:
                     notifyDownloadFinished();

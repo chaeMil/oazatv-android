@@ -62,6 +62,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     public static final String NOTIFY_REW = "notify_rew";
     public static final String NOTIFY_FF = "notify_ff";
     public static final String NOTIFY_OPEN = "notify_open";
+    public static final String NOTIFY_DELETE = "notify_delete";
     private ImageView playerBg;
     private RelativeLayout miniPlayer;
     private ImageView miniPlayerImageView;
@@ -93,6 +94,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private NotificationManager notificationManager;
     private Notification notification;
     private NotificationCompat.Builder notificationBuilder;
+    private Bitmap unblurredThumb;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -319,12 +321,20 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             wifiLock.release();
         }
 
+        notificationBuilder.setOngoing(false);
+        notificationManager.notify(NOTIFICATION_ID,
+                notificationBuilder.build());
+
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
     }
 
     public void playAudio() {
         audioPlayer.start();
+
+        notificationBuilder.setOngoing(true);
+        notificationManager.notify(NOTIFICATION_ID,
+                notificationBuilder.build());
 
         wifiLock.acquire();
 
@@ -364,13 +374,17 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         Intent rew = new Intent(NOTIFY_REW);
         PendingIntent pRew = PendingIntent.getBroadcast(mainActivity, 0, rew, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        Intent delete = new Intent(NOTIFY_DELETE);
+        PendingIntent pDelete = PendingIntent.getBroadcast(mainActivity, 0, delete, PendingIntent.FLAG_UPDATE_CURRENT);
+
         notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getActivity())
                 .setContentTitle(currentAudio.getName())
                 .setContentText(currentAudio.getDate())
                 .setSmallIcon(R.drawable.white_logo)
-                .setLargeIcon(thumb)
+                .setLargeIcon(unblurredThumb)
                 .setContentIntent(pOpen)
                 .setOngoing(true)
+                .setDeleteIntent(pDelete)
                 .addAction(R.drawable.rew, "", pRew)
                 .addAction(R.drawable.pause, "", pPause)
                 .addAction(R.drawable.ff, "", pFf)
@@ -499,6 +513,10 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         return miniPlayer;
     }
 
+    public MediaPlayer getAudioPlayer() {
+        return audioPlayer;
+    }
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (fromUser) {
@@ -586,6 +604,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             super.onPreExecute();
             try {
                 thumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
+                unblurredThumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
                 if (thumb == null) {
                     thumb = BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.placeholder));
                 }
