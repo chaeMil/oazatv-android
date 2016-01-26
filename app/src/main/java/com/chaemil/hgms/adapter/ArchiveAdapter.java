@@ -69,6 +69,8 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
 
                 final Video video = archiveItem.getVideo();
 
+                holder.download.setVisibility(View.VISIBLE);
+                holder.playAudio.setVisibility(View.VISIBLE);
                 holder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
