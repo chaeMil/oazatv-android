@@ -17,16 +17,26 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.factory.RequestFactory;
+import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.PhotoAlbum;
+import com.chaemil.hgms.model.RequestType;
+import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.SmartLog;
 import com.github.clans.fab.FloatingActionButton;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
+import org.json.JSONObject;
+
 /**
  * Created by chaemil on 4.12.15.
  */
-public class MainFragment extends Fragment implements TabLayout.OnTabSelectedListener, View.OnClickListener, MaterialSearchView.SearchViewListener, MaterialSearchView.OnQueryTextListener {
+public class MainFragment extends BaseFragment implements TabLayout.OnTabSelectedListener,
+        View.OnClickListener, MaterialSearchView.SearchViewListener,
+        MaterialSearchView.OnQueryTextListener, RequestFactoryListener {
 
     public static final String TAG = "main_fragment";
     private TabLayout tabLayout;
@@ -223,7 +233,14 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        return false;
+        JsonObjectRequest search = RequestFactory.search(this, newText);
+        MyRequestService.getRequestQueue().add(search);
+        return true;
+    }
+
+    @Override
+    public void onSuccessResponse(JSONObject response, RequestType requestType) {
+        super.onSuccessResponse(response, requestType);
     }
 
     private class MainFragmentsAdapter extends FragmentPagerAdapter {

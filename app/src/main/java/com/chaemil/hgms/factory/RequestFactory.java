@@ -14,6 +14,19 @@ import org.json.JSONObject;
 public class RequestFactory {
     public static final int DEFAULT_TIMEOUT_MS = 10000;
 
+    public static JsonObjectRequest search(RequestFactoryListener listener, String query) {
+        String url = Constants.API_SEARCH + query;
+
+        JSONObject jsonObject = new JSONObject();
+
+        SmartLog.Log(SmartLog.LogLevel.INFO, "search", "get " + url);
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+
+        return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
+                createMyReqSuccessListener(listener, RequestType.SEARCH),
+                createMyReqErrorListener(listener));
+    }
+
     public static JsonObjectRequest getArchive(RequestFactoryListener listener, int page) {
         String url = Constants.API_GET_ARCHIVE + page;
 
