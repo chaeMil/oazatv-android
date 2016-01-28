@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.model.PhotoAlbum;
@@ -36,7 +37,7 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
     private ArchiveFragment archiveFragment;
     private DownloadedFragment downloadedFragment;
     private Toolbar toolbar;
-    private LinearLayout appBar;
+    private RelativeLayout appBar;
     private FrameLayout photoalbumWrapper;
     private PhotoAlbumFragment photoAlbumFragment;
 
@@ -75,7 +76,7 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
 
     private void getUI(ViewGroup rootView) {
         tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
-        appBar = (LinearLayout) rootView.findViewById(R.id.app_bar);
+        appBar = (RelativeLayout) rootView.findViewById(R.id.app_bar);
         pager = (ViewPager) rootView.findViewById(R.id.pager);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         photoalbumWrapper = (FrameLayout) rootView.findViewById(R.id.photoalbum_wrapper);
@@ -120,7 +121,7 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
         return toolbar;
     }
 
-    public LinearLayout getAppBar() {
+    public RelativeLayout getAppBar() {
         return appBar;
     }
 

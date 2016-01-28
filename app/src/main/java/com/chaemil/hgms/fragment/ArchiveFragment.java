@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -40,8 +41,6 @@ public class ArchiveFragment extends BaseFragment {
     private GridView archiveGridView;
     private ProgressBar progress;
     private ArchiveAdapter archiveAdapter;
-    private int actionBarHeight;
-    private LinearLayout appBar;
     private ProgressBar endlessProgress;
 
     @Override
@@ -52,7 +51,6 @@ public class ArchiveFragment extends BaseFragment {
 
         TypedValue tv = new TypedValue();
         getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
-        actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId);
     }
 
     @Override
@@ -119,7 +117,6 @@ public class ArchiveFragment extends BaseFragment {
     private void getUI(ViewGroup rootView) {
         archiveGridView = (GridView) rootView.findViewById(R.id.archive_grid_view);
         progress = (ProgressBar) rootView.findViewById(R.id.progress);
-        appBar = ((MainActivity) getActivity()).getMainFragment().getAppBar();
         endlessProgress = (ProgressBar) rootView.findViewById(R.id.endless_progress);
     }
 
