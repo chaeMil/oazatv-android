@@ -32,6 +32,8 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_tutorial);
 
+        startMainActivity();
+
         getUI();
         setupUI();
     }

@@ -1,6 +1,9 @@
 package com.chaemil.hgms.fragment;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -72,10 +75,6 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
 
     private void getUI(ViewGroup rootView) {
         tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.home)));
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.archive)));
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.downloaded)));
-        tabLayout.setOnTabSelectedListener(this);
         appBar = (LinearLayout) rootView.findViewById(R.id.app_bar);
         pager = (ViewPager) rootView.findViewById(R.id.pager);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
@@ -83,10 +82,21 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
     }
 
     private void setupUI(Bundle savedInstanceState) {
+
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_home_white));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_view_list));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_downloaded));
+        tabLayout.setOnTabSelectedListener(this);
+        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.white));
+
         if (savedInstanceState == null) {
             pager.setAdapter(new MainFragmentsAdapter(context.getSupportFragmentManager()));
             pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
             pager.setOffscreenPageLimit(2);
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            appBar.setElevation(4f);
         }
 
         toolbar.setTitle(getString(R.string.app_name));
@@ -123,6 +133,22 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         pager.setCurrentItem(tab.getPosition());
+
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_view_list);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_downloaded);
+
+        switch (tab.getPosition()) {
+            case 0:
+                tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_white);
+                break;
+            case 1:
+                tabLayout.getTabAt(1).setIcon(R.drawable.ic_view_list_white);
+                break;
+            case 2:
+                tabLayout.getTabAt(2).setIcon(R.drawable.ic_downloaded_white);
+                break;
+        }
     }
 
     @Override
