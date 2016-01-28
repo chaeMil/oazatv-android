@@ -2,6 +2,7 @@ package com.chaemil.hgms.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -26,6 +27,8 @@ import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.SmartLog;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.github.clans.fab.FloatingActionButton;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
@@ -191,19 +194,43 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         transaction.replace(R.id.photoalbum_wrapper, photoAlbumFragment, PhotoAlbumFragment.TAG);
         transaction.commit();
         photoAlbumFragment.setAlbum(album);
+
         photoalbumWrapper.setVisibility(View.VISIBLE);
-        tabLayout.setVisibility(View.GONE);
-        pager.setVisibility(View.GONE);
+        YoYo.with(Techniques.SlideInUp).duration(300).playOn(photoalbumWrapper);
+        YoYo.with(Techniques.FadeOut).duration(300).playOn(tabLayout);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tabLayout.setVisibility(View.GONE);
+                pager.setVisibility(View.GONE);
+            }
+        }, 300);
+
     }
 
     public void closeAlbum() {
         searchFab.show(true);
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.remove(getFragmentManager().findFragmentByTag(PhotoAlbumFragment.TAG));
-        transaction.commit();
-        photoalbumWrapper.setVisibility(View.GONE);
+
+
         tabLayout.setVisibility(View.VISIBLE);
         pager.setVisibility(View.VISIBLE);
+
+        YoYo.with(Techniques.FadeIn).duration(300).playOn(tabLayout);
+        YoYo.with(Techniques.SlideOutDown).duration(300).playOn(photoalbumWrapper);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                photoalbumWrapper.setVisibility(View.GONE);
+                transaction.commit();
+            }
+        }, 350);
+
     }
 
     @Override

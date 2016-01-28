@@ -18,6 +18,49 @@ import java.util.Objects;
 
 public class ResponseFactory {
 
+
+    public static ArrayList<ArchiveItem> parseSearch(JSONObject response) {
+
+        try {
+
+            if (response.has(Constants.JSON_SEARCH)) {
+                if (response.get(Constants.JSON_SEARCH) instanceof JSONObject) {
+
+                    ArrayList<ArchiveItem> result = new ArrayList<>();
+
+                    JSONArray jsonVideos = response.getJSONObject(Constants.JSON_SEARCH)
+                            .getJSONArray(Constants.JSON_VIDEOS);
+
+                    for (int v = 0; v < jsonVideos.length(); v++) {
+                        Video video = parseVideo(jsonVideos.getJSONObject(v));
+                        ArchiveItem archiveItem = new ArchiveItem();
+                        archiveItem.setVideo(video);
+                        result.add(archiveItem);
+                    }
+
+                    JSONArray jsonAlbums = response.getJSONObject(Constants.JSON_SEARCH)
+                            .getJSONArray(Constants.JSON_ALBUMS);
+
+                    for (int a = 0; a < jsonAlbums.length(); a++) {
+                        PhotoAlbum photoAlbum = parseAlbum(jsonAlbums.getJSONObject(a));
+                        ArchiveItem archiveItem = new ArchiveItem();
+                        archiveItem.setAlbum(photoAlbum);
+                        result.add(archiveItem);
+                    }
+
+                    return result;
+
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
+
     public static Video parseVideo(JSONObject response) {
 
         try {
