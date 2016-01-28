@@ -80,8 +80,8 @@
                 <ImageView
                     android:scaleType="centerCrop"
                     android:id="@+id/mini_player_image"
-                    android:layout_width="?android:attr/actionBarSize"
-                    android:layout_height="?android:attr/actionBarSize" />
+                    android:layout_width="56dp"
+                    android:layout_height="56dp" />
 
                 <at.markushi.ui.CircleButton
                     android:id="@+id/mini_play_pause"
