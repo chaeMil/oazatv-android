@@ -94,12 +94,6 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
             pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
             pager.setOffscreenPageLimit(2);
         }
-
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            appBar.setElevation(4f);
-        }
-
-        toolbar.setTitle(getString(R.string.app_name));
     }
 
     public HomeFragment getHomeFragment() {
