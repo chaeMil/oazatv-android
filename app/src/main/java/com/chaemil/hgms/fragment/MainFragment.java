@@ -1,9 +1,6 @@
 package com.chaemil.hgms.fragment;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -17,17 +14,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.utils.SmartLog;
+import com.github.clans.fab.FloatingActionButton;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 /**
  * Created by chaemil on 4.12.15.
  */
-public class MainFragment extends Fragment implements TabLayout.OnTabSelectedListener {
+public class MainFragment extends Fragment implements TabLayout.OnTabSelectedListener, View.OnClickListener, MaterialSearchView.SearchViewListener {
 
     public static final String TAG = "main_fragment";
     private TabLayout tabLayout;
@@ -40,6 +38,8 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
     private RelativeLayout appBar;
     private FrameLayout photoalbumWrapper;
     private PhotoAlbumFragment photoAlbumFragment;
+    private MaterialSearchView searchView;
+    private FloatingActionButton searchFab;
 
     @Override
     public void onAttach(Activity activity) {
@@ -80,6 +80,8 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
         pager = (ViewPager) rootView.findViewById(R.id.pager);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         photoalbumWrapper = (FrameLayout) rootView.findViewById(R.id.photoalbum_wrapper);
+        searchView = (MaterialSearchView) rootView.findViewById(R.id.search_view);
+        searchFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -89,6 +91,8 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_downloaded));
         tabLayout.setOnTabSelectedListener(this);
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.white));
+        searchFab.setOnClickListener(this);
+        searchView.setOnSearchViewListener(this);
 
         if (savedInstanceState == null) {
             pager.setAdapter(new MainFragmentsAdapter(context.getSupportFragmentManager()));
@@ -115,6 +119,10 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
 
     public TabLayout getTabLayout() {
         return tabLayout;
+    }
+
+    public MaterialSearchView getSearchView() {
+        return searchView;
     }
 
     public Toolbar getToolbar() {
@@ -177,6 +185,26 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
         photoalbumWrapper.setVisibility(View.GONE);
         tabLayout.setVisibility(View.VISIBLE);
         pager.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab:
+                searchFab.hide(false);
+                searchView.showSearch();
+                break;
+        }
+    }
+
+    @Override
+    public void onSearchViewShown() {
+        searchFab.hide(false);
+    }
+
+    @Override
+    public void onSearchViewClosed() {
+        searchFab.show(false);
     }
 
     private class MainFragmentsAdapter extends FragmentPagerAdapter {

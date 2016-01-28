@@ -252,7 +252,11 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onBackPressed() {
 
-        if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)
+        if (getMainFragment().getSearchView().isSearchOpen()) {
+
+            getMainFragment().getSearchView().closeSearch();
+
+        } else if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)
                 && currentOrientation == Configuration.ORIENTATION_LANDSCAPE) { //if player in fullscreen rotate screen to portrait
 
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
