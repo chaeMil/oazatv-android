@@ -39,6 +39,7 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void startMainActivity() {
+        finish();
         Intent mainActivity = new Intent(TutorialActivity.this, MainActivity.class);
         mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(mainActivity);

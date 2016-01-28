@@ -248,7 +248,9 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onBackPressed() {
 
-        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) { //if player in fullscreen rotate screen to portrait
+        if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)
+                && currentOrientation == Configuration.ORIENTATION_LANDSCAPE) { //if player in fullscreen rotate screen to portrait
+
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
             //this will reset orientation back to sensor after 2 sec
@@ -261,11 +263,19 @@ public class MainActivity extends BaseActivity implements
             }, 2000);
 
         } else if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
+
             panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+
         } else if (getMainFragment().getPhotoalbumWrapper().getVisibility() == View.VISIBLE) {
+
             getMainFragment().closeAlbum();
-        } else if (getAudioPlayerFragment().getAudioPlayer().isPlaying()) {
+
+        } else if (getAudioPlayerFragment() != null
+                && getAudioPlayerFragment().getAudioPlayer() != null
+                && getAudioPlayerFragment().getAudioPlayer().isPlaying()) {
+
             moveTaskToBack(true);
+
         } else {
             super.onBackPressed();
         }
