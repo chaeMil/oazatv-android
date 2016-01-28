@@ -114,6 +114,10 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
         return downloadedFragment;
     }
 
+    public PhotoAlbumFragment getPhotoAlbumFragment() {
+        return photoAlbumFragment;
+    }
+
     public TabLayout getTabLayout() {
         return tabLayout;
     }

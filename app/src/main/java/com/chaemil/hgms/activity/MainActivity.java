@@ -157,6 +157,10 @@ public class MainActivity extends BaseActivity implements
         getMainFragment().getArchiveFragment().adjustLayout();
         getMainFragment().getDownloadedFragment().adjustLayout();
 
+        if (getMainFragment().getPhotoAlbumFragment() != null) {
+            getMainFragment().getPhotoAlbumFragment().adjustLayout();
+        }
+
         if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
             changeStatusBarColor(getResources().getColor(R.color.black));
             if (videoPlayerFragment != null) {

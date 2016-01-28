@@ -74,6 +74,12 @@ public class PhotoAlbumFragment extends Fragment implements RequestFactoryListen
         grid.setColumnWidth(getThumbWidth());
     }
 
+    public void adjustLayout() {
+        if (isAdded()) {
+            grid.setColumnWidth(getThumbWidth());
+        }
+    }
+
     private int getThumbWidth() {
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -84,7 +90,7 @@ public class PhotoAlbumFragment extends Fragment implements RequestFactoryListen
         if (width < height) {
             return width / 3;
         } else {
-            return height / 4;
+            return width / 4;
         }
     }
 
