@@ -31,7 +31,7 @@
         <RelativeLayout
             android:id="@+id/toolbars_wrapper"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="56dp">
 
             <RelativeLayout
                 android:visibility="gone"
@@ -39,7 +39,7 @@
                 android:id="@+id/toolbar"
                 android:background="@color/transparent_black"
                 android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize">
+                android:layout_height="match_parent">
 
                 <TextView
                     android:textColor="@color/white"
@@ -75,7 +75,7 @@
                 android:id="@+id/mini_player"
                 android:background="@color/black"
                 android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize">
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:scaleType="centerCrop"
