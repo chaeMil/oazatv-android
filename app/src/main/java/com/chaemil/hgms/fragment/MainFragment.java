@@ -1,6 +1,7 @@
 package com.chaemil.hgms.fragment;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -65,6 +66,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private TextView toolbarSecondaryTitle;
     private ArrayList<ArchiveItem> searchResult = new ArrayList<>();
     private SearchAdapter searchAdapter;
+    private FrameLayout searchContainer;
 
     @Override
     public void onAttach(Activity activity) {
@@ -111,6 +113,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         searchFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         toolbarSecondary = (Toolbar) rootView.findViewById(R.id.toolbar_secondary);
         toolbarSecondaryTitle = (TextView) rootView.findViewById(R.id.toolbar_secondary_title);
+        searchContainer = (FrameLayout) rootView.findViewById(R.id.search_container);
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -259,11 +262,21 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     @Override
     public void onSearchViewShown() {
         searchFab.hide(false);
+        searchContainer.setVisibility(View.VISIBLE);
+        YoYo.with(Techniques.FadeIn).duration(200).playOn(searchContainer);
     }
 
     @Override
     public void onSearchViewClosed() {
         searchFab.show(true);
+        YoYo.with(Techniques.FadeOut).duration(200).playOn(searchContainer);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                searchContainer.setVisibility(View.GONE);
+            }
+        }, 200);
     }
 
     @Override

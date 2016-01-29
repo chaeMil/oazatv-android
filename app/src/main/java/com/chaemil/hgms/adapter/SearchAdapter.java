@@ -45,6 +45,7 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
 
             holder = new ViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.name);
+            holder.thumb = (ImageView) convertView.findViewById(R.id.thumb);
 
             convertView.setTag(holder);
         }
@@ -60,6 +61,11 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
                 final Video video = archiveItem.getVideo();
 
                 holder.name.setText(video.getName());
+                Picasso.with(context)
+                        .load(video.getThumbFile())
+                        .resize(320, 240)
+                        .centerCrop()
+                        .into(holder.thumb);
                 break;
 
             case ArchiveItem.Type.ALBUM:
@@ -67,6 +73,11 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
                 final PhotoAlbum photoAlbum = archiveItem.getAlbum();
 
                 holder.name.setText(photoAlbum.getName());
+                Picasso.with(context)
+                        .load(photoAlbum.getThumbs().getThumb256())
+                        .resize(320, 240)
+                        .centerCrop()
+                        .into(holder.thumb);
                 break;
         }
 
