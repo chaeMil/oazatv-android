@@ -21,8 +21,12 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.adapter.SearchAdapter;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
+import com.chaemil.hgms.factory.ResponseFactory;
+import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.MyRequestService;
@@ -33,6 +37,9 @@ import com.github.clans.fab.FloatingActionButton;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by chaemil on 4.12.15.
@@ -56,6 +63,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private FloatingActionButton searchFab;
     private Toolbar toolbarSecondary;
     private TextView toolbarSecondaryTitle;
+    private ArrayList<ArchiveItem> searchResult = new ArrayList<>();
+    private SearchAdapter searchAdapter;
 
     @Override
     public void onAttach(Activity activity) {
@@ -74,6 +83,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             archiveFragment = new ArchiveFragment();
             downloadedFragment = new DownloadedFragment();
             photoAlbumFragment = new PhotoAlbumFragment(null);
+            searchAdapter = new SearchAdapter(getActivity(), R.layout.search_item,
+                    ((MainActivity) getActivity()), searchResult);
         }
 
     }
@@ -112,6 +123,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         searchFab.setOnClickListener(this);
         searchView.setOnSearchViewListener(this);
         searchView.setOnQueryTextListener(this);
+        searchView.setAdapter(searchAdapter);
+        //searchView.setSuggestions(new String[] {"test", "pokusak", "blabla"});
 
         if (savedInstanceState == null) {
             pager.setAdapter(new MainFragmentsAdapter(context.getSupportFragmentManager()));
@@ -268,6 +281,20 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     @Override
     public void onSuccessResponse(JSONObject response, RequestType requestType) {
         super.onSuccessResponse(response, requestType);
+
+        switch (requestType) {
+            case SEARCH:
+                ArrayList<ArchiveItem> searchItems = ResponseFactory.parseSearch(response);
+                if (searchItems != null) {
+                    SmartLog.Log(SmartLog.LogLevel.DEBUG, "searchResultSize", String.valueOf(searchItems.size()));
+
+                    searchResult.clear();
+                    searchResult.addAll(searchItems);
+                    searchAdapter.notifyDataSetChanged();
+                    searchView.showSuggestions();
+
+                }
+        }
     }
 
     private class MainFragmentsAdapter extends FragmentPagerAdapter {
