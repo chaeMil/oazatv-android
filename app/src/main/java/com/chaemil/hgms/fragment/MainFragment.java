@@ -2,6 +2,7 @@ package com.chaemil.hgms.fragment;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -127,7 +128,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         searchView.setOnSearchViewListener(this);
         searchView.setOnQueryTextListener(this);
         searchView.setAdapter(searchAdapter);
-        //searchView.setSuggestions(new String[] {"test", "pokusak", "blabla"});
+        searchContainer.setOnClickListener(this);
 
         if (savedInstanceState == null) {
             pager.setAdapter(new MainFragmentsAdapter(context.getSupportFragmentManager()));
@@ -255,6 +256,9 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             case R.id.fab:
                 searchFab.hide(false);
                 searchView.showSearch();
+                break;
+            case R.id.search_container:
+                searchView.closeSearch();
                 break;
         }
     }

@@ -9,6 +9,7 @@
     <color name="white">#ffffff</color>
     <color name="transparent_white">#0fffffff</color>
     <color name="download_cover">#a2ffffff</color>
+    <color name="colorPrimaryAlpha">#ce4285f4</color>
 
 
     <!-- google's material design colours from
