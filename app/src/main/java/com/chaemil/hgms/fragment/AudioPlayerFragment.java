@@ -197,12 +197,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         rew.setOnClickListener(this);
         ff.setOnClickListener(this);
         miniPlayerPause.setOnClickListener(this);
-
-        if (downloaded) {
-            type.setImageDrawable(getResources().getDrawable(R.drawable.thumb_corner_white_color));
-        } else {
-            type.setImageDrawable(getResources().getDrawable(R.drawable.thumb_corner_red_color));
-        }
     }
 
     @Override
@@ -454,6 +448,10 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         String downloadedString = "";
         if (downloaded) {
             downloadedString = "[" + getString(R.string.downloaded) + "] ";
+
+            type.setImageDrawable(getResources().getDrawable(R.drawable.thumb_corner_white_color));
+        } else {
+            type.setImageDrawable(getResources().getDrawable(R.drawable.thumb_corner_red_color));
         }
 
         miniPlayerText.setText(downloadedString + audio.getName());
