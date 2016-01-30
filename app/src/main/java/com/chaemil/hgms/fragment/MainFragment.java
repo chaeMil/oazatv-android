@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
+import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
@@ -48,7 +50,7 @@ import java.util.List;
  */
 public class MainFragment extends BaseFragment implements TabLayout.OnTabSelectedListener,
         View.OnClickListener, MaterialSearchView.SearchViewListener,
-        MaterialSearchView.OnQueryTextListener, RequestFactoryListener {
+        MaterialSearchView.OnQueryTextListener, RequestFactoryListener, AdapterView.OnItemClickListener {
 
     public static final String TAG = "main_fragment";
     private TabLayout tabLayout;
@@ -128,6 +130,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         searchView.setOnSearchViewListener(this);
         searchView.setOnQueryTextListener(this);
         searchView.setAdapter(searchAdapter);
+        searchView.setOnItemClickListener(this);
         searchContainer.setOnClickListener(this);
 
         if (savedInstanceState == null) {
@@ -293,6 +296,37 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         JsonObjectRequest search = RequestFactory.search(this, newText);
         MyRequestService.getRequestQueue().add(search);
         return true;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        final ArchiveItem item = searchResult.get(position);
+
+        switch (item.getType()) {
+            case ArchiveItem.Type.VIDEO:
+                searchView.closeSearch();
+                Handler videoHandler = new Handler();
+                videoHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Video video = item.getVideo();
+                        ((MainActivity) getActivity()).playNewVideo(video);
+                    }
+                }, 200);
+
+                break;
+            case ArchiveItem.Type.ALBUM:
+                searchView.closeSearch();
+                Handler albumHandler = new Handler();
+                albumHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        PhotoAlbum album = item.getAlbum();
+                        ((MainActivity) getActivity()).getMainFragment().openAlbum(album);
+                    }
+                }, 200);
+                break;
+        }
     }
 
     @Override
