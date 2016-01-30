@@ -18,6 +18,18 @@
             android:layout_width="150dp"
             android:layout_height="match_parent" />
 
+        <ImageView
+            tools:background="@drawable/thumb_corner_primary_color"
+            android:id="@+id/type_drawable"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentRight="false"
+            android:layout_alignTop="@+id/thumb"
+            android:layout_alignRight="@+id/thumb">
+
+        </ImageView>
+
         <TextView
             tools:text="Video name sooooo long"
             android:id="@+id/name"

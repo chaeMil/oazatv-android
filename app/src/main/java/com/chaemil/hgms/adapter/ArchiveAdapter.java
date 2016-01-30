@@ -55,6 +55,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
             holder.views = (TextView) convertView.findViewById(R.id.views);
             holder.playAudio = (ImageView) convertView.findViewById(R.id.play_audio);
             holder.download = (ImageView) convertView.findViewById(R.id.download_audio);
+            holder.type = (ImageView) convertView.findViewById(R.id.type_drawable);
 
             convertView.setTag(holder);
         }
@@ -69,6 +70,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
 
                 final Video video = archiveItem.getVideo();
 
+                holder.type.setImageDrawable(context.getResources().getDrawable(R.drawable.thumb_corner_primary_color));
                 holder.download.setVisibility(View.VISIBLE);
                 holder.playAudio.setVisibility(View.VISIBLE);
                 holder.mainView.setOnClickListener(new View.OnClickListener() {
@@ -107,6 +109,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
 
                 final PhotoAlbum photoAlbum = archiveItem.getAlbum();
 
+                holder.type.setImageDrawable(context.getResources().getDrawable(R.drawable.thumb_corner_green_color));
                 holder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -150,6 +153,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
         public TextView views;
         public ImageView playAudio;
         public ImageView download;
+        public ImageView type;
 
     }
 

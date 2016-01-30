@@ -136,6 +136,15 @@
                 android:layout_centerHorizontal="true"
                 android:visibility="gone" />
 
+            <ImageView
+                android:background="@drawable/thumb_corner_primary_color"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true">
+
+            </ImageView>
+
         </RelativeLayout>
 
         <RelativeLayout

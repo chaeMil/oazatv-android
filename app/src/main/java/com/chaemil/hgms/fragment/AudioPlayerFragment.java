@@ -95,6 +95,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private Notification notification;
     private NotificationCompat.Builder notificationBuilder;
     private Bitmap unblurredThumb;
+    private ImageView type;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -188,6 +189,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         seekBar.setOnSeekBarChangeListener(this);
         miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
+        type = (ImageView) rootView.findViewById(R.id.type_drawable);
     }
 
     private void setupUI() {
@@ -195,6 +197,12 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         rew.setOnClickListener(this);
         ff.setOnClickListener(this);
         miniPlayerPause.setOnClickListener(this);
+
+        if (downloaded) {
+            type.setImageDrawable(getResources().getDrawable(R.drawable.thumb_corner_white_color));
+        } else {
+            type.setImageDrawable(getResources().getDrawable(R.drawable.thumb_corner_red_color));
+        }
     }
 
     @Override
