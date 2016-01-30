@@ -21,8 +21,8 @@
         <ImageView
             android:background="@drawable/thumb_corner_white_color"
             android:id="@+id/type_drawable"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_alignParentTop="false"
             android:layout_alignParentRight="false"
             android:layout_alignTop="@+id/thumb"

@@ -129,10 +129,12 @@
             <ImageView
                 android:id="@+id/type"
                 tools:background="@drawable/thumb_corner_red_color"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true">
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentRight="false"
+                android:layout_alignTop="@+id/audio_thumb"
+                android:layout_alignRight="@+id/audio_thumb">
 
             </ImageView>
 

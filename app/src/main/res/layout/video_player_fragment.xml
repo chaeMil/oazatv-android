@@ -138,10 +138,12 @@
 
             <ImageView
                 android:background="@drawable/thumb_corner_primary_color"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true">
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentRight="false"
+                android:layout_alignTop="@+id/video_view"
+                android:layout_alignRight="@+id/video_view">
 
             </ImageView>
 
