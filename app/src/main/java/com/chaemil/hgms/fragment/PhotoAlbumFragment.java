@@ -2,8 +2,6 @@ package com.chaemil.hgms.fragment;
 
 import android.graphics.Point;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -12,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.adapter.PhotosAdapter;
@@ -24,8 +21,6 @@ import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.SmartLog;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 
 import org.json.JSONObject;
 
@@ -34,7 +29,6 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     private PhotoAlbum album;
     private PhotosAdapter adapter;
     private GridView grid;
-
     private int thumbWidth;
     private ViewPager photosViewPager;
     private PhotosViewPagerAdapter photosAdapter;
@@ -80,6 +74,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
 
     private void setupUI() {
         thumbWidth = getThumbWidth();
+        photosViewPager.setOffscreenPageLimit(1);
         grid.setColumnWidth(getThumbWidth());
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -128,7 +123,8 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
                     album.setPhotos(photoAlbum.getPhotos());
                     adapter = new PhotosAdapter(getActivity(), thumbWidth, album.getPhotos());
                     grid.setAdapter(adapter);
-                    photosAdapter = new PhotosViewPagerAdapter(getFragmentManager(), album.getPhotos());
+                    photosAdapter = new PhotosViewPagerAdapter(getFragmentManager(),
+                            album.getPhotos());
                     photosViewPager.setAdapter(photosAdapter);
                 }
                 break;

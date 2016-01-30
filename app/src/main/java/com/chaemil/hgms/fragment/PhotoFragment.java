@@ -1,24 +1,28 @@
 package com.chaemil.hgms.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.model.Photo;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 /**
  * Created by chaemil on 21.7.15.
  */
 public class PhotoFragment extends Fragment {
-    private ImageView image;
+    private SubsamplingScaleImageView image;
     private TextView label;
     private Photo photo;
     private ProgressBar progressBar;
@@ -35,26 +39,39 @@ public class PhotoFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
     private void setupUI() {
+
         Picasso.with(getActivity())
                 .load(photo.getThumb2048())
-                .into(image, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                progressBar.setVisibility(View.GONE);
-                            }
+                .into(new Target() {
 
-                            @Override
-                            public void onError() {
-                                setupUI();
-                            }
-                        });
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        progressBar.setVisibility(View.GONE);
+                        image.setImage(ImageSource.bitmap(bitmap));
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                });
 
         label.setText(photo.getDescription());
     }
 
     private void getUI(ViewGroup rootView) {
-        image = (ImageView) rootView.findViewById(R.id.image);
+        image = (SubsamplingScaleImageView) rootView.findViewById(R.id.image);
         label = (TextView) rootView.findViewById(R.id.label);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
     }
