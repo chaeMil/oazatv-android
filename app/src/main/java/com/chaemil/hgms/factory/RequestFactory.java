@@ -11,11 +11,13 @@ import com.chaemil.hgms.utils.SmartLog;
 
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
+
 public class RequestFactory {
     public static final int DEFAULT_TIMEOUT_MS = 10000;
 
     public static JsonObjectRequest search(RequestFactoryListener listener, String query) {
-        String url = Constants.API_SEARCH + query;
+        String url = Constants.API_SEARCH + URLEncoder.encode(query) + "/?limit=20";
 
         JSONObject jsonObject = new JSONObject();
 
