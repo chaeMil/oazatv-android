@@ -564,6 +564,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         if (fromUser) {
             audioPlayer.seekTo(progress);
             updateTime();
+            saveCurrentAudioTime();
         }
     }
 

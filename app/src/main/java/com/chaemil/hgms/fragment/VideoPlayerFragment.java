@@ -545,6 +545,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         if (fromUser) {
             videoView.seekTo(progress);
             updateTime();
+            saveCurrentVideoTime();
         }
     }
 
