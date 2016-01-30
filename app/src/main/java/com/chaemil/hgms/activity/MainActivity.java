@@ -10,9 +10,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.GridView;
 import android.widget.RelativeLayout;
 
 import com.chaemil.hgms.R;
@@ -23,6 +25,8 @@ import com.chaemil.hgms.fragment.VideoPlayerFragment;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.utils.SmartLog;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
@@ -276,7 +280,21 @@ public class MainActivity extends BaseActivity implements
 
         } else if (getMainFragment().getPhotoalbumWrapper().getVisibility() == View.VISIBLE) {
 
-            getMainFragment().closeAlbum();
+            ViewPager photosViewPager = getMainFragment().getPhotoAlbumFragment().getPhotosViewPager();
+            GridView grid = getMainFragment().getPhotoAlbumFragment().getGrid();
+
+            if (photosViewPager.getVisibility() == View.VISIBLE) {
+                int currentPhoto = photosViewPager.getCurrentItem();
+                grid.smoothScrollToPosition(currentPhoto);
+
+                if (grid.getChildAt(currentPhoto) != null) {
+                    YoYo.with(Techniques.Pulse).duration(500).playOn(grid.getChildAt(currentPhoto));
+                }
+
+                getMainFragment().getPhotoAlbumFragment().hidePhotos();
+            } else {
+                getMainFragment().closeAlbum();
+            }
 
         } else if (getAudioPlayerFragment() != null
                 && getAudioPlayerFragment().getAudioPlayer() != null

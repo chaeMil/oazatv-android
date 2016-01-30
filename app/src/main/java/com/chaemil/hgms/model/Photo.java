@@ -1,10 +1,18 @@
 package com.chaemil.hgms.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.chaemil.hgms.utils.Constants;
+
+import java.util.Locale;
+
 /**
  * Created by chaemil on 24.1.16.
  */
-public class Photo {
+public class Photo implements Parcelable {
 
+    public static final String PHOTO = "photo";
     private String originalFile;
     private String thumb128;
     private String thumb256;
@@ -23,6 +31,59 @@ public class Photo {
         this.thumb2048 = thumb2048;
         this.descriptionCS = descriptionCS;
         this.descriptionEN = descriptionEN;
+    }
+
+    public Photo(Parcel source) {
+        this.originalFile = source.readString();
+        this.thumb128 = source.readString();
+        this.thumb256 = source.readString();
+        this.thumb512 = source.readString();
+        this.thumb1024 = source.readString();
+        this.thumb2048 = source.readString();
+        this.descriptionCS = source.readString();
+        this.descriptionEN = source.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(originalFile);
+        dest.writeString(thumb128);
+        dest.writeString(thumb256);
+        dest.writeString(thumb512);
+        dest.writeString(thumb1024);
+        dest.writeString(thumb2048);
+        dest.writeString(descriptionCS);
+        dest.writeString(descriptionEN);
+    }
+
+    public static final Parcelable.Creator<Photo> CREATOR
+            = new Parcelable.Creator<Photo>() {
+        public Photo createFromParcel(Parcel in) {
+            return new Photo(in);
+        }
+
+        public Photo[] newArray(int size) {
+            return new Photo[size];
+        }
+    };
+
+    public String getDescription() {
+        switch (Locale.getDefault().getLanguage()) {
+
+            case Constants.SK:
+                return getDescriptionCS();
+            case Constants.CS:
+                return getDescriptionCS();
+            case Constants.EN:
+                return getDescriptionEN();
+            default:
+                return getDescriptionEN();
+        }
     }
 
     public String getOriginalFile() {

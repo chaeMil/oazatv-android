@@ -51,13 +51,6 @@ public class PhotosAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
         Picasso.with(activity.getApplicationContext())
                 .load(photos.get(position).getThumb512())
                 .resize(thumbWidth, thumbWidth)

@@ -2,17 +2,21 @@ package com.chaemil.hgms.fragment;
 
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.adapter.PhotosAdapter;
+import com.chaemil.hgms.adapter.PhotosViewPagerAdapter;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.factory.ResponseFactory;
@@ -20,16 +24,20 @@ import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.SmartLog;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 
 import org.json.JSONObject;
 
-public class PhotoAlbumFragment extends Fragment implements RequestFactoryListener {
+public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryListener {
     public static final String TAG = "PhotoAlbumFragment";
     private PhotoAlbum album;
     private PhotosAdapter adapter;
     private GridView grid;
 
     private int thumbWidth;
+    private ViewPager photosViewPager;
+    private PhotosViewPagerAdapter photosAdapter;
 
     public PhotoAlbumFragment(PhotoAlbum album) {
         super();
@@ -67,11 +75,27 @@ public class PhotoAlbumFragment extends Fragment implements RequestFactoryListen
 
     private void getUI(View rootView) {
         grid = (GridView) rootView.findViewById(R.id.gridView);
+        photosViewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
     }
 
     private void setupUI() {
         thumbWidth = getThumbWidth();
         grid.setColumnWidth(getThumbWidth());
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showPhoto(position);
+            }
+        });
+    }
+
+    public void showPhoto(int position) {
+        photosViewPager.setCurrentItem(position, false);
+        photosViewPager.setVisibility(View.VISIBLE);
+    }
+
+    public void hidePhotos() {
+        photosViewPager.setVisibility(View.GONE);
     }
 
     public void adjustLayout() {
@@ -104,13 +128,18 @@ public class PhotoAlbumFragment extends Fragment implements RequestFactoryListen
                     album.setPhotos(photoAlbum.getPhotos());
                     adapter = new PhotosAdapter(getActivity(), thumbWidth, album.getPhotos());
                     grid.setAdapter(adapter);
+                    photosAdapter = new PhotosViewPagerAdapter(getFragmentManager(), album.getPhotos());
+                    photosViewPager.setAdapter(photosAdapter);
                 }
                 break;
         }
     }
 
-    @Override
-    public void onErrorResponse(VolleyError exception) {
+    public GridView getGrid() {
+        return grid;
+    }
 
+    public ViewPager getPhotosViewPager() {
+        return photosViewPager;
     }
 }

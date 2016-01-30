@@ -11,10 +11,14 @@
         android:gravity="center"
         android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
-        android:paddingBottom="?android:attr/actionBarSize"
-        android:focusable="true"
-        android:clickable="true"
         android:scrollbars="none"
         android:clipToPadding="false"/>
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/viewPager"
+        android:visibility="gone">
+    </android.support.v4.view.ViewPager>
 
 </RelativeLayout>
