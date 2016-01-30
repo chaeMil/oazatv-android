@@ -189,7 +189,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         seekBar.setOnSeekBarChangeListener(this);
         miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
-        type = (ImageView) rootView.findViewById(R.id.type_drawable);
+        type = (ImageView) rootView.findViewById(R.id.type);
     }
 
     private void setupUI() {
