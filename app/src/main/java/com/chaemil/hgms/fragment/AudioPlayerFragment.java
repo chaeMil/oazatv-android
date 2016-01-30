@@ -134,7 +134,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
         releasePlayer();
 
-        saveCurrentVideoTime();
+        saveCurrentAudioTime();
     }
 
     @Override
@@ -214,6 +214,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     private void swipeDismissPlayer(boolean right) {
+        saveCurrentAudioTime();
+
         pauseAudio();
         releasePlayer();
         if (right) {
@@ -277,11 +279,11 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             public boolean onInfo(MediaPlayer mp, int what, int extra) {
                 if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
                     bufferBar.setVisibility(View.VISIBLE);
-                    saveCurrentVideoTime();
+                    saveCurrentAudioTime();
                 }
                 if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
                     bufferBar.setVisibility(View.GONE);
-                    saveCurrentVideoTime();
+                    saveCurrentAudioTime();
                 }
                 return false;
             }
@@ -329,7 +331,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     public void playPauseAudio() {
-        saveCurrentVideoTime();
+        saveCurrentAudioTime();
 
         if (audioPlayer.isPlaying()) {
             pauseAudio();
@@ -436,7 +438,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
 
-    public void saveCurrentVideoTime() {
+    public void saveCurrentAudioTime() {
         if (audioPlayer != null && currentAudio != null) {
             try {
                 currentAudio.setCurrentTime(audioPlayer.getCurrentPosition());
@@ -449,7 +451,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
     public void playNewAudio(final Video audio, final boolean downloaded) {
 
-        saveCurrentVideoTime();
+        saveCurrentAudioTime();
 
         this.downloaded = downloaded;
 

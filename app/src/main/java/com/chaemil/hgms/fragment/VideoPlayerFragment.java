@@ -205,6 +205,8 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     private void swipeDismissPlayer(boolean right) {
+        saveCurrentVideoTime();
+
         videoView.pause();
         if (right) {
             YoYo.with(Techniques.SlideOutRight).duration(300).playOn(miniPlayer);
@@ -431,6 +433,8 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     private void playPauseVideo() {
+        saveCurrentVideoTime();
+
         if (videoView.isPlaying()) {
             videoView.pause();
             playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
