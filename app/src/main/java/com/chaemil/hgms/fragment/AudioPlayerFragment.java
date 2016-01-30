@@ -36,6 +36,7 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.BitmapUtils;
+import com.chaemil.hgms.utils.OnSwipeTouchListener;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -197,6 +198,37 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         rew.setOnClickListener(this);
         ff.setOnClickListener(this);
         miniPlayerPause.setOnClickListener(this);
+        miniPlayer.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
+            @Override
+            public void onSwipeRight() {
+                super.onSwipeRight();
+                swipeDismissPlayer(true);
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                super.onSwipeLeft();
+                swipeDismissPlayer(false);
+            }
+        });
+    }
+
+    private void swipeDismissPlayer(boolean right) {
+        pauseAudio();
+        releasePlayer();
+        if (right) {
+            YoYo.with(Techniques.SlideOutRight).duration(300).playOn(miniPlayer);
+        } else {
+            YoYo.with(Techniques.SlideOutLeft).duration(300).playOn(miniPlayer);
+        }
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ((MainActivity) getActivity()).hidePanel();
+            }
+        }, 300);
     }
 
     @Override

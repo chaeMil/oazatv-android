@@ -27,6 +27,7 @@ import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.BitmapUtils;
 import com.chaemil.hgms.utils.DimensUtils;
+import com.chaemil.hgms.utils.OnSwipeTouchListener;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -188,6 +189,36 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                 ViewGroup.LayoutParams.MATCH_PARENT);
         videoWrapperParamsFullscreen.setMargins(0, 0, 0, 0);  // left, top, right, bottom
 
+        miniPlayer.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
+            @Override
+            public void onSwipeRight() {
+                super.onSwipeRight();
+                swipeDismissPlayer(true);
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                super.onSwipeLeft();
+                swipeDismissPlayer(false);
+            }
+        });
+    }
+
+    private void swipeDismissPlayer(boolean right) {
+        videoView.pause();
+        if (right) {
+            YoYo.with(Techniques.SlideOutRight).duration(300).playOn(miniPlayer);
+        } else {
+            YoYo.with(Techniques.SlideOutLeft).duration(300).playOn(miniPlayer);
+        }
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ((MainActivity) getActivity()).hidePanel();
+            }
+        }, 300);
     }
 
     @Override
