@@ -58,7 +58,6 @@ dependencies {
     compile 'com.github.markushi:circlebutton:1.1'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.satyan:sugar:1.4'
-    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.koushikdutta.ion:ion:2.+'
     compile 'com.github.clans:fab:1.6.1'
     compile 'com.miguelcatalan:materialsearchview:1.4.0'

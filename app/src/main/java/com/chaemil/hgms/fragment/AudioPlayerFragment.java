@@ -41,7 +41,7 @@ import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
-import com.squareup.picasso.Picasso;
+import com.koushikdutta.ion.Ion;
 
 import java.io.IOException;
 
@@ -473,8 +473,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             this.currentAudio = audio;
         }
 
-        Picasso.with(getActivity()).load(currentAudio.getThumbFile()).into(audioThumb);
-        Picasso.with(getActivity()).load(currentAudio.getThumbFile()).centerCrop().resize(320, 320).into(miniPlayerImageView);
+        Ion.with(getActivity()).load(currentAudio.getThumbFile()).intoImageView(audioThumb);
+        Ion.with(getActivity()).load(currentAudio.getThumbFile()).intoImageView(miniPlayerImageView);
 
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));

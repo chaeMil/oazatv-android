@@ -16,7 +16,7 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.StringUtils;
-import com.squareup.picasso.Picasso;
+import com.koushikdutta.ion.Ion;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -78,7 +78,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
 
         File thumbFile = new File(String.valueOf(context.getExternalFilesDir(null)) + "/" + video.getHash() + ".jpg");
 
-        Picasso.with(context).load(thumbFile).into(holder.thumb);
+        Ion.with(context).load(thumbFile).intoImageView(holder.thumb);
 
         if (!video.isDownloaded() && video.isInDownloadQueue()) {
             holder.downloadCover.setVisibility(View.VISIBLE);

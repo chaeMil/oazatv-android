@@ -32,7 +32,7 @@ import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
-import com.squareup.picasso.Picasso;
+import com.koushikdutta.ion.Ion;
 
 import at.markushi.ui.CircleButton;
 
@@ -494,7 +494,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
             this.currentVideo = video;
         }
 
-        Picasso.with(getActivity()).load(currentVideo.getThumbFile()).centerCrop().resize(320, 320).into(miniPlayerImageView);
+        Ion.with(getActivity()).load(currentVideo.getThumbFile()).intoImageView(miniPlayerImageView);
 
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));

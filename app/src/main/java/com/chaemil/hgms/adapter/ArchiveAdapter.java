@@ -13,12 +13,11 @@ import android.widget.TextView;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
-import com.chaemil.hgms.fragment.MainFragment;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
-import com.squareup.picasso.Picasso;
+import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 
@@ -94,7 +93,8 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                         downloadAudio(video);
                     }
                 });
-                Picasso.with(context).load(video.getThumbFile()).into(holder.thumb);
+                Ion.with(context).load(video.getThumbFile()).intoImageView(holder.thumb);
+
 
                 int downloadStatus = Video.getDownloadStatus(video.getServerId());
 
@@ -121,7 +121,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.views.setText(context.getString(R.string.photo_album));
                 holder.download.setVisibility(View.GONE);
                 holder.playAudio.setVisibility(View.GONE);
-                Picasso.with(context).load(photoAlbum.getThumbs().getThumb512()).into(holder.thumb);
+                Ion.with(context).load(photoAlbum.getThumbs().getThumb512()).intoImageView(holder.thumb);
                 break;
         }
 

@@ -10,7 +10,7 @@ import android.widget.BaseAdapter;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.view.SquareImageView;
-import com.squareup.picasso.Picasso;
+import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 
@@ -51,11 +51,9 @@ public class PhotosAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Picasso.with(activity.getApplicationContext())
+        Ion.with(activity.getApplicationContext())
                 .load(photos.get(position).getThumb512())
-                .resize(thumbWidth, thumbWidth)
-                .centerCrop()
-                .into(holder.image);
+                .intoImageView(holder.image);
 
         return convertView;
     }
