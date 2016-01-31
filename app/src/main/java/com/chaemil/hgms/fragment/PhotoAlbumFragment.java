@@ -75,6 +75,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     private void setupUI() {
         thumbWidth = getThumbWidth();
         photosViewPager.setOffscreenPageLimit(1);
+        photosViewPager.removeAllViews();
         grid.setColumnWidth(getThumbWidth());
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -82,6 +83,14 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
                 showPhoto(position);
             }
         });
+
+        adapter = new PhotosAdapter(getActivity(), thumbWidth, album.getPhotos());
+        grid.setAdapter(adapter);
+        photosAdapter = new PhotosViewPagerAdapter(getChildFragmentManager(), album.getPhotos());
+        photosViewPager.setAdapter(photosAdapter);
+
+        adapter.notifyDataSetChanged();
+        photosAdapter.notifyDataSetChanged();
     }
 
     public void showPhoto(int position) {
@@ -119,13 +128,9 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
             case GET_PHOTO_ALBUM:
                 PhotoAlbum photoAlbum = ResponseFactory.parseAlbum(response);
                 if (photoAlbum != null && photoAlbum.getPhotos().size() > 0) {
-                    setupUI();
+                    album.setPhotos(null);
                     album.setPhotos(photoAlbum.getPhotos());
-                    adapter = new PhotosAdapter(getActivity(), thumbWidth, album.getPhotos());
-                    grid.setAdapter(adapter);
-                    photosAdapter = new PhotosViewPagerAdapter(getFragmentManager(),
-                            album.getPhotos());
-                    photosViewPager.setAdapter(photosAdapter);
+                    setupUI();
                 }
                 break;
         }
