@@ -74,7 +74,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
 
     private void setupUI() {
         thumbWidth = getThumbWidth();
-        photosViewPager.setOffscreenPageLimit(1);
+        photosViewPager.setOffscreenPageLimit(2);
         photosViewPager.removeAllViews();
         grid.setColumnWidth(getThumbWidth());
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {

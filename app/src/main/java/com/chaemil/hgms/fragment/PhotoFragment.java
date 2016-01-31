@@ -1,7 +1,6 @@
 package com.chaemil.hgms.fragment;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,14 +13,13 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.model.Photo;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 /**
  * Created by chaemil on 21.7.15.
  */
-public class PhotoFragment extends Fragment {
+public class PhotoFragment extends Fragment implements FutureCallback<Bitmap> {
     private SubsamplingScaleImageView image;
     private TextView label;
     private Photo photo;
@@ -46,26 +44,10 @@ public class PhotoFragment extends Fragment {
 
     private void setupUI() {
 
-        Picasso.with(getActivity())
+        Ion.with(getActivity())
                 .load(photo.getThumb2048())
-                .into(new Target() {
-
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        progressBar.setVisibility(View.GONE);
-                        image.setImage(ImageSource.bitmap(bitmap));
-                    }
-
-                    @Override
-                    public void onBitmapFailed(Drawable errorDrawable) {
-
-                    }
-
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                    }
-                });
+                .asBitmap()
+                .setCallback(this);
 
         label.setText(photo.getDescription());
     }
@@ -84,5 +66,11 @@ public class PhotoFragment extends Fragment {
         fragment.setArguments(bundle);
 
         return fragment;
+    }
+
+    @Override
+    public void onCompleted(Exception e, Bitmap result) {
+        image.setImage(ImageSource.bitmap(result));
+        progressBar.setVisibility(View.GONE);
     }
 }
