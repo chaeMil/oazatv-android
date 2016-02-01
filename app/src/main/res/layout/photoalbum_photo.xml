@@ -19,7 +19,7 @@
         tools:text="photoLabel"
         android:textColor="@color/white"
         android:background="@color/transparent_black"
-        android:padding="8dp"
+        android:padding="12dp"
         android:gravity="center_horizontal|center_vertical"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"

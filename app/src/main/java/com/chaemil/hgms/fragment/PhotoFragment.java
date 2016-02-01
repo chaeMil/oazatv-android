@@ -49,7 +49,12 @@ public class PhotoFragment extends Fragment implements FutureCallback<Bitmap> {
                 .asBitmap()
                 .setCallback(this);
 
-        label.setText(photo.getDescription());
+        if (!photo.getDescription().trim().equals("")) {
+            label.setText(photo.getDescription());
+        } else {
+            label.setVisibility(View.GONE);
+        }
+
     }
 
     private void getUI(ViewGroup rootView) {
