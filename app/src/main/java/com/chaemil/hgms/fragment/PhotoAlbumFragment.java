@@ -9,9 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageButton;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.PhotosAdapter;
 import com.chaemil.hgms.adapter.PhotosViewPagerAdapter;
 import com.chaemil.hgms.factory.RequestFactory;
@@ -24,7 +26,7 @@ import com.chaemil.hgms.utils.SmartLog;
 
 import org.json.JSONObject;
 
-public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryListener {
+public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryListener, View.OnClickListener {
     public static final String TAG = "PhotoAlbumFragment";
     private PhotoAlbum album;
     private PhotosAdapter adapter;
@@ -32,6 +34,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     private int thumbWidth;
     private ViewPager photosViewPager;
     private PhotosViewPagerAdapter photosAdapter;
+    private ImageButton back;
 
     public PhotoAlbumFragment(PhotoAlbum album) {
         super();
@@ -70,9 +73,11 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     private void getUI(View rootView) {
         grid = (GridView) rootView.findViewById(R.id.gridView);
         photosViewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
+        back = (ImageButton) rootView.findViewById(R.id.back);
     }
 
     private void setupUI() {
+        back.setOnClickListener(this);
         thumbWidth = getThumbWidth();
         photosViewPager.setOffscreenPageLimit(2);
         photosViewPager.removeAllViews();
@@ -94,12 +99,18 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     }
 
     public void showPhoto(int position) {
+        ((MainActivity) getActivity()).changeStatusBarColor(getResources().getColor(R.color.black));
+        ((MainActivity) getActivity()).getMainFragment().getAppBar().setVisibility(View.GONE);
         photosViewPager.setCurrentItem(position, false);
         photosViewPager.setVisibility(View.VISIBLE);
+        back.setVisibility(View.VISIBLE);
     }
 
     public void hidePhotos() {
+        ((MainActivity) getActivity()).changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        ((MainActivity) getActivity()).getMainFragment().getAppBar().setVisibility(View.VISIBLE);
         photosViewPager.setVisibility(View.GONE);
+        back.setVisibility(View.GONE);
     }
 
     public void adjustLayout() {
@@ -142,5 +153,14 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
 
     public ViewPager getPhotosViewPager() {
         return photosViewPager;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back:
+                hidePhotos();
+                break;
+        }
     }
 }

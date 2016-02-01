@@ -310,7 +310,7 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
-    private void changeStatusBarColor(int color) {
+    public void changeStatusBarColor(int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

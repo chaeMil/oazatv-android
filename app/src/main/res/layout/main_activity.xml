@@ -14,7 +14,7 @@
         android:id="@+id/sliding_up_panel_layout"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        sothree:umanoPanelHeight="?android:attr/actionBarSize"
+        sothree:umanoPanelHeight="56dp"
         sothree:umanoShadowHeight="4dp"
         sothree:umanoDragView="@+id/mini_player">
 
