@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.GridView;
@@ -42,6 +43,7 @@ public class MainActivity extends BaseActivity implements
     private int currentOrientation;
     private RelativeLayout mainRelativeLayout;
     private AudioPlaybackControlsReceiver audioPlaybackReceiver;
+    private View decorView;
 
 
     @Override
@@ -89,6 +91,7 @@ public class MainActivity extends BaseActivity implements
     private void getUI() {
         panelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_up_panel_layout);
         mainRelativeLayout = (RelativeLayout) findViewById(R.id.main_relative_layout);
+        decorView = getWindow().getDecorView().getRootView();
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -373,14 +376,8 @@ public class MainActivity extends BaseActivity implements
                     context.sendBroadcast(it);
 
                     bringToFront();
+                    expandPanel();
 
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            expandPanel();
-                        }
-                    }, 500);
                     break;
                 case AudioPlayerFragment.NOTIFY_FF:
                     getAudioPlayerFragment().seekFF();
