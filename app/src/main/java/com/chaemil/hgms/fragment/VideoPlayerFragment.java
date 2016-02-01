@@ -123,10 +123,18 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         }
 
         getUI(rootView);
+        activateUI(false);
         setupUI();
         adjustLayout();
 
         return rootView;
+    }
+
+    private void activateUI(boolean state) {
+        playPause.setEnabled(state);
+        rew.setEnabled(state);
+        ff.setEnabled(state);
+        seekBar.setEnabled(state);
     }
 
     @Override
@@ -518,6 +526,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
                 resizeAndBlurBg();
 
+                activateUI(true);
                 videoView.stopPlayback();
                 videoView.setVideoPath(video.getVideoFile());
                 videoView.start();

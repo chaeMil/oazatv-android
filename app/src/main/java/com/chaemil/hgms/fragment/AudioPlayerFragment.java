@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -43,6 +44,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.ion.Ion;
 
+import java.io.File;
 import java.io.IOException;
 
 import at.markushi.ui.CircleButton;
@@ -150,9 +152,17 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         }
 
         getUI(rootView);
+        activateUI(false);
         setupUI();
 
         return rootView;
+    }
+
+    private void activateUI(boolean state) {
+        playPause.setEnabled(state);
+        rew.setEnabled(state);
+        ff.setEnabled(state);
+        seekBar.setEnabled(state);
     }
 
     @Override
@@ -253,6 +263,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onPrepared(MediaPlayer mp) {
+        activateUI(true);
         audioPlayer.start();
         audioPlayer.seekTo(currentAudio.getCurrentTime());
         duration = audioPlayer.getDuration();
@@ -357,8 +368,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             wifiLock.release();
         }
 
-        notificationBuilder.setOngoing(false)
-                .setLargeIcon(thumb);
+        notificationBuilder.setOngoing(false);
         notificationManager.notify(NOTIFICATION_ID,
                 notificationBuilder.build());
 
@@ -369,8 +379,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     public void playAudio() {
         audioPlayer.start();
 
-        notificationBuilder.setOngoing(true)
-                .setLargeIcon(thumb);
+        notificationBuilder.setOngoing(true);
         notificationManager.notify(NOTIFICATION_ID,
                 notificationBuilder.build());
 
@@ -642,13 +651,18 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
     private class ComputeImage extends AsyncTask {
 
-
         @Override
         protected Object doInBackground(Object[] params) {
 
             try {
-                thumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
-                unblurredThumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
+                if (downloaded) {
+                    String thumbFile = getContext().getExternalFilesDir(null) + "/" + currentAudio.getHash() + ".jpg";
+                    thumb = BitmapFactory.decodeFile(thumbFile);
+                    unblurredThumb = Bitmap.createBitmap(thumb);
+                } else {
+                    thumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
+                    unblurredThumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
+                }
                 if (thumb == null) {
                     thumb = BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.placeholder));
                 }
