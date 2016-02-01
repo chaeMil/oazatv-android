@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -70,6 +71,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private ArrayList<ArchiveItem> searchResult = new ArrayList<>();
     private SearchAdapter searchAdapter;
     private FrameLayout searchContainer;
+    private RelativeLayout backWrapper;
+    private ImageButton back;
 
     @Override
     public void onAttach(Activity activity) {
@@ -117,6 +120,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         toolbarSecondary = (Toolbar) rootView.findViewById(R.id.toolbar_secondary);
         toolbarSecondaryTitle = (TextView) rootView.findViewById(R.id.toolbar_secondary_title);
         searchContainer = (FrameLayout) rootView.findViewById(R.id.search_container);
+        backWrapper = (RelativeLayout) rootView.findViewById(R.id.back_wrapper);
+        back = (ImageButton) rootView.findViewById(R.id.back);
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -132,6 +137,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         searchView.setAdapter(searchAdapter);
         searchView.setOnItemClickListener(this);
         searchContainer.setOnClickListener(this);
+        back.setOnClickListener(this);
 
         if (savedInstanceState == null) {
             pager.setAdapter(new MainFragmentsAdapter(context.getSupportFragmentManager()));
@@ -208,6 +214,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     }
 
     public void openAlbum(PhotoAlbum album) {
+        backWrapper.setVisibility(View.VISIBLE);
         searchFab.hide(true);
         toolbarSecondaryTitle.setText(album.getName());
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -231,6 +238,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     }
 
     public void closeAlbum() {
+        backWrapper.setVisibility(View.GONE);
         searchFab.show(true);
         final FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.remove(getFragmentManager().findFragmentByTag(PhotoAlbumFragment.TAG));
@@ -262,6 +270,9 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                 break;
             case R.id.search_container:
                 searchView.closeSearch();
+                break;
+            case R.id.back:
+                closeAlbum();
                 break;
         }
     }
