@@ -351,6 +351,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         }
 
 
+
     }
 
     public void seekFF() {
@@ -368,7 +369,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             wifiLock.release();
         }
 
-        notificationBuilder.setOngoing(false);
+        notificationBuilder.setOngoing(false)
+                .mActions.get(1).icon = R.drawable.play;
         notificationManager.notify(NOTIFICATION_ID,
                 notificationBuilder.build());
 
@@ -379,7 +381,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     public void playAudio() {
         audioPlayer.start();
 
-        notificationBuilder.setOngoing(true);
+        notificationBuilder.setOngoing(true)
+                .mActions.get(1).icon = R.drawable.pause;
         notificationManager.notify(NOTIFICATION_ID,
                 notificationBuilder.build());
 
