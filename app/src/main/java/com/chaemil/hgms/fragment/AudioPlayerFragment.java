@@ -458,6 +458,25 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    private void getImages() {
+        if (downloaded) {
+            String thumbFile = getContext().getExternalFilesDir(null) + "/" + currentAudio.getHash() + ".jpg";
+            thumb = BitmapFactory.decodeFile(thumbFile);
+            unblurredThumb = BitmapFactory.decodeFile(thumbFile);
+        } else {
+            thumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
+            unblurredThumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
+        }
+
+        try {
+            notificationBuilder.setLargeIcon(unblurredThumb);
+            notificationManager.notify(NOTIFICATION_ID,
+                    notificationBuilder.build());
+        } catch (Exception e) {
+            SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
+        }
+    }
+
     public void playNewAudio(final Video audio, final boolean downloaded) {
 
         saveCurrentAudioTime();
@@ -655,14 +674,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         protected Object doInBackground(Object[] params) {
 
             try {
-                if (downloaded) {
-                    String thumbFile = getContext().getExternalFilesDir(null) + "/" + currentAudio.getHash() + ".jpg";
-                    thumb = BitmapFactory.decodeFile(thumbFile);
-                    unblurredThumb = Bitmap.createBitmap(thumb);
-                } else {
-                    thumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
-                    unblurredThumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
-                }
+                getImages();
                 if (thumb == null) {
                     thumb = BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.placeholder));
                 }
