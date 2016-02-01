@@ -642,9 +642,10 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
     private class ComputeImage extends AsyncTask {
 
+
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        protected Object doInBackground(Object[] params) {
+
             try {
                 thumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
                 unblurredThumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
@@ -654,10 +655,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             } catch (Exception e) {
                 SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
             }
-        }
-
-        @Override
-        protected Object doInBackground(Object[] params) {
 
             if (!imagesAlreadyBlurred && thumb != null) {
                 SmartLog.Log(SmartLog.LogLevel.DEBUG, "resizeAndBlurBg", "blurring bg image");
