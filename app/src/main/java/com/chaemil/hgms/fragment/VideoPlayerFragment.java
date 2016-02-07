@@ -538,7 +538,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     private void resizeAndBlurBg() {
-        new ComputeImage().execute(null);
+        new ComputeImage().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public RelativeLayout getPlayerToolbar() {

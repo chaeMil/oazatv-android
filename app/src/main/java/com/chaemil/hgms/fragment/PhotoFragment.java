@@ -37,11 +37,6 @@ public class PhotoFragment extends Fragment implements FutureCallback<Bitmap> {
         return rootView;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
     private void setupUI() {
 
         Ion.with(getActivity())
