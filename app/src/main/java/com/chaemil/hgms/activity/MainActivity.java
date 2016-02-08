@@ -161,11 +161,13 @@ public class MainActivity extends BaseActivity implements
     private void adjustLayout() {
 
         adjustPlayersLayout();
-        getMainFragment().getArchiveFragment().adjustLayout();
-        getMainFragment().getDownloadedFragment().adjustLayout();
+        if (getMainFragment() != null) {
+            getMainFragment().getArchiveFragment().adjustLayout();
+            getMainFragment().getDownloadedFragment().adjustLayout();
 
-        if (getMainFragment().getPhotoAlbumFragment() != null) {
-            getMainFragment().getPhotoAlbumFragment().adjustLayout();
+            if (getMainFragment().getPhotoAlbumFragment() != null) {
+                getMainFragment().getPhotoAlbumFragment().adjustLayout();
+            }
         }
 
         if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
