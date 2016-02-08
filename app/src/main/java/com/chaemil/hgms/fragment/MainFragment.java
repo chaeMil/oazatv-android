@@ -12,11 +12,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -35,6 +38,7 @@ import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -74,6 +78,10 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private RelativeLayout backWrapper;
     private ImageButton back;
     private FloatingActionButton settingsFab;
+    private SharedPrefUtils sharedPreferences;
+    private CardView settingsCard;
+    private SwitchCompat downloadOnWifiSwitch;
+    private RelativeLayout settingsCardBg;
 
     @Override
     public void onAttach(Activity activity) {
@@ -94,6 +102,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             photoAlbumFragment = new PhotoAlbumFragment(null);
             searchAdapter = new SearchAdapter(getActivity(), R.layout.search_item,
                     ((MainActivity) getActivity()), searchResult);
+            sharedPreferences = SharedPrefUtils.getInstance(getContext());
         }
 
     }
@@ -124,6 +133,9 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         backWrapper = (RelativeLayout) rootView.findViewById(R.id.back_wrapper);
         back = (ImageButton) rootView.findViewById(R.id.back);
         settingsFab = (FloatingActionButton) rootView.findViewById(R.id.settings_fab);
+        settingsCard = (CardView) rootView.findViewById(R.id.settings_card);
+        settingsCardBg = (RelativeLayout) rootView.findViewById(R.id.settings_card_bg);
+        downloadOnWifiSwitch = (SwitchCompat) rootView.findViewById(R.id.download_on_wifi_switch);
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -143,13 +155,22 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         searchView.setBackIcon(getResources().getDrawable(R.drawable.ic_search_back));
         searchContainer.setOnClickListener(this);
         back.setOnClickListener(this);
+        settingsFab.setOnClickListener(this);
 
         if (savedInstanceState == null) {
             pager.setAdapter(new MainFragmentsAdapter(context.getSupportFragmentManager()));
             pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
             pager.setOffscreenPageLimit(2);
             settingsFab.hide(false);
+            downloadOnWifiSwitch.setChecked(sharedPreferences.loadDownloadOnWifi());
         }
+
+        downloadOnWifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sharedPreferences.saveDownloadOnWifi(isChecked);
+            }
+        });
     }
 
     public HomeFragment getHomeFragment() {
@@ -199,10 +220,13 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         switch (tab.getPosition()) {
             case 0:
                 tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_white);
+                settingsFab.hide(true);
+                hideSettings();
                 break;
             case 1:
                 tabLayout.getTabAt(1).setIcon(R.drawable.ic_view_list_white);
                 settingsFab.hide(true);
+                hideSettings();
                 break;
             case 2:
                 tabLayout.getTabAt(2).setIcon(R.drawable.ic_downloaded_white);
@@ -282,13 +306,42 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             case R.id.back:
                 closeAlbum();
                 break;
+            case R.id.settings_fab:
+                if (settingsCard.getVisibility() == View.GONE) {
+                    showSettings();
+                } else {
+                    hideSettings();
+                }
+                break;
         }
+    }
+
+    private void showSettings() {
+        settingsCard.setVisibility(View.VISIBLE);
+        YoYo.with(Techniques.FadeInUp).duration(200).playOn(settingsCard);
+        YoYo.with(Techniques.FadeIn).duration(200).playOn(settingsCardBg);
+        settingsFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
+    }
+
+    private void hideSettings() {
+        YoYo.with(Techniques.FadeOutDown).duration(200).playOn(settingsCard);
+        YoYo.with(Techniques.FadeOut).duration(200).playOn(settingsCard);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                settingsCard.setVisibility(View.GONE);
+                settingsCardBg.setVisibility(View.GONE);
+            }
+        }, 200);
+        settingsFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings));
     }
 
     @Override
     public void onSearchViewShown() {
         searchFab.hide(false);
         searchContainer.setVisibility(View.VISIBLE);
+        settingsCardBg.setVisibility(View.VISIBLE);
         YoYo.with(Techniques.FadeIn).duration(200).playOn(searchContainer);
     }
 

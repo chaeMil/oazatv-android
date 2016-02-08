@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
@@ -104,6 +105,16 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:id="@+id/settings_card_bg"
+        android:background="@color/colorPrimaryAlpha"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </RelativeLayout>
+
     <com.github.clans.fab.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -133,6 +144,52 @@
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp" />
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/settings_card"
+        android:layout_gravity="center"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="4dp"
+        card_view:cardUseCompatPadding="true"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="75dp"
+        android:layout_marginRight="8dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="12dp">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical">
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/download_on_wifi_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="12dp" />
+
+                <TextView
+                    android:text="@string/download_only_on_wifi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 
     <FrameLayout
         android:id="@+id/search_container"

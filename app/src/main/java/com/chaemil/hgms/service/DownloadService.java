@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -15,6 +17,7 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.FileUtils;
+import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.async.future.FutureCallback;
@@ -50,6 +53,9 @@ public class DownloadService extends IntentService {
 
     private void init() {
 
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
         if (!((OazaApp) getApplication()).isDownloadingNow()) {
             notificationThread = new Thread(new Runnable() {
                 @Override
@@ -71,7 +77,13 @@ public class DownloadService extends IntentService {
                 currentDownload = getFirstToDownload(downloadQueue);
 
                 if (FileUtils.getAvailableSpaceInMB() > 100) {
-                    startDownload();
+                    if (SharedPrefUtils.getInstance(getApplicationContext()).loadDownloadOnWifi()) {
+                        if (wifi.isConnected()) {
+                            startDownload();
+                        }
+                    } else {
+                        startDownload();
+                    }
                 } else {
                     SuperToast.create(getApplicationContext(),
                             getString(R.string.not_enough_space_to_download),

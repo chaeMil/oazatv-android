@@ -10,9 +10,7 @@ public class SharedPrefUtils {
     private static SharedPrefUtils sharedPrefUtils;
 
     public static final String APPLICATION_PREFERENCES = "com.chaemil.hgms.preferences";
-    public static final String PREFERENCES_TOKEN = "token";
-    private static final String PREFERENCES_NICK = "nick";
-    private static final String PREFERENCES_EMAIL = "email";
+    public static final String PREFERENCES_DOWNLOAD_ON_WIFI = "download_on_wifi";
 
     public static SharedPrefUtils getInstance(Context context) {
         if (sharedPrefUtils == null) {
@@ -28,38 +26,17 @@ public class SharedPrefUtils {
         editor = sharedPreferences.edit();
     }
 
-    public void saveToken(String token) {
-        editor.putString(PREFERENCES_TOKEN, token);
+    public void saveDownloadOnWifi(boolean value) {
+        editor.putBoolean(PREFERENCES_DOWNLOAD_ON_WIFI, value);
         editor.commit();
     }
 
-    public String loadToken() {
-        return sharedPreferences.getString(PREFERENCES_TOKEN, null);
+    public boolean loadDownloadOnWifi() {
+        return sharedPreferences.getBoolean(PREFERENCES_DOWNLOAD_ON_WIFI, true);
     }
-
-    public void saveNick(String nick) {
-        editor.putString(PREFERENCES_NICK, nick);
-        editor.commit();
-    }
-
-    public String loadNick() {
-        return sharedPreferences.getString(PREFERENCES_NICK, null);
-    }
-
-    public void saveEmail(String email) {
-        editor.putString(PREFERENCES_EMAIL, email);
-        editor.commit();
-    }
-
-    public String loadEmail() {
-        return sharedPreferences.getString(PREFERENCES_EMAIL, null);
-    }
-
 
     public void deleteUserData() {
-        editor.remove(PREFERENCES_EMAIL);
-        editor.remove(PREFERENCES_NICK);
-        editor.remove(PREFERENCES_TOKEN);
+        editor.remove(PREFERENCES_DOWNLOAD_ON_WIFI);
         editor.commit();
     }
 }
