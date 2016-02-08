@@ -16,6 +16,7 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.StringUtils;
+import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
 
 import java.io.File;
@@ -29,8 +30,8 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
     private final MainActivity mainActivity;
     private ArrayList<Video> videos;
 
-    public DownloadedAdapter(Context context, int resource, MainActivity mainActivity, ArrayList<Video> videos) {
-        super(context, resource);
+    public DownloadedAdapter(Context context, MainActivity mainActivity, ArrayList<Video> videos) {
+        super(context, 0);
         this.context = context;
         this.videos = videos;
         this.mainActivity = mainActivity;
@@ -46,11 +47,11 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
 
             holder = new ViewHolder();
             holder.mainView = (RelativeLayout) convertView.findViewById(R.id.main_view);
-            holder.thumb = (ImageView) convertView.findViewById(R.id.thumb);
+            holder.thumb = (VideoThumbImageView) convertView.findViewById(R.id.thumb);
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.date = (TextView) convertView.findViewById(R.id.date);
             holder.size = (TextView) convertView.findViewById(R.id.size);
-            holder.delete = (ImageView) convertView.findViewById(R.id.delete);
+            //holder.delete = (ImageView) convertView.findViewById(R.id.delete);
             holder.downloadCover = (RelativeLayout) convertView.findViewById(R.id.download_cover);
 
             convertView.setTag(holder);
@@ -64,12 +65,6 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
             @Override
             public void onClick(View v) {
                 mainActivity.playNewAudio(video, true);
-            }
-        });
-        holder.delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createDeleteDialog(video, videos, DownloadedAdapter.this).show();
             }
         });
         holder.name.setText(video.getName());
@@ -98,7 +93,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
     public class ViewHolder {
 
         private RelativeLayout mainView;
-        public ImageView thumb;
+        public VideoThumbImageView thumb;
         public TextView name;
         public TextView date;
         public TextView size;

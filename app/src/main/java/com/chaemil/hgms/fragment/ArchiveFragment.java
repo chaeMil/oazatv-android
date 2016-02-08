@@ -74,14 +74,11 @@ public class ArchiveFragment extends BaseFragment {
 
     private void setupUI() {
         archiveAdapter = new ArchiveAdapter(getActivity(),
-                R.layout.archive_item,
                 (MainActivity) getActivity(),
                 archive);
 
         archiveGridView.setAdapter(archiveAdapter);
         archiveGridView.setOnScrollListener(endlessScrollListener());
-
-        setupToolbarHiding();
 
         adjustLayout();
     }
@@ -118,26 +115,6 @@ public class ArchiveFragment extends BaseFragment {
         archiveGridView = (GridView) rootView.findViewById(R.id.archive_grid_view);
         progress = (ProgressBar) rootView.findViewById(R.id.progress);
         endlessProgress = (ProgressBar) rootView.findViewById(R.id.endless_progress);
-    }
-
-    public void setupToolbarHiding() {
-
-        /*archiveGridView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
-                int distance = oldScrollY - scrollY;
-ic void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
-                int distance = oldScrollY - scrollY;
-
-                appBar.setTranslationY(distance);
-            }
-        });
-    }
-                appBar.setTranslationY(distance);
-            }
-        });*/
     }
 
     @Override

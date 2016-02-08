@@ -49,7 +49,6 @@ public class DownloadedFragment extends BaseFragment {
 
     private void setupUI() {
         downloadedAdapter = new DownloadedAdapter(getActivity(),
-                R.id.download_audio,
                 ((MainActivity) getActivity()),
                 downloadedItems);
 

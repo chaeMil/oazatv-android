@@ -17,6 +17,7 @@ import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
+import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
@@ -30,8 +31,8 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
     private final MainActivity mainActivity;
     private ArrayList<ArchiveItem> archive;
 
-    public ArchiveAdapter(Context context, int resource, MainActivity mainActivity, ArrayList<ArchiveItem> archive) {
-        super(context, resource);
+    public ArchiveAdapter(Context context, MainActivity mainActivity, ArrayList<ArchiveItem> archive) {
+        super(context, 0);
         this.context = context;
         this.archive = archive;
         this.mainActivity = mainActivity;
@@ -48,12 +49,10 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
 
             holder = new ViewHolder();
             holder.mainView = (RelativeLayout) convertView.findViewById(R.id.main_view);
-            holder.thumb = (ImageView) convertView.findViewById(R.id.thumb);
+            holder.thumb = (VideoThumbImageView) convertView.findViewById(R.id.thumb);
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.date = (TextView) convertView.findViewById(R.id.date);
             holder.views = (TextView) convertView.findViewById(R.id.views);
-            holder.playAudio = (ImageView) convertView.findViewById(R.id.play_audio);
-            holder.download = (ImageView) convertView.findViewById(R.id.download_audio);
             holder.type = (ImageView) convertView.findViewById(R.id.type_drawable);
 
             convertView.setTag(holder);
@@ -70,8 +69,6 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 final Video video = archiveItem.getVideo();
 
                 holder.type.setImageDrawable(context.getResources().getDrawable(R.drawable.thumb_corner_primary_color));
-                holder.download.setVisibility(View.VISIBLE);
-                holder.playAudio.setVisibility(View.VISIBLE);
                 holder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -81,28 +78,11 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.name.setText(video.getName());
                 holder.date.setText(video.getDate());
                 holder.views.setText(video.getViews() + " " + context.getString(R.string.views));
-                holder.playAudio.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mainActivity.playNewAudio(video, false);
-                    }
-                });
-                holder.download.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        downloadAudio(video);
-                    }
-                });
                 Ion.with(context).load(video.getThumbFile()).intoImageView(holder.thumb);
 
 
                 int downloadStatus = Video.getDownloadStatus(video.getServerId());
 
-                /*if (downloadStatus == Video.DOWNLOADED || downloadStatus == Video.IN_DOWNLOAD_QUEUE) {
-                    holder.download.setVisibility(View.GONE);
-                } else {
-                    holder.download.setVisibility(View.VISIBLE);
-                }*/
                 break;
 
             case ArchiveItem.Type.ALBUM:
@@ -119,8 +99,6 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.name.setText(photoAlbum.getName());
                 holder.date.setText(photoAlbum.getDate());
                 holder.views.setText(context.getString(R.string.photo_album));
-                holder.download.setVisibility(View.GONE);
-                holder.playAudio.setVisibility(View.GONE);
                 Ion.with(context).load(photoAlbum.getThumbs().getThumb512()).intoImageView(holder.thumb);
                 break;
         }
@@ -147,12 +125,10 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
     public class ViewHolder {
 
         private RelativeLayout mainView;
-        public ImageView thumb;
+        public VideoThumbImageView thumb;
         public TextView name;
         public TextView date;
         public TextView views;
-        public ImageView playAudio;
-        public ImageView download;
         public ImageView type;
 
     }
