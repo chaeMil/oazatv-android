@@ -21,6 +21,7 @@ import com.orm.SugarContext;
 public class OazaApp extends Application {
 
     private boolean downloadingNow = false;
+    private DownloadService downloadService;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -47,5 +48,13 @@ public class OazaApp extends Application {
 
         savedVideo.setInDownloadQueue(true);
         savedVideo.save();
+    }
+
+    public void setDownloadService(DownloadService downloadService) {
+        this.downloadService = downloadService;
+    }
+
+    public DownloadService getDownloadService() {
+        return downloadService;
     }
 }

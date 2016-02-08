@@ -20,6 +20,7 @@ import com.chaemil.hgms.utils.FileUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.github.johnpersano.supertoasts.SuperToast;
+import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.ProgressCallback;
@@ -41,6 +42,8 @@ public class DownloadService extends IntentService {
     private NotificationManager notificationManager;
     private long percentDownloaded;
     private Thread notificationThread;
+    private Future<File> currentIonDownload;
+    private boolean canceled;
 
     public DownloadService() {
         super(NAME);
@@ -96,6 +99,8 @@ public class DownloadService extends IntentService {
     private void startDownload() {
         createNotification();
 
+        ((OazaApp) getApplicationContext()).setDownloadService(this);
+
         Intent i = new Intent(DOWNLOAD_STARTED);
         sendBroadcast(i);
 
@@ -107,7 +112,7 @@ public class DownloadService extends IntentService {
                 .load(currentDownload.getThumbFile())
                 .write(new File(getExternalFilesDir(null), currentDownload.getHash() + ".jpg"));
 
-        Ion.with(getApplication())
+        currentIonDownload = Ion.with(getApplication())
                 .load(currentDownload.getAudioFile())
                 .progress(new ProgressCallback() {
                     @Override
@@ -127,18 +132,35 @@ public class DownloadService extends IntentService {
                             SmartLog.Log(SmartLog.LogLevel.DEBUG, "fileDownloaded", file.getAbsolutePath());
                         }
 
-                        notificationThread.interrupt();
-
-                        videoDownloaded(currentDownload.getId());
-                        updateNotificationComplete();
-                        ((OazaApp) getApplication()).setDownloadingNow(false);
-
-                        Intent i = new Intent(DOWNLOAD_COMPLETE);
-                        sendBroadcast(i);
-
-                        init();
+                        downloadCallback(canceled);
                     }
                 });
+    }
+
+    private void downloadCallback(boolean canceled) {
+
+        if (canceled) {
+            notificationThread.interrupt();
+
+            videoDownloaded(currentDownload.getId());
+            updateNotificationComplete();
+
+        } else {
+
+            updateNotificationCanceled();
+            Video.deleteDownloadedVideo(getApplicationContext(), currentDownload);
+
+        }
+
+        ((OazaApp) getApplication()).setDownloadingNow(false);
+
+        Intent i = new Intent(DOWNLOAD_COMPLETE);
+        sendBroadcast(i);
+
+        ((OazaApp) getApplicationContext()).setDownloadService(null);
+
+        init();
+
     }
 
     private void updateNotificationPercent(double downloaded, double total) {
@@ -150,6 +172,13 @@ public class DownloadService extends IntentService {
     private void updateNotificationComplete() {
         builder.setProgress(0, 0, false);
         builder.setContentText(getString(R.string.download_completed));
+        builder.setOngoing(false);
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
+    }
+
+    private void updateNotificationCanceled() {
+        builder.setProgress(0, 0, false);
+        builder.setContentText(getString(R.string.download_canceled));
         builder.setOngoing(false);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
@@ -190,4 +219,10 @@ public class DownloadService extends IntentService {
     }
 
 
+    public void killCurrentDownload() {
+        canceled = true;
+        if (currentIonDownload != null) {
+            currentIonDownload.cancel();
+        }
+    }
 }

@@ -83,6 +83,9 @@ public class MainActivity extends BaseActivity implements
 
         audioPlaybackReceiver = new AudioPlaybackControlsReceiver();
         registerReceiver(audioPlaybackReceiver, filter);
+
+        Intent downloadService = new Intent(this, DownloadService.class);
+        startService(downloadService);
     }
 
     @Override

@@ -47,6 +47,12 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".receiver.WifiConnectedReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="4a9f379c8de34396a9eecacff9b374cdf8cd8083" />

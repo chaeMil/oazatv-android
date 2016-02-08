@@ -22,6 +22,7 @@ import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.view.VideoThumbImageView;
+import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
@@ -174,6 +175,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
         Intent downloadService = new Intent(mainActivity, DownloadService.class);
         mainActivity.startService(downloadService);
         notifyDataSetChanged();
+        SuperToast.create(context, context.getString(R.string.added_to_download_queue), SuperToast.Duration.MEDIUM).show();
     }
 
     private void openAlbum(PhotoAlbum album) {

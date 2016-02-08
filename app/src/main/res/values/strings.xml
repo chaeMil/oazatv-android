@@ -32,4 +32,6 @@
     <string name="stream_only_on_wifi">Stream only on wifi</string>
     <string name="stream_only_audio">Stream only audio when not on wifi</string>
     <string name="cannot_play_without_wifi">Cannot play without wifi connection (check your settings)</string>
+    <string name="added_to_download_queue">Added to download queue</string>
+    <string name="download_canceled">Download canceled</string>
 </resources>
