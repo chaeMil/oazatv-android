@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.GridView;
@@ -21,7 +20,6 @@ import android.widget.RelativeLayout;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.fragment.MainFragment;
-import com.chaemil.hgms.fragment.PhotoAlbumFragment;
 import com.chaemil.hgms.fragment.VideoPlayerFragment;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
@@ -243,7 +241,7 @@ public class MainActivity extends BaseActivity implements
         adjustPlayersLayout();
     }
 
-    public void colapsePanel() {
+    public void collapsePanel() {
         panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         adjustPlayersLayout();
     }
@@ -265,23 +263,32 @@ public class MainActivity extends BaseActivity implements
 
             getMainFragment().getSearchView().closeSearch();
 
-        } else if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)
-                && currentOrientation == Configuration.ORIENTATION_LANDSCAPE) { //if player in fullscreen rotate screen to portrait
-
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-            //this will reset orientation back to sensor after 2 sec
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-                }
-            }, 2000);
-
         } else if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
 
-            panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (getAudioPlayerFragment() != null) {
+
+                    collapsePanel();
+
+                } else {
+
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+                    //this will reset orientation back to sensor after 2 sec
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                        }
+                    }, 2000);
+
+                }
+            } else {
+
+                collapsePanel();
+
+            }
 
         } else if (getMainFragment().getPhotoalbumWrapper().getVisibility() == View.VISIBLE) {
 

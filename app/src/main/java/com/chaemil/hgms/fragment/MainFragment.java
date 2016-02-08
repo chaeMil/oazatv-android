@@ -136,6 +136,9 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         searchView.setOnQueryTextListener(this);
         searchView.setAdapter(searchAdapter);
         searchView.setOnItemClickListener(this);
+        searchView.setHintTextColor(getResources().getColor(R.color.md_grey_500));
+        searchView.setHint(getResources().getString(R.string.search_hint_oaza));
+        searchView.setBackIcon(getResources().getDrawable(R.drawable.ic_search_back));
         searchContainer.setOnClickListener(this);
         back.setOnClickListener(this);
 
