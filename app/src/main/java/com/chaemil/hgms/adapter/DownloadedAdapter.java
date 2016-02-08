@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -51,7 +52,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.date = (TextView) convertView.findViewById(R.id.date);
             holder.size = (TextView) convertView.findViewById(R.id.size);
-            //holder.delete = (ImageView) convertView.findViewById(R.id.delete);
+            holder.more = (ImageButton) convertView.findViewById(R.id.context_menu);
             holder.downloadCover = (RelativeLayout) convertView.findViewById(R.id.download_cover);
 
             convertView.setTag(holder);
@@ -70,6 +71,12 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
         holder.name.setText(video.getName());
         holder.date.setText(video.getDate());
         holder.size.setText(StringUtils.getStringSizeLengthFile(Video.getDownloadedAudioSize(context, video)));
+        holder.more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                contextDialog(video);
+            }
+        });
 
         File thumbFile = new File(String.valueOf(context.getExternalFilesDir(null)) + "/" + video.getHash() + ".jpg");
 
@@ -97,10 +104,30 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
         public TextView name;
         public TextView date;
         public TextView size;
-        public ImageView delete;
         public RelativeLayout downloadCover;
-
+        public ImageButton more;
     }
+
+    private void contextDialog(final Video video) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        String[] menu = new String[] {context.getString(R.string.delete_downloaded_audio)};
+
+        builder.setItems(menu, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch(which) {
+                    case 0:
+                        createDeleteDialog(video, videos, DownloadedAdapter.this).show();
+                        break;
+                }
+            }
+        });
+
+
+        builder.create().show();
+    }
+
 
     private AlertDialog createDeleteDialog(final Video video, final ArrayList<Video> adapterData,
                                            final DownloadedAdapter adapter) {

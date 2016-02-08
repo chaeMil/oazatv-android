@@ -42,8 +42,8 @@
             android:layout_alignLeft="@+id/date"
             android:layout_alignStart="@+id/date"
             android:layout_marginTop="8dp"
-            android:layout_toLeftOf="@+id/imageButton"
-            android:layout_toStartOf="@+id/imageButton" />
+            android:layout_toStartOf="@+id/context_menu"
+            android:layout_toLeftOf="@+id/context_menu" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -81,7 +81,7 @@
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:id="@+id/imageButton"
+            android:id="@+id/context_menu"
             android:background="@drawable/transparent_ripple"
             android:src="@drawable/ic_action_navigation_more_vert"
             android:layout_alignParentTop="true"
