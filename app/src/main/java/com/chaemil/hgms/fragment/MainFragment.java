@@ -73,6 +73,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private FrameLayout searchContainer;
     private RelativeLayout backWrapper;
     private ImageButton back;
+    private FloatingActionButton settingsFab;
 
     @Override
     public void onAttach(Activity activity) {
@@ -122,6 +123,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         searchContainer = (FrameLayout) rootView.findViewById(R.id.search_container);
         backWrapper = (RelativeLayout) rootView.findViewById(R.id.back_wrapper);
         back = (ImageButton) rootView.findViewById(R.id.back);
+        settingsFab = (FloatingActionButton) rootView.findViewById(R.id.settings_fab);
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -146,6 +148,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             pager.setAdapter(new MainFragmentsAdapter(context.getSupportFragmentManager()));
             pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
             pager.setOffscreenPageLimit(2);
+            settingsFab.hide(false);
         }
     }
 
@@ -199,9 +202,11 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                 break;
             case 1:
                 tabLayout.getTabAt(1).setIcon(R.drawable.ic_view_list_white);
+                settingsFab.hide(true);
                 break;
             case 2:
                 tabLayout.getTabAt(2).setIcon(R.drawable.ic_downloaded_white);
+                settingsFab.show(true);
                 break;
         }
     }

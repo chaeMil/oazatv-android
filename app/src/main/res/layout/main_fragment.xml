@@ -119,6 +119,21 @@
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp" />
 
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/settings_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:src="@drawable/ic_settings"
+        fab:fab_colorNormal="@color/colorAccent"
+        fab:fab_colorPressed="@color/colorAccentDarker"
+        fab:fab_colorRipple="@color/colorAccentDarkest"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp" />
+
     <FrameLayout
         android:id="@+id/search_container"
         android:layout_width="match_parent"
