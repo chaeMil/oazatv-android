@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,9 +25,11 @@ import com.chaemil.hgms.fragment.MainFragment;
 import com.chaemil.hgms.fragment.VideoPlayerFragment;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
+import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.github.johnpersano.supertoasts.SuperToast;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
@@ -42,6 +46,9 @@ public class MainActivity extends BaseActivity implements
     private RelativeLayout mainRelativeLayout;
     private AudioPlaybackControlsReceiver audioPlaybackReceiver;
     private View decorView;
+    private ConnectivityManager connManager;
+    private NetworkInfo wifi;
+    private SharedPrefUtils sharedPreferences;
 
 
     @Override
@@ -57,6 +64,10 @@ public class MainActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
+        connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        sharedPreferences = SharedPrefUtils.getInstance(this);
 
         getUI();
         setupUI(savedInstanceState);
@@ -111,39 +122,51 @@ public class MainActivity extends BaseActivity implements
 
     public void playNewVideo(final Video video) {
 
-        audioPlayerFragment = null;
-        videoPlayerFragment = new VideoPlayerFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.player_fragment, videoPlayerFragment, VideoPlayerFragment.TAG);
-        transaction.commit();
-        expandPanel();
+        if (sharedPreferences.loadStreamOnWifi() && !wifi.isConnected()) {
+            SuperToast.create(this, getString(R.string.cannot_play_without_wifi), SuperToast.Duration.MEDIUM).show();
+        } else {
+            if (sharedPreferences.loadStreamAudio()) {
+                playNewAudio(video, false);
+            } else {
+                audioPlayerFragment = null;
+                videoPlayerFragment = new VideoPlayerFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.player_fragment, videoPlayerFragment, VideoPlayerFragment.TAG);
+                transaction.commit();
+                expandPanel();
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getVideoPlayerFragment().playNewVideo(video);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getVideoPlayerFragment().playNewVideo(video);
+                    }
+                }, 600);
             }
-        }, 600);
+        }
 
     }
 
     public void playNewAudio(final Video video, final boolean downloaded) {
 
-        videoPlayerFragment = null;
-        audioPlayerFragment = new AudioPlayerFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.player_fragment, audioPlayerFragment, AudioPlayerFragment.TAG);
-        transaction.commit();
-        expandPanel();
+        if (sharedPreferences.loadStreamOnWifi() && !wifi.isConnected()) {
+            SuperToast.create(this, getString(R.string.cannot_play_without_wifi), SuperToast.Duration.MEDIUM).show();
+        } else {
+            videoPlayerFragment = null;
+            audioPlayerFragment = new AudioPlayerFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.player_fragment, audioPlayerFragment, AudioPlayerFragment.TAG);
+            transaction.commit();
+            expandPanel();
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getAudioPlayerFragment().playNewAudio(video, downloaded);
-            }
-        }, 600);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getAudioPlayerFragment().playNewAudio(video, downloaded);
+                }
+            }, 600);
+        }
 
     }
 
@@ -308,11 +331,10 @@ public class MainActivity extends BaseActivity implements
                 getMainFragment().closeAlbum();
             }
 
-        } else if (getAudioPlayerFragment() != null
-                && getAudioPlayerFragment().getAudioPlayer() != null
-                && getAudioPlayerFragment().getAudioPlayer().isPlaying()) {
-
-            moveTaskToBack(true);
+        } else if (getAudioPlayerFragment() != null && getAudioPlayerFragment().getAudioPlayer() != null) {
+            if (getAudioPlayerFragment().getAudioPlayer().isPlaying()) {
+                moveTaskToBack(true);
+            }
 
         } else {
             super.onBackPressed();

@@ -111,7 +111,8 @@
         android:id="@+id/settings_card_bg"
         android:background="@color/colorPrimaryAlpha"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clickable="true">
 
     </RelativeLayout>
 
@@ -149,8 +150,8 @@
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/settings_card"
         android:layout_gravity="center"
-        android:layout_width="300dp"
-        android:layout_height="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         card_view:cardCornerRadius="4dp"
         card_view:cardElevation="4dp"
         card_view:cardUseCompatPadding="true"
@@ -171,7 +172,7 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="45dp"
                 android:gravity="center_vertical">
 
                 <android.support.v7.widget.SwitchCompat
@@ -182,6 +183,44 @@
 
                 <TextView
                     android:text="@string/download_only_on_wifi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:gravity="center_vertical">
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/stream_on_wifi_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="12dp" />
+
+                <TextView
+                    android:text="@string/stream_only_on_wifi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:gravity="center_vertical">
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/stream_only_audio_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="12dp" />
+
+                <TextView
+                    android:text="@string/stream_only_audio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 

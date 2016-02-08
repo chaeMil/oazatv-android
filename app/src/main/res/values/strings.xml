@@ -29,4 +29,7 @@
     <string name="delete_downloaded_audio">Delete downloaded audio</string>
     <string name="not_enough_space_to_download">Not enought space to download</string>
     <string name="download_only_on_wifi">Download only on wifi</string>
+    <string name="stream_only_on_wifi">Stream only on wifi</string>
+    <string name="stream_only_audio">Stream only audio when not on wifi</string>
+    <string name="cannot_play_without_wifi">Cannot play without wifi connection (check your settings)</string>
 </resources>

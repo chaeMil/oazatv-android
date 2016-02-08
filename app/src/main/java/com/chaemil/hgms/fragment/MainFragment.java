@@ -82,6 +82,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private CardView settingsCard;
     private SwitchCompat downloadOnWifiSwitch;
     private RelativeLayout settingsCardBg;
+    private SwitchCompat streamOnWifiSwitch;
+    private SwitchCompat streamOnlyAudioSwitch;
 
     @Override
     public void onAttach(Activity activity) {
@@ -136,6 +138,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         settingsCard = (CardView) rootView.findViewById(R.id.settings_card);
         settingsCardBg = (RelativeLayout) rootView.findViewById(R.id.settings_card_bg);
         downloadOnWifiSwitch = (SwitchCompat) rootView.findViewById(R.id.download_on_wifi_switch);
+        streamOnWifiSwitch = (SwitchCompat) rootView.findViewById(R.id.stream_on_wifi_switch);
+        streamOnlyAudioSwitch = (SwitchCompat) rootView.findViewById(R.id.stream_only_audio_switch);
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -156,6 +160,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         searchContainer.setOnClickListener(this);
         back.setOnClickListener(this);
         settingsFab.setOnClickListener(this);
+        settingsCardBg.setOnClickListener(this);
 
         if (savedInstanceState == null) {
             pager.setAdapter(new MainFragmentsAdapter(context.getSupportFragmentManager()));
@@ -163,12 +168,28 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             pager.setOffscreenPageLimit(2);
             settingsFab.hide(false);
             downloadOnWifiSwitch.setChecked(sharedPreferences.loadDownloadOnWifi());
+            streamOnlyAudioSwitch.setChecked(sharedPreferences.loadStreamAudio());
+            streamOnWifiSwitch.setChecked(sharedPreferences.loadStreamOnWifi());
         }
 
         downloadOnWifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 sharedPreferences.saveDownloadOnWifi(isChecked);
+            }
+        });
+
+        streamOnWifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sharedPreferences.saveStreamOnWifi(isChecked);
+            }
+        });
+
+        streamOnlyAudioSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sharedPreferences.saveStreamAudio(isChecked);
             }
         });
     }
@@ -313,11 +334,15 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                     hideSettings();
                 }
                 break;
+            case R.id.settings_card_bg:
+                hideSettings();
+                break;
         }
     }
 
     private void showSettings() {
         settingsCard.setVisibility(View.VISIBLE);
+        settingsCardBg.setVisibility(View.VISIBLE);
         YoYo.with(Techniques.FadeInUp).duration(200).playOn(settingsCard);
         YoYo.with(Techniques.FadeIn).duration(200).playOn(settingsCardBg);
         settingsFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
