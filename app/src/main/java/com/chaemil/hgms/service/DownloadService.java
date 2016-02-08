@@ -140,15 +140,16 @@ public class DownloadService extends IntentService {
     private void downloadCallback(boolean canceled) {
 
         if (canceled) {
+
+            updateNotificationCanceled();
+            Video.deleteDownloadedVideo(getApplicationContext(), currentDownload);
+
+        } else {
+
             notificationThread.interrupt();
 
             videoDownloaded(currentDownload.getId());
             updateNotificationComplete();
-
-        } else {
-
-            updateNotificationCanceled();
-            Video.deleteDownloadedVideo(getApplicationContext(), currentDownload);
 
         }
 
