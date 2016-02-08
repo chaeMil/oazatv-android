@@ -27,4 +27,5 @@
     <string name="stream_audio">Stream audio</string>
     <string name="play_downloaded_audio">Play downloaded audio</string>
     <string name="delete_downloaded_audio">Delete downloaded audio</string>
+    <string name="not_enough_space_to_download">Not enought space to download</string>
 </resources>

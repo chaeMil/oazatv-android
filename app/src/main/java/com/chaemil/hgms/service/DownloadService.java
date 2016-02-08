@@ -14,7 +14,9 @@ import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.utils.FileUtils;
 import com.chaemil.hgms.utils.SmartLog;
+import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.ProgressCallback;
@@ -67,7 +69,14 @@ public class DownloadService extends IntentService {
 
             if (getDownloadQueueSize(downloadQueue) > 0) {
                 currentDownload = getFirstToDownload(downloadQueue);
-                startDownload();
+
+                if (FileUtils.getAvailableSpaceInMB() > 50) {
+                    startDownload();
+                } else {
+                    SuperToast.create(getApplicationContext(),
+                            getString(R.string.not_enough_space_to_download),
+                            SuperToast.Duration.MEDIUM).show();
+                }
             }
         }
     }
