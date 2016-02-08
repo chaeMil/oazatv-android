@@ -9,6 +9,7 @@
         android:scaleType="centerCrop"
         android:focusable="false"
         android:focusableInTouchMode="false"
+        android:background="@drawable/image_placehodler"
         android:id="@+id/image" />
 
 </LinearLayout>

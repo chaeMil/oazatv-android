@@ -23,4 +23,8 @@
     <string name="added_to_queue">Added to queue</string>
     <string name="photo_album">Photo album</string>
     <string name="search_hint_oaza">Gods grace, #conference, majesty...</string>
+    <string name="download_audio">Download audio</string>
+    <string name="stream_audio">Stream audio</string>
+    <string name="play_downloaded_audio">Play downloaded audio</string>
+    <string name="delete_downloaded_audio">Delete downloaded audio</string>
 </resources>

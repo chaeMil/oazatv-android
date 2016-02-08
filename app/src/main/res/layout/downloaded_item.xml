@@ -41,30 +41,32 @@
             android:layout_alignParentTop="true"
             android:layout_alignLeft="@+id/date"
             android:layout_alignStart="@+id/date"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@+id/imageButton"
+            android:layout_toStartOf="@+id/imageButton" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="29.12.2015"
             android:id="@+id/date"
-            android:textColor="@color/dark_gray"
+            android:textColor="@color/md_grey_700"
             android:layout_below="@+id/name"
             android:layout_toRightOf="@+id/thumb"
             android:layout_toEndOf="@+id/thumb"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="4dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="532 views"
             android:id="@+id/size"
-            android:textColor="@color/dark_gray"
+            android:textColor="@color/md_grey_700"
             android:gravity="right"
             android:layout_below="@+id/date"
             android:layout_toRightOf="@+id/thumb"
             android:layout_toEndOf="@+id/thumb"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="4dp" />
 
         <RelativeLayout
             android:id="@+id/download_cover"
@@ -75,6 +77,16 @@
             android:layout_height="match_parent">
 
         </RelativeLayout>
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageButton"
+            android:background="@drawable/transparent_ripple"
+            android:src="@drawable/ic_action_navigation_more_vert"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 
