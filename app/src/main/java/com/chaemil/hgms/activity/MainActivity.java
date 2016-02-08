@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.fragment.MainFragment;
@@ -84,8 +85,10 @@ public class MainActivity extends BaseActivity implements
         audioPlaybackReceiver = new AudioPlaybackControlsReceiver();
         registerReceiver(audioPlaybackReceiver, filter);
 
-        Intent downloadService = new Intent(this, DownloadService.class);
-        startService(downloadService);
+        if (!((OazaApp) getApplication()).isDownloadingNow()) {
+            Intent downloadService = new Intent(this, DownloadService.class);
+            startService(downloadService);
+        }
     }
 
     @Override
