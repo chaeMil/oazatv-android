@@ -230,6 +230,10 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         return photoalbumWrapper;
     }
 
+    public CardView getSettingsCard() {
+        return settingsCard;
+    }
+
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         pager.setCurrentItem(tab.getPosition());
@@ -340,7 +344,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         }
     }
 
-    private void showSettings() {
+    public void showSettings() {
         settingsCard.setVisibility(View.VISIBLE);
         settingsCardBg.setVisibility(View.VISIBLE);
         YoYo.with(Techniques.FadeInUp).duration(200).playOn(settingsCard);
@@ -348,7 +352,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         settingsFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_close));
     }
 
-    private void hideSettings() {
+    public void hideSettings() {
         YoYo.with(Techniques.FadeOutDown).duration(200).playOn(settingsCard);
         YoYo.with(Techniques.FadeOut).duration(200).playOn(settingsCard);
         Handler handler = new Handler();

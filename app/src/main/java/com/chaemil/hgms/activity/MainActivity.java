@@ -149,7 +149,7 @@ public class MainActivity extends BaseActivity implements
 
     public void playNewAudio(final Video video, final boolean downloaded) {
 
-        if (sharedPreferences.loadStreamOnWifi() && !wifi.isConnected()) {
+        if (!downloaded && sharedPreferences.loadStreamOnWifi() && !wifi.isConnected()) {
             SuperToast.create(this, getString(R.string.cannot_play_without_wifi), SuperToast.Duration.MEDIUM).show();
         } else {
             videoPlayerFragment = null;
@@ -330,6 +330,10 @@ public class MainActivity extends BaseActivity implements
             } else {
                 getMainFragment().closeAlbum();
             }
+
+        } else if (getMainFragment().getSettingsCard().getVisibility() == View.VISIBLE) {
+
+            getMainFragment().hideSettings();
 
         } else if (getAudioPlayerFragment() != null && getAudioPlayerFragment().getAudioPlayer() != null) {
             if (getAudioPlayerFragment().getAudioPlayer().isPlaying()) {
