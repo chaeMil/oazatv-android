@@ -2,19 +2,14 @@ package com.chaemil.hgms.service;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Binder;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.FileUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
@@ -142,7 +137,7 @@ public class DownloadService extends IntentService {
         if (canceled) {
 
             updateNotificationCanceled();
-            Video.deleteDownloadedVideo(getApplicationContext(), currentDownload);
+            Video.deleteDownloadedAudio(getApplicationContext(), currentDownload);
 
         } else {
 

@@ -126,34 +126,45 @@ public class MainActivity extends BaseActivity implements
         panelLayout.setPanelSlideListener(this);
     }
 
+    private void playVideo(final Video video) {
+        audioPlayerFragment = null;
+        videoPlayerFragment = new VideoPlayerFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.player_fragment, videoPlayerFragment, VideoPlayerFragment.TAG);
+        transaction.commit();
+        expandPanel();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getVideoPlayerFragment().playNewVideo(video);
+            }
+        }, 600);
+    }
+
     public void playNewVideo(final Video video) {
 
-        if (sharedPreferences.loadStreamOnWifi() && !wifi.isConnected()) {
-            SuperToast.create(this, getString(R.string.cannot_play_without_wifi), SuperToast.Duration.MEDIUM).show();
+        if (wifi.isConnected()) {
+            playVideo(video);
         } else {
-            if (sharedPreferences.loadStreamAudio()) {
-                playNewAudio(video, false);
+            if (sharedPreferences.loadStreamOnWifi()) {
+                SuperToast.create(this, getString(R.string.cannot_play_without_wifi), SuperToast.Duration.MEDIUM).show();
+            } else if (sharedPreferences.loadStreamAudio()) {
+                playNewAudio(video);
             } else {
-                audioPlayerFragment = null;
-                videoPlayerFragment = new VideoPlayerFragment();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.player_fragment, videoPlayerFragment, VideoPlayerFragment.TAG);
-                transaction.commit();
-                expandPanel();
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        getVideoPlayerFragment().playNewVideo(video);
-                    }
-                }, 600);
+                playVideo(video);
             }
         }
 
     }
 
-    public void playNewAudio(final Video video, final boolean downloaded) {
+    public void playNewAudio(final Video video) {
+
+        boolean downloaded = false;
+        if (Video.getDownloadStatus(video.getServerId()) == Video.DOWNLOADED) {
+            downloaded = true;
+        }
 
         if (!downloaded && sharedPreferences.loadStreamOnWifi() && !wifi.isConnected()) {
             SuperToast.create(this, getString(R.string.cannot_play_without_wifi), SuperToast.Duration.MEDIUM).show();
@@ -166,10 +177,11 @@ public class MainActivity extends BaseActivity implements
             expandPanel();
 
             Handler handler = new Handler();
+            final boolean finalDownloaded = downloaded;
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    getAudioPlayerFragment().playNewAudio(video, downloaded);
+                    getAudioPlayerFragment().playNewAudio(video, finalDownloaded);
                 }
             }, 600);
         }

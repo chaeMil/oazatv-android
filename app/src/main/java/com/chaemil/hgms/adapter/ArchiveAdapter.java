@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
-import com.chaemil.hgms.fragment.ArchiveFragment;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
@@ -135,7 +134,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                             dialog.dismiss();
                             break;
                         case 1:
-                            mainActivity.playNewAudio(video, false);
+                            mainActivity.playNewAudio(video);
                             dialog.dismiss();
                             break;
                     }
@@ -146,18 +145,18 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
 
         if (Video.getDownloadStatus(video.getServerId()) == Video.DOWNLOADED) {
             menu = new String[] {context.getString(R.string.play_downloaded_audio),
-                                context.getString(R.string.stream_audio)};
+                                context.getString(R.string.delete_downloaded_audio)};
 
             builder.setItems(menu, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     switch(which) {
                         case 0:
-                            mainActivity.playNewAudio(video, true);
+                            mainActivity.playNewAudio(video);
                             dialog.dismiss();
                             break;
                         case 1:
-                            mainActivity.playNewAudio(video, false);
+                            Video.deleteDownloadedAudio(context, video);
                             dialog.dismiss();
                             break;
                     }

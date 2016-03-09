@@ -4,12 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -65,7 +63,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
         holder.mainView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.playNewAudio(video, true);
+                mainActivity.playNewAudio(video);
             }
         });
         holder.name.setText(video.getName());
@@ -136,7 +134,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        Video.deleteDownloadedVideo(getContext(), video);
+                        Video.deleteDownloadedAudio(getContext(), video);
                         dialog.dismiss();
                         adapterData.remove(adapterData.indexOf(video));
                         adapter.notifyDataSetChanged();
