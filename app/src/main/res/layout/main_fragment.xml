@@ -50,7 +50,7 @@
         </RelativeLayout>
 
         <android.support.v7.widget.Toolbar
-            android:layout_width="90dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:id="@+id/toolbar"
             android:background="@color/colorPrimary"
@@ -107,7 +107,7 @@
 
     <RelativeLayout
         android:visibility="gone"
-        tools:visibility="visible"
+        tools:visibility="gone"
         android:id="@+id/settings_card_bg"
         android:background="@color/colorPrimaryAlpha"
         android:layout_width="match_parent"
@@ -132,6 +132,7 @@
         android:layout_marginRight="8dp" />
 
     <com.github.clans.fab.FloatingActionButton
+        tools:visibility="gone"
         android:id="@+id/settings_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -157,7 +158,7 @@
         card_view:cardElevation="4dp"
         card_view:cardUseCompatPadding="true"
         android:visibility="gone"
-        tools:visibility="visible"
+        tools:visibility="gone"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
