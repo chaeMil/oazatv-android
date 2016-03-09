@@ -370,7 +370,6 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     public void onSearchViewShown() {
         searchFab.hide(false);
         searchContainer.setVisibility(View.VISIBLE);
-        settingsCardBg.setVisibility(View.VISIBLE);
         YoYo.with(Techniques.FadeIn).duration(200).playOn(searchContainer);
     }
 
