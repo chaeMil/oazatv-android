@@ -305,7 +305,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         if (isAdded()) {
             currentOrientation = getResources().getConfiguration().orientation;
 
-            if (((MainActivity) getActivity()).isPanelExpanded()) {
+            /*if (((MainActivity) getActivity()).isPanelExpanded()) {
 
                 videoWrapper.setVisibility(View.VISIBLE);
 
@@ -341,7 +341,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                     videoWrapper.setVisibility(View.VISIBLE);
                 }
 
-            }
+            }*/
         }
     }
 

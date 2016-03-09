@@ -353,13 +353,14 @@ public class MainActivity extends BaseActivity implements
 
             getMainFragment().hideSettings();
 
-        } else if (getAudioPlayerFragment() != null && getAudioPlayerFragment().getAudioPlayer() != null) {
-            if (getAudioPlayerFragment().getAudioPlayer().isPlaying()) {
+        } else if (getAudioPlayerFragment() != null) {
+            if (getAudioPlayerFragment().getAudioPlayer() != null) {
                 moveTaskToBack(true);
+            } else {
+                finish();
             }
-
         } else {
-            super.onBackPressed();
+            finish();
         }
     }
 

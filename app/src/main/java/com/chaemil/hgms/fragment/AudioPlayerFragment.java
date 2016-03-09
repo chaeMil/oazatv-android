@@ -172,7 +172,13 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         if (bgDrawable != null) {
             outState.putParcelable(BG_DRAWABLE, BitmapUtils.drawableToBitmap(bgDrawable));
         }
-        outState.putInt(CURRENT_TIME, audioPlayer.getCurrentPosition());
+        if (audioPlayer != null) {
+            try {
+                outState.putInt(CURRENT_TIME, audioPlayer.getCurrentPosition());
+            } catch (Exception e) {
+                SmartLog.Log(SmartLog.LogLevel.DEBUG, "exception", e.toString());
+            }
+        }
     }
 
     @Override
