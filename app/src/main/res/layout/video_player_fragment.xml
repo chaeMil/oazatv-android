@@ -120,13 +120,20 @@
             android:layout_below="@+id/toolbars_wrapper"
             android:layout_alignParentBottom="true">
 
-            <VideoView
-                android:alpha="0"
-                android:fitsSystemWindows="false"
-                android:id="@+id/video_view"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|center_horizontal"
+                android:foregroundGravity="center_vertical|center_horizontal">
+
+                <VideoView
+                    android:alpha="0"
+                    android:id="@+id/video_view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center" />
+
+            </LinearLayout>
 
             <ProgressBar
                 android:layout_width="wrap_content"
@@ -135,17 +142,6 @@
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
                 android:visibility="gone" />
-
-            <ImageView
-                android:background="@drawable/thumb_corner_primary_color"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_alignParentTop="false"
-                android:layout_alignParentRight="false"
-                android:layout_alignTop="@+id/video_view"
-                android:layout_alignRight="@+id/video_view">
-
-            </ImageView>
 
         </RelativeLayout>
 

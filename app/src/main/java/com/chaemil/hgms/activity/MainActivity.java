@@ -318,19 +318,6 @@ public class MainActivity extends BaseActivity implements
 
                     collapsePanel();
 
-                } else {
-
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-                    //this will reset orientation back to sensor after 2 sec
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-                        }
-                    }, 2000);
-
                 }
             } else {
 

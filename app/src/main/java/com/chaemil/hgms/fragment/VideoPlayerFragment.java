@@ -287,61 +287,14 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     private void requestFullscreenPlayer() {
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        toggleControls(false);
-
-        //this will reset orientation back to sensor after 2 sec
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-            }
-        }, 2000);
     }
 
     public void adjustLayout() {
         if (isAdded()) {
             currentOrientation = getResources().getConfiguration().orientation;
 
-            /*if (((MainActivity) getActivity()).isPanelExpanded()) {
 
-                videoWrapper.setVisibility(View.VISIBLE);
-
-                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-                    ((BaseActivity) getActivity()).setFullscreen(true);
-                    getActivity().getWindow().getDecorView()
-                            .setBackgroundColor(getResources().getColor(R.color.black));
-
-                    playerToolbar.setVisibility(View.GONE);
-                    playerBg.setVisibility(View.GONE);
-
-                    videoWrapper.setLayoutParams(videoWrapperParamsFullscreen);
-                    toggleControls(false);
-
-                } else {
-
-                    ((BaseActivity) getActivity()).setFullscreen(false);
-                    getActivity().getWindow().getDecorView()
-                            .setBackgroundColor(getResources().getColor(R.color.white));
-
-                    playerToolbar.setVisibility(View.VISIBLE);
-                    playerBg.setVisibility(View.VISIBLE);
-
-                    videoWrapper.setLayoutParams(videoWrapperParamsNormal);
-                    toggleControls(true);
-                }
-            } else {
-
-                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    videoWrapper.setVisibility(View.GONE);
-                } else {
-                    videoWrapper.setVisibility(View.VISIBLE);
-                }
-
-            }*/
         }
     }
 
