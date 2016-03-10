@@ -285,6 +285,8 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         videoWrapper.setLayoutParams(videoWrapperParamsFullscreen);
         toggleControls(false);
 
+        ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(false);
+
         isInFullscreenMode = true;
     }
 
@@ -298,6 +300,8 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
         videoWrapper.setLayoutParams(videoWrapperParamsNormal);
         toggleControls(true);
+
+        ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(true);
 
         isInFullscreenMode = false;
     }

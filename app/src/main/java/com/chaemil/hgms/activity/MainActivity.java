@@ -43,13 +43,13 @@ public class MainActivity extends BaseActivity implements
     private VideoPlayerFragment videoPlayerFragment;
     private AudioPlayerFragment audioPlayerFragment;
     private MainFragment mainFragment;
-    private int currentOrientation;
     private RelativeLayout mainRelativeLayout;
     private MainActivityReceiver mainActivityReceiver;
     private View decorView;
     private ConnectivityManager connManager;
     private NetworkInfo wifi;
     private SharedPrefUtils sharedPreferences;
+    private RelativeLayout playerWrapper;
 
 
     @Override
@@ -57,7 +57,6 @@ public class MainActivity extends BaseActivity implements
         super.onResume();
         adjustLayout();
 
-        currentOrientation = getResources().getConfiguration().orientation;
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
     }
 
@@ -112,6 +111,7 @@ public class MainActivity extends BaseActivity implements
         panelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_up_panel_layout);
         mainRelativeLayout = (RelativeLayout) findViewById(R.id.main_relative_layout);
         decorView = getWindow().getDecorView().getRootView();
+        playerWrapper = (RelativeLayout) findViewById(R.id.player_wrapper);
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -199,7 +199,6 @@ public class MainActivity extends BaseActivity implements
 
         adjustLayout();
 
-        currentOrientation = getResources().getConfiguration().orientation;
     }
 
     private void adjustLayout() {
@@ -378,12 +377,9 @@ public class MainActivity extends BaseActivity implements
         if (panelLayout != null) {
             if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
                 return true;
-            } else {
-                return false;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     public void notifyDownloadFinished() {

@@ -4,7 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:sothree="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
@@ -19,7 +18,6 @@
         sothree:umanoDragView="@+id/mini_player">
 
         <RelativeLayout
-            android:fitsSystemWindows="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/main_layout">
@@ -30,8 +28,7 @@
                 android:id="@+id/main_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:layout="@layout/main_fragment"
-                android:layout_below="@+id/toolbar">
+                tools:layout="@layout/main_fragment">
             </FrameLayout>
 
         </RelativeLayout>
