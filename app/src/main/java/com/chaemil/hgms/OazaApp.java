@@ -47,6 +47,7 @@ public class OazaApp extends Application {
         }
 
         savedVideo.setInDownloadQueue(true);
+        savedVideo.setDownloaded(false);
         savedVideo.save();
     }
 

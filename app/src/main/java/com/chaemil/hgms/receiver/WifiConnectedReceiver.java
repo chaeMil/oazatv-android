@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.service.DownloadService;
+import com.chaemil.hgms.utils.SharedPrefUtils;
 
 /**
  * Created by chaemil on 8.2.16.
@@ -31,7 +32,9 @@ public class WifiConnectedReceiver extends BroadcastReceiver {
             Log.d("WifiReceiver", "Don't have Wifi Connection");
 
             if (((OazaApp) context.getApplicationContext()).getDownloadService() != null) {
-                ((OazaApp) context.getApplicationContext()).getDownloadService().killCurrentDownload();
+                if (SharedPrefUtils.getInstance(context).loadDownloadOnWifi()) {
+                    ((OazaApp) context.getApplicationContext()).getDownloadService().killCurrentDownload();
+                }
             }
 
         }

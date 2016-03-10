@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.utils.SmartLog;
 import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
@@ -51,7 +52,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
             holder.date = (TextView) convertView.findViewById(R.id.date);
             holder.size = (TextView) convertView.findViewById(R.id.size);
             holder.more = (ImageButton) convertView.findViewById(R.id.context_menu);
-            holder.downloadCover = (RelativeLayout) convertView.findViewById(R.id.download_cover);
+            holder.downloadCover = convertView.findViewById(R.id.download_cover);
 
             convertView.setTag(holder);
         }
@@ -63,7 +64,9 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
         holder.mainView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.playNewAudio(video);
+                if (video.isDownloaded()) {
+                    mainActivity.playNewAudio(video);
+                }
             }
         });
         holder.name.setText(video.getName());
@@ -72,7 +75,9 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
         holder.more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                contextDialog(video);
+                if (video.isDownloaded()) {
+                    contextDialog(video);
+                }
             }
         });
 
@@ -80,10 +85,10 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
 
         Ion.with(context).load(thumbFile).intoImageView(holder.thumb);
 
-        if (!video.isDownloaded() && video.isInDownloadQueue()) {
-            holder.downloadCover.setVisibility(View.VISIBLE);
+        if (!video.isDownloaded()) {
+            holder.mainView.setAlpha(0.5f);
         } else {
-            holder.downloadCover.setVisibility(View.GONE);
+            holder.mainView.setAlpha(1.0f);
         }
 
 
@@ -102,7 +107,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
         public TextView name;
         public TextView date;
         public TextView size;
-        public RelativeLayout downloadCover;
+        public View downloadCover;
         public ImageButton more;
     }
 
