@@ -1,11 +1,14 @@
 package com.chaemil.hgms.activity;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -124,6 +127,11 @@ public class MainActivity extends BaseActivity implements
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.main_fragment, mainFragment);
             transaction.commit();
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.white_logo);
+            setTaskDescription(new ActivityManager.TaskDescription(getString(R.string.app_name), bm, getResources().getColor(R.color.colorPrimary)));
         }
 
         changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
