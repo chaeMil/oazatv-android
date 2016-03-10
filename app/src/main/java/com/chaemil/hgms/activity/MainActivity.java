@@ -360,6 +360,8 @@ public class MainActivity extends BaseActivity implements
             } else {
                 finish();
             }
+        } else if (((OazaApp) getApplication()).isDownloadingNow()) {
+            moveTaskToBack(true);
         } else {
             finish();
         }
@@ -457,8 +459,11 @@ public class MainActivity extends BaseActivity implements
                     if (getMainFragment().isAlbumOpened()) {
                         getMainFragment().closeAlbum();
                     }
+                    getMainFragment().hideSettings();
+                    getMainFragment().getSearchView().closeSearch();
                     getMainFragment().getPager().setCurrentItem(2);
                     break;
+
             }
 
 

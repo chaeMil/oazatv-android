@@ -3,14 +3,17 @@ package com.chaemil.hgms.service;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.NotificationCompat;
 
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.FileUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
@@ -33,6 +36,7 @@ public class DownloadService extends IntentService {
     public static final String DOWNLOAD_COMPLETE = "downloadComplete";
     public static final String DOWNLOAD_STARTED = "downloadStarted";
     public static final String OPEN_DOWNLOADS = "openDownloads";
+    private static final String KILL_DOWNLOAD = "killDownload";
     private List<Video> downloadQueue;
     private Video currentDownload;
     private NotificationCompat.Builder builder;
@@ -43,6 +47,10 @@ public class DownloadService extends IntentService {
     private boolean canceled;
     private Intent openDownloads;
     private PendingIntent pOpenDownloads;
+    private Intent killDownload;
+    private PendingIntent pKillDownload;
+    private BroadcastReceiver receiver;
+    private IntentFilter filter;
 
     public DownloadService() {
         super(NAME);
@@ -53,11 +61,25 @@ public class DownloadService extends IntentService {
         init();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (receiver != null) {
+            unregisterReceiver(receiver);
+        }
+    }
+
     private void init() {
 
+        createReceiver();
+
         openDownloads = new Intent(OPEN_DOWNLOADS);
-        pOpenDownloads = PendingIntent.getBroadcast(getApplicationContext(), 0,
-                openDownloads, PendingIntent.FLAG_UPDATE_CURRENT);
+        pOpenDownloads = PendingIntent.getBroadcast(getApplicationContext(), 0, openDownloads,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        killDownload = new Intent(KILL_DOWNLOAD);
+        pKillDownload = PendingIntent.getBroadcast(this, 0, killDownload, PendingIntent.FLAG_UPDATE_CURRENT);
 
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -97,6 +119,28 @@ public class DownloadService extends IntentService {
                 }
             }
         }
+    }
+
+    private void createReceiver() {
+        if (receiver != null) {
+            unregisterReceiver(receiver);
+        }
+
+        filter = new IntentFilter();
+        filter.addAction(AudioPlayerFragment.NOTIFY_PLAY_PAUSE);
+
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                switch (intent.getAction()) {
+                    case KILL_DOWNLOAD:
+                        killCurrentDownload();
+                        break;
+                }
+            }
+        };
+
+        registerReceiver(receiver, filter);
     }
 
     private void startDownload() {
@@ -194,6 +238,7 @@ public class DownloadService extends IntentService {
                 .setProgress(100, 0, false)
                 .setOngoing(true)
                 .setContentIntent(pOpenDownloads)
+                .addAction(R.drawable.ic_close, getString(R.string.cancel_download), pKillDownload)
                 .setSmallIcon(R.drawable.download);
 
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -222,7 +267,6 @@ public class DownloadService extends IntentService {
             return null;
         }
     }
-
 
     public void killCurrentDownload() {
         canceled = true;

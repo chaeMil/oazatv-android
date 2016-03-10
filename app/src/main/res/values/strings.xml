@@ -34,4 +34,5 @@
     <string name="cannot_play_without_wifi">Cannot play without wifi connection (check your settings)</string>
     <string name="added_to_download_queue">Added to download queue</string>
     <string name="download_canceled">Download canceled</string>
+    <string name="cancel_download">Cancel download</string>
 </resources>
