@@ -36,6 +36,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     private PhotosViewPagerAdapter photosAdapter;
     private ImageButton back;
 
+
     public PhotoAlbumFragment(PhotoAlbum album) {
         super();
         this.album = album;

@@ -2,6 +2,7 @@ package com.chaemil.hgms.service;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -31,6 +32,7 @@ public class DownloadService extends IntentService {
     private static final int NOTIFICATION_ID = 5000;
     public static final String DOWNLOAD_COMPLETE = "downloadComplete";
     public static final String DOWNLOAD_STARTED = "downloadStarted";
+    public static final String OPEN_DOWNLOADS = "openDownloads";
     private List<Video> downloadQueue;
     private Video currentDownload;
     private NotificationCompat.Builder builder;
@@ -39,6 +41,8 @@ public class DownloadService extends IntentService {
     private Thread notificationThread;
     private Future<File> currentIonDownload;
     private boolean canceled;
+    private Intent openDownloads;
+    private PendingIntent pOpenDownloads;
 
     public DownloadService() {
         super(NAME);
@@ -50,6 +54,10 @@ public class DownloadService extends IntentService {
     }
 
     private void init() {
+
+        openDownloads = new Intent(OPEN_DOWNLOADS);
+        pOpenDownloads = PendingIntent.getBroadcast(getApplicationContext(), 0,
+                openDownloads, PendingIntent.FLAG_UPDATE_CURRENT);
 
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -185,6 +193,7 @@ public class DownloadService extends IntentService {
                 .setContentText(getResources().getString(R.string.downloading_audio))
                 .setProgress(100, 0, false)
                 .setOngoing(true)
+                .setContentIntent(pOpenDownloads)
                 .setSmallIcon(R.drawable.download);
 
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

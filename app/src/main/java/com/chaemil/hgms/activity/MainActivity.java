@@ -45,7 +45,7 @@ public class MainActivity extends BaseActivity implements
     private MainFragment mainFragment;
     private int currentOrientation;
     private RelativeLayout mainRelativeLayout;
-    private AudioPlaybackControlsReceiver audioPlaybackReceiver;
+    private MainActivityReceiver audioPlaybackReceiver;
     private View decorView;
     private ConnectivityManager connManager;
     private NetworkInfo wifi;
@@ -81,8 +81,9 @@ public class MainActivity extends BaseActivity implements
         filter.addAction(AudioPlayerFragment.NOTIFY_DELETE);
         filter.addAction(DownloadService.DOWNLOAD_COMPLETE);
         filter.addAction(DownloadService.DOWNLOAD_STARTED);
+        filter.addAction(DownloadService.OPEN_DOWNLOADS);
 
-        audioPlaybackReceiver = new AudioPlaybackControlsReceiver();
+        audioPlaybackReceiver = new MainActivityReceiver();
         registerReceiver(audioPlaybackReceiver, filter);
 
         if (!((OazaApp) getApplication()).isDownloadingNow()) {
@@ -412,7 +413,7 @@ public class MainActivity extends BaseActivity implements
         notifyDownloadFinished();
     }
 
-    private class AudioPlaybackControlsReceiver extends BroadcastReceiver {
+    private class MainActivityReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -447,6 +448,16 @@ public class MainActivity extends BaseActivity implements
                     break;
                 case DownloadService.DOWNLOAD_STARTED:
                     notifyDownloadStarted();
+                    break;
+                case DownloadService.OPEN_DOWNLOADS:
+                    bringToFront();
+                    if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
+                        collapsePanel();
+                    }
+                    if (getMainFragment().isAlbumOpened()) {
+                        getMainFragment().closeAlbum();
+                    }
+                    getMainFragment().getPager().setCurrentItem(2);
                     break;
             }
 

@@ -234,6 +234,10 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         return settingsCard;
     }
 
+    public ViewPager getPager() {
+        return pager;
+    }
+
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         pager.setCurrentItem(tab.getPosition());
@@ -270,6 +274,10 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
 
     }
 
+    public boolean isAlbumOpened() {
+        return photoalbumWrapper.getVisibility() == View.VISIBLE;
+    }
+
     public void openAlbum(PhotoAlbum album) {
         backWrapper.setVisibility(View.VISIBLE);
         searchFab.hide(true);
@@ -299,7 +307,6 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         searchFab.show(true);
         final FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.remove(getFragmentManager().findFragmentByTag(PhotoAlbumFragment.TAG));
-
 
         tabLayout.setVisibility(View.VISIBLE);
         pager.setVisibility(View.VISIBLE);
