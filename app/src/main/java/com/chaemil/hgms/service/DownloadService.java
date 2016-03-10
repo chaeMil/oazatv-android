@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.NotificationCompat;
+import android.system.ErrnoException;
 
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
@@ -25,6 +26,7 @@ import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.ProgressCallback;
 
 import java.io.File;
+import java.net.SocketException;
 import java.util.List;
 
 /**
@@ -138,6 +140,9 @@ public class DownloadService extends IntentService {
                     public void onCompleted(Exception e, File file) {
                         if (e != null) {
                             e.printStackTrace();
+                            if (e instanceof SocketException) {
+                                canceled = true;
+                            }
                         }
 
                         if (file != null) {
@@ -185,6 +190,7 @@ public class DownloadService extends IntentService {
     private void updateNotificationComplete() {
         builder.setProgress(0, 0, false);
         builder.setContentText(getString(R.string.download_completed));
+        builder.mActions.clear();
         builder.setOngoing(false);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
@@ -192,6 +198,7 @@ public class DownloadService extends IntentService {
     private void updateNotificationCanceled() {
         builder.setProgress(0, 0, false);
         builder.setContentText(getString(R.string.download_canceled));
+        builder.mActions.clear();
         builder.setOngoing(false);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
