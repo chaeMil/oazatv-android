@@ -126,10 +126,12 @@ public class BaseActivity extends AppCompatActivity implements RequestFactoryLis
 
         if (error instanceof TimeoutError || error instanceof NoConnectionError) {
 
-            SuperToast.create(context,
-                    context.getString(R.string.exception_network_timeout),
-                    SuperToast.Duration.MEDIUM,
-                    Style.getStyle(Style.RED)).show();
+            if (context != null) {
+                SuperToast.create(context,
+                        context.getString(R.string.exception_network_timeout),
+                        SuperToast.Duration.MEDIUM,
+                        Style.getStyle(Style.RED)).show();
+            }
 
         } else if (error instanceof AuthFailureError) {
             SmartLog.Log(SmartLog.LogLevel.ERROR, "AuthFailureError", error.toString());

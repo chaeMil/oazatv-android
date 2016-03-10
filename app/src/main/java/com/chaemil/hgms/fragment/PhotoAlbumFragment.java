@@ -1,13 +1,7 @@
 package com.chaemil.hgms.fragment;
 
-import android.app.DownloadManager;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Point;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.view.ViewPager;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -17,7 +11,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.BaseActivity;
@@ -31,9 +27,7 @@ import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.MyRequestService;
-import com.chaemil.hgms.utils.PermissionUtils;
 import com.chaemil.hgms.utils.SmartLog;
-import com.chaemil.hgms.utils.StringUtils;
 
 import org.json.JSONObject;
 
@@ -47,8 +41,8 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     private PhotosViewPagerAdapter photosAdapter;
     private ImageButton back;
     private ImageView download;
-    private DownloadManager manager;
-    private DownloadManager.Request request;
+    private ProgressBar progress;
+    private ImageView retry;
 
 
     public PhotoAlbumFragment(PhotoAlbum album) {
@@ -80,6 +74,9 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     }
 
     private void getData() {
+        if (progress != null) {
+            progress.setVisibility(View.VISIBLE);
+        }
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "getData", album.getHash());
         JsonObjectRequest getPhotos = RequestFactory.getPhotoAlbum(this, album.getHash());
         MyRequestService.getRequestQueue().add(getPhotos);
@@ -90,11 +87,14 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
         photosViewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
         back = (ImageButton) rootView.findViewById(R.id.back);
         download = (ImageView) rootView.findViewById(R.id.download);
+        progress = (ProgressBar) rootView.findViewById(R.id.progress);
+        retry = (ImageView) rootView.findViewById(R.id.retry);
     }
 
     private void setupUI() {
         download.setOnClickListener(this);
         back.setOnClickListener(this);
+        retry.setOnClickListener(this);
         thumbWidth = getThumbWidth();
         photosViewPager.setOffscreenPageLimit(2);
         photosViewPager.removeAllViews();
@@ -157,6 +157,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
         switch (requestType) {
             case GET_PHOTO_ALBUM:
                 PhotoAlbum photoAlbum = ResponseFactory.parseAlbum(response);
+                progress.setVisibility(View.GONE);
                 if (photoAlbum != null && photoAlbum.getPhotos().size() > 0) {
                     album.setPhotos(null);
                     album.setPhotos(photoAlbum.getPhotos());
@@ -164,6 +165,14 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError exception) {
+        super.onErrorResponse(exception);
+
+        progress.setVisibility(View.GONE);
+        retry.setVisibility(View.VISIBLE);
     }
 
     public GridView getGrid() {
@@ -183,6 +192,10 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
             case R.id.download:
                 Photo photo = album.getPhotos().get(photosViewPager.getCurrentItem());
                 ((BaseActivity) getActivity()).downloadPhoto(photo);
+                break;
+            case R.id.retry:
+                retry.setVisibility(View.GONE);
+                getData();
                 break;
         }
     }
