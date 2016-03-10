@@ -36,4 +36,5 @@
     <string name="download_canceled">Download canceled</string>
     <string name="cancel_download">Cancel download</string>
     <string name="downloading_photo">Downloading photo</string>
+    <string name="permission_revoked">Permission revoked</string>
 </resources>

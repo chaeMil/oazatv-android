@@ -2,6 +2,9 @@ package com.chaemil.hgms.utils;
 
 import android.os.Environment;
 import android.os.StatFs;
+import android.util.Log;
+
+import java.io.File;
 
 /**
  * Created by chaemil on 8.2.16.
@@ -16,5 +19,4 @@ public class FileUtils {
         availableSpace = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
         return availableSpace/SIZE_MB;
     }
-
 }

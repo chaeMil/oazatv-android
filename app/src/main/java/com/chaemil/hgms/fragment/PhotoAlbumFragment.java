@@ -20,6 +20,7 @@ import android.widget.ImageView;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.PhotosAdapter;
 import com.chaemil.hgms.adapter.PhotosViewPagerAdapter;
@@ -180,40 +181,9 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
                 hidePhotos();
                 break;
             case R.id.download:
-                downloadPhoto();
+                Photo photo = album.getPhotos().get(photosViewPager.getCurrentItem());
+                ((BaseActivity) getActivity()).downloadPhoto(photo);
                 break;
-        }
-    }
-
-    private void downloadPhoto() {
-        Photo photo = album.getPhotos().get(photosViewPager.getCurrentItem());
-
-        request = new DownloadManager.Request(Uri.parse(photo.getThumb2048()));
-        request.setDescription(getString(R.string.downloading_photo));
-        if (!photo.getDescription().equals("")) {
-            request.setTitle(photo.getDescription());
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            request.allowScanningByMediaScanner();
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        }
-        request.setDestinationInExternalPublicDir(getString(R.string.app_name),
-                getString(R.string.app_name) + "_" + StringUtils.randomString(8) + ".jpg");
-
-        manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= 23) {
-            PermissionUtils.isStoragePermissionGranted(getActivity());
-        } else {
-            manager.enqueue(request);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-            manager.enqueue(request);
         }
     }
 }
