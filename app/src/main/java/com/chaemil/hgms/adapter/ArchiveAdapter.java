@@ -144,8 +144,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
         }
 
         if (Video.getDownloadStatus(video.getServerId()) == Video.DOWNLOADED) {
-            menu = new String[] {context.getString(R.string.play_downloaded_audio),
-                                context.getString(R.string.delete_downloaded_audio)};
+            menu = new String[] {context.getString(R.string.play_downloaded_audio)};
 
             builder.setItems(menu, new DialogInterface.OnClickListener() {
                 @Override
@@ -153,10 +152,6 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                     switch(which) {
                         case 0:
                             mainActivity.playNewAudio(video);
-                            dialog.dismiss();
-                            break;
-                        case 1:
-                            Video.deleteDownloadedAudio(context, video);
                             dialog.dismiss();
                             break;
                     }

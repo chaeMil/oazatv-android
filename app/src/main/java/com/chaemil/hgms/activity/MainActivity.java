@@ -45,7 +45,7 @@ public class MainActivity extends BaseActivity implements
     private MainFragment mainFragment;
     private int currentOrientation;
     private RelativeLayout mainRelativeLayout;
-    private MainActivityReceiver audioPlaybackReceiver;
+    private MainActivityReceiver mainActivityReceiver;
     private View decorView;
     private ConnectivityManager connManager;
     private NetworkInfo wifi;
@@ -72,7 +72,15 @@ public class MainActivity extends BaseActivity implements
 
         getUI();
         setupUI(savedInstanceState);
+        setupReceiver();
 
+        if (!((OazaApp) getApplication()).isDownloadingNow()) {
+            Intent downloadService = new Intent(this, DownloadService.class);
+            startService(downloadService);
+        }
+    }
+
+    private void setupReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(AudioPlayerFragment.NOTIFY_PLAY_PAUSE);
         filter.addAction(AudioPlayerFragment.NOTIFY_OPEN);
@@ -82,20 +90,16 @@ public class MainActivity extends BaseActivity implements
         filter.addAction(DownloadService.DOWNLOAD_COMPLETE);
         filter.addAction(DownloadService.DOWNLOAD_STARTED);
         filter.addAction(DownloadService.OPEN_DOWNLOADS);
+        filter.addAction(DownloadService.KILL_DOWNLOAD);
 
-        audioPlaybackReceiver = new MainActivityReceiver();
-        registerReceiver(audioPlaybackReceiver, filter);
-
-        if (!((OazaApp) getApplication()).isDownloadingNow()) {
-            Intent downloadService = new Intent(this, DownloadService.class);
-            startService(downloadService);
-        }
+        mainActivityReceiver = new MainActivityReceiver();
+        registerReceiver(mainActivityReceiver, filter);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(audioPlaybackReceiver);
+        unregisterReceiver(mainActivityReceiver);
     }
 
     private void bringToFront() {
@@ -462,6 +466,11 @@ public class MainActivity extends BaseActivity implements
                     getMainFragment().hideSettings();
                     getMainFragment().getSearchView().closeSearch();
                     getMainFragment().getPager().setCurrentItem(2);
+                    break;
+                case DownloadService.KILL_DOWNLOAD:
+                    if (((OazaApp) context.getApplicationContext()).getDownloadService() != null) {
+                        ((OazaApp) context.getApplicationContext()).getDownloadService().killCurrentDownload();
+                    }
                     break;
 
             }
