@@ -139,17 +139,20 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     }
 
     private int getThumbWidth() {
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
+        if (getActivity() != null) {
+            Display display = getActivity().getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int width = size.x;
+            int height = size.y;
 
-        if (width < height) {
-            return width / 3;
-        } else {
-            return width / 5;
+            if (width < height) {
+                return width / 3;
+            } else {
+                return width / 5;
+            }
         }
+        return 0;
     }
 
     @Override

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -14,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -264,6 +262,7 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onPanelCollapsed(View panel) {
         adjustLayout();
+        setFullscreen(false);
     }
 
     @Override
@@ -302,7 +301,15 @@ public class MainActivity extends BaseActivity implements
 
         } else if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
 
-            collapsePanel();
+            if (getVideoPlayerFragment() != null) {
+                if (getVideoPlayerFragment().isInFullscreenMode) {
+                    getVideoPlayerFragment().cancelFullscreenPlayer();
+                } else {
+                    collapsePanel();
+                }
+            } else {
+                collapsePanel();
+            }
 
         } else if (getMainFragment().getPhotoalbumWrapper().getVisibility() == View.VISIBLE) {
 

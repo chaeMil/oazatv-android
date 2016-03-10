@@ -72,6 +72,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     private ImageView fullscreen;
     private RelativeLayout.LayoutParams videoWrapperParamsFullscreen;
     private RelativeLayout.LayoutParams videoWrapperParamsNormal;
+    public boolean isInFullscreenMode = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -260,8 +261,10 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            requestFullscreenPlayer();
-                            toggleControls(false);
+                            if (videoView.isPlaying() && isInFullscreenMode) {
+                                requestFullscreenPlayer();
+                                toggleControls(false);
+                            }
                         }
                     }, 3000);
                 }
@@ -271,7 +274,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         return true;
     }
 
-    private void requestFullscreenPlayer() {
+    public void requestFullscreenPlayer() {
         ((BaseActivity) getActivity()).setFullscreen(true);
         getActivity().getWindow().getDecorView()
                 .setBackgroundColor(getResources().getColor(R.color.black));
@@ -281,9 +284,11 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
         videoWrapper.setLayoutParams(videoWrapperParamsFullscreen);
         toggleControls(false);
+
+        isInFullscreenMode = true;
     }
 
-    private void cancelFullscreenPlayer() {
+    public void cancelFullscreenPlayer() {
         ((BaseActivity) getActivity()).setFullscreen(false);
         getActivity().getWindow().getDecorView()
                 .setBackgroundColor(getResources().getColor(R.color.white));
@@ -293,9 +298,11 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
         videoWrapper.setLayoutParams(videoWrapperParamsNormal);
         toggleControls(true);
+
+        isInFullscreenMode = false;
     }
 
-    private void toggleControls(boolean visible) {
+    public void toggleControls(boolean visible) {
         if (visible) {
             if (controlsWrapper.getVisibility() != View.VISIBLE) {
                 controlsWrapper.setVisibility(View.VISIBLE);

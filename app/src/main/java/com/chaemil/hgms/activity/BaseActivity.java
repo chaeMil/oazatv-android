@@ -44,13 +44,14 @@ public class BaseActivity extends AppCompatActivity implements RequestFactoryLis
     private Photo photoToDownload;
     private DownloadManager.Request request;
     private DownloadManager manager;
+    public boolean fullscreen = false;
 
     public void setFullscreen(boolean full) {
 
         View decorView = getWindow().getDecorView();
 
         if (full) {
-
+            fullscreen = true;
             int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -58,15 +59,12 @@ public class BaseActivity extends AppCompatActivity implements RequestFactoryLis
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
             decorView.setSystemUiVisibility(uiOptions);
-            decorView.setFitsSystemWindows(false);
-
         } else {
-
+            fullscreen = false;
             decorView.setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            decorView.setFitsSystemWindows(true);
         }
     }
 
