@@ -6,12 +6,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.model.Photo;
 import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.ImageViewState;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -24,6 +26,7 @@ public class PhotoFragment extends Fragment implements FutureCallback<Bitmap> {
     private TextView label;
     private Photo photo;
     private ProgressBar progressBar;
+    private ImageView download;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,7 +41,6 @@ public class PhotoFragment extends Fragment implements FutureCallback<Bitmap> {
     }
 
     private void setupUI() {
-
         Ion.with(getActivity())
                 .load(photo.getThumb2048())
                 .asBitmap()

@@ -1,6 +1,7 @@
 package com.chaemil.hgms.utils;
 
 import java.text.DecimalFormat;
+import java.util.Random;
 
 /**
  * Created by chaemil on 8.1.16.
@@ -25,4 +26,16 @@ public class StringUtils {
 
         return "";
     }
+
+    public static String randomString(int length) {
+        String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
+        Random rng = new Random();
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++)
+        {
+            text[i] = characters.charAt(rng.nextInt(characters.length()));
+        }
+        return new String(text);
+    }
+
 }

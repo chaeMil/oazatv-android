@@ -1,7 +1,13 @@
 package com.chaemil.hgms.fragment;
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.view.ViewPager;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -10,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.R;
@@ -19,10 +26,13 @@ import com.chaemil.hgms.adapter.PhotosViewPagerAdapter;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.factory.ResponseFactory;
+import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.utils.PermissionUtils;
 import com.chaemil.hgms.utils.SmartLog;
+import com.chaemil.hgms.utils.StringUtils;
 
 import org.json.JSONObject;
 
@@ -35,6 +45,9 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     private ViewPager photosViewPager;
     private PhotosViewPagerAdapter photosAdapter;
     private ImageButton back;
+    private ImageView download;
+    private DownloadManager manager;
+    private DownloadManager.Request request;
 
 
     public PhotoAlbumFragment(PhotoAlbum album) {
@@ -75,9 +88,11 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
         grid = (GridView) rootView.findViewById(R.id.gridView);
         photosViewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
         back = (ImageButton) rootView.findViewById(R.id.back);
+        download = (ImageView) rootView.findViewById(R.id.download);
     }
 
     private void setupUI() {
+        download.setOnClickListener(this);
         back.setOnClickListener(this);
         thumbWidth = getThumbWidth();
         photosViewPager.setOffscreenPageLimit(2);
@@ -105,6 +120,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
         photosViewPager.setCurrentItem(position, false);
         photosViewPager.setVisibility(View.VISIBLE);
         back.setVisibility(View.VISIBLE);
+        download.setVisibility(View.VISIBLE);
     }
 
     public void hidePhotos() {
@@ -112,6 +128,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
         ((MainActivity) getActivity()).getMainFragment().getAppBar().setVisibility(View.VISIBLE);
         photosViewPager.setVisibility(View.GONE);
         back.setVisibility(View.GONE);
+        download.setVisibility(View.GONE);
     }
 
     public void adjustLayout() {
@@ -130,7 +147,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
         if (width < height) {
             return width / 3;
         } else {
-            return width / 4;
+            return width / 5;
         }
     }
 
@@ -162,6 +179,41 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
             case R.id.back:
                 hidePhotos();
                 break;
+            case R.id.download:
+                downloadPhoto();
+                break;
+        }
+    }
+
+    private void downloadPhoto() {
+        Photo photo = album.getPhotos().get(photosViewPager.getCurrentItem());
+
+        request = new DownloadManager.Request(Uri.parse(photo.getThumb2048()));
+        request.setDescription(getString(R.string.downloading_photo));
+        if (!photo.getDescription().equals("")) {
+            request.setTitle(photo.getDescription());
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            request.allowScanningByMediaScanner();
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        }
+        request.setDestinationInExternalPublicDir(getString(R.string.app_name),
+                getString(R.string.app_name) + "_" + StringUtils.randomString(8) + ".jpg");
+
+        manager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            PermissionUtils.isStoragePermissionGranted(getActivity());
+        } else {
+            manager.enqueue(request);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+            manager.enqueue(request);
         }
     }
 }

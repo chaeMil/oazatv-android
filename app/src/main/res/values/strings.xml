@@ -35,4 +35,5 @@
     <string name="added_to_download_queue">Added to download queue</string>
     <string name="download_canceled">Download canceled</string>
     <string name="cancel_download">Cancel download</string>
+    <string name="downloading_photo">Downloading photo</string>
 </resources>
