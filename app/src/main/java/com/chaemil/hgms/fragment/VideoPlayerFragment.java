@@ -1,7 +1,5 @@
 package com.chaemil.hgms.fragment;
 
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
@@ -74,7 +72,6 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     private ImageView fullscreen;
     private RelativeLayout.LayoutParams videoWrapperParamsFullscreen;
     private RelativeLayout.LayoutParams videoWrapperParamsNormal;
-    private int currentOrientation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,10 +98,6 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
             videoView.seekTo(currentVideo.getCurrentTime());
         }
 
-        if (isAdded()) {
-            adjustLayout();
-        }
-
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
 
@@ -125,7 +118,6 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         getUI(rootView);
         activateUI(false);
         setupUI();
-        adjustLayout();
 
         return rootView;
     }
@@ -260,25 +252,18 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     public boolean onTouch(View v, MotionEvent event) {
         switch(v.getId()) {
             case R.id.video_view:
-                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    toggleControls(true);
+                toggleControls(true);
+                ((BaseActivity) getActivity()).setFullscreen(false);
 
-                    if (videoView.isPlaying()) {
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                if (getActivity() != null) {
-                                    if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE
-                                            && ((MainActivity) getActivity()).isPanelExpanded()) {
-                                        ((BaseActivity) getActivity()).setFullscreen(true);
-                                        toggleControls(false);
-                                    }
-                                }
-                            }
-                        }, 5000);
-                    }
+                if (videoView.isPlaying()) {
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            requestFullscreenPlayer();
+                            toggleControls(false);
+                        }
+                    }, 3000);
                 }
                 break;
         }
@@ -287,15 +272,27 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     private void requestFullscreenPlayer() {
+        ((BaseActivity) getActivity()).setFullscreen(true);
+        getActivity().getWindow().getDecorView()
+                .setBackgroundColor(getResources().getColor(R.color.black));
 
+        playerToolbar.setVisibility(View.GONE);
+        playerBg.setVisibility(View.GONE);
+
+        videoWrapper.setLayoutParams(videoWrapperParamsFullscreen);
+        toggleControls(false);
     }
 
-    public void adjustLayout() {
-        if (isAdded()) {
-            currentOrientation = getResources().getConfiguration().orientation;
+    private void cancelFullscreenPlayer() {
+        ((BaseActivity) getActivity()).setFullscreen(false);
+        getActivity().getWindow().getDecorView()
+                .setBackgroundColor(getResources().getColor(R.color.white));
 
+        playerToolbar.setVisibility(View.VISIBLE);
+        playerBg.setVisibility(View.VISIBLE);
 
-        }
+        videoWrapper.setLayoutParams(videoWrapperParamsNormal);
+        toggleControls(true);
     }
 
     private void toggleControls(boolean visible) {

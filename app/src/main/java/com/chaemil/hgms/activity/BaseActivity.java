@@ -41,25 +41,32 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  */
 public class BaseActivity extends AppCompatActivity implements RequestFactoryListener {
 
-    public static int WRITE_EXTERNAL_STORAGE_REQUEST = 1;
     private Photo photoToDownload;
     private DownloadManager.Request request;
     private DownloadManager manager;
 
     public void setFullscreen(boolean full) {
+
+        View decorView = getWindow().getDecorView();
+
         if (full) {
 
-            View decorView = getWindow().getDecorView();
-            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+            int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
             decorView.setSystemUiVisibility(uiOptions);
+            decorView.setFitsSystemWindows(false);
 
         } else {
 
-            this.getWindow()
-                .getDecorView()
-                .setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            decorView.setFitsSystemWindows(true);
         }
     }
 

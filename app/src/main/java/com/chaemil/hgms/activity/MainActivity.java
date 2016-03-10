@@ -206,7 +206,6 @@ public class MainActivity extends BaseActivity implements
 
     private void adjustLayout() {
 
-        adjustPlayersLayout();
         if (getMainFragment() != null) {
             getMainFragment().getArchiveFragment().adjustLayout();
             getMainFragment().getDownloadedFragment().adjustLayout();
@@ -246,7 +245,6 @@ public class MainActivity extends BaseActivity implements
         }
 
         if (slideOffset < 0.2) {
-            adjustPlayersLayout();
             if (videoPlayerFragment != null) {
                 videoPlayerFragment.switchMiniPlayer(true);
             }
@@ -254,7 +252,6 @@ public class MainActivity extends BaseActivity implements
                 audioPlayerFragment.switchMiniPlayer(true);
             }
         } else {
-            adjustPlayersLayout();
             if (videoPlayerFragment != null) {
                 videoPlayerFragment.switchMiniPlayer(false);
             }
@@ -286,18 +283,10 @@ public class MainActivity extends BaseActivity implements
 
     public void expandPanel() {
         panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-        adjustPlayersLayout();
     }
 
     public void collapsePanel() {
         panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        adjustPlayersLayout();
-    }
-
-    private void adjustPlayersLayout() {
-        if (videoPlayerFragment != null) {
-            videoPlayerFragment.adjustLayout();
-        }
     }
 
     public void hidePanel() {
@@ -313,17 +302,7 @@ public class MainActivity extends BaseActivity implements
 
         } else if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
 
-            if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                if (getAudioPlayerFragment() != null) {
-
-                    collapsePanel();
-
-                }
-            } else {
-
-                collapsePanel();
-
-            }
+            collapsePanel();
 
         } else if (getMainFragment().getPhotoalbumWrapper().getVisibility() == View.VISIBLE) {
 
