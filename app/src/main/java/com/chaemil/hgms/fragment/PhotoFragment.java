@@ -70,7 +70,9 @@ public class PhotoFragment extends Fragment implements FutureCallback<Bitmap> {
 
     @Override
     public void onCompleted(Exception e, Bitmap result) {
-        image.setImage(ImageSource.bitmap(result));
-        progressBar.setVisibility(View.GONE);
+        if (result != null) {
+            image.setImage(ImageSource.bitmap(result));
+            progressBar.setVisibility(View.GONE);
+        }
     }
 }
