@@ -618,7 +618,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     @Override
     public void onAudioFocusChange(int focusChange) {
         switch (focusChange) {
-            case AudioManager.AUDIOFOCUS_GAIN:
+            /*case AudioManager.AUDIOFOCUS_GAIN: //TODO BUG: autoplay after notification sound
                 // resume playback
                 try {
                     if (audioPlayer == null) {
@@ -630,7 +630,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                break;
+                break;*/
             case AudioManager.AUDIOFOCUS_LOSS:
                 // Lost focus for an unbounded amount of time: stop playback and release media player
                 if (audioPlayer != null) {
