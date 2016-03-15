@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:id="@+id/main_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.chaemil.hgms.view.VideoThumbImageView
+            android:scaleType="centerCrop"
+            android:id="@+id/thumb"
+            android:background="@color/dark_gray"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="2dp" />
+
+        <ImageView
+            tools:background="@drawable/thumb_corner_primary_color"
+            android:id="@+id/type_drawable"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentRight="false"
+            android:layout_alignTop="@+id/thumb"
+            android:layout_alignRight="@+id/thumb">
+
+        </ImageView>
+
+        <TextView
+            tools:text="Video name sooooo long"
+            android:id="@+id/name"
+            android:textSize="16sp"
+            android:textColor="@color/dark_gray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:layout_alignParentTop="true"
+            android:layout_alignLeft="@+id/date"
+            android:layout_alignStart="@+id/date"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="29.12.2015"
+            android:id="@+id/date"
+            android:textColor="@color/dark_gray"
+            android:layout_below="@+id/name"
+            android:layout_toRightOf="@+id/thumb"
+            android:layout_toEndOf="@+id/thumb"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="532 views"
+            android:id="@+id/views"
+            android:textColor="@color/dark_gray"
+            android:gravity="right"
+            android:layout_below="@+id/date"
+            android:layout_toRightOf="@+id/thumb"
+            android:layout_toEndOf="@+id/thumb"
+            android:layout_marginTop="8dp" />
+
+    </RelativeLayout>
+
+</LinearLayout>
