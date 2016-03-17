@@ -3,18 +3,14 @@ package com.chaemil.hgms.service;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.NotificationCompat;
-import android.system.ErrnoException;
 
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.FileUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
@@ -174,8 +170,6 @@ public class DownloadService extends IntentService {
 
         Intent i = new Intent(DOWNLOAD_COMPLETE);
         sendBroadcast(i);
-
-        ((OazaApp) getApplicationContext()).setDownloadService(null);
 
         init();
 

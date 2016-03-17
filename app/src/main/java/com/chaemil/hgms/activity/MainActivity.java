@@ -398,6 +398,11 @@ public class MainActivity extends BaseActivity implements
         notifyDownloadFinished();
     }
 
+    public void startDownloadService() {
+        Intent downloadService = new Intent(this, DownloadService.class);
+        startService(downloadService);
+    }
+
     private class MainActivityReceiver extends BroadcastReceiver {
 
         @Override

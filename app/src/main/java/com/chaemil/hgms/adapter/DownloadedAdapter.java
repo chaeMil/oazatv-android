@@ -60,6 +60,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
             holder.size = (TextView) convertView.findViewById(R.id.size);
             holder.more = (ImageButton) convertView.findViewById(R.id.context_menu);
             holder.progress = (CircularProgressBar) convertView.findViewById(R.id.progress);
+            holder.cancel = (ImageButton) convertView.findViewById(R.id.cancel_download);
 
             convertView.setTag(holder);
         }
@@ -87,47 +88,18 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
                 }
             }
         });
+        holder.cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelVideo(video);
+            }
+        });
 
         File thumbFile = new File(String.valueOf(context.getExternalFilesDir(null)) + "/" + video.getHash() + ".jpg");
 
         Ion.with(context).load(thumbFile).intoImageView(holder.thumb);
 
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "downloadStatus",
-                String.valueOf(Video.getDownloadStatus(((OazaApp) context.getApplicationContext()), video.getServerId())));
-
-        switch (Video.getDownloadStatus(((OazaApp) context.getApplicationContext()), video.getServerId())) {
-            case Video.CURRENTLY_DOWNLOADING:
-                holder.progress.setVisibility(View.VISIBLE);
-                holder.thumb.setAlpha(0.4f);
-                holder.more.setVisibility(View.GONE);
-                holder.timer = new Timer();
-                holder.timer.scheduleAtFixedRate(new TimerTask() {
-                    @Override
-                    public void run() {
-                        updatePercent(holder);
-                    }
-                }, 0, TIMER_DELAY);
-                break;
-            case Video.IN_DOWNLOAD_QUEUE:
-                holder.progress.setVisibility(View.GONE);
-                holder.thumb.setAlpha(0.4f);
-                holder.more.setVisibility(View.GONE);
-                if (holder.timer != null) {
-                    holder.timer.cancel();
-                }
-                holder.timer = null;
-                break;
-            case Video.DOWNLOADED:
-                holder.progress.setVisibility(View.GONE);
-                holder.thumb.setAlpha(1.0f);
-                holder.more.setVisibility(View.VISIBLE);
-                if (holder.timer != null) {
-                    holder.timer.cancel();
-                }
-                holder.timer = null;
-                break;
-        }
-
+        setupView(holder, video);
 
         return convertView;
     }
@@ -141,6 +113,57 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
                     holder.progress.setProgress(percent);
                 }
             });
+        }
+    }
+
+    private void cancelVideo(Video video) {
+        switch (Video.getDownloadStatus(((OazaApp) context.getApplicationContext()), video.getServerId())) {
+            case Video.CURRENTLY_DOWNLOADING:
+                ((OazaApp) context.getApplicationContext()).getDownloadService().killCurrentDownload();
+                break;
+            case Video.IN_DOWNLOAD_QUEUE:
+                video.delete();
+                break;
+        }
+
+        mainActivity.getMainFragment().getDownloadedFragment().notifyDatasetChanged();
+    }
+
+    private void setupView(final ViewHolder holder, Video video) {
+        switch (Video.getDownloadStatus(((OazaApp) context.getApplicationContext()), video.getServerId())) {
+            case Video.CURRENTLY_DOWNLOADING:
+                holder.progress.setVisibility(View.VISIBLE);
+                holder.thumb.setAlpha(0.4f);
+                holder.more.setVisibility(View.GONE);
+                holder.cancel.setVisibility(View.VISIBLE);
+                holder.timer = new Timer();
+                holder.timer.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                        updatePercent(holder);
+                    }
+                }, 0, TIMER_DELAY);
+                break;
+            case Video.IN_DOWNLOAD_QUEUE:
+                holder.progress.setVisibility(View.GONE);
+                holder.thumb.setAlpha(0.4f);
+                holder.more.setVisibility(View.GONE);
+                holder.cancel.setVisibility(View.VISIBLE);
+                if (holder.timer != null) {
+                    holder.timer.cancel();
+                }
+                holder.timer = null;
+                break;
+            case Video.DOWNLOADED:
+                holder.progress.setVisibility(View.GONE);
+                holder.thumb.setAlpha(1.0f);
+                holder.more.setVisibility(View.VISIBLE);
+                holder.cancel.setVisibility(View.GONE);
+                if (holder.timer != null) {
+                    holder.timer.cancel();
+                }
+                holder.timer = null;
+                break;
         }
     }
 
@@ -159,6 +182,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
         public ImageButton more;
         public CircularProgressBar progress;
         public Timer timer;
+        public ImageButton cancel;
     }
 
     private void contextDialog(final Video video) {

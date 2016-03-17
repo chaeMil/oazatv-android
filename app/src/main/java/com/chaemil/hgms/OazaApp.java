@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
@@ -29,6 +30,12 @@ public class OazaApp extends Application {
         MultiDex.install(this);
         MyRequestService.init(this);
         SugarContext.init(this);
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        Log.d("", "onTerminate");
     }
 
     public boolean isDownloadingNow() {

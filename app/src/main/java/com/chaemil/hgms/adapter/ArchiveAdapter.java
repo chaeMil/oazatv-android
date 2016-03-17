@@ -167,8 +167,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
 
     private void downloadAudio(Video video) {
         ((OazaApp) mainActivity.getApplication()).addToDownloadQueue(video);
-        Intent downloadService = new Intent(mainActivity, DownloadService.class);
-        mainActivity.startService(downloadService);
+        mainActivity.startDownloadService();
         notifyDataSetChanged();
         mainActivity.getMainFragment().getDownloadedFragment().notifyDatasetChanged();
         SuperToast.create(context, context.getString(R.string.added_to_download_queue), SuperToast.Duration.MEDIUM).show();
