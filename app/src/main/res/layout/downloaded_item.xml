@@ -38,8 +38,7 @@
 
             </ImageView>
 
-            <com.mikhaellopez.circularprogressbar.CircularProgressBar
-                android:id="@+id/progress"
+            <com.mikhaellopez.circularprogressbar.CircularProgressBar android:id="@+id/progress"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 app:cpb_background_progressbar_color="@color/white"
