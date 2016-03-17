@@ -42,7 +42,7 @@
                 android:id="@+id/progress"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                app:cpb_background_progressbar_color="@color/md_grey_400"
+                app:cpb_background_progressbar_color="@color/white"
                 app:cpb_background_progressbar_width="5dp"
                 app:cpb_progressbar_color="@color/colorPrimary"
                 app:cpb_progressbar_width="5dp"

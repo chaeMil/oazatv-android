@@ -98,7 +98,8 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
         switch (Video.getDownloadStatus(((OazaApp) context.getApplicationContext()), video.getServerId())) {
             case Video.CURRENTLY_DOWNLOADING:
                 holder.progress.setVisibility(View.VISIBLE);
-                holder.thumb.setAlpha(0.5f);
+                holder.thumb.setAlpha(0.4f);
+                holder.more.setVisibility(View.GONE);
                 holder.timer = new Timer();
                 holder.timer.scheduleAtFixedRate(new TimerTask() {
                     @Override
@@ -109,7 +110,8 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
                 break;
             case Video.IN_DOWNLOAD_QUEUE:
                 holder.progress.setVisibility(View.GONE);
-                holder.thumb.setAlpha(0.5f);
+                holder.thumb.setAlpha(0.4f);
+                holder.more.setVisibility(View.GONE);
                 if (holder.timer != null) {
                     holder.timer.cancel();
                 }
@@ -118,6 +120,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
             case Video.DOWNLOADED:
                 holder.progress.setVisibility(View.GONE);
                 holder.thumb.setAlpha(1.0f);
+                holder.more.setVisibility(View.VISIBLE);
                 if (holder.timer != null) {
                     holder.timer.cancel();
                 }
