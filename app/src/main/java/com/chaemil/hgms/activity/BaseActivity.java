@@ -1,5 +1,6 @@
 package com.chaemil.hgms.activity;
 
+import android.app.ActivityManager;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -206,5 +207,15 @@ public class BaseActivity extends AppCompatActivity implements RequestFactoryLis
         } else {
             SuperToast.create(this, getString(R.string.permission_revoked), SuperToast.Duration.MEDIUM).show();
         }
+    }
+
+    public boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

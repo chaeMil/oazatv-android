@@ -175,7 +175,7 @@ public class MainActivity extends BaseActivity implements
     public void playNewAudio(final Video video) {
 
         boolean downloaded = false;
-        if (Video.getDownloadStatus(video.getServerId()) == Video.DOWNLOADED) {
+        if (Video.getDownloadStatus(((OazaApp) getApplication()), video.getServerId()) == Video.DOWNLOADED) {
             downloaded = true;
         }
 

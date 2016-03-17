@@ -70,4 +70,9 @@ public class DownloadedFragment extends BaseFragment {
         getData();
         downloadedAdapter.notifyDataSetChanged();
     }
+
+    public void notifyDatasetChanged() {
+        getData();
+        downloadedAdapter.notifyDataSetChanged();
+    }
 }

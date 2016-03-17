@@ -2,11 +2,12 @@ package com.chaemil.hgms.model;
 
 import android.content.Context;
 
+import com.chaemil.hgms.OazaApp;
+import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.utils.Constants;
 import com.orm.SugarRecord;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -16,9 +17,10 @@ import java.util.Locale;
  */
 public class Video extends SugarRecord {
 
-    public static int NOT_DOWNLOADED = 0;
-    public static int IN_DOWNLOAD_QUEUE = 1;
-    public static int DOWNLOADED = 2;
+    public static final int NOT_DOWNLOADED = 0;
+    public static final int IN_DOWNLOAD_QUEUE = 1;
+    public static final int DOWNLOADED = 2;
+    public static final int CURRENTLY_DOWNLOADING = 3;
 
     private Long id;
     private int serverId;
@@ -71,9 +73,12 @@ public class Video extends SugarRecord {
 
     }
 
-    public static int getDownloadStatus(int serverId) {
+    public static int getDownloadStatus(OazaApp oazaApp, int serverId) {
         Video savedVideo = findByServerId(serverId);
         if (savedVideo != null) {
+            if (savedVideo.isCurrentlyDownloading(oazaApp)) {
+                return CURRENTLY_DOWNLOADING;
+            }
             if (savedVideo.isInDownloadQueue()) {
                 return IN_DOWNLOAD_QUEUE;
             }
@@ -148,6 +153,15 @@ public class Video extends SugarRecord {
             default:
                 return getNameEN();
         }
+    }
+
+    public boolean isCurrentlyDownloading(OazaApp oazaApp) {
+        if (oazaApp.getDownloadService() != null) {
+            DownloadService downloadService = oazaApp.getDownloadService();
+            Video currentDownload = downloadService.getCurrentDownload();
+            return currentDownload.serverId == this.serverId;
+        }
+        return false;
     }
 
     public void setAudioFile(String audioFile) {

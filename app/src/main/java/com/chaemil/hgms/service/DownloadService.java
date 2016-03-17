@@ -246,4 +246,12 @@ public class DownloadService extends IntentService {
             currentIonDownload.cancel();
         }
     }
+
+    public Video getCurrentDownload() {
+        return currentDownload;
+    }
+
+    public long getCurrentDownloadProgress() {
+        return percentDownloaded;
+    }
 }
