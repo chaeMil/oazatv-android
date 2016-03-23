@@ -63,4 +63,5 @@ dependencies {
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
     compile 'com.mikhaellopez:circularprogressbar:1.1.1'
+    compile project(':json2view')
 }
