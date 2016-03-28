@@ -1,13 +1,11 @@
 package com.chaemil.hgms.adapter;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,9 +16,6 @@ import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
-
-import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Created by chaemil on 28.3.16.
@@ -46,7 +41,7 @@ public class HomepageAdapter extends ArrayAdapter<Object> {
 
         if (convertView == null) {
             LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.archive_item, null);
+            convertView = vi.inflate(R.layout.frontpage_item, null);
 
             holder = new ViewHolder();
             holder.mainView = (RelativeLayout) convertView.findViewById(R.id.main_view);
@@ -54,7 +49,6 @@ public class HomepageAdapter extends ArrayAdapter<Object> {
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.date = (TextView) convertView.findViewById(R.id.date);
             holder.views = (TextView) convertView.findViewById(R.id.views);
-            holder.type = (ImageView) convertView.findViewById(R.id.type_drawable);
             holder.more = (ImageButton) convertView.findViewById(R.id.context_menu);
 
             convertView.setTag(holder);
@@ -81,7 +75,6 @@ public class HomepageAdapter extends ArrayAdapter<Object> {
 
             final Video video = (Video) item;
 
-            holder.type.setImageDrawable(context.getResources().getDrawable(R.drawable.thumb_corner_primary_color));
             holder.mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -97,8 +90,6 @@ public class HomepageAdapter extends ArrayAdapter<Object> {
         if (item instanceof PhotoAlbum) {
 
             final PhotoAlbum photoAlbum = (PhotoAlbum) item;
-
-            holder.type.setImageDrawable(context.getResources().getDrawable(R.drawable.thumb_corner_green_color));
             holder.mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -139,7 +130,6 @@ public class HomepageAdapter extends ArrayAdapter<Object> {
         public TextView name;
         public TextView date;
         public TextView views;
-        public ImageView type;
         public ImageButton more;
 
     }

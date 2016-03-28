@@ -26,18 +26,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="8dp" />
 
-            <ImageView
-                android:background="@drawable/thumb_corner_white_color"
-                android:id="@+id/type_drawable"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_alignParentTop="false"
-                android:layout_alignParentRight="false"
-                android:layout_alignTop="@+id/thumb"
-                android:layout_alignRight="@+id/thumb">
-
-            </ImageView>
-
             <com.mikhaellopez.circularprogressbar.CircularProgressBar android:id="@+id/progress"
                 android:layout_width="40dp"
                 android:layout_height="40dp"

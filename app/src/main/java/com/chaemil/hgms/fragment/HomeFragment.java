@@ -19,6 +19,8 @@ import com.chaemil.hgms.service.MyRequestService;
 
 import org.json.JSONObject;
 
+import it.sephiroth.android.library.widget.HListView;
+
 /**
  * Created by chaemil on 2.12.15.
  */
@@ -29,9 +31,9 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     public static final int POPULAR_VIDEOS = 3;
 
     private Homepage homepage;
-    private ListView newestVideos;
-    private ListView newestAlbums;
-    private ListView popularVideos;
+    private HListView newestVideos;
+    private HListView newestAlbums;
+    private HListView popularVideos;
     private HomepageAdapter newestVideosAdapter;
     private HomepageAdapter newestAlbumsAdapter;
     private HomepageAdapter popularVideosAdapter;
@@ -62,9 +64,9 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     }
 
     private void getUI(ViewGroup rootView) {
-        newestVideos = (ListView) rootView.findViewById(R.id.newest_videos);
-        newestAlbums = (ListView) rootView.findViewById(R.id.newest_albums);
-        popularVideos = (ListView) rootView.findViewById(R.id.popular_videos);
+        newestVideos = (HListView) rootView.findViewById(R.id.newest_videos);
+        newestAlbums = (HListView) rootView.findViewById(R.id.newest_albums);
+        popularVideos = (HListView) rootView.findViewById(R.id.popular_videos);
     }
 
     @Override

@@ -19,12 +19,12 @@
                 android:text="@string/newest_videos"
                 android:padding="10dp" />
 
-            <ListView
+            <it.sephiroth.android.library.widget.HListView
                 android:id="@+id/newest_videos"
                 android:layout_width="match_parent"
                 android:layout_height="200dp">
 
-            </ListView>
+            </it.sephiroth.android.library.widget.HListView>
 
             <TextView
                 android:layout_width="match_parent"
@@ -33,12 +33,12 @@
                 android:text="@string/newest_albums"
                 android:padding="10dp" />
 
-            <ListView
+            <it.sephiroth.android.library.widget.HListView
                 android:id="@+id/newest_albums"
                 android:layout_width="match_parent"
                 android:layout_height="200dp">
 
-            </ListView>
+            </it.sephiroth.android.library.widget.HListView>
 
             <TextView
                 android:layout_width="match_parent"
@@ -47,12 +47,12 @@
                 android:text="@string/popular_videos"
                 android:padding="10dp" />
 
-            <ListView
+            <it.sephiroth.android.library.widget.HListView
                 android:id="@+id/popular_videos"
                 android:layout_width="match_parent"
                 android:layout_height="200dp">
 
-            </ListView>
+            </it.sephiroth.android.library.widget.HListView>
 
 
 
