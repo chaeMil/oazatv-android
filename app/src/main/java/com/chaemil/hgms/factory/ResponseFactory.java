@@ -2,10 +2,12 @@ package com.chaemil.hgms.factory;
 
 
 import com.chaemil.hgms.model.ArchiveItem;
+import com.chaemil.hgms.model.Homepage;
 import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.Constants;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -208,6 +210,46 @@ public class ResponseFactory {
 
         return null;
 
+    }
+
+    public static Homepage parseHomepage(JSONObject response) {
+        try {
+
+            ArrayList<Video> newestVideos = new ArrayList<>();
+            ArrayList<Video> popularVideos = new ArrayList<>();
+            ArrayList<PhotoAlbum> newestAlbums = new ArrayList<>();
+
+            if (response.has(Constants.JSON_NEWEST_VIDEOS)) {
+                JSONArray newestVideosJsonArray = response.getJSONArray(Constants.JSON_NEWEST_VIDEOS);
+                for(int i = 0; i < newestVideosJsonArray.length(); i++) {
+                    Video video = parseVideo(newestVideosJsonArray.getJSONObject(i));
+                    newestVideos.add(video);
+                }
+            }
+
+            if (response.has(Constants.JSON_POPULAR_VIDEOS)) {
+                JSONArray popularVideosJsonArray = response.getJSONArray(Constants.JSON_POPULAR_VIDEOS);
+                for(int i = 0; i < popularVideosJsonArray.length(); i++) {
+                    Video video = parseVideo(popularVideosJsonArray.getJSONObject(i));
+                    popularVideos.add(video);
+                }
+            }
+
+            if (response.has(Constants.JSON_NEWEST_ALBUMS)) {
+                JSONArray newestAlbumsJsonArray = response.getJSONArray(Constants.JSON_NEWEST_ALBUMS);
+                for(int i = 0; i < newestAlbumsJsonArray.length(); i++) {
+                    PhotoAlbum album = parseAlbum(newestAlbumsJsonArray.getJSONObject(i));
+                    newestAlbums.add(album);
+                }
+            }
+
+            return new Homepage(newestVideos, newestAlbums, popularVideos);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }

@@ -18,6 +18,7 @@ public class Constants {
     public static final String API_GET_ARCHIVE = API + "archive/";
     public static final String API_GET_PHOTO_ALBUM = API + "album/";
     public static final String API_SEARCH = API + "search/";
+    public static final String API_GET_HOMEPAGE = API + "/main";
 
     public static final String JSON_POST_NICK = "nick";
     public static final String JSON_POST_EMAIL = "email";
@@ -69,4 +70,7 @@ public class Constants {
     public static final String JSON_SEARCH = "search";
     public static final String JSON_VIDEOS = "videos";
     public static final String JSON_ALBUMS = "albums";
+    public static final String JSON_NEWEST_VIDEOS = "newestVideos";
+    public static final String JSON_POPULAR_VIDEOS = "popularVideos";
+    public static final String JSON_NEWEST_ALBUMS = "newestAlbums";
 }

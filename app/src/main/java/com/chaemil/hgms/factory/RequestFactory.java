@@ -55,6 +55,19 @@ public class RequestFactory {
                 createMyReqErrorListener(listener));
     }
 
+    public static JsonObjectRequest getHomepage(RequestFactoryListener listener) {
+        String url = Constants.API_GET_HOMEPAGE;
+
+        JSONObject jsonObject = new JSONObject();
+
+        SmartLog.Log(SmartLog.LogLevel.INFO, "getHomePage", "get " + url);
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+
+        return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
+                createMyReqSuccessListener(listener, RequestType.GET_HOMEPAGE),
+                createMyReqErrorListener(listener));
+    }
+
     private static Response.Listener<JSONObject> createMyReqSuccessListener(
             final RequestFactoryListener listener, final RequestType requestType) {
         return new Response.Listener<JSONObject>() {
