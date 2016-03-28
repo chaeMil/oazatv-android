@@ -1,7 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:paddingTop="?android:attr/actionBarSize"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/newest_videos"
+                android:padding="10dp" />
+
+            <ListView
+                android:id="@+id/newest_videos"
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+
+            </ListView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/newest_albums"
+                android:padding="10dp" />
+
+            <ListView
+                android:id="@+id/newest_albums"
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+
+            </ListView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/popular_videos"
+                android:padding="10dp" />
+
+            <ListView
+                android:id="@+id/popular_videos"
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+
+            </ListView>
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
 
 </RelativeLayout>
