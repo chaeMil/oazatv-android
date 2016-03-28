@@ -98,7 +98,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private Notification notification;
     private NotificationCompat.Builder notificationBuilder;
     private Bitmap unblurredThumb;
-    private ImageView type;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -206,7 +205,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         seekBar.setOnSeekBarChangeListener(this);
         miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
-        type = (ImageView) rootView.findViewById(R.id.type);
     }
 
     private void setupUI() {
@@ -519,10 +517,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         String downloadedString = "";
         if (downloaded) {
             downloadedString = "[" + getString(R.string.downloaded) + "] ";
-
-            type.setImageDrawable(getResources().getDrawable(R.drawable.thumb_corner_white_color));
-        } else {
-            type.setImageDrawable(getResources().getDrawable(R.drawable.thumb_corner_red_color));
         }
 
         miniPlayerText.setText(downloadedString + audio.getName());
@@ -618,19 +612,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     @Override
     public void onAudioFocusChange(int focusChange) {
         switch (focusChange) {
-            /*case AudioManager.AUDIOFOCUS_GAIN: //TODO BUG: autoplay after notification sound
-                // resume playback
-                try {
-                    if (audioPlayer == null) {
-                        playNewAudio(currentAudio, downloaded);
-                    } else if (!audioPlayer.isPlaying()) {
-                        playAudio();
-                    }
-                    audioPlayer.setVolume(1.0f, 1.0f);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;*/
             case AudioManager.AUDIOFOCUS_LOSS:
                 // Lost focus for an unbounded amount of time: stop playback and release media player
                 if (audioPlayer != null) {

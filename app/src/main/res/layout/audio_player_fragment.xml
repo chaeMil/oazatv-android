@@ -127,16 +127,6 @@
                 android:layout_centerHorizontal="true"
                 android:visibility="gone" />
 
-            <ImageView
-                android:id="@+id/type"
-                tools:background="@drawable/thumb_corner_red_color"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_alignTop="@+id/audio_thumb"
-                android:layout_alignRight="@+id/audio_thumb">
-
-            </ImageView>
-
         </RelativeLayout>
 
         <RelativeLayout
