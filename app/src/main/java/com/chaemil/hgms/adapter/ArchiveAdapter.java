@@ -21,6 +21,7 @@ import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
+import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.ion.Ion;
@@ -86,7 +87,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.more.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        contextDialog(video);
+                        AdapterUtils.contextDialog(context, mainActivity, ArchiveAdapter.this, video);
                     }
                 });
                 Ion.with(context).load(video.getThumbFile()).intoImageView(holder.thumb);
@@ -112,62 +113,6 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
         }
 
         return convertView;
-    }
-
-    private void contextDialog(final Video video) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-        String[] menu;
-
-        if (Video.getDownloadStatus(((OazaApp) context.getApplicationContext()), video.getServerId()) == Video.NOT_DOWNLOADED) {
-            menu = new String[] {context.getString(R.string.download_audio),
-                                context.getString(R.string.stream_audio)};
-
-            builder.setItems(menu, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch(which) {
-                        case 0:
-                            downloadAudio(video);
-                            dialog.dismiss();
-                            break;
-                        case 1:
-                            mainActivity.playNewAudio(video);
-                            dialog.dismiss();
-                            break;
-                    }
-                }
-            });
-
-        }
-
-        if (Video.getDownloadStatus(((OazaApp) context.getApplicationContext()), video.getServerId()) == Video.DOWNLOADED) {
-            menu = new String[] {context.getString(R.string.play_downloaded_audio)};
-
-            builder.setItems(menu, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch(which) {
-                        case 0:
-                            mainActivity.playNewAudio(video);
-                            dialog.dismiss();
-                            break;
-                    }
-                }
-            });
-
-        }
-
-
-        builder.create().show();
-    }
-
-    private void downloadAudio(Video video) {
-        ((OazaApp) mainActivity.getApplication()).addToDownloadQueue(video);
-        mainActivity.startDownloadService();
-        notifyDataSetChanged();
-        mainActivity.getMainFragment().getDownloadedFragment().notifyDatasetChanged();
-        SuperToast.create(context, context.getString(R.string.added_to_download_queue), SuperToast.Duration.MEDIUM).show();
     }
 
     private void openAlbum(PhotoAlbum album) {
