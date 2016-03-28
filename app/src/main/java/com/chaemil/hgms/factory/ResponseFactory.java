@@ -2,20 +2,16 @@ package com.chaemil.hgms.factory;
 
 
 import com.chaemil.hgms.model.ArchiveItem;
-import com.chaemil.hgms.model.BlockDefinition;
 import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.Constants;
-import com.chaemil.hgms.utils.SmartLog;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class ResponseFactory {
 
@@ -206,32 +202,6 @@ public class ResponseFactory {
                 return archive;
 
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-
-    }
-
-    public static ArrayList<BlockDefinition> parseBlockDefinitions(JSONObject response) {
-
-        try {
-            JSONArray definitionsJson = response.getJSONArray(Constants.JSON_DEFINITIONS);
-
-            ArrayList<BlockDefinition> definitions = new ArrayList<>();
-
-            for (int c = 0; c < definitionsJson.length(); c++) {
-
-                String name = definitionsJson.getJSONObject(c).getString(Constants.JSON_NAME);
-                String definition = definitionsJson.getJSONObject(c).getString(Constants.JSON_DEFINITION);
-
-                BlockDefinition blockDefinition = new BlockDefinition(name, definition);
-                definitions.add(blockDefinition);
-            }
-
-            return definitions;
-
         } catch (JSONException e) {
             e.printStackTrace();
         }

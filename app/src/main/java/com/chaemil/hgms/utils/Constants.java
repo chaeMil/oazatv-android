@@ -18,7 +18,6 @@ public class Constants {
     public static final String API_GET_ARCHIVE = API + "archive/";
     public static final String API_GET_PHOTO_ALBUM = API + "album/";
     public static final String API_SEARCH = API + "search/";
-    public static final String API_GET_BLOCK_DEFINITIONS = API + "blocks/";
 
     public static final String JSON_POST_NICK = "nick";
     public static final String JSON_POST_EMAIL = "email";
@@ -70,6 +69,4 @@ public class Constants {
     public static final String JSON_SEARCH = "search";
     public static final String JSON_VIDEOS = "videos";
     public static final String JSON_ALBUMS = "albums";
-    public static final String JSON_DEFINITION = "definition";
-    public static final String JSON_DEFINITIONS = "definitions";
 }
