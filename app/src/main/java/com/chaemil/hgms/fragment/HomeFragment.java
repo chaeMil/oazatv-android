@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.adapter.HomepageAdapter;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.factory.ResponseFactory;
@@ -21,7 +24,17 @@ import org.json.JSONObject;
  */
 public class HomeFragment extends BaseFragment implements RequestFactoryListener {
 
+    public static final int NEWEST_VIDEOS = 0;
+    public static final int NEWEST_ALBUMS = 1;
+    public static final int POPULAR_VIDEOS = 3;
+
     private Homepage homepage;
+    private ListView newestVideos;
+    private ListView newestAlbums;
+    private ListView popularVideos;
+    private HomepageAdapter newestVideosAdapter;
+    private HomepageAdapter newestAlbumsAdapter;
+    private HomepageAdapter popularVideosAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,8 +43,6 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
         getData();
         getUI(rootView);
-        setupUI();
-
         return rootView;
 
     }
@@ -42,11 +53,18 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     }
 
     private void setupUI() {
-
+        newestVideosAdapter = new HomepageAdapter(getActivity(), ((MainActivity) getActivity()), homepage, NEWEST_VIDEOS);
+        newestVideos.setAdapter(newestVideosAdapter);
+        newestAlbumsAdapter = new HomepageAdapter(getActivity(), ((MainActivity) getActivity()), homepage, NEWEST_ALBUMS);
+        newestAlbums.setAdapter(newestAlbumsAdapter);
+        popularVideosAdapter = new HomepageAdapter(getActivity(), ((MainActivity) getActivity()), homepage, POPULAR_VIDEOS);
+        popularVideos.setAdapter(popularVideosAdapter);
     }
 
     private void getUI(ViewGroup rootView) {
-
+        newestVideos = (ListView) rootView.findViewById(R.id.newest_videos);
+        newestAlbums = (ListView) rootView.findViewById(R.id.newest_albums);
+        popularVideos = (ListView) rootView.findViewById(R.id.popular_videos);
     }
 
     @Override
@@ -57,6 +75,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
             case GET_HOMEPAGE:
 
                 homepage = ResponseFactory.parseHomepage(response);
+                setupUI();
 
                 break;
 
