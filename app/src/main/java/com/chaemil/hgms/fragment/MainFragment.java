@@ -101,7 +101,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             homeFragment = new HomeFragment();
             archiveFragment = new ArchiveFragment();
             downloadedFragment = new DownloadedFragment();
-            photoAlbumFragment = new PhotoAlbumFragment(null);
+            photoAlbumFragment = new PhotoAlbumFragment();
             searchAdapter = new SearchAdapter(getActivity(), R.layout.search_item,
                     ((MainActivity) getActivity()), searchResult);
             sharedPreferences = SharedPrefUtils.getInstance(getContext());

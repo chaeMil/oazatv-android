@@ -44,12 +44,6 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     private ProgressBar progress;
     private ImageView retry;
 
-
-    public PhotoAlbumFragment(PhotoAlbum album) {
-        super();
-        this.album = album;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
