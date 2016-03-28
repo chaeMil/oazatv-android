@@ -10,7 +10,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="75dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -22,7 +23,7 @@
             <it.sephiroth.android.library.widget.HListView
                 android:id="@+id/newest_videos"
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
+                android:layout_height="240dp">
 
             </it.sephiroth.android.library.widget.HListView>
 
@@ -36,7 +37,7 @@
             <it.sephiroth.android.library.widget.HListView
                 android:id="@+id/newest_albums"
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
+                android:layout_height="240dp">
 
             </it.sephiroth.android.library.widget.HListView>
 
@@ -50,7 +51,7 @@
             <it.sephiroth.android.library.widget.HListView
                 android:id="@+id/popular_videos"
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
+                android:layout_height="240dp">
 
             </it.sephiroth.android.library.widget.HListView>
 
