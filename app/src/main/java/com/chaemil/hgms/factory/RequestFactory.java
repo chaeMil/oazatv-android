@@ -55,6 +55,19 @@ public class RequestFactory {
                 createMyReqErrorListener(listener));
     }
 
+    public static JsonObjectRequest getBlockDefinitions(RequestFactoryListener listener) {
+        String url = Constants.API_GET_BLOCK_DEFINITIONS;
+
+        JSONObject jsonObject = new JSONObject();
+
+        SmartLog.Log(SmartLog.LogLevel.INFO, "getBlockDefinitions", "get " + url);
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+
+        return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
+                createMyReqSuccessListener(listener, RequestType.GET_BLOCK_DEFINITIONS),
+                createMyReqErrorListener(listener));
+    }
+
     private static Response.Listener<JSONObject> createMyReqSuccessListener(
             final RequestFactoryListener listener, final RequestType requestType) {
         return new Response.Listener<JSONObject>() {

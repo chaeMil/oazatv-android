@@ -37,17 +37,4 @@
     <string name="cancel_download">Cancel download</string>
     <string name="downloading_photo">Downloading photo</string>
     <string name="permission_revoked">Permission revoked</string>
-
-    <string name="test_json_layout">{
-    \"widget\": \"TextView\",
-    \"properties\": [
-        {\"name\":\"layout_width\", \"type\": \"dimen\", \"value\":\"match_parent\"},
-        {\"name\":\"background\", \"type\": \"color\", \"value\":\"red\"},
-        {\"name\":\"textSize\", \"type\": \"dimen\", \"value\":\"25sp\"},
-        {\"name\":\"textColor\", \"type\": \"color\", \"value\":\"white\"},
-        {\"name\":\"padding\", \"type\": \"dimen\", \"value\":\"24dp\"},
-        {\"name\":\"gravity\", \"type\": \"string\", \"value\":\"CENTER_HORIZONTAL\"},
-        {\"name\":\"text\", \"type\": \"string\", \"value\":\"Hello Avocarrot!\"}
-    ]
-}</string>
 </resources>
