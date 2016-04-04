@@ -8,6 +8,8 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.chaemil.hgms.OazaApp;
+import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 
@@ -37,6 +39,18 @@ public class WifiConnectedReceiver extends BroadcastReceiver {
                 }
             }
 
+        }
+
+        MainActivity mainActivity =  ((OazaApp) context.getApplicationContext()).getMainActivity();
+        if (mainActivity != null) {
+            if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+                mainActivity.hideStatusMessage();
+            }
+            if (netInfo != null && !netInfo.isConnected()) {
+                mainActivity.showStatusMessage(
+                        context.getString(R.string.offline_status_message),
+                        context.getResources().getColor(R.color.md_red_800));
+            }
         }
 
     }

@@ -7,6 +7,23 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
+    <RelativeLayout
+        android:id="@+id/status_message_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <TextView
+            android:textColor="@color/white"
+            tools:text="Offline!"
+            android:id="@+id/status_message_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="8dp" />
+
+    </RelativeLayout>
+
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
         android:gravity="bottom"
         android:background="@color/white"
@@ -15,7 +32,8 @@
         android:layout_width="match_parent"
         sothree:umanoPanelHeight="56dp"
         sothree:umanoShadowHeight="4dp"
-        sothree:umanoDragView="@+id/mini_player">
+        sothree:umanoDragView="@+id/mini_player"
+        android:layout_below="@+id/status_message_wrapper">
 
         <RelativeLayout
             android:layout_width="match_parent"

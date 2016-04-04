@@ -40,4 +40,5 @@
     <string name="newest_videos">Newest videos</string>
     <string name="newest_albums">Newest photo albums</string>
     <string name="popular_videos">Popular videos</string>
+    <string name="offline_status_message">No internet connection!</string>
 </resources>

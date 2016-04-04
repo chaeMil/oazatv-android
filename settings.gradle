@@ -1,3 +1,1 @@
 include ':app'
-include ':json2view'
-project(':json2view').projectDir = new File(settingsDir, 'json2view/json2view')

@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.MyRequestService;
@@ -23,6 +24,7 @@ public class OazaApp extends Application {
 
     private boolean downloadingNow = false;
     private DownloadService downloadService;
+    private MainActivity mainActivity;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -64,5 +66,13 @@ public class OazaApp extends Application {
 
     public DownloadService getDownloadService() {
         return downloadService;
+    }
+
+    public MainActivity getMainActivity() {
+        return mainActivity;
+    }
+
+    public void setMainActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 }

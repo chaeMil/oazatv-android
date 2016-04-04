@@ -9,6 +9,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -16,11 +17,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.TextViewCompat;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
@@ -29,6 +32,7 @@ import com.chaemil.hgms.fragment.MainFragment;
 import com.chaemil.hgms.fragment.VideoPlayerFragment;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
+import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
@@ -53,7 +57,8 @@ public class MainActivity extends BaseActivity implements
     private NetworkInfo wifi;
     private SharedPrefUtils sharedPreferences;
     private RelativeLayout playerWrapper;
-
+    private RelativeLayout statusMessageWrapper;
+    private TextView statusMessageText;
 
     @Override
     protected void onResume() {
@@ -71,6 +76,8 @@ public class MainActivity extends BaseActivity implements
         connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         sharedPreferences = SharedPrefUtils.getInstance(this);
+
+        ((OazaApp) getApplication()).setMainActivity(this);
 
         getUI();
         setupUI(savedInstanceState);
@@ -101,6 +108,7 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ((OazaApp) getApplication()).setMainActivity(null);
         unregisterReceiver(mainActivityReceiver);
     }
 
@@ -115,6 +123,8 @@ public class MainActivity extends BaseActivity implements
         mainRelativeLayout = (RelativeLayout) findViewById(R.id.main_relative_layout);
         decorView = getWindow().getDecorView().getRootView();
         playerWrapper = (RelativeLayout) findViewById(R.id.player_wrapper);
+        statusMessageWrapper = (RelativeLayout) findViewById(R.id.status_message_wrapper);
+        statusMessageText = (TextView) findViewById(R.id.status_message_text);
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -137,6 +147,11 @@ public class MainActivity extends BaseActivity implements
         changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
 
         panelLayout.setPanelSlideListener(this);
+
+        if (!NetworkUtils.isConnected(this)) {
+            showStatusMessage(getString(R.string.offline_status_message),
+                    getResources().getColor(R.color.md_red_800));
+        }
     }
 
     private void playVideo(final Video video) {
@@ -401,6 +416,16 @@ public class MainActivity extends BaseActivity implements
     public void startDownloadService() {
         Intent downloadService = new Intent(this, DownloadService.class);
         startService(downloadService);
+    }
+
+    public void showStatusMessage(String text, int backgroundColor) {
+        statusMessageWrapper.setVisibility(View.VISIBLE);
+        statusMessageWrapper.setBackgroundColor(backgroundColor);
+        statusMessageText.setText(text);
+    }
+
+    public void hideStatusMessage() {
+        statusMessageWrapper.setVisibility(View.GONE);
     }
 
     private class MainActivityReceiver extends BroadcastReceiver {
