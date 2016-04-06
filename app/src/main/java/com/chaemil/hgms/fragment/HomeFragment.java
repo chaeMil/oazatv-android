@@ -96,6 +96,8 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
                 switch (v.getId()) {
                     case R.id.featured_button:
                         if (activeView != FEATURED) {
+                            featuredButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.app_round_button_bg_active));
+                            newAndPopularButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.app_round_button_bg));
                             featuredWrapper.setVisibility(View.VISIBLE);
                             YoYo.with(Techniques.SlideInLeft).duration(250).playOn(featuredWrapper);
                             YoYo.with(Techniques.SlideOutRight).duration(250).playOn(newAndPopularWrapper);
@@ -111,6 +113,8 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
                         break;
                     case R.id.new_and_popular_button:
                         if (activeView != NEW_AND_POPULAR) {
+                            newAndPopularButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.app_round_button_bg_active));
+                            featuredButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.app_round_button_bg));
                             newAndPopularWrapper.setVisibility(View.VISIBLE);
                             YoYo.with(Techniques.SlideInRight).duration(250).playOn(newAndPopularWrapper);
                             YoYo.with(Techniques.SlideOutLeft).duration(250).playOn(featuredWrapper);
