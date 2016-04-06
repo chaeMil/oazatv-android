@@ -144,23 +144,9 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     }
 
     private void setupUI(Bundle savedInstanceState) {
+        setupTabLayout();
+        setupSearch();
 
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_home_white));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_view_list));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_downloaded));
-        RelativeLayout newTab = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.home_tab, null);
-        tabLayout.getTabAt(0).setCustomView(newTab);
-        tabLayout.setOnTabSelectedListener(this);
-        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.white));
-        searchFab.setOnClickListener(this);
-        searchView.setOnSearchViewListener(this);
-        searchView.setOnQueryTextListener(this);
-        searchView.setAdapter(searchAdapter);
-        searchView.setOnItemClickListener(this);
-        searchView.setHintTextColor(getResources().getColor(R.color.md_grey_500));
-        searchView.setHint(getResources().getString(R.string.search_hint_oaza));
-        searchView.setBackIcon(getResources().getDrawable(R.drawable.ic_search_back));
-        searchContainer.setOnClickListener(this);
         back.setOnClickListener(this);
         settingsFab.setOnClickListener(this);
         settingsCardBg.setOnClickListener(this);
@@ -195,6 +181,28 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                 sharedPreferences.saveStreamAudio(isChecked);
             }
         });
+    }
+
+    private void setupSearch() {
+        searchFab.setOnClickListener(this);
+        searchView.setOnSearchViewListener(this);
+        searchView.setOnQueryTextListener(this);
+        searchView.setAdapter(searchAdapter);
+        searchView.setOnItemClickListener(this);
+        searchView.setHintTextColor(getResources().getColor(R.color.md_grey_500));
+        searchView.setHint(getResources().getString(R.string.search_hint_oaza));
+        searchView.setBackIcon(getResources().getDrawable(R.drawable.ic_search_back));
+        searchContainer.setOnClickListener(this);
+    }
+
+    private void setupTabLayout() {
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_home_white));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_view_list));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_downloaded));
+        RelativeLayout newTab = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.home_tab, null);
+        tabLayout.getTabAt(0).setCustomView(newTab);
+        tabLayout.setOnTabSelectedListener(this);
+        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.white));
     }
 
     public HomeFragment getHomeFragment() {
