@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.adapter.ArchiveAdapter;
 import com.chaemil.hgms.adapter.HomepageAdapter;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
@@ -50,6 +52,8 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     private LinearLayout featuredWrapper;
     private LinearLayout newAndPopularWrapper;
     private int activeView = FEATURED;
+    private ArchiveAdapter featuredAdapter;
+    private GridView featuredGridView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,6 +78,8 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
         newestAlbums.setAdapter(newestAlbumsAdapter);
         popularVideosAdapter = new HomepageAdapter(getActivity(), ((MainActivity) getActivity()), homepage, POPULAR_VIDEOS);
         popularVideos.setAdapter(popularVideosAdapter);
+        featuredAdapter = new ArchiveAdapter(getActivity(), (MainActivity) getActivity(), homepage.featured);
+        featuredGridView.setAdapter(featuredAdapter);
 
         setupSwitcher();
     }
@@ -86,6 +92,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
         newAndPopularButton = (Button) rootView.findViewById(R.id.new_and_popular_button);
         featuredWrapper = (LinearLayout) rootView.findViewById(R.id.featured_wrapper);
         newAndPopularWrapper = (LinearLayout) rootView.findViewById(R.id.new_and_popular_wrapper);
+        featuredGridView = (GridView) rootView.findViewById(R.id.featured_grid_view);
     }
 
     private void setupSwitcher() {

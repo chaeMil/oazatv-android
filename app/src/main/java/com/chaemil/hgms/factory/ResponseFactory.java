@@ -218,6 +218,7 @@ public class ResponseFactory {
             ArrayList<Video> newestVideos = new ArrayList<>();
             ArrayList<Video> popularVideos = new ArrayList<>();
             ArrayList<PhotoAlbum> newestAlbums = new ArrayList<>();
+            ArrayList<ArchiveItem> featured = new ArrayList<>();
 
             if (response.has(Constants.JSON_NEWEST_VIDEOS)) {
                 JSONArray newestVideosJsonArray = response.getJSONArray(Constants.JSON_NEWEST_VIDEOS);
@@ -243,7 +244,31 @@ public class ResponseFactory {
                 }
             }
 
-            return new Homepage(newestVideos, newestAlbums, popularVideos);
+            if (response.has(Constants.JSON_FEATURED)) {
+                JSONArray featuredJsonArray = response.getJSONArray(Constants.JSON_FEATURED);
+                for(int i = 0; i < featuredJsonArray.length(); i++) {
+
+                    ArchiveItem archiveItem = new ArchiveItem();
+                    switch (featuredJsonArray.getJSONObject(i).getString(Constants.JSON_TYPE)) {
+                        case Constants.JSON_TYPE_VIDEO:
+
+                            Video video = parseVideo(featuredJsonArray.getJSONObject(i));
+                            archiveItem.setVideo(video);
+                            featured.add(archiveItem);
+                            break;
+
+                        case Constants.JSON_TYPE_ALBUM:
+
+                            PhotoAlbum photoAlbum = parseAlbum(featuredJsonArray.getJSONObject(i));
+                            archiveItem.setAlbum(photoAlbum);
+                            featured.add(archiveItem);
+                            break;
+
+                    }
+                }
+            }
+
+            return new Homepage(newestVideos, newestAlbums, popularVideos, featured);
 
         } catch (JSONException e) {
             e.printStackTrace();

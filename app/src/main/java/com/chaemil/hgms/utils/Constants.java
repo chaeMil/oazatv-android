@@ -73,4 +73,5 @@ public class Constants {
     public static final String JSON_NEWEST_VIDEOS = "newestVideos";
     public static final String JSON_POPULAR_VIDEOS = "popularVideos";
     public static final String JSON_NEWEST_ALBUMS = "newestAlbums";
+    public static final String JSON_FEATURED = "featured";
 }

@@ -7,13 +7,16 @@ import java.util.ArrayList;
  */
 public class Homepage {
 
-    public Homepage(ArrayList<Video> newestVideos, ArrayList<PhotoAlbum> newestAlbums, ArrayList<Video> popularVideos) {
-        this.newestVideos = newestVideos;
-        this.newestAlbums = newestAlbums;
-        this.popularVideos = popularVideos;
-    }
-
     public ArrayList<Video> newestVideos;
     public ArrayList<PhotoAlbum> newestAlbums;
     public ArrayList<Video> popularVideos;
+    public ArrayList<ArchiveItem> featured;
+
+    public Homepage(ArrayList<Video> newestVideos, ArrayList<PhotoAlbum> newestAlbums, ArrayList<Video> popularVideos, ArrayList<ArchiveItem> featured) {
+        this.newestVideos = newestVideos;
+        this.newestAlbums = newestAlbums;
+        this.popularVideos = popularVideos;
+        this.featured = featured;
+    }
+
 }
