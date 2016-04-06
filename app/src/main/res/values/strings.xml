@@ -41,4 +41,6 @@
     <string name="newest_albums">Newest photo albums</string>
     <string name="popular_videos">Popular videos</string>
     <string name="offline_status_message">No internet connection!</string>
+    <string name="featured">Featured</string>
+    <string name="new_and_popular"><![CDATA[New & popular]]></string>
 </resources>
