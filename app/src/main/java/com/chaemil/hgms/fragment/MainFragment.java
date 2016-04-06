@@ -15,6 +15,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -147,6 +148,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_home_white));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_view_list));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_downloaded));
+        RelativeLayout newTab = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.home_tab, null);
+        tabLayout.getTabAt(0).setCustomView(newTab);
         tabLayout.setOnTabSelectedListener(this);
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.white));
         searchFab.setOnClickListener(this);

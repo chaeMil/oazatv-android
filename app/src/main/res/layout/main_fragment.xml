@@ -54,7 +54,8 @@
             android:layout_height="match_parent"
             android:id="@+id/toolbar"
             android:background="@color/colorPrimary"
-            android:layout_toRightOf="@+id/back_wrapper">
+            android:layout_toRightOf="@+id/back_wrapper"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/toolbar_title"
