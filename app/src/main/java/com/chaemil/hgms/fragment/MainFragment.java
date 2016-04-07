@@ -160,21 +160,27 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         downloadOnWifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharedPreferences.saveDownloadOnWifi(isChecked);
+                if (sharedPreferences != null) {
+                    sharedPreferences.saveDownloadOnWifi(isChecked);
+                }
             }
         });
 
         streamOnWifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharedPreferences.saveStreamOnWifi(isChecked);
+                if (sharedPreferences != null) {
+                    sharedPreferences.saveStreamOnWifi(isChecked);
+                }
             }
         });
 
         streamOnlyAudioSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sharedPreferences.saveStreamAudio(isChecked);
+                if (sharedPreferences != null) {
+                    sharedPreferences.saveStreamAudio(isChecked);
+                }
             }
         });
     }

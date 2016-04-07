@@ -72,16 +72,18 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     }
 
     private void setupUI() {
-        newestVideosAdapter = new HomepageAdapter(getActivity(), ((MainActivity) getActivity()), homepage, NEWEST_VIDEOS);
-        newestVideos.setAdapter(newestVideosAdapter);
-        newestAlbumsAdapter = new HomepageAdapter(getActivity(), ((MainActivity) getActivity()), homepage, NEWEST_ALBUMS);
-        newestAlbums.setAdapter(newestAlbumsAdapter);
-        popularVideosAdapter = new HomepageAdapter(getActivity(), ((MainActivity) getActivity()), homepage, POPULAR_VIDEOS);
-        popularVideos.setAdapter(popularVideosAdapter);
-        featuredAdapter = new ArchiveAdapter(getActivity(), (MainActivity) getActivity(), homepage.featured);
-        featuredGridView.setAdapter(featuredAdapter);
+        if (getActivity() != null) {
+            newestVideosAdapter = new HomepageAdapter(getActivity(), ((MainActivity) getActivity()), homepage, NEWEST_VIDEOS);
+            newestVideos.setAdapter(newestVideosAdapter);
+            newestAlbumsAdapter = new HomepageAdapter(getActivity(), ((MainActivity) getActivity()), homepage, NEWEST_ALBUMS);
+            newestAlbums.setAdapter(newestAlbumsAdapter);
+            popularVideosAdapter = new HomepageAdapter(getActivity(), ((MainActivity) getActivity()), homepage, POPULAR_VIDEOS);
+            popularVideos.setAdapter(popularVideosAdapter);
+            featuredAdapter = new ArchiveAdapter(getActivity(), (MainActivity) getActivity(), homepage.featured);
+            featuredGridView.setAdapter(featuredAdapter);
 
-        setupSwitcher();
+            setupSwitcher();
+        }
     }
 
     private void getUI(ViewGroup rootView) {
