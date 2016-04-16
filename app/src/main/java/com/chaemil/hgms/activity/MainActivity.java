@@ -131,7 +131,7 @@ public class MainActivity extends BaseActivity implements
                 public void run() {
                     getLiveStream();
                 }
-            }, 0, 10 * 10000);
+            }, 0, 10 * 1000);
         } else {
             noConnectionMessage();
         }
@@ -564,6 +564,8 @@ public class MainActivity extends BaseActivity implements
                 if (liveStream != null && liveStream.getOnAir()) {
                     showStatusMessage(getString(R.string.app_name) + " " + getString(R.string.now_on_air),
                             getResources().getColor(R.color.md_green_700), true);
+                } else {
+                    hideStatusMessage();
                 }
                 break;
         }
