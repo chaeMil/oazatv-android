@@ -47,4 +47,6 @@
     <string name="watch">Watch!</string>
     <string name="player_error">Error initializing YouTube player: %s</string>
     <string name="stream_has_ended">Stream has ended</string>
+    <string name="live_stream_share">Oáza.tv - Livestream</string>
+    <string name="share_live_stream">Share live stream</string>
 </resources>

@@ -22,6 +22,7 @@ import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.LocalUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
+import com.chaemil.hgms.utils.ShareUtils;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -133,9 +134,9 @@ public class YoutubePlayer extends YouTubeBaseActivity implements YouTubePlayer.
                 finish();
                 break;
             case R.id.share:
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(Constants.LIVESTREAM_LINK));
-                startActivity(intent);
+                ShareUtils.shareLink(this, Constants.LIVESTREAM_LINK,
+                        getString(R.string.live_stream_share),
+                        getString(R.string.share_live_stream));
                 break;
         }
     }

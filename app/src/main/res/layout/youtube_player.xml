@@ -62,6 +62,7 @@
 
             <ImageView
                 android:id="@+id/share"
+                android:background="@drawable/transparent_ripple"
                 android:src="@drawable/ic_share"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
