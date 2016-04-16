@@ -28,12 +28,17 @@ public class OazaApp extends Application {
     private MainActivity mainActivity;
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        AnalyticsService.init(this);
+    }
+
+    @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
         MyRequestService.init(this);
         SugarContext.init(this);
-        AnalyticsService.init(this);
     }
 
     @Override

@@ -85,9 +85,8 @@ public class RequestFactory {
                 createMyReqErrorListener(listener));
     }
 
-    public static JsonObjectRequest postAnalyticsAlive(RequestFactoryListener listener, Context context, String page) {
+    public static JsonObjectRequest postAnalyticsAlive(RequestFactoryListener listener, Context context, String ip, String page) {
         String userId = AnalyticsUtils.getDeviceUniqueID(context);
-        String ip = AnalyticsUtils.getLocalIpAddress();
         String os = AnalyticsUtils.getAndroidVersion();
         String browser = AnalyticsUtils.getAppVersion();
 

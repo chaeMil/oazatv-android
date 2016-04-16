@@ -7,6 +7,10 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.chaemil.hgms.BuildConfig;
+import com.koushikdutta.async.future.Future;
+import com.koushikdutta.ion.Ion;
+
+import org.w3c.dom.Document;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -25,21 +29,8 @@ public class AnalyticsUtils {
                 Settings.Secure.ANDROID_ID);
     }
 
-    public static String getLocalIpAddress() {
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress()) {
-                        return inetAddress.getHostAddress();
-                    }
-                }
-            }
-        } catch (SocketException ex) {
-            Log.e(TAG, ex.toString());
-        }
-        return null;
+    public static Future<String> getPublicIpAddress(Context context) {
+        return Ion.with(context).load("https://api.ipify.org?format=json").asString();
     }
 
     public static String getAndroidVersion() {

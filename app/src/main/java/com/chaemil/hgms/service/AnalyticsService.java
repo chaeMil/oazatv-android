@@ -8,9 +8,14 @@ import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.RequestType;
+import com.chaemil.hgms.utils.AnalyticsUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SmartLog;
+import com.koushikdutta.async.future.Future;
+import com.koushikdutta.async.future.FutureCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Timer;
@@ -26,6 +31,7 @@ public class AnalyticsService implements RequestFactoryListener {
 
     private Context context;
     private String page = "";
+    private String ip = "";
 
     public AnalyticsService(final Context context) {
         this.context = context;
@@ -49,6 +55,19 @@ public class AnalyticsService implements RequestFactoryListener {
 
     public static void init(Context context) {
         analyticsService = new AnalyticsService(context);
+
+        Future<String> jsonIp = AnalyticsUtils.getPublicIpAddress(context);
+        jsonIp.setCallback(new FutureCallback<String>() {
+            @Override
+            public void onCompleted(Exception e, String result) {
+                try {
+                    JSONObject jsonArray = new JSONObject(result);
+                    analyticsService.setIp(jsonArray.getString("ip"));
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
     }
 
     public void setPage(String page) {
@@ -57,7 +76,7 @@ public class AnalyticsService implements RequestFactoryListener {
 
     private void postKeepAlive(String page) {
         if (NetworkUtils.isConnected(context)) {
-            JsonObjectRequest keepAlive = RequestFactory.postAnalyticsAlive(this, context, page);
+            JsonObjectRequest keepAlive = RequestFactory.postAnalyticsAlive(this, context, ip, page);
             MyRequestService.getRequestQueue().add(keepAlive);
         }
     }
@@ -74,6 +93,10 @@ public class AnalyticsService implements RequestFactoryListener {
     @Override
     public void onErrorResponse(VolleyError exception) {
         BaseActivity.responseError(exception, context);
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
     public static class Pages {
