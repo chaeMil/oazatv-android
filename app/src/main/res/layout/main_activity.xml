@@ -11,7 +11,8 @@
         android:id="@+id/status_message_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <TextView
             android:textColor="@color/white"
@@ -20,7 +21,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:padding="8dp" />
+            android:padding="12dp"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:textAllCaps="true"
+            android:id="@+id/watch"
+            android:text="@string/watch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:padding="16dp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 

@@ -45,11 +45,10 @@ public class WifiConnectedReceiver extends BroadcastReceiver {
         if (mainActivity != null) {
             if (netInfo != null && netInfo.isConnectedOrConnecting()) {
                 mainActivity.hideStatusMessage();
+                mainActivity.setupLiveRequestTimer();
             }
             if (netInfo != null && !netInfo.isConnected()) {
-                mainActivity.showStatusMessage(
-                        context.getString(R.string.offline_status_message),
-                        context.getResources().getColor(R.color.md_red_800));
+                mainActivity.noConnectionMessage();
             }
         }
 

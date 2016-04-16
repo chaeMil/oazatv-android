@@ -72,6 +72,7 @@ public class MainActivity extends BaseActivity implements
     private TextView statusMessageText;
     private Timer liveRequestTimer;
     private LiveStream liveStream;
+    private TextView liveStreamMessageWatch;
 
     @Override
     protected void onResume() {
@@ -95,14 +96,12 @@ public class MainActivity extends BaseActivity implements
         getUI();
         setupUI(savedInstanceState);
         setupReceiver();
+        setupLiveRequestTimer();
 
         if (!((OazaApp) getApplication()).isDownloadingNow()) {
             Intent downloadService = new Intent(this, DownloadService.class);
             startService(downloadService);
         }
-
-
-        setupLiveRequestTimer();
     }
 
     private void setupReceiver() {
@@ -121,16 +120,26 @@ public class MainActivity extends BaseActivity implements
         registerReceiver(mainActivityReceiver, filter);
     }
 
-    private void setupLiveRequestTimer() {
-        getLiveStream();
+    public void setupLiveRequestTimer() {
+        if (liveRequestTimer != null) {
+            liveRequestTimer.cancel();
+        }
+        if (NetworkUtils.isConnected(this)) {
+            liveRequestTimer = new Timer();
+            liveRequestTimer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    getLiveStream();
+                }
+            }, 0, 10 * 10000);
+        } else {
+            noConnectionMessage();
+        }
+    }
 
-        liveRequestTimer = new Timer();
-        liveRequestTimer.schedule(new TimerTask() {
-            public void run() {
-                getLiveStream();
-            }
-        }, 10000);
-
+    public void noConnectionMessage() {
+        showStatusMessage(getString(R.string.offline_status_message),
+                getResources().getColor(R.color.md_red_800), false);
     }
 
     private void getLiveStream() {
@@ -158,6 +167,7 @@ public class MainActivity extends BaseActivity implements
         playerWrapper = (RelativeLayout) findViewById(R.id.player_wrapper);
         statusMessageWrapper = (RelativeLayout) findViewById(R.id.status_message_wrapper);
         statusMessageText = (TextView) findViewById(R.id.status_message_text);
+        liveStreamMessageWatch = (TextView) findViewById(R.id.watch);
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -183,8 +193,22 @@ public class MainActivity extends BaseActivity implements
 
         if (!NetworkUtils.isConnected(this)) {
             showStatusMessage(getString(R.string.offline_status_message),
-                    getResources().getColor(R.color.md_red_800));
+                    getResources().getColor(R.color.md_red_800), false);
         }
+
+        statusMessageWrapper.setOnClickListener(setupMessageClick());
+    }
+
+    private View.OnClickListener setupMessageClick() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (liveStream != null && liveStream.getOnAir()) {
+                    Intent youtubePlayer = new Intent(MainActivity.this, YoutubePlayer.class);
+                    startActivity(youtubePlayer);
+                }
+            }
+        };
     }
 
     private void playVideo(final Video video) {
@@ -451,14 +475,22 @@ public class MainActivity extends BaseActivity implements
         startService(downloadService);
     }
 
-    public void showStatusMessage(String text, int backgroundColor) {
+    public void showStatusMessage(String text, int backgroundColor, boolean liveStream) {
         statusMessageWrapper.setVisibility(View.VISIBLE);
         statusMessageWrapper.setBackgroundColor(backgroundColor);
         statusMessageText.setText(text);
+        changeStatusBarColor(backgroundColor);
+
+        if (liveStream) {
+            liveStreamMessageWatch.setVisibility(View.VISIBLE);
+        } else {
+            liveStreamMessageWatch.setVisibility(View.GONE);
+        }
     }
 
     public void hideStatusMessage() {
         statusMessageWrapper.setVisibility(View.GONE);
+        changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
     }
 
     private class MainActivityReceiver extends BroadcastReceiver {
@@ -530,7 +562,8 @@ public class MainActivity extends BaseActivity implements
 
                 liveStream = ResponseFactory.parseLiveStream(response);
                 if (liveStream != null && liveStream.getOnAir()) {
-                    showStatusMessage(getString(R.string.app_name) + getString(R.string.now_on_air), R.color.md_green_700);
+                    showStatusMessage(getString(R.string.app_name) + " " + getString(R.string.now_on_air),
+                            getResources().getColor(R.color.md_green_700), true);
                 }
                 break;
         }
