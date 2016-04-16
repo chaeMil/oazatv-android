@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.ArchiveAdapter;
@@ -20,7 +21,9 @@ import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.Homepage;
 import com.chaemil.hgms.model.RequestType;
+import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.utils.AnalyticsUtils;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 

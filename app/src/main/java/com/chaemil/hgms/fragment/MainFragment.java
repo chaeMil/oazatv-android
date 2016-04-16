@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.SearchAdapter;
@@ -35,6 +36,7 @@ import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
@@ -261,16 +263,19 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
 
         switch (tab.getPosition()) {
             case 0:
+                AnalyticsService.getInstance().setPage(AnalyticsService.Pages.HOME_FRAGMENT);
                 tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_white);
                 settingsFab.hide(true);
                 hideSettings();
                 break;
             case 1:
+                AnalyticsService.getInstance().setPage(AnalyticsService.Pages.ARCHIVE_FRAGMENT);
                 tabLayout.getTabAt(1).setIcon(R.drawable.ic_view_list_white);
                 settingsFab.hide(true);
                 hideSettings();
                 break;
             case 2:
+                AnalyticsService.getInstance().setPage(AnalyticsService.Pages.DOWNLOADED_FRAGMENT);
                 tabLayout.getTabAt(2).setIcon(R.drawable.ic_downloaded_white);
                 settingsFab.show(true);
                 break;
@@ -312,7 +317,6 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                 pager.setVisibility(View.GONE);
             }
         }, 300);
-
     }
 
     public void closeAlbum() {

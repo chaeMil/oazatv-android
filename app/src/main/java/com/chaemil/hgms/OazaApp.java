@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.SmartLog;
@@ -32,6 +33,7 @@ public class OazaApp extends Application {
         MultiDex.install(this);
         MyRequestService.init(this);
         SugarContext.init(this);
+        AnalyticsService.init(this);
     }
 
     @Override

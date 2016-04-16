@@ -36,6 +36,7 @@ import android.widget.TextView;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.utils.BitmapUtils;
 import com.chaemil.hgms.utils.OnSwipeTouchListener;
 import com.chaemil.hgms.utils.SmartLog;
@@ -149,6 +150,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             bgDrawable = new BitmapDrawable(getResources(),
                     (Bitmap) savedInstanceState.getParcelable(BG_DRAWABLE));
         }
+
+        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT + "videoHash: " + currentAudio.getHash());
 
         getUI(rootView);
         activateUI(false);

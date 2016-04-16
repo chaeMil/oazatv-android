@@ -18,6 +18,7 @@ import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.LiveStream;
 import com.chaemil.hgms.model.RequestType;
+import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.LocalUtils;
@@ -60,6 +61,8 @@ public class YoutubePlayer extends YouTubeBaseActivity implements YouTubePlayer.
         getUI();
         setupUI();
         setupLiveRequestTimer();
+
+        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.LIVESTREAM);
     }
 
     private void setupUI() {

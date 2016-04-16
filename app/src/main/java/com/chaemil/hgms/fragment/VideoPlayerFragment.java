@@ -23,6 +23,7 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.utils.BitmapUtils;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.OnSwipeTouchListener;
@@ -115,6 +116,8 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
             bgDrawable = new BitmapDrawable(getResources(),
                     (Bitmap) savedInstanceState.getParcelable(BG_DRAWABLE));
         }
+
+        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT + "videoHash: " + currentVideo.getHash());
 
         getUI(rootView);
         activateUI(false);

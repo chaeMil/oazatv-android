@@ -20,8 +20,9 @@ public class Constants {
     public static final String API_GET_ARCHIVE = API + "archive/";
     public static final String API_GET_PHOTO_ALBUM = API + "album/";
     public static final String API_SEARCH = API + "search/";
-    public static final String API_GET_HOMEPAGE = API + "/main";
-    public static final String API_GET_LIVESTREAM = API + "/live";
+    public static final String API_GET_HOMEPAGE = API + "main/";
+    public static final String API_GET_LIVESTREAM = API + "live/";
+    public static final String API_POST_ANALYTICS_PING_ALIVE = API + "ping-alive/";
 
     public static final String JSON_POST_NICK = "nick";
     public static final String JSON_POST_EMAIL = "email";

@@ -26,6 +26,7 @@ import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
+import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.SmartLog;
 
@@ -56,8 +57,9 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "PhotoAlbumFragment", "onCreateView");
 
         View view = inflater.inflate(R.layout.photos_fragment, container, false);
-
         getUI(view);
+
+        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.PHOTOALBUM_FRAGMENT + "albumHash: " + album.getHash());
 
         return view;
     }

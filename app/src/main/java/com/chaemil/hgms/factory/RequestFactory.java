@@ -1,11 +1,15 @@
 package com.chaemil.hgms.factory;
 
 
+import android.app.Activity;
+import android.content.Context;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.model.RequestType;
+import com.chaemil.hgms.utils.AnalyticsUtils;
 import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.SmartLog;
 
@@ -78,6 +82,29 @@ public class RequestFactory {
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.GET_LIVESTREAM),
+                createMyReqErrorListener(listener));
+    }
+
+    public static JsonObjectRequest postAnalyticsAlive(RequestFactoryListener listener, Context context, String page) {
+        String userId = AnalyticsUtils.getDeviceUniqueID(context);
+        String ip = AnalyticsUtils.getLocalIpAddress();
+        String os = AnalyticsUtils.getAndroidVersion();
+        String browser = AnalyticsUtils.getAppVersion();
+
+        String url = Constants.API_POST_ANALYTICS_PING_ALIVE
+                + "?oazaUserId=" + URLEncoder.encode(userId)
+                + "&ip=" + URLEncoder.encode(ip)
+                + "&os=" + URLEncoder.encode(os)
+                + "&browser=" + URLEncoder.encode(browser)
+                + "&page=" + URLEncoder.encode(page);
+
+        JSONObject jsonObject = new JSONObject();
+
+        SmartLog.Log(SmartLog.LogLevel.INFO, "postAnalyticsAlive", "post " + url);
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+
+        return new JsonObjectRequest(Request.Method.POST, url, jsonObject,
+                createMyReqSuccessListener(listener, RequestType.POST_ANALYTICS_ALIVE),
                 createMyReqErrorListener(listener));
     }
 
