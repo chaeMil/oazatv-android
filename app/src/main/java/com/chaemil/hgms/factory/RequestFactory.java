@@ -109,7 +109,7 @@ public class RequestFactory {
     }
 
     public static JsonObjectRequest postVideoView(RequestFactoryListener listener, String hash) {
-        String url = Constants.API_POST_VIDEO_VIEW + "/" + hash;
+        String url = Constants.API_POST_VIEW_PREFIX + hash + Constants.API_POST_VIEW_SUFFIX;
 
         JSONObject jsonObject = new JSONObject();
 
