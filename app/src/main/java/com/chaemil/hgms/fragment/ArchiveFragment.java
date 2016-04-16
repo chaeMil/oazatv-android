@@ -103,7 +103,7 @@ public class ArchiveFragment extends BaseFragment {
                     public void run() {
                         getArchivePage(page);
                     }
-                }, 2000);
+                }, 500);
 
             }
         };
