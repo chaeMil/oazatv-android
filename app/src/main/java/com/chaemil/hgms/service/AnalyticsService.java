@@ -82,6 +82,6 @@ public class AnalyticsService implements RequestFactoryListener {
         public static final String DOWNLOADED_FRAGMENT = "DownloadedFragment";
         public static final String PHOTOALBUM_FRAGMENT = "PhotoalbumFragment";
         public static final String VIDEOPLAYER_FRAGMENT = "VideoPlayerFragment";
-        public static final String LIVESTREAM = "LiveStream";
+        public static final String LIVESTREAM = "live-stream";
     }
 }
