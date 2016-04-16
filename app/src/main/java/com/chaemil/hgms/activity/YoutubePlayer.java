@@ -1,5 +1,7 @@
 package com.chaemil.hgms.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Html;
@@ -45,6 +47,7 @@ public class YoutubePlayer extends YouTubeBaseActivity implements YouTubePlayer.
     private Timer liveRequestTimer;
     private TextView bottomText;
     private YouTubePlayer player;
+    private ImageView share;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,6 +64,7 @@ public class YoutubePlayer extends YouTubeBaseActivity implements YouTubePlayer.
     private void setupUI() {
         back.setOnClickListener(this);
         youTubeView.initialize(Constants.YOUTUBE_API_KEY, this);
+        share.setOnClickListener(this);
 
         setupBottomText();
     }
@@ -80,6 +84,7 @@ public class YoutubePlayer extends YouTubeBaseActivity implements YouTubePlayer.
         back = (ImageView) findViewById(R.id.back);
         youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
         bottomText = (TextView) findViewById(R.id.bottom_text);
+        share = (ImageView) findViewById(R.id.share);
     }
 
     private void getLiveStream() {
@@ -126,6 +131,11 @@ public class YoutubePlayer extends YouTubeBaseActivity implements YouTubePlayer.
         switch (v.getId()) {
             case R.id.back:
                 finish();
+                break;
+            case R.id.share:
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(Constants.LIVESTREAM_LINK));
+                startActivity(intent);
                 break;
         }
     }

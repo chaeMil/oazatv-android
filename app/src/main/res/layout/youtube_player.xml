@@ -60,6 +60,16 @@
                 android:layout_toEndOf="@+id/imageView"
                 android:layout_marginLeft="8dp" />
 
+            <ImageView
+                android:id="@+id/share"
+                android:src="@drawable/ic_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:padding="8dp" />
+
 
         </RelativeLayout>
 
