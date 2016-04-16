@@ -37,9 +37,30 @@
                 android:visibility="gone"
                 tools:visibility="visible"
                 android:id="@+id/toolbar"
-                android:background="@color/transparent_black"
+                android:background="@color/colorPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:animateLayoutChanges="true"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/back_wrapper"
+                    android:background="@color/colorPrimary"
+                    android:visibility="visible">
+
+                    <ImageButton
+                        android:background="@drawable/transparent_ripple"
+                        android:src="@drawable/ic_action_navigation_arrow_back"
+                        android:id="@+id/back"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:visibility="visible"
+                        android:layout_centerInParent="true" />
+
+                </RelativeLayout>
+
+
 
                 <TextView
                     android:textColor="@color/white"
@@ -51,11 +72,10 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/fullscreen"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:layout_toRightOf="@+id/back_wrapper"
+                    android:layout_toEndOf="@+id/back_wrapper" />
 
                 <ImageView
                     android:layout_width="42dp"
