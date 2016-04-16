@@ -111,7 +111,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
 
-        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT + "videoHash: " + currentVideo.getHash());
+        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT);
 
     }
 
@@ -512,6 +512,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
             }
         }, 500);
 
+        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT + "videoHash: " + currentVideo.getHash());
         postVideoView();
 
     }

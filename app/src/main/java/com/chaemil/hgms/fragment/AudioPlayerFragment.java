@@ -137,7 +137,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                     SuperToast.Duration.SHORT).show();
         }
 
-        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: " + currentAudio.getHash());
+        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT);
 
     }
 
@@ -576,6 +576,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         }, 500);
 
         postVideoView();
+        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: " + currentAudio.getHash());
 
     }
 
