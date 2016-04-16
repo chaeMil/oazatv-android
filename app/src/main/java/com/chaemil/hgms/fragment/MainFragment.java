@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,6 +39,8 @@ import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.utils.Constants;
+import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
@@ -69,7 +72,6 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private PhotoAlbumFragment photoAlbumFragment;
     private MaterialSearchView searchView;
     private FloatingActionButton searchFab;
-    private Toolbar toolbarSecondary;
     private TextView toolbarSecondaryTitle;
     private ArrayList<ArchiveItem> searchResult = new ArrayList<>();
     private SearchAdapter searchAdapter;
@@ -83,6 +85,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private RelativeLayout settingsCardBg;
     private SwitchCompat streamOnWifiSwitch;
     private SwitchCompat streamOnlyAudioSwitch;
+    private ImageView share;
 
     @Override
     public void onAttach(Activity activity) {
@@ -128,7 +131,6 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         photoalbumWrapper = (FrameLayout) rootView.findViewById(R.id.photoalbum_wrapper);
         searchView = (MaterialSearchView) rootView.findViewById(R.id.search_view);
         searchFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        toolbarSecondary = (Toolbar) rootView.findViewById(R.id.toolbar_secondary);
         toolbarSecondaryTitle = (TextView) rootView.findViewById(R.id.toolbar_secondary_title);
         searchContainer = (FrameLayout) rootView.findViewById(R.id.search_container);
         backWrapper = (RelativeLayout) rootView.findViewById(R.id.back_wrapper);
@@ -139,6 +141,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         downloadOnWifiSwitch = (SwitchCompat) rootView.findViewById(R.id.download_on_wifi_switch);
         streamOnWifiSwitch = (SwitchCompat) rootView.findViewById(R.id.stream_on_wifi_switch);
         streamOnlyAudioSwitch = (SwitchCompat) rootView.findViewById(R.id.stream_only_audio_switch);
+        share = (ImageView) rootView.findViewById(R.id.share);
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -148,6 +151,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         back.setOnClickListener(this);
         settingsFab.setOnClickListener(this);
         settingsCardBg.setOnClickListener(this);
+        share.setOnClickListener(this);
 
         if (savedInstanceState == null) {
             pager.setAdapter(new MainFragmentsAdapter(context.getSupportFragmentManager()));
@@ -350,7 +354,9 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                 searchView.closeSearch();
                 break;
             case R.id.back:
-                closeAlbum();
+                if (isAlbumOpened()) {
+                    closeAlbum();
+                }
                 break;
             case R.id.settings_fab:
                 if (settingsCard.getVisibility() == View.GONE) {
@@ -362,6 +368,14 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             case R.id.settings_card_bg:
                 hideSettings();
                 break;
+            case R.id.share:
+                if (isAlbumOpened()) {
+                    PhotoAlbum album = getPhotoAlbumFragment().getAlbum();
+                    ShareUtils.shareLink(getActivity(),
+                            Constants.ALBUM_LINK + album.getHash(),
+                            album.getNameCS() + " | " + album.getNameEN(),
+                            getString(R.string.share_album));
+                }
         }
     }
 

@@ -50,4 +50,5 @@
     <string name="live_stream_share">Oáza.tv - Livestream</string>
     <string name="share_live_stream">Share live stream</string>
     <string name="share_video">Share video</string>
+    <string name="share_album">Share album</string>
 </resources>

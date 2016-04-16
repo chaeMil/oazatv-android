@@ -73,6 +73,10 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
         getData();
     }
 
+    public PhotoAlbum getAlbum() {
+        return album;
+    }
+
     private void getData() {
         if (progress != null) {
             progress.setVisibility(View.VISIBLE);

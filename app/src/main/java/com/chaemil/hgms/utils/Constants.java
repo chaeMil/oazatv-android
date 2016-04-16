@@ -41,6 +41,7 @@ public class Constants {
     public static final String LIVESTREAM_LINK = DOMAIN + "/live-stream/";
     public static final String VIDEO_LINK = DOMAIN + "video/watch/";
     public static final String AUDIO_LINK = DOMAIN + "audio/listen/";
+    public static final String ALBUM_LINK = DOMAIN + "album/view/";
 
     public static final String JSON_ID = "id";
     public static final String JSON_ERROR = "error";
@@ -87,4 +88,5 @@ public class Constants {
     public static final String JSON_YOUTUBE_LINK = "youtube_link";
     public static final String JSON_BOTTOM_TEXT_CS = "bottom_text_cs";
     public static final String JSON_BOTTOM_TEXT_EN = "bottom_text_en";
+
 }
