@@ -4,10 +4,19 @@
     <item
         android:drawable="@color/colorPrimary"/>
 
-    <item>
+    <item android:gravity="center"
+        android:width="110dp"
+        android:height="110dp">
         <bitmap
-            android:gravity="center"
             android:src="@mipmap/splash_logo"/>
+    </item>
+
+    <item android:gravity="center"
+        android:top="300dp"
+        android:width="146dp"
+        android:height="35dp">
+        <bitmap
+            android:src="@mipmap/splash_text"/>
     </item>
 
 </layer-list>
