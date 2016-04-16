@@ -6,6 +6,8 @@ public class Constants {
     public static final String CS = "cs";
     public static final String SK = "sk";
 
+    public static final String YOUTUBE_API_KEY = "AIzaSyB0uBmjinBHCx2KGPg-wI0XXG3kxPxfV1E";
+
     public static final String JSON_POST_HEADER_ACCEPT = "Content-type:";
     public static final String JSON_POST_HEADER_APPLICATION_JSON = "application/json";
     public static final String JSON_POST_CHARSET = "charset=";
@@ -19,6 +21,7 @@ public class Constants {
     public static final String API_GET_PHOTO_ALBUM = API + "album/";
     public static final String API_SEARCH = API + "search/";
     public static final String API_GET_HOMEPAGE = API + "/main";
+    public static final String API_GET_LIVESTREAM = API + "/live";
 
     public static final String JSON_POST_NICK = "nick";
     public static final String JSON_POST_EMAIL = "email";
@@ -74,4 +77,8 @@ public class Constants {
     public static final String JSON_POPULAR_VIDEOS = "popularVideos";
     public static final String JSON_NEWEST_ALBUMS = "newestAlbums";
     public static final String JSON_FEATURED = "featured";
+    public static final String JSON_ONAIR = "on_air";
+    public static final String JSON_YOUTUBE_LINK = "youtube_link";
+    public static final String JSON_BOTTOM_TEXT_CS = "bottom_text_cs";
+    public static final String JSON_BOTTOM_TEXT_EN = "bottom_text_en";
 }

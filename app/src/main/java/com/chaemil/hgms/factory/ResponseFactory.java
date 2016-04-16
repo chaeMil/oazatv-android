@@ -3,6 +3,7 @@ package com.chaemil.hgms.factory;
 
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.Homepage;
+import com.chaemil.hgms.model.LiveStream;
 import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
@@ -270,6 +271,21 @@ public class ResponseFactory {
 
             return new Homepage(newestVideos, newestAlbums, popularVideos, featured);
 
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static LiveStream parseLiveStream(JSONObject response) {
+        try {
+            String onAir = response.getString(Constants.JSON_ONAIR);
+            String youtubeLink = response.getString(Constants.JSON_YOUTUBE_LINK);
+            String bottomTextCS = response.getString(Constants.JSON_BOTTOM_TEXT_CS);
+            String bottomTextEN = response.getString(Constants.JSON_BOTTOM_TEXT_EN);
+
+            return new LiveStream(onAir, youtubeLink, bottomTextCS, bottomTextEN);
         } catch (JSONException e) {
             e.printStackTrace();
         }

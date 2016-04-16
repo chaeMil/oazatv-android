@@ -37,6 +37,10 @@
 
         </activity>
 
+        <activity android:name=".activity.YoutubePlayer">
+
+        </activity>
+
         <service android:name=".service.DownloadService">
 
         </service>

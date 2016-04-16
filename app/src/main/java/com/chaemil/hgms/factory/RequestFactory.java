@@ -68,6 +68,19 @@ public class RequestFactory {
                 createMyReqErrorListener(listener));
     }
 
+    public static JsonObjectRequest getLiveStream(RequestFactoryListener listener) {
+        String url = Constants.API_GET_LIVESTREAM;
+
+        JSONObject jsonObject = new JSONObject();
+
+        SmartLog.Log(SmartLog.LogLevel.INFO, "getLiveStream", "get " + url);
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+
+        return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
+                createMyReqSuccessListener(listener, RequestType.GET_LIVESTREAM),
+                createMyReqErrorListener(listener));
+    }
+
     private static Response.Listener<JSONObject> createMyReqSuccessListener(
             final RequestFactoryListener listener, final RequestType requestType) {
         return new Response.Listener<JSONObject>() {

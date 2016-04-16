@@ -25,13 +25,19 @@ import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.factory.RequestFactory;
+import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.fragment.MainFragment;
 import com.chaemil.hgms.fragment.VideoPlayerFragment;
+import com.chaemil.hgms.model.LiveStream;
+import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
+import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
@@ -39,6 +45,11 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
+import org.json.JSONObject;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by chaemil on 2.12.15.
@@ -59,6 +70,8 @@ public class MainActivity extends BaseActivity implements
     private RelativeLayout playerWrapper;
     private RelativeLayout statusMessageWrapper;
     private TextView statusMessageText;
+    private Timer liveRequestTimer;
+    private LiveStream liveStream;
 
     @Override
     protected void onResume() {
@@ -87,6 +100,9 @@ public class MainActivity extends BaseActivity implements
             Intent downloadService = new Intent(this, DownloadService.class);
             startService(downloadService);
         }
+
+
+        setupLiveRequestTimer();
     }
 
     private void setupReceiver() {
@@ -103,6 +119,23 @@ public class MainActivity extends BaseActivity implements
 
         mainActivityReceiver = new MainActivityReceiver();
         registerReceiver(mainActivityReceiver, filter);
+    }
+
+    private void setupLiveRequestTimer() {
+        getLiveStream();
+
+        liveRequestTimer = new Timer();
+        liveRequestTimer.schedule(new TimerTask() {
+            public void run() {
+                getLiveStream();
+            }
+        }, 10000);
+
+    }
+
+    private void getLiveStream() {
+        JsonObjectRequest request = RequestFactory.getLiveStream(MainActivity.this);
+        MyRequestService.getRequestQueue().add(request);
     }
 
     @Override
@@ -488,5 +521,18 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
+    @Override
+    public void onSuccessResponse(JSONObject response, RequestType requestType) {
+        super.onSuccessResponse(response, requestType);
 
+        switch (requestType) {
+            case GET_LIVESTREAM:
+
+                liveStream = ResponseFactory.parseLiveStream(response);
+                if (liveStream != null && liveStream.getOnAir()) {
+                    showStatusMessage(getString(R.string.app_name) + getString(R.string.now_on_air), R.color.md_green_700);
+                }
+                break;
+        }
+    }
 }
