@@ -20,6 +20,12 @@ public class LiveStream implements Parcelable {
         this.bottomTextEN = bottomTextEN;
     }
 
+    protected LiveStream(Parcel in) {
+        onAir = in.readString();
+        youtubeLink = in.readString();
+        bottomTextCS = in.readString();
+        bottomTextEN = in.readString();
+    }
     public boolean getOnAir() {
         return this.onAir.equals("online");
     }
@@ -27,6 +33,26 @@ public class LiveStream implements Parcelable {
     public void setOnAir(String onAir) {
         this.onAir = onAir;
     }
+
+    public void setOnAir(boolean onAir) {
+        if (onAir) {
+            this.onAir = "online";
+        } else {
+            this.onAir = "offline";
+        }
+    }
+
+    public static final Creator<LiveStream> CREATOR = new Creator<LiveStream>() {
+        @Override
+        public LiveStream createFromParcel(Parcel in) {
+            return new LiveStream(in);
+        }
+
+        @Override
+        public LiveStream[] newArray(int size) {
+            return new LiveStream[size];
+        }
+    };
 
     public String getYoutubeLink() {
         return youtubeLink;
@@ -52,13 +78,6 @@ public class LiveStream implements Parcelable {
         this.bottomTextEN = bottomTextEN;
     }
 
-    protected LiveStream(Parcel in) {
-        onAir = in.readString();
-        youtubeLink = in.readString();
-        bottomTextCS = in.readString();
-        bottomTextEN = in.readString();
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -66,22 +85,10 @@ public class LiveStream implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+
         dest.writeString(onAir);
         dest.writeString(youtubeLink);
         dest.writeString(bottomTextCS);
         dest.writeString(bottomTextEN);
     }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<LiveStream> CREATOR = new Parcelable.Creator<LiveStream>() {
-        @Override
-        public LiveStream createFromParcel(Parcel in) {
-            return new LiveStream(in);
-        }
-
-        @Override
-        public LiveStream[] newArray(int size) {
-            return new LiveStream[size];
-        }
-    };
 }

@@ -34,7 +34,8 @@ import java.util.TimerTask;
 /**
  * Created by chaemil on 16.4.16.
  */
-public class YoutubePlayer extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener, View.OnClickListener, RequestFactoryListener {
+public class YoutubePlayer extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener,
+        View.OnClickListener, RequestFactoryListener {
 
     private static final int RECOVERY_REQUEST = 1;
     public static final String LIVESTREAM = "livestream";
@@ -43,6 +44,7 @@ public class YoutubePlayer extends YouTubeBaseActivity implements YouTubePlayer.
     private LiveStream liveStream;
     private Timer liveRequestTimer;
     private TextView bottomText;
+    private YouTubePlayer player;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,8 +104,10 @@ public class YoutubePlayer extends YouTubeBaseActivity implements YouTubePlayer.
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+        this.player = player;
         if (!wasRestored) {
             player.cueVideo(liveStream.getYoutubeLink());
+            player.play();
         }
     }
 
@@ -133,9 +137,26 @@ public class YoutubePlayer extends YouTubeBaseActivity implements YouTubePlayer.
                 LiveStream responseLiveStream = ResponseFactory.parseLiveStream(response);
 
                 if (responseLiveStream != null) {
-                    liveStream = responseLiveStream;
 
-                    setupBottomText();
+                    if (responseLiveStream.getOnAir()) {
+
+                        String oldVideoLink = liveStream.getYoutubeLink();
+                        String newVideoLink = responseLiveStream.getYoutubeLink();
+
+                        if (!oldVideoLink.equals(newVideoLink) && !newVideoLink.equals("")) {
+                            player.cueVideo(newVideoLink);
+                        }
+
+                        liveStream.setOnAir(responseLiveStream.getOnAir());
+                        liveStream.setYoutubeLink(responseLiveStream.getYoutubeLink());
+                        liveStream.setBottomTextCS(responseLiveStream.getBottomTextCS());
+                        liveStream.setBottomTextEN(responseLiveStream.getBottomTextEN());
+
+                        setupBottomText();
+                    } else {
+                        finish();
+                        SuperToast.create(this, getString(R.string.stream_has_ended), Toast.LENGTH_LONG).show();
+                    }
                 }
                 break;
         }
