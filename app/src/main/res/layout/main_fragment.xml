@@ -113,7 +113,7 @@
         android:layout_width="match_parent"
         android:layout_height="8dp"
         android:layout_below="@+id/app_bar"
-        android:alpha="0.3"
+        android:alpha="0.2"
         android:adjustViewBounds="false" />
 
     <RelativeLayout

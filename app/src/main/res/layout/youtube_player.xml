@@ -76,6 +76,15 @@
 
     </RelativeLayout>
 
+    <ImageView
+        android:scaleType="fitXY"
+        android:src="@drawable/drop_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_below="@+id/app_bar"
+        android:alpha="0.2"
+        android:adjustViewBounds="false" />
+
     <com.google.android.youtube.player.YouTubePlayerView
         android:id="@+id/youtube_view"
         android:layout_width="match_parent"
