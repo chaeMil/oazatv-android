@@ -1,9 +1,12 @@
 package com.chaemil.hgms.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by chaemil on 16.4.16.
  */
-public class LiveStream {
+public class LiveStream implements Parcelable {
 
     private String onAir;
     private String youtubeLink;
@@ -48,4 +51,37 @@ public class LiveStream {
     public void setBottomTextEN(String bottomTextEN) {
         this.bottomTextEN = bottomTextEN;
     }
+
+    protected LiveStream(Parcel in) {
+        onAir = in.readString();
+        youtubeLink = in.readString();
+        bottomTextCS = in.readString();
+        bottomTextEN = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(onAir);
+        dest.writeString(youtubeLink);
+        dest.writeString(bottomTextCS);
+        dest.writeString(bottomTextEN);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<LiveStream> CREATOR = new Parcelable.Creator<LiveStream>() {
+        @Override
+        public LiveStream createFromParcel(Parcel in) {
+            return new LiveStream(in);
+        }
+
+        @Override
+        public LiveStream[] newArray(int size) {
+            return new LiveStream[size];
+        }
+    };
 }

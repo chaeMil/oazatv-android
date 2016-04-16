@@ -205,6 +205,7 @@ public class MainActivity extends BaseActivity implements
             public void onClick(View v) {
                 if (liveStream != null && liveStream.getOnAir()) {
                     Intent youtubePlayer = new Intent(MainActivity.this, YoutubePlayer.class);
+                    youtubePlayer.putExtra(YoutubePlayer.LIVESTREAM, liveStream);
                     startActivity(youtubePlayer);
                 }
             }
