@@ -116,7 +116,6 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     }
 
     public void showPhoto(int position) {
-        ((MainActivity) getActivity()).changeStatusBarColor(getResources().getColor(R.color.black));
         ((MainActivity) getActivity()).getMainFragment().getAppBar().setVisibility(View.GONE);
         photosViewPager.setCurrentItem(position, false);
         photosViewPager.setVisibility(View.VISIBLE);
@@ -125,7 +124,6 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     }
 
     public void hidePhotos() {
-        ((MainActivity) getActivity()).changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         ((MainActivity) getActivity()).getMainFragment().getAppBar().setVisibility(View.VISIBLE);
         photosViewPager.setVisibility(View.GONE);
         back.setVisibility(View.GONE);
