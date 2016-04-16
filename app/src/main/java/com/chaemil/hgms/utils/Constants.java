@@ -23,6 +23,7 @@ public class Constants {
     public static final String API_GET_HOMEPAGE = API + "main/";
     public static final String API_GET_LIVESTREAM = API + "live/";
     public static final String API_POST_ANALYTICS_PING_ALIVE = API + "ping-alive/";
+    public static final String API_POST_VIDEO_VIEW = "video/count-view/";
 
     public static final String JSON_POST_NICK = "nick";
     public static final String JSON_POST_EMAIL = "email";

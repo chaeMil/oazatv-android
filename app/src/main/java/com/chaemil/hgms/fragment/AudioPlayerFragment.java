@@ -33,10 +33,17 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.factory.RequestFactory;
+import com.chaemil.hgms.factory.RequestFactoryListener;
+import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
+import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.BitmapUtils;
 import com.chaemil.hgms.utils.OnSwipeTouchListener;
 import com.chaemil.hgms.utils.SmartLog;
@@ -44,6 +51,8 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.ion.Ion;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,7 +64,7 @@ import at.markushi.ui.CircleButton;
  */
 public class AudioPlayerFragment extends Fragment implements View.OnClickListener,
         MediaPlayer.OnPreparedListener, SeekBar.OnSeekBarChangeListener,
-        AudioManager.OnAudioFocusChangeListener {
+        AudioManager.OnAudioFocusChangeListener, RequestFactoryListener {
 
     public static final String TAG = "audio_player_fragment";
     private static final String IMAGES_ALREADY_BLURRED = "images_already_blurred";
@@ -156,8 +165,14 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         getUI(rootView);
         activateUI(false);
         setupUI();
+        postVideoView();
 
         return rootView;
+    }
+
+    private void postVideoView() {
+        JsonObjectRequest postView = RequestFactory.postVideoView(this, currentAudio.getHash());
+        MyRequestService.getRequestQueue().add(postView);
     }
 
     private void activateUI(boolean state) {
@@ -659,6 +674,20 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onSuccessResponse(JSONObject response, RequestType requestType) {
+        switch(requestType) {
+            case POST_VIDEO_VIEW:
+                SmartLog.Log(SmartLog.LogLevel.DEBUG, "postedVideoView", "ok");
+                break;
+        }
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError exception) {
+        BaseActivity.responseError(exception, getActivity());
     }
 
     private class ComputeImage extends AsyncTask {

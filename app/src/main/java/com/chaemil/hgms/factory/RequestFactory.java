@@ -85,7 +85,8 @@ public class RequestFactory {
                 createMyReqErrorListener(listener));
     }
 
-    public static JsonObjectRequest postAnalyticsAlive(RequestFactoryListener listener, Context context, String ip, String page) {
+    public static JsonObjectRequest postAnalyticsAlive(RequestFactoryListener listener,
+                                                       Context context, String ip, String page) {
         String userId = AnalyticsUtils.getDeviceUniqueID(context);
         String os = AnalyticsUtils.getAndroidVersion();
         String browser = AnalyticsUtils.getAppVersion();
@@ -104,6 +105,19 @@ public class RequestFactory {
 
         return new JsonObjectRequest(Request.Method.POST, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.POST_ANALYTICS_ALIVE),
+                createMyReqErrorListener(listener));
+    }
+
+    public static JsonObjectRequest postVideoView(RequestFactoryListener listener, String hash) {
+        String url = Constants.API_POST_VIDEO_VIEW + "/" + hash;
+
+        JSONObject jsonObject = new JSONObject();
+
+        SmartLog.Log(SmartLog.LogLevel.INFO, "postVideoView", "post " + url);
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+
+        return new JsonObjectRequest(Request.Method.POST, url, jsonObject,
+                createMyReqSuccessListener(listener, RequestType.POST_VIDEO_VIEW),
                 createMyReqErrorListener(listener));
     }
 
