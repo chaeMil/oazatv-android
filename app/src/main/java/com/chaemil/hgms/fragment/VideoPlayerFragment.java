@@ -130,7 +130,6 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         getUI(rootView);
         activateUI(false);
         setupUI();
-        postVideoView();
 
         return rootView;
     }
@@ -512,6 +511,8 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
             }
         }, 500);
+
+        postVideoView();
 
     }
 
