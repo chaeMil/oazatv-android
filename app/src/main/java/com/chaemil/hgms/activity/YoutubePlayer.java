@@ -154,8 +154,8 @@ public class YoutubePlayer extends YouTubeBaseActivity implements YouTubePlayer.
 
                         setupBottomText();
                     } else {
-                        finish();
                         SuperToast.create(this, getString(R.string.stream_has_ended), Toast.LENGTH_LONG).show();
+                        finish();
                     }
                 }
                 break;
