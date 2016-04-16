@@ -292,36 +292,10 @@ public class MainActivity extends BaseActivity implements
                 getMainFragment().getPhotoAlbumFragment().adjustLayout();
             }
         }
-
-        if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
-            changeStatusBarColor(getResources().getColor(R.color.black));
-            if (videoPlayerFragment != null) {
-                panelLayout.setDragView(videoPlayerFragment.getPlayerToolbar());
-            }
-            if (audioPlayerFragment != null) {
-                panelLayout.setDragView(audioPlayerFragment.getPlayerToolbar());
-            }
-        } else {
-            changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
-            if (videoPlayerFragment != null) {
-                panelLayout.setDragView(videoPlayerFragment.getMiniPlayer());
-            }
-            if (audioPlayerFragment != null) {
-                panelLayout.setDragView(audioPlayerFragment.getMiniPlayer());
-            }
-        }
     }
 
     @Override
     public void onPanelSlide(View panel, float slideOffset) {
-        if (slideOffset > 0.7) {
-            changeStatusBarColor(getResources().getColor(R.color.black));
-        } else if (slideOffset < 0.7 && slideOffset > 0.4) {
-            changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDarker));
-        } else if (slideOffset < 0.4) {
-            changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
-        }
-
         if (slideOffset < 0.2) {
             if (videoPlayerFragment != null) {
                 videoPlayerFragment.switchMiniPlayer(true);
