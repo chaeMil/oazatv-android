@@ -75,7 +75,7 @@ public class AnalyticsService implements RequestFactoryListener {
     }
 
     private void postKeepAlive(String page) {
-        if (NetworkUtils.isConnected(context)) {
+        if (NetworkUtils.isConnected(context) && AnalyticsUtils.isDisplayOn(context)) {
             JsonObjectRequest keepAlive = RequestFactory.postAnalyticsAlive(this, context, ip, page);
             MyRequestService.getRequestQueue().add(keepAlive);
         }
@@ -106,5 +106,6 @@ public class AnalyticsService implements RequestFactoryListener {
         public static final String PHOTOALBUM_FRAGMENT = "PhotoalbumFragment";
         public static final String VIDEOPLAYER_FRAGMENT = "VideoPlayerFragment";
         public static final String LIVESTREAM = "live-stream";
+        public static final String AUDIOPLAYER_FRAGMENT = "AudioPlayerFragment";
     }
 }

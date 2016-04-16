@@ -151,7 +151,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                     (Bitmap) savedInstanceState.getParcelable(BG_DRAWABLE));
         }
 
-        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT + "videoHash: " + currentAudio.getHash());
+        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: " + currentAudio.getHash());
 
         getUI(rootView);
         activateUI(false);

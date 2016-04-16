@@ -1,21 +1,13 @@
 package com.chaemil.hgms.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.os.PowerManager;
 import android.provider.Settings;
-import android.util.Log;
 
 import com.chaemil.hgms.BuildConfig;
 import com.koushikdutta.async.future.Future;
 import com.koushikdutta.ion.Ion;
-
-import org.w3c.dom.Document;
-
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
 
 /**
  * Created by chaemil on 16.4.16.
@@ -44,6 +36,11 @@ public class AnalyticsUtils {
         String versionName = BuildConfig.VERSION_NAME;
 
         return "oazatv-android v:" + versionName + " build: " + versionCode;
+    }
+
+    public static boolean isDisplayOn(Context context) {
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        return powerManager.isScreenOn();
     }
 
 }
