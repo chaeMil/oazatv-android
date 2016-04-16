@@ -108,6 +108,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private Notification notification;
     private NotificationCompat.Builder notificationBuilder;
     private Bitmap unblurredThumb;
+    private ImageView back;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -222,9 +223,12 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         seekBar.setOnSeekBarChangeListener(this);
         miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
+        back = (ImageView) rootView.findViewById(R.id.back);
+
     }
 
     private void setupUI() {
+        back.setOnClickListener(this);
         playPause.setOnClickListener(this);
         rew.setOnClickListener(this);
         ff.setOnClickListener(this);
@@ -278,6 +282,9 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.mini_play_pause:
                 playPauseAudio();
+                break;
+            case R.id.back:
+                ((MainActivity) getActivity()).collapsePanel();
                 break;
         }
     }

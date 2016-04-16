@@ -82,6 +82,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     private RelativeLayout.LayoutParams videoWrapperParamsFullscreen;
     private RelativeLayout.LayoutParams videoWrapperParamsNormal;
     public boolean isInFullscreenMode = false;
+    private ImageView back;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -184,6 +185,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         controlsWrapper = (RelativeLayout) rootView.findViewById(R.id.controls_wrapper);
         videoWrapper = (RelativeLayout) rootView.findViewById(R.id.video_wrapper);
         fullscreen = (ImageView) rootView.findViewById(R.id.fullscreen);
+        back = (ImageView) rootView.findViewById(R.id.back);
     }
 
     private void setupUI() {
@@ -194,6 +196,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         videoView.setOnPreparedListener(this);
         miniPlayerPause.setOnClickListener(this);
         fullscreen.setOnClickListener(this);
+        back.setOnClickListener(this);
 
         int bottomMargin = (int) DimensUtils.pxFromDp(getActivity(),
                 getResources().getInteger(R.integer.video_player_wrapper_bottom_margin));
@@ -261,6 +264,9 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.fullscreen:
                 requestFullscreenPlayer();
+                break;
+            case R.id.back:
+                ((MainActivity) getActivity()).collapsePanel();
                 break;
         }
     }
