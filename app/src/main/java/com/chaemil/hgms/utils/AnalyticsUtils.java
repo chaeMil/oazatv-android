@@ -28,7 +28,7 @@ public class AnalyticsUtils {
     public static String getAndroidVersion() {
         String release = Build.VERSION.RELEASE;
         int sdkVersion = Build.VERSION.SDK_INT;
-        return "Android " + release + " SDK: " + sdkVersion;
+        return getDeviceName() + " Android " + release + " SDK: " + sdkVersion;
     }
 
     public static String getAppVersion() {
@@ -41,6 +41,16 @@ public class AnalyticsUtils {
     public static boolean isDisplayOn(Context context) {
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         return powerManager.isScreenOn();
+    }
+
+    public static String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.startsWith(manufacturer)) {
+            return model.toUpperCase();
+        } else {
+            return manufacturer + " " + model;
+        }
     }
 
 }
