@@ -38,7 +38,9 @@ public class Constants {
     public static final String JSON_POST_LIKE = "like";
 
     public static final String GOOGLE_PLAY_APP_LINK = "https://play.google.com/store/apps/details?id=com.chaemil.hgms";
-    public static final String LIVESTREAM_LINK = "http://oaza.tv/live-stream/";
+    public static final String LIVESTREAM_LINK = DOMAIN + "/live-stream/";
+    public static final String VIDEO_LINK = DOMAIN + "/video/watch/";
+    public static final String AUDIO_LINK = DOMAIN + "/audio/listen/";
 
     public static final String JSON_ID = "id";
     public static final String JSON_ERROR = "error";

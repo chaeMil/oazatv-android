@@ -31,8 +31,10 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.BitmapUtils;
+import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.OnSwipeTouchListener;
+import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -83,6 +85,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     private RelativeLayout.LayoutParams videoWrapperParamsNormal;
     public boolean isInFullscreenMode = false;
     private ImageView back;
+    private ImageView share;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -186,6 +189,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         videoWrapper = (RelativeLayout) rootView.findViewById(R.id.video_wrapper);
         fullscreen = (ImageView) rootView.findViewById(R.id.fullscreen);
         back = (ImageView) rootView.findViewById(R.id.back);
+        share = (ImageView) rootView.findViewById(R.id.share);
     }
 
     private void setupUI() {
@@ -197,6 +201,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         miniPlayerPause.setOnClickListener(this);
         fullscreen.setOnClickListener(this);
         back.setOnClickListener(this);
+        share.setOnClickListener(this);
 
         int bottomMargin = (int) DimensUtils.pxFromDp(getActivity(),
                 getResources().getInteger(R.integer.video_player_wrapper_bottom_margin));
@@ -267,6 +272,9 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.back:
                 ((MainActivity) getActivity()).collapsePanel();
+                break;
+            case R.id.share:
+                shareVideoLink();
                 break;
         }
     }
@@ -438,6 +446,12 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                 seekBar.postDelayed(onEverySecond, 1000);
             }
         }
+    }
+
+    private void shareVideoLink() {
+        ShareUtils.shareLink(getActivity(), Constants.VIDEO_LINK + currentVideo.getHash(),
+                currentVideo.getNameCS() + " | " + currentVideo.getNameEN(),
+                getString(R.string.share_video));
     }
 
     public void switchMiniPlayer(boolean show) {

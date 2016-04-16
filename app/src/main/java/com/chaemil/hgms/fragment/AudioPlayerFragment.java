@@ -45,7 +45,9 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.BitmapUtils;
+import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.OnSwipeTouchListener;
+import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -109,6 +111,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private NotificationCompat.Builder notificationBuilder;
     private Bitmap unblurredThumb;
     private ImageView back;
+    private ImageView share;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -224,7 +227,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
         back = (ImageView) rootView.findViewById(R.id.back);
-
+        share = (ImageView) rootView.findViewById(R.id.share);
     }
 
     private void setupUI() {
@@ -233,6 +236,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         rew.setOnClickListener(this);
         ff.setOnClickListener(this);
         miniPlayerPause.setOnClickListener(this);
+        share.setOnClickListener(this);
         miniPlayer.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
             @Override
             public void onSwipeRight() {
@@ -285,6 +289,9 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.back:
                 ((MainActivity) getActivity()).collapsePanel();
+                break;
+            case R.id.share:
+                shareAudioLink();
                 break;
         }
     }
@@ -377,9 +384,12 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         } else {
             playAudio();
         }
+    }
 
-
-
+    private void shareAudioLink() {
+        ShareUtils.shareLink(getActivity(), Constants.AUDIO_LINK + currentAudio.getHash(),
+                currentAudio.getNameCS() + " | " + currentAudio.getNameEN(),
+                getString(R.string.share_video));
     }
 
     public void seekFF() {
