@@ -128,6 +128,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                     SuperToast.Duration.SHORT).show();
         }
 
+        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: " + currentAudio.getHash());
+
     }
 
     @Override
@@ -150,8 +152,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             bgDrawable = new BitmapDrawable(getResources(),
                     (Bitmap) savedInstanceState.getParcelable(BG_DRAWABLE));
         }
-
-        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: " + currentAudio.getHash());
 
         getUI(rootView);
         activateUI(false);

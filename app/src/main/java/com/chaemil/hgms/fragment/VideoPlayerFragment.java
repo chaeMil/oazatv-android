@@ -103,6 +103,8 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
 
+        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT + "videoHash: " + currentVideo.getHash());
+
     }
 
     @Override
@@ -116,8 +118,6 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
             bgDrawable = new BitmapDrawable(getResources(),
                     (Bitmap) savedInstanceState.getParcelable(BG_DRAWABLE));
         }
-
-        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT + "videoHash: " + currentVideo.getHash());
 
         getUI(rootView);
         activateUI(false);

@@ -59,9 +59,13 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
         View view = inflater.inflate(R.layout.photos_fragment, container, false);
         getUI(view);
 
-        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.PHOTOALBUM_FRAGMENT + "albumHash: " + album.getHash());
-
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.PHOTOALBUM_FRAGMENT + "albumHash: " + album.getHash());
     }
 
     public void setAlbum(PhotoAlbum album) {

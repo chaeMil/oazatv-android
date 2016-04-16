@@ -263,19 +263,16 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
 
         switch (tab.getPosition()) {
             case 0:
-                AnalyticsService.getInstance().setPage(AnalyticsService.Pages.HOME_FRAGMENT);
                 tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_white);
                 settingsFab.hide(true);
                 hideSettings();
                 break;
             case 1:
-                AnalyticsService.getInstance().setPage(AnalyticsService.Pages.ARCHIVE_FRAGMENT);
                 tabLayout.getTabAt(1).setIcon(R.drawable.ic_view_list_white);
                 settingsFab.hide(true);
                 hideSettings();
                 break;
             case 2:
-                AnalyticsService.getInstance().setPage(AnalyticsService.Pages.DOWNLOADED_FRAGMENT);
                 tabLayout.getTabAt(2).setIcon(R.drawable.ic_downloaded_white);
                 settingsFab.show(true);
                 break;

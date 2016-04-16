@@ -69,6 +69,12 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.ARCHIVE_FRAGMENT);
+    }
+
     private void getData() {
         JsonObjectRequest homepage = RequestFactory.getHomepage(this);
         MyRequestService.getRequestQueue().add(homepage);

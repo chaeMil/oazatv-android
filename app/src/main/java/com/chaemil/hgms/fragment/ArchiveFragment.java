@@ -22,6 +22,7 @@ import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.RequestType;
+import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.EndlessScrollListener;
@@ -51,6 +52,12 @@ public class ArchiveFragment extends BaseFragment {
 
         TypedValue tv = new TypedValue();
         getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.ARCHIVE_FRAGMENT);
     }
 
     @Override
