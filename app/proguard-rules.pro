@@ -15,3 +15,13 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-dontnote org.apache.*
+-dontwarn com.google.common.**
+-dontwarn com.viewpagerindicator.**
+-dontwarn it.sephiroth.**
+-keep class com.chaemil.hgms.model.** { *; }
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+-keep class android.support.v8.renderscript.** { *; }

@@ -27,11 +27,15 @@ android {
         versionName "2.0"
 
         multiDexEnabled true
-        renderscriptTargetApi 18
+        renderscriptTargetApi 19
         renderscriptSupportModeEnabled true
     }
     buildTypes {
         release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
