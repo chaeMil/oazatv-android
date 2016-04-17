@@ -1,7 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/free_space_wrapper"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/free_space_text"
+            tools:text="Used: 8GB | Oaza: 1.2GB | Available space: 2.5 GB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" />
+
+        <LinearLayout
+            android:background="@color/md_grey_200"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_below="@+id/free_space_text"
+            android:id="@+id/space_wrapper"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/used_space"
+                tools:layout_width="200dp"
+                android:background="@color/md_grey_400"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+
+            <View
+                android:id="@+id/oaza_space"
+                tools:layout_width="45dp"
+                android:background="@color/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <GridView
         android:clipToPadding="false"
@@ -9,9 +52,8 @@
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:paddingBottom="75dp"
-        android:paddingTop="8dp">
+        android:layout_below="@+id/free_space_wrapper">
 
     </GridView>
 
