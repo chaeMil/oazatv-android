@@ -45,6 +45,8 @@ import com.koushikdutta.ion.Ion;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import at.markushi.ui.CircleButton;
 
@@ -284,24 +286,26 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         switch(v.getId()) {
             case R.id.video_view:
                 toggleControls(true);
-                ((BaseActivity) getActivity()).setFullscreen(false);
 
-                if (videoView.isPlaying()) {
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (videoView.isPlaying() && isInFullscreenMode) {
-                                requestFullscreenPlayer();
-                                toggleControls(false);
-                            }
-                        }
-                    }, 3000);
-                }
+                hideControls();
                 break;
         }
 
         return true;
+    }
+
+    private void hideControls() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (videoView.isPlaying()
+                        && isInFullscreenMode
+                        && !seekBar.isFocused()) {
+                    toggleControls(false);
+                }
+            }
+        }, 5 * 1000);
     }
 
     public void requestFullscreenPlayer() {
@@ -314,11 +318,11 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         infoLayout.setVisibility(View.GONE);
 
         videoWrapper.setLayoutParams(videoWrapperParamsFullscreen);
-        toggleControls(false);
-
         ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(false);
 
         isInFullscreenMode = true;
+        toggleControls(false);
+
     }
 
     public void cancelFullscreenPlayer() {
@@ -331,31 +335,32 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         infoLayout.setVisibility(View.VISIBLE);
 
         videoWrapper.setLayoutParams(videoWrapperParamsNormal);
-        toggleControls(true);
-
         ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(true);
 
         isInFullscreenMode = false;
+        toggleControls(true);
     }
 
     public void toggleControls(boolean visible) {
-        if (visible) {
-            if (controlsWrapper.getVisibility() != View.VISIBLE) {
-                controlsWrapper.setVisibility(View.VISIBLE);
-                YoYo.with(Techniques.BounceInUp).duration(400).playOn(controlsWrapper);
-            }
-        } else {
-            if (controlsWrapper.getVisibility() != View.GONE) {
-                YoYo.with(Techniques.FadeOutDown).duration(400).playOn(controlsWrapper);
-                YoYo.with(Techniques.FadeIn).duration(400).playOn(seekBar);
+        if (isInFullscreenMode) {
+            if (visible) {
+                if (controlsWrapper.getVisibility() != View.VISIBLE) {
+                    controlsWrapper.setVisibility(View.VISIBLE);
+                    YoYo.with(Techniques.BounceInUp).duration(400).playOn(controlsWrapper);
+                }
+            } else {
+                if (controlsWrapper.getVisibility() != View.GONE) {
+                    YoYo.with(Techniques.FadeOutDown).duration(400).playOn(controlsWrapper);
+                    YoYo.with(Techniques.FadeIn).duration(400).playOn(seekBar);
 
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        controlsWrapper.setVisibility(View.GONE);
-                    }
-                }, 400);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            controlsWrapper.setVisibility(View.GONE);
+                        }
+                    }, 400);
+                }
             }
         }
     }
@@ -442,6 +447,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
             miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
         } else {
             videoView.start();
+            hideControls();
             playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
             miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
             if (seekBar != null) {

@@ -148,14 +148,14 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_below="@+id/toolbars_wrapper"
-            android:layout_above="@+id/info_layout"
-            android:gravity="center_vertical|center_horizontal">
+            android:gravity="center"
+            android:layout_alignParentBottom="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:foregroundGravity="center_vertical|center_horizontal"
-                android:gravity="top">
+                android:gravity="center">
 
                 <VideoView
                     android:alpha="0"
