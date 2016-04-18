@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.view.LayoutInflater;
@@ -13,7 +14,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -44,7 +44,6 @@ import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -94,11 +93,16 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     private TextView tags;
     private RelativeLayout infoLayout;
     private ImageView fullscreenExit;
+    private Timer hideControlsTimer;
+    private int controlsTimeHide = 0;
+    private Handler uiHandler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        setupUIHandler();
     }
 
 
@@ -144,6 +148,26 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         setupUI();
 
         return rootView;
+    }
+
+    private void setupUIHandler() {
+        uiHandler = new Handler(Looper.getMainLooper());
+        hideControlsTimer = new Timer();
+        hideControlsTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        controlsTimeHide += 1;
+                        if (controlsTimeHide >= 8) {
+                            toggleControls(false);
+                        }
+                    }
+                };
+                uiHandler.post(runnable);
+            }
+        }, 1000, 1000);
     }
 
     private void postVideoView() {
@@ -293,25 +317,15 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
             case R.id.video_view:
                 toggleControls(true);
 
-                hideControls();
+                resetHideControlsTimer();
                 break;
         }
 
         return true;
     }
 
-    private void hideControls() {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (videoView.isPlaying()
-                        && isInFullscreenMode
-                        && !seekBar.isFocused()) {
-                    toggleControls(false);
-                }
-            }
-        }, 5 * 1000);
+    private void resetHideControlsTimer() {
+        controlsTimeHide = 0;
     }
 
     public void requestFullscreenPlayer() {
@@ -329,6 +343,9 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         isInFullscreenMode = true;
         if (videoView.isPlaying()) {
             toggleControls(false);
+        } else {
+            toggleControls(true);
+            fullscreenExit.setVisibility(View.VISIBLE);
         }
 
     }
@@ -355,13 +372,13 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                 if (controlsWrapper.getVisibility() != View.VISIBLE) {
                     controlsWrapper.setVisibility(View.VISIBLE);
                     fullscreenExit.setVisibility(View.VISIBLE);
-                    YoYo.with(Techniques.BounceInUp).duration(400).playOn(controlsWrapper);
+                    YoYo.with(Techniques.FadeInUp).duration(400).playOn(controlsWrapper);
                 }
             } else {
                 fullscreenExit.setVisibility(View.GONE);
             }
         } else {
-            if (isInFullscreenMode) {
+            if (isInFullscreenMode && videoView.isPlaying()) {
                 if (controlsWrapper.getVisibility() != View.GONE) {
                     YoYo.with(Techniques.FadeOutDown).duration(400).playOn(controlsWrapper);
                     YoYo.with(Techniques.FadeIn).duration(400).playOn(seekBar);
@@ -461,7 +478,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
             miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
         } else {
             videoView.start();
-            hideControls();
+            resetHideControlsTimer();
             playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
             miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
             if (seekBar != null) {
