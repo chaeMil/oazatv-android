@@ -89,7 +89,7 @@ public class DownloadService extends IntentService {
             if (getDownloadQueueSize(downloadQueue) > 0) {
                 currentDownload = getFirstToDownload(downloadQueue);
 
-                if (FileUtils.getAvailableSpaceInMB() > 100) {
+                if (FileUtils.getFreeSpace()/FileUtils.SIZE_MB > 100) {
                     if (SharedPrefUtils.getInstance(getApplicationContext()).loadDownloadOnWifi()) {
                         if (wifi.isConnected()) {
                             startDownload();
