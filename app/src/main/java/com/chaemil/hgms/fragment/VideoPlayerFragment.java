@@ -90,6 +90,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     private ImageView share;
     private TextView description;
     private TextView tags;
+    private RelativeLayout infoLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -194,6 +195,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         share = (ImageView) rootView.findViewById(R.id.share);
         description = (TextView) rootView.findViewById(R.id.description);
         tags = (TextView) rootView.findViewById(R.id.tags);
+        infoLayout = (RelativeLayout) rootView.findViewById(R.id.info_layout);
     }
 
     private void setupUI() {
@@ -309,6 +311,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
         playerToolbar.setVisibility(View.GONE);
         playerBg.setVisibility(View.GONE);
+        infoLayout.setVisibility(View.GONE);
 
         videoWrapper.setLayoutParams(videoWrapperParamsFullscreen);
         toggleControls(false);
@@ -325,6 +328,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
         playerToolbar.setVisibility(View.VISIBLE);
         playerBg.setVisibility(View.VISIBLE);
+        infoLayout.setVisibility(View.VISIBLE);
 
         videoWrapper.setLayoutParams(videoWrapperParamsNormal);
         toggleControls(true);

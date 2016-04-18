@@ -143,24 +143,25 @@
         <RelativeLayout
             android:fitsSystemWindows="false"
             android:id="@+id/video_wrapper"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_below="@+id/toolbars_wrapper"
-            android:layout_alignBottom="@+id/controls_wrapper">
+            android:layout_above="@+id/info_layout"
+            android:gravity="center_vertical|center_horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical|center_horizontal"
-                android:foregroundGravity="center_vertical|center_horizontal">
+                android:foregroundGravity="center_vertical|center_horizontal"
+                android:gravity="top">
 
                 <VideoView
                     android:alpha="0"
                     android:id="@+id/video_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center" />
 
             </LinearLayout>
@@ -179,27 +180,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/controls_wrapper"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:id="@+id/info_layout">
 
-        <TextView
-            tools:text="description text"
-            android:id="@+id/description"
-            android:textColor="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
+            <TextView
+                tools:text="description text"
+                android:id="@+id/description"
+                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp" />
 
-        <TextView
-            android:textSize="18dp"
-            tools:text="#tag #god #grace #another #tag"
-            android:id="@+id/tags"
-            android:textColor="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/description"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textIsSelectable="false" />
+            <TextView
+                android:textSize="18dp"
+                tools:text="#tag #god #grace #another #tag"
+                android:id="@+id/tags"
+                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/description"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textIsSelectable="false" />
         </RelativeLayout>
 
         <RelativeLayout

@@ -88,7 +88,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private TextView playerTitle;
     private CircleButton playPause;
     private CircleButton rew;
-    private CircleButton ff;
     private TextView currentTime;
     private TextView totalTime;
     private int duration;
@@ -112,6 +111,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private Bitmap unblurredThumb;
     private ImageView back;
     private ImageView share;
+    private TextView description;
+    private TextView tags;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -181,7 +182,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private void activateUI(boolean state) {
         playPause.setEnabled(state);
         rew.setEnabled(state);
-        ff.setEnabled(state);
         seekBar.setEnabled(state);
     }
 
@@ -219,7 +219,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         audioThumb = (ImageView) rootView.findViewById(R.id.audio_thumb);
         playPause = (CircleButton) rootView.findViewById(R.id.play_pause);
         rew = (CircleButton) rootView.findViewById(R.id.rew);
-        ff = (CircleButton) rootView.findViewById(R.id.ff);
         currentTime = (TextView) rootView.findViewById(R.id.current_time);
         totalTime = (TextView) rootView.findViewById(R.id.total_time);
         seekBar = (AppCompatSeekBar) rootView.findViewById(R.id.seek_bar);
@@ -228,13 +227,14 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
         back = (ImageView) rootView.findViewById(R.id.back);
         share = (ImageView) rootView.findViewById(R.id.share);
+        description = (TextView) rootView.findViewById(R.id.description);
+        tags = (TextView) rootView.findViewById(R.id.tags);
     }
 
     private void setupUI() {
         back.setOnClickListener(this);
         playPause.setOnClickListener(this);
         rew.setOnClickListener(this);
-        ff.setOnClickListener(this);
         miniPlayerPause.setOnClickListener(this);
         share.setOnClickListener(this);
         miniPlayer.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
@@ -280,9 +280,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.rew:
                 seekREW();
-                break;
-            case R.id.ff:
-                seekFF();
                 break;
             case R.id.mini_play_pause:
                 playPauseAudio();
@@ -397,7 +394,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     public void seekREW() {
-        audioPlayer.seekTo(audioPlayer.getCurrentPosition() - 10000);
+        audioPlayer.seekTo(audioPlayer.getCurrentPosition() - 30 * 1000);
     }
 
     public void pauseAudio() {
@@ -555,6 +552,12 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
         miniPlayerText.setText(downloadedString + audio.getName());
         playerTitle.setText(downloadedString + audio.getName());
+        description.setText(currentAudio.getDescription());
+        String tagsString = "";
+        for (String tag : currentAudio.getTags().split(",")) {
+            tagsString += "#" + tag + " ";
+        }
+        tags.setText(tagsString);
 
         currentTime.setText("00:00:00");
         totalTime.setText("???");

@@ -27,7 +27,7 @@ android {
         versionName "2.0"
 
         multiDexEnabled true
-        renderscriptTargetApi 19
+        renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
     }
     buildTypes {
