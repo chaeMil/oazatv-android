@@ -502,7 +502,13 @@ public class MainActivity extends BaseActivity implements
                     hidePanel();
                     break;
                 case DownloadService.DOWNLOAD_COMPLETE:
-                    notifyDownloadFinished();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            notifyDownloadFinished();
+                        }
+                    }, 1000);
                     break;
                 case DownloadService.DOWNLOAD_STARTED:
                     notifyDownloadStarted();
