@@ -216,7 +216,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
                         Video.deleteDownloadedAudio(getContext(), video);
                         dialog.dismiss();
                         adapterData.remove(adapterData.indexOf(video));
-                        adapter.notifyDataSetChanged();
+                        mainActivity.notifyDownloadFinished();
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
