@@ -612,11 +612,13 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
             }
 
             if (!imagesAlreadyBlurred && thumb != null) {
-                SmartLog.Log(SmartLog.LogLevel.DEBUG, "resizeAndBlurBg", "blurring bg image");
-                Bitmap originalBitmap = thumb;
-                Bitmap blurredPlayerBitmap = BitmapUtils.blur(getContext(), originalBitmap, 25);
-                Bitmap resizedBitmap = BitmapUtils.resizeImageForImageView(blurredPlayerBitmap, 255);
-                bgDrawable = new BitmapDrawable(getResources(), resizedBitmap);
+                if (getContext() != null) {
+                    SmartLog.Log(SmartLog.LogLevel.DEBUG, "resizeAndBlurBg", "blurring bg image");
+                    Bitmap originalBitmap = thumb;
+                    Bitmap blurredPlayerBitmap = BitmapUtils.blur(getContext(), originalBitmap, 25);
+                    Bitmap resizedBitmap = BitmapUtils.resizeImageForImageView(blurredPlayerBitmap, 255);
+                    bgDrawable = new BitmapDrawable(getResources(), resizedBitmap);
+                }
             }
 
             return null;
