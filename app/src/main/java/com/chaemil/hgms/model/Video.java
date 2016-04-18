@@ -141,6 +141,20 @@ public class Video extends SugarRecord {
 
     }
 
+    public String getDescription() {
+        switch (Locale.getDefault().getLanguage()) {
+
+            case Constants.SK:
+                return getDescriptionCS();
+            case Constants.CS:
+                return getDescriptionCS();
+            case Constants.EN:
+                return getDescriptionEN();
+            default:
+                return getDescriptionEN();
+        }
+    }
+
     public String getName() {
         switch (Locale.getDefault().getLanguage()) {
 

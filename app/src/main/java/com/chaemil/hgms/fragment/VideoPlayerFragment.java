@@ -43,6 +43,8 @@ import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import at.markushi.ui.CircleButton;
 
 /**
@@ -66,7 +68,6 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     private VideoView videoView;
     private CircleButton playPause;
     private CircleButton rew;
-    private CircleButton ff;
     private TextView currentTime;
     private TextView totalTime;
     private int duration;
@@ -86,6 +87,8 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     public boolean isInFullscreenMode = false;
     private ImageView back;
     private ImageView share;
+    private TextView description;
+    private TextView tags;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -146,7 +149,6 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     private void activateUI(boolean state) {
         playPause.setEnabled(state);
         rew.setEnabled(state);
-        ff.setEnabled(state);
         seekBar.setEnabled(state);
     }
 
@@ -178,7 +180,6 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         videoView = (VideoView) rootView.findViewById(R.id.video_view);
         playPause = (CircleButton) rootView.findViewById(R.id.play_pause);
         rew = (CircleButton) rootView.findViewById(R.id.rew);
-        ff = (CircleButton) rootView.findViewById(R.id.ff);
         currentTime = (TextView) rootView.findViewById(R.id.current_time);
         totalTime = (TextView) rootView.findViewById(R.id.total_time);
         seekBar = (AppCompatSeekBar) rootView.findViewById(R.id.seek_bar);
@@ -190,12 +191,13 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         fullscreen = (ImageView) rootView.findViewById(R.id.fullscreen);
         back = (ImageView) rootView.findViewById(R.id.back);
         share = (ImageView) rootView.findViewById(R.id.share);
+        description = (TextView) rootView.findViewById(R.id.description);
+        tags = (TextView) rootView.findViewById(R.id.tags);
     }
 
     private void setupUI() {
         playPause.setOnClickListener(this);
         rew.setOnClickListener(this);
-        ff.setOnClickListener(this);
         videoView.setOnTouchListener(this);
         videoView.setOnPreparedListener(this);
         miniPlayerPause.setOnClickListener(this);
@@ -256,12 +258,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.rew:
                 if (videoView.canSeekBackward()) {
-                    videoView.seekTo(videoView.getCurrentPosition() - 10000);
-                }
-                break;
-            case R.id.ff:
-                if (videoView.canSeekForward()) {
-                    videoView.seekTo(videoView.getCurrentPosition() + 10000);
+                    videoView.seekTo(videoView.getCurrentPosition() - 30 * 1000);
                 }
                 break;
             case R.id.mini_play_pause:
@@ -510,6 +507,12 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
         currentTime.setText("00:00:00");
         totalTime.setText("???");
+        description.setText(currentVideo.getDescription());
+        String tagsString = "";
+        for (String tag : currentVideo.getTags().split(",")) {
+            tagsString += "#" + tag + " ";
+        }
+        tags.setText(tagsString);
 
         ((MainActivity) getActivity()).expandPanel();
 

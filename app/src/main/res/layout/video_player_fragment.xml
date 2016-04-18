@@ -148,7 +148,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_below="@+id/toolbars_wrapper"
-            android:layout_alignParentBottom="true">
+            android:layout_alignBottom="@+id/controls_wrapper">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -159,8 +159,8 @@
                 <VideoView
                     android:alpha="0"
                     android:id="@+id/video_view"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center" />
 
             </LinearLayout>
@@ -177,18 +177,45 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/controls_wrapper"
+            android:padding="16dp">
+
+        <TextView
+            tools:text="description text"
+            android:id="@+id/description"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:textSize="18dp"
+            tools:text="#tag #god #grace #another #tag"
+            android:id="@+id/tags"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/description"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textIsSelectable="false" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:background="@color/transparent_black"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
             android:id="@+id/controls_wrapper"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:padding="4dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="20dp"
                 android:layout_above="@+id/seek_bar"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true">
+                android:layout_toRightOf="@+id/play_pause"
+                android:layout_toLeftOf="@+id/total_time">
 
                 <TextView
                     android:textColor="@color/white"
@@ -200,70 +227,62 @@
                     android:id="@+id/current_time"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
+                    android:layout_alignParentStart="true"
+                    android:text="Z"
+                    android:layout_alignParentTop="true" />
 
-                <TextView
-                    android:textColor="@color/white"
-                    android:shadowColor="@color/black"
-                    android:shadowRadius="5"
-                    tools:text="0:57:32"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/total_time"
-                    android:layout_alignParentTop="false"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true" />
-
-                <at.markushi.ui.CircleButton
-                    android:id="@+id/play_pause"
-                    android:layout_width="85dp"
-                    android:layout_height="85dp"
-                    android:src="@drawable/pause"
-                    app:cb_color="@color/transparent_white"
-                    app:cb_pressedRingWidth="3dip"
-                    android:layout_alignParentTop="false"
-                    android:layout_centerHorizontal="true"
-                    android:layout_alignParentBottom="true" />
-
-                <at.markushi.ui.CircleButton
-                    android:id="@+id/rew"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/rew"
-                    app:cb_color="@color/transparent_white"
-                    app:cb_pressedRingWidth="3dip"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/play_pause"
-                    android:layout_toStartOf="@+id/play_pause" />
-
-                <at.markushi.ui.CircleButton
-                    android:id="@+id/ff"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/ff"
-                    app:cb_color="@color/transparent_white"
-                    app:cb_pressedRingWidth="3dip"
-                    android:layout_toRightOf="@+id/play_pause"
-                    android:layout_toEndOf="@+id/play_pause"
-                    android:layout_centerVertical="true" />
             </RelativeLayout>
+
+            <TextView
+                android:textColor="@color/white"
+                android:shadowColor="@color/black"
+                android:shadowRadius="5"
+                tools:text="0:57:32"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/total_time"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_alignTop="@+id/seek_bar"
+                android:gravity="center_vertical"
+                android:layout_marginRight="6dp" />
 
             <android.support.v7.widget.AppCompatSeekBar
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="24dp"
                 android:id="@+id/seek_bar"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
                 tools:progress="14"
                 android:progressTint="@color/transparent_white"
                 android:thumbTint="@color/white"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp" />
+                android:layout_alignTop="@+id/play_pause"
+                android:layout_toRightOf="@+id/play_pause"
+                android:layout_toLeftOf="@+id/total_time" />
+
+            <at.markushi.ui.CircleButton
+                android:id="@+id/play_pause"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/pause"
+                app:cb_color="@color/colorPrimaryDark"
+                app:cb_pressedRingWidth="3dip"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentBottom="false"
+                android:layout_toRightOf="@+id/rew"
+                android:layout_alignBottom="@+id/rew" />
+
+            <at.markushi.ui.CircleButton
+                android:id="@+id/rew"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/rew"
+                app:cb_color="@color/colorPrimaryDark"
+                app:cb_pressedRingWidth="3dip"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
         </RelativeLayout>
 
