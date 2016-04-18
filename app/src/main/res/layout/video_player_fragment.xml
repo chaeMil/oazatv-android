@@ -188,7 +188,6 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginRight="8dp"
                 android:src="@drawable/fullscreen"
                 android:padding="6dp"
                 android:background="@drawable/transparent_ripple"
