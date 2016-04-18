@@ -253,7 +253,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/current_time"
-                android:text="Z"
                 android:layout_alignBottom="@+id/play_pause"
                 android:layout_alignLeft="@+id/seek_bar"
                 android:layout_marginLeft="16dp"

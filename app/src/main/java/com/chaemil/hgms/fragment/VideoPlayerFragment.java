@@ -327,7 +327,9 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(false);
 
         isInFullscreenMode = true;
-        toggleControls(false);
+        if (videoView.isPlaying()) {
+            toggleControls(false);
+        }
 
     }
 
@@ -348,25 +350,28 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     public void toggleControls(boolean visible) {
-        if (isInFullscreenMode) {
-            if (visible) {
+        if (visible) {
+            if (isInFullscreenMode) {
                 if (controlsWrapper.getVisibility() != View.VISIBLE) {
                     controlsWrapper.setVisibility(View.VISIBLE);
                     fullscreenExit.setVisibility(View.VISIBLE);
                     YoYo.with(Techniques.BounceInUp).duration(400).playOn(controlsWrapper);
                 }
             } else {
+                fullscreenExit.setVisibility(View.GONE);
+            }
+        } else {
+            if (isInFullscreenMode) {
                 if (controlsWrapper.getVisibility() != View.GONE) {
                     YoYo.with(Techniques.FadeOutDown).duration(400).playOn(controlsWrapper);
                     YoYo.with(Techniques.FadeIn).duration(400).playOn(seekBar);
-                    YoYo.with(Techniques.FadeOut).duration(400).playOn(fullscreenExit);
+                    fullscreenExit.setVisibility(View.GONE);
 
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             controlsWrapper.setVisibility(View.GONE);
-                            fullscreenExit.setVisibility(View.VISIBLE);
                         }
                     }, 400);
                 }
@@ -527,12 +532,20 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
         currentTime.setText("00:00:00");
         totalTime.setText("???");
-        description.setText(currentVideo.getDescription());
-        String tagsString = "";
-        for (String tag : currentVideo.getTags().split(",")) {
-            tagsString += "#" + tag + " ";
+        if (!currentVideo.getDescription().equals("")) {
+            description.setText(currentVideo.getDescription());
+        } else {
+            description.setVisibility(View.GONE);
         }
-        tags.setText(tagsString);
+        if (!currentVideo.getTags().equals("")) {
+            String tagsString = "";
+            for (String tag : currentVideo.getTags().split(",")) {
+                tagsString += "#" + tag + " ";
+            }
+            tags.setText(tagsString);
+        } else {
+            tags.setVisibility(View.GONE);
+        }
 
         ((MainActivity) getActivity()).expandPanel();
 

@@ -552,12 +552,20 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
         miniPlayerText.setText(downloadedString + audio.getName());
         playerTitle.setText(downloadedString + audio.getName());
-        description.setText(currentAudio.getDescription());
-        String tagsString = "";
-        for (String tag : currentAudio.getTags().split(",")) {
-            tagsString += "#" + tag + " ";
+        if (!currentAudio.getDescription().equals("")) {
+            description.setText(currentAudio.getDescription());
+        } else {
+            description.setVisibility(View.GONE);
         }
-        tags.setText(tagsString);
+        if (!currentAudio.getTags().equals("")) {
+            String tagsString = "";
+            for (String tag : currentAudio.getTags().split(",")) {
+                tagsString += "#" + tag + " ";
+            }
+            tags.setText(tagsString);
+        } else {
+            tags.setVisibility(View.GONE);
+        }
 
         currentTime.setText("00:00:00");
         totalTime.setText("???");
