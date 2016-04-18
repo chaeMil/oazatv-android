@@ -317,6 +317,9 @@ public class MainActivity extends BaseActivity implements
     public void onPanelCollapsed(View panel) {
         adjustLayout();
         setFullscreen(false);
+        if (getVideoPlayerFragment() != null) {
+            getVideoPlayerFragment().cancelFullscreenPlayer();
+        }
     }
 
     @Override

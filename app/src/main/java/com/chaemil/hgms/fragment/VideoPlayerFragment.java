@@ -93,6 +93,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     private TextView description;
     private TextView tags;
     private RelativeLayout infoLayout;
+    private ImageView fullscreenExit;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -193,6 +194,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         controlsWrapper = (RelativeLayout) rootView.findViewById(R.id.controls_wrapper);
         videoWrapper = (RelativeLayout) rootView.findViewById(R.id.video_wrapper);
         fullscreen = (ImageView) rootView.findViewById(R.id.fullscreen);
+        fullscreenExit = (ImageView) rootView.findViewById(R.id.fullscreen_exit);
         back = (ImageView) rootView.findViewById(R.id.back);
         share = (ImageView) rootView.findViewById(R.id.share);
         description = (TextView) rootView.findViewById(R.id.description);
@@ -209,6 +211,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         fullscreen.setOnClickListener(this);
         back.setOnClickListener(this);
         share.setOnClickListener(this);
+        fullscreenExit.setOnClickListener(this);
 
         int bottomMargin = (int) DimensUtils.pxFromDp(getActivity(),
                 getResources().getInteger(R.integer.video_player_wrapper_bottom_margin));
@@ -278,6 +281,9 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
             case R.id.share:
                 shareVideoLink();
                 break;
+            case R.id.fullscreen_exit:
+                cancelFullscreenPlayer();
+                break;
         }
     }
 
@@ -346,18 +352,21 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
             if (visible) {
                 if (controlsWrapper.getVisibility() != View.VISIBLE) {
                     controlsWrapper.setVisibility(View.VISIBLE);
+                    fullscreenExit.setVisibility(View.VISIBLE);
                     YoYo.with(Techniques.BounceInUp).duration(400).playOn(controlsWrapper);
                 }
             } else {
                 if (controlsWrapper.getVisibility() != View.GONE) {
                     YoYo.with(Techniques.FadeOutDown).duration(400).playOn(controlsWrapper);
                     YoYo.with(Techniques.FadeIn).duration(400).playOn(seekBar);
+                    YoYo.with(Techniques.FadeOut).duration(400).playOn(fullscreenExit);
 
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             controlsWrapper.setVisibility(View.GONE);
+                            fullscreenExit.setVisibility(View.VISIBLE);
                         }
                     }, 400);
                 }
