@@ -115,7 +115,7 @@ public class DownloadedFragment extends BaseFragment {
     }
 
     private float getTotalSpace() {
-        return FileUtils.getAvailableSpace();
+        return FileUtils.getExternalStorageSize();
     }
 
     private float getOazaSpace() {

@@ -1,7 +1,10 @@
 package com.chaemil.hgms.utils;
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.io.File;
@@ -14,13 +17,6 @@ public class FileUtils {
     public static final long SIZE_KB = 1024L;
     public static final long SIZE_MB = SIZE_KB * SIZE_KB;
 
-    public static long getAvailableSpace(){
-        long availableSpace = -1L;
-        StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
-        availableSpace = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
-        return availableSpace;
-    }
-
     public static long getFreeSpace(){
         long availableSpace = -1L;
         StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
@@ -31,7 +27,7 @@ public class FileUtils {
     public static long getExternalStorageSize() {
         StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getAbsolutePath());
         long blockSize = statFs.getBlockSize();
-        return statFs.getBlockCount()*blockSize;
+        return statFs.getAvailableBlocks()*blockSize;
     }
 
     public static long getFolderSize(File f) {
@@ -44,6 +40,10 @@ public class FileUtils {
             size=f.length();
         }
         return size;
+    }
+
+    public static boolean isSDPresent() {
+        return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
     }
 
     public static String readableFileSize(long size) {
