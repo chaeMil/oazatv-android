@@ -213,6 +213,14 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
+                        if (mainActivity.getAudioPlayerFragment() != null) {
+                            Video currentlyPlayingAudio = mainActivity.getAudioPlayerFragment()
+                                    .getCurrentAudio();
+
+                            if (currentlyPlayingAudio.getHash().equals(video.getHash())) {
+                                mainActivity.getAudioPlayerFragment().closePlayer();
+                            }
+                        }
                         Video.deleteDownloadedAudio(getContext(), video);
                         dialog.dismiss();
                         adapterData.remove(adapterData.indexOf(video));

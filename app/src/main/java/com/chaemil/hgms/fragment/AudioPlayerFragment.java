@@ -496,6 +496,15 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    public Video getCurrentAudio() {
+        return currentAudio;
+    }
+
+    public void closePlayer() {
+        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+        ((MainActivity) getActivity()).hidePanel();
+    }
+
     private void getImages() {
         if (downloaded) {
             String thumbFile = getContext().getExternalFilesDir(null) + "/" + currentAudio.getHash() + ".jpg";
