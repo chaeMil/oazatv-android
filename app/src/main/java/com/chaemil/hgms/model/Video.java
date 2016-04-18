@@ -108,7 +108,7 @@ public class Video extends SugarRecord {
     }
 
     public static List<Video> getWholeDownloadQueue() {
-        List<Video> list = Video.find(Video.class, "in_download_queue = 1 OR downloaded = 1");
+        List<Video> list = Video.find(Video.class, "in_download_queue = 1 OR downloaded = 1 ORDER BY id DESC");
         ArrayList<Video> queue = new ArrayList<>();
         queue.addAll(list);
 

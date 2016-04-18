@@ -47,6 +47,12 @@ public class DownloadedFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        downloadedAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         view.post(new Runnable() {
@@ -119,12 +125,14 @@ public class DownloadedFragment extends BaseFragment {
     public void notifyDownloadFinished() {
         getData();
         downloadedAdapter.notifyDataSetChanged();
+        downloadedAdapter.notifyDataSetInvalidated();
         setupSpaceGraph();
     }
 
     public void notifyDatasetChanged() {
         getData();
         downloadedAdapter.notifyDataSetChanged();
+        downloadedAdapter.notifyDataSetInvalidated();
         setupSpaceGraph();
     }
 }
