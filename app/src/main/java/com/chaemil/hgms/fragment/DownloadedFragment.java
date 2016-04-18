@@ -29,7 +29,6 @@ public class DownloadedFragment extends BaseFragment {
     private DownloadedAdapter downloadedAdapter;
     private ArrayList<Video> downloadedItems;
     private LinearLayout spaceWrapper;
-    private View usedSpace;
     private View oazaSpace;
     private TextView spaceText;
 
@@ -66,7 +65,6 @@ public class DownloadedFragment extends BaseFragment {
     private void getUI(ViewGroup rootView) {
         downloadedGridView = (GridView) rootView.findViewById(R.id.downloaded_grid_view);
         spaceWrapper = (LinearLayout) rootView.findViewById(R.id.space_wrapper);
-        usedSpace = rootView.findViewById(R.id.used_space);
         oazaSpace = rootView.findViewById(R.id.oaza_space);
         spaceText = (TextView) rootView.findViewById(R.id.space_text);
     }
@@ -86,28 +84,15 @@ public class DownloadedFragment extends BaseFragment {
         int totalSpaceInt = (int) getTotalSpace() / 1024;
         int freeSpaceInt = (int) getFreeSpace() / 1024;
         int oazaSpaceInt = (int) getOazaSpace() / 1024;
-        int usedSpaceInt = totalSpaceInt - freeSpaceInt - oazaSpaceInt;
 
         int graphWidth = DimensUtils.getDisplayWidth(getActivity());
-        double usedSpacePercent = (double) usedSpaceInt / (double) totalSpaceInt * 100.0;
-        double usedSpaceWidth = graphWidth / 100.0 * usedSpacePercent;
         double oazaSpacePercent = (double) oazaSpaceInt / (double) totalSpaceInt * 100.0;
         double oazaSpaceWidth = graphWidth / 100.0 * oazaSpacePercent;
-
-        usedSpace.setLayoutParams(new LinearLayout.LayoutParams((int) usedSpaceWidth,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-
         oazaSpace.setLayoutParams(new LinearLayout.LayoutParams((int) oazaSpaceWidth,
                 ViewGroup.LayoutParams.MATCH_PARENT));
 
-        spaceText.setText(getString(R.string.space_used) + ": " + FileUtils.readableFileSize((long) totalSpaceInt * 1024) + " | " +
-                        getString(R.string.app_name) + ": " + FileUtils.readableFileSize((long) oazaSpaceInt * 1024) + " | " +
+        spaceText.setText(getString(R.string.app_name) + ": " + FileUtils.readableFileSize((long) oazaSpaceInt * 1024) + " | " +
                         getString(R.string.space_free) + ": " + FileUtils.readableFileSize((long) freeSpaceInt * 1024));
-
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "setupSpaceGraph",
-                "total: " + FileUtils.readableFileSize((long) totalSpaceInt) +
-                " free: " + FileUtils.readableFileSize((long) freeSpaceInt) +
-                " oaza: " + FileUtils.readableFileSize((long) oazaSpaceInt));
     }
 
     private float getFreeSpace() {
@@ -134,10 +119,12 @@ public class DownloadedFragment extends BaseFragment {
     public void notifyDownloadFinished() {
         getData();
         downloadedAdapter.notifyDataSetChanged();
+        setupSpaceGraph();
     }
 
     public void notifyDatasetChanged() {
         getData();
         downloadedAdapter.notifyDataSetChanged();
+        setupSpaceGraph();
     }
 }
