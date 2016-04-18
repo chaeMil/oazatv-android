@@ -160,7 +160,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                     @Override
                     public void run() {
                         controlsTimeHide += 1;
-                        if (controlsTimeHide >= 8) {
+                        if (controlsTimeHide >= 5) {
                             toggleControls(false);
                         }
                     }
