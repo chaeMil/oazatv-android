@@ -315,9 +315,12 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     public boolean onTouch(View v, MotionEvent event) {
         switch(v.getId()) {
             case R.id.video_view:
-                toggleControls(true);
-
-                resetHideControlsTimer();
+                if (controlsWrapper.getVisibility() == View.VISIBLE) {
+                    toggleControls(true);
+                    resetHideControlsTimer();
+                } else {
+                    toggleControls(false);
+                }
                 break;
         }
 
