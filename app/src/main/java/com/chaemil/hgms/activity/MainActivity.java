@@ -403,14 +403,6 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
-    public void changeStatusBarColor(int color) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(color);
-        }
-    }
-
     public MainFragment getMainFragment() {
         return mainFragment;
     }

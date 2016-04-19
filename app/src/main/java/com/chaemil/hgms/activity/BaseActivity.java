@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -29,12 +31,14 @@ import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.PermissionUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.chaemil.hgms.utils.StringUtils;
+import com.crashlytics.android.Crashlytics;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.util.Style;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import io.fabric.sdk.android.Fabric;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
@@ -46,6 +50,12 @@ public class BaseActivity extends AppCompatActivity implements RequestFactoryLis
     private DownloadManager.Request request;
     private DownloadManager manager;
     public boolean fullscreen = false;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
+    }
 
     public void setFullscreen(boolean full) {
 
@@ -217,5 +227,13 @@ public class BaseActivity extends AppCompatActivity implements RequestFactoryLis
             }
         }
         return false;
+    }
+
+    public void changeStatusBarColor(int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(color);
+        }
     }
 }

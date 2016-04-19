@@ -278,4 +278,14 @@
 
     </FrameLayout>
 
+    <View
+        android:fitsSystemWindows="true"
+        android:clickable="true"
+        android:id="@+id/splash"
+        android:background="@drawable/splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </View>
+
 </RelativeLayout>

@@ -13,25 +13,18 @@ import io.fabric.sdk.android.Fabric;
 /**
  * Created by chaemil on 8.2.16.
  */
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+
+        changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
 
         final Intent intent = new Intent(this, MainActivity.class);
-
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(intent);
-                finish();
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-            }
-        }, 1000);
-
+        startActivity(intent);
+        finish();
+        overridePendingTransition(0, 0);
 
     }
 }

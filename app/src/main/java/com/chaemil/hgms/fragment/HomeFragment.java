@@ -9,7 +9,9 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
@@ -26,8 +28,12 @@ import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.AnalyticsUtils;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.github.johnpersano.supertoasts.SuperToast;
 
 import org.json.JSONObject;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import it.sephiroth.android.library.widget.HListView;
 
@@ -43,6 +49,8 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     private static final int FEATURED = 0;
     private static final int NEW_AND_POPULAR = 1;
 
+    private boolean init = false;
+    private int initRetry = 5;
     private Homepage homepage;
     private HListView newestVideos;
     private HListView newestAlbums;
@@ -92,6 +100,8 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
             featuredGridView.setAdapter(featuredAdapter);
 
             setupSwitcher();
+
+            ((MainActivity) getActivity()).getMainFragment().hideSplash();
         }
     }
 
@@ -164,9 +174,28 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
                 homepage = ResponseFactory.parseHomepage(response);
                 setupUI();
+                init = true;
+                initRetry = 5;
 
                 break;
 
+        }
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError exception) {
+        super.onErrorResponse(exception);
+
+        if (!init) {
+            initRetry -= 1;
+
+            if (initRetry <= 0) {
+                getActivity().finish();
+                SuperToast.create(getActivity(), getString(R.string.connection_error), Toast.LENGTH_LONG).show();
+            } else {
+                JsonObjectRequest request = RequestFactory.getHomepage(this);
+                MyRequestService.getRequestQueue().add(request);
+            }
         }
     }
 }

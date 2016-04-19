@@ -53,4 +53,5 @@
     <string name="share_album">Share album</string>
     <string name="space_free">Free</string>
     <string name="space_used">Used</string>
+    <string name="connection_error">Connection error</string>
 </resources>

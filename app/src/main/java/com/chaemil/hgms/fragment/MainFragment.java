@@ -86,6 +86,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private SwitchCompat streamOnWifiSwitch;
     private SwitchCompat streamOnlyAudioSwitch;
     private ImageView share;
+    private View splash;
 
     @Override
     public void onAttach(Activity activity) {
@@ -123,6 +124,20 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         return rootView;
     }
 
+
+    public void hideSplash() {
+        if (splash != null) {
+            YoYo.with(Techniques.FadeOut).duration(350).playOn(splash);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    splash.setVisibility(View.GONE);
+                }
+            }, 350);
+        }
+    }
+
     private void getUI(ViewGroup rootView) {
         tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
         appBar = (RelativeLayout) rootView.findViewById(R.id.app_bar);
@@ -142,6 +157,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         streamOnWifiSwitch = (SwitchCompat) rootView.findViewById(R.id.stream_on_wifi_switch);
         streamOnlyAudioSwitch = (SwitchCompat) rootView.findViewById(R.id.stream_only_audio_switch);
         share = (ImageView) rootView.findViewById(R.id.share);
+        splash = rootView.findViewById(R.id.splash);
     }
 
     private void setupUI(Bundle savedInstanceState) {
