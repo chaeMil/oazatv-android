@@ -279,6 +279,7 @@
     </FrameLayout>
 
     <View
+        tools:visibility="gone"
         android:fitsSystemWindows="true"
         android:clickable="true"
         android:id="@+id/splash"
