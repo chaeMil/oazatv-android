@@ -118,9 +118,7 @@
             app:tabGravity="fill"
             app:tabMode="fixed"
             android:background="@color/colorPrimary"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/toolbar"
-            android:layout_toEndOf="@+id/toolbar">
+            android:layout_alignParentTop="true">
 
         </android.support.design.widget.TabLayout>
 
