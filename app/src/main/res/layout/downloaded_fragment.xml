@@ -50,4 +50,33 @@
 
     </GridView>
 
+    <RelativeLayout
+        android:id="@+id/none_downloaded"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:src="@drawable/ic_downloaded_none"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/imageView2"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:text="@string/none_downloaded_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView2"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:gravity="center_horizontal"
+            android:textColor="@color/dark_gray"
+            android:textSize="18sp" />
+
+
+    </RelativeLayout>
+
 </RelativeLayout>

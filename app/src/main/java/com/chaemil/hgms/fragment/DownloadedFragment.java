@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chaemil.hgms.R;
@@ -31,6 +32,7 @@ public class DownloadedFragment extends BaseFragment {
     private LinearLayout spaceWrapper;
     private View oazaSpace;
     private TextView spaceText;
+    private RelativeLayout noneDownloaded;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,6 +75,7 @@ public class DownloadedFragment extends BaseFragment {
         spaceWrapper = (LinearLayout) rootView.findViewById(R.id.space_wrapper);
         oazaSpace = rootView.findViewById(R.id.oaza_space);
         spaceText = (TextView) rootView.findViewById(R.id.space_text);
+        noneDownloaded = (RelativeLayout) rootView.findViewById(R.id.none_downloaded);
     }
 
     private void setupUI() {
@@ -123,10 +126,7 @@ public class DownloadedFragment extends BaseFragment {
     }
 
     public void notifyDownloadFinished() {
-        getData();
-        downloadedAdapter.notifyDataSetChanged();
-        downloadedAdapter.notifyDataSetInvalidated();
-        setupSpaceGraph();
+        notifyDatasetChanged();
     }
 
     public void notifyDatasetChanged() {
@@ -134,5 +134,11 @@ public class DownloadedFragment extends BaseFragment {
         downloadedAdapter.notifyDataSetChanged();
         downloadedAdapter.notifyDataSetInvalidated();
         setupSpaceGraph();
+
+        if (downloadedItems.size() <= 0) {
+            noneDownloaded.setVisibility(View.VISIBLE);
+        } else {
+            noneDownloaded.setVisibility(View.GONE);
+        }
     }
 }
