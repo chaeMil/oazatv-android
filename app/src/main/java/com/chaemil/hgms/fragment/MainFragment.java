@@ -40,6 +40,7 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.Constants;
+import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
@@ -86,7 +87,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private SwitchCompat streamOnWifiSwitch;
     private SwitchCompat streamOnlyAudioSwitch;
     private ImageView share;
-    private View splash;
+    private RelativeLayout splash;
 
     @Override
     public void onAttach(Activity activity) {
@@ -157,13 +158,14 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         streamOnWifiSwitch = (SwitchCompat) rootView.findViewById(R.id.stream_on_wifi_switch);
         streamOnlyAudioSwitch = (SwitchCompat) rootView.findViewById(R.id.stream_only_audio_switch);
         share = (ImageView) rootView.findViewById(R.id.share);
-        splash = rootView.findViewById(R.id.splash);
+        splash = (RelativeLayout) rootView.findViewById(R.id.splash);
     }
 
     private void setupUI(Bundle savedInstanceState) {
         setupTabLayout();
         setupSearch();
 
+        splash.setPadding(0, ((MainActivity) getActivity()).getStatusBarHeight(), 0, 0);
         back.setOnClickListener(this);
         settingsFab.setOnClickListener(this);
         settingsCardBg.setOnClickListener(this);

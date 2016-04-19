@@ -278,15 +278,21 @@
 
     </FrameLayout>
 
-    <View
-        tools:visibility="gone"
-        android:fitsSystemWindows="true"
-        android:clickable="true"
+    <RelativeLayout
+        android:background="@color/colorPrimary"
         android:id="@+id/splash"
-        android:background="@drawable/splash"
+        tools:visibility="visible"
+        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </View>
+        <View
+            android:background="@drawable/splash"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </View>
+
+    </RelativeLayout>
 
 </RelativeLayout>
