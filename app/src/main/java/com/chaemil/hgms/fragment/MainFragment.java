@@ -286,8 +286,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     public void onTabSelected(TabLayout.Tab tab) {
         pager.setCurrentItem(tab.getPosition());
 
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_view_list);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_categories);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_categories);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_view_list);
         tabLayout.getTabAt(3).setIcon(R.drawable.ic_downloaded);
 
         switch (tab.getPosition()) {
