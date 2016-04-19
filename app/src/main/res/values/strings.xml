@@ -54,5 +54,5 @@
     <string name="space_free">Free</string>
     <string name="space_used">Used</string>
     <string name="connection_error">Connection error</string>
-    <string name="none_downloaded_hint">You didn\'t downloaded any audio files. To download them and play offline tap the three dots next to the video and download there.</string>
+    <string name="none_downloaded_hint">You didn\'t downloaded any audio files. To download and play offline tap the three dots next to the video and download there.</string>
 </resources>
