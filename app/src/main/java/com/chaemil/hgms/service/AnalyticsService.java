@@ -94,7 +94,7 @@ public class AnalyticsService implements RequestFactoryListener {
 
     @Override
     public void onErrorResponse(VolleyError exception) {
-        BaseActivity.responseError(exception, context);
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, TAG, exception.toString());
     }
 
     public void setIp(String ip) {
