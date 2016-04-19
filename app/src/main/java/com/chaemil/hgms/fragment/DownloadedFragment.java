@@ -49,12 +49,6 @@ public class DownloadedFragment extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        downloadedAdapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         view.post(new Runnable() {
