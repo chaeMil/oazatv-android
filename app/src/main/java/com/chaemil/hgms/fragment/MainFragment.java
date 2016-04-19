@@ -302,6 +302,11 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         }
     }
 
+    public void goToDownloaded() {
+        pager.setCurrentItem(2);
+        hideSettings();
+    }
+
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
 

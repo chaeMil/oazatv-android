@@ -61,8 +61,10 @@ public class AnalyticsService implements RequestFactoryListener {
             @Override
             public void onCompleted(Exception e, String result) {
                 try {
-                    JSONObject jsonArray = new JSONObject(result);
-                    analyticsService.setIp(jsonArray.getString("ip"));
+                    if (result != null) {
+                        JSONObject jsonArray = new JSONObject(result);
+                        analyticsService.setIp(jsonArray.getString("ip"));
+                    }
                 } catch (JSONException e1) {
                     e1.printStackTrace();
                 }
