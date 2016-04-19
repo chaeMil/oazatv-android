@@ -88,6 +88,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private SwitchCompat streamOnlyAudioSwitch;
     private ImageView share;
     private RelativeLayout splash;
+    private CategoriesFragment categoriesFragment;
+    private RelativeLayout logoWrapper;
 
     @Override
     public void onAttach(Activity activity) {
@@ -103,6 +105,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         if (savedInstanceState == null) {
             SmartLog.Log(SmartLog.LogLevel.DEBUG, TAG + " savedInstanceState", "null");
             homeFragment = new HomeFragment();
+            categoriesFragment = new CategoriesFragment();
             archiveFragment = new ArchiveFragment();
             downloadedFragment = new DownloadedFragment();
             photoAlbumFragment = new PhotoAlbumFragment();
@@ -159,6 +162,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         streamOnlyAudioSwitch = (SwitchCompat) rootView.findViewById(R.id.stream_only_audio_switch);
         share = (ImageView) rootView.findViewById(R.id.share);
         splash = (RelativeLayout) rootView.findViewById(R.id.splash);
+        logoWrapper = (RelativeLayout) rootView.findViewById(R.id.logo_wrapper);
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -222,17 +226,20 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     }
 
     private void setupTabLayout() {
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_home_white));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.color.transparent));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_categories));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_view_list));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_downloaded));
-        RelativeLayout newTab = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.home_tab, null);
-        tabLayout.getTabAt(0).setCustomView(newTab);
         tabLayout.setOnTabSelectedListener(this);
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.white));
     }
 
     public HomeFragment getHomeFragment() {
         return homeFragment;
+    }
+
+    public CategoriesFragment getCategoriesFragment() {
+        return categoriesFragment;
     }
 
     public ArchiveFragment getArchiveFragment() {
@@ -279,23 +286,27 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     public void onTabSelected(TabLayout.Tab tab) {
         pager.setCurrentItem(tab.getPosition());
 
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_view_list);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_downloaded);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_categories);
+        tabLayout.getTabAt(3).setIcon(R.drawable.ic_downloaded);
 
         switch (tab.getPosition()) {
             case 0:
-                tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_white);
                 settingsFab.hide(true);
                 hideSettings();
                 break;
             case 1:
-                tabLayout.getTabAt(1).setIcon(R.drawable.ic_view_list_white);
+                tabLayout.getTabAt(1).setIcon(R.drawable.ic_categories_white);
                 settingsFab.hide(true);
                 hideSettings();
                 break;
             case 2:
-                tabLayout.getTabAt(2).setIcon(R.drawable.ic_downloaded_white);
+                tabLayout.getTabAt(2).setIcon(R.drawable.ic_view_list_white);
+                settingsFab.hide(true);
+                hideSettings();
+                break;
+            case 3:
+                tabLayout.getTabAt(3).setIcon(R.drawable.ic_downloaded_white);
                 settingsFab.show(true);
                 getDownloadedFragment().notifyDatasetChanged();
                 break;
@@ -303,7 +314,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     }
 
     public void goToDownloaded() {
-        pager.setCurrentItem(2);
+        pager.setCurrentItem(3);
         hideSettings();
     }
 
@@ -333,6 +344,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         photoalbumWrapper.setVisibility(View.VISIBLE);
         YoYo.with(Techniques.SlideInUp).duration(300).playOn(photoalbumWrapper);
         YoYo.with(Techniques.FadeOut).duration(300).playOn(tabLayout);
+        YoYo.with(Techniques.FadeOut).duration(300).playOn(logoWrapper);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -340,6 +352,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             public void run() {
                 tabLayout.setVisibility(View.GONE);
                 pager.setVisibility(View.GONE);
+                logoWrapper.setVisibility(View.GONE);
             }
         }, 300);
     }
@@ -352,9 +365,11 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
 
         tabLayout.setVisibility(View.VISIBLE);
         pager.setVisibility(View.VISIBLE);
+        logoWrapper.setVisibility(View.VISIBLE);
 
         YoYo.with(Techniques.FadeIn).duration(300).playOn(tabLayout);
         YoYo.with(Techniques.SlideOutDown).duration(300).playOn(photoalbumWrapper);
+        YoYo.with(Techniques.FadeIn).duration(300).playOn(logoWrapper);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -507,6 +522,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         }
     }
 
+
+
     private class MainFragmentsAdapter extends FragmentPagerAdapter {
         public MainFragmentsAdapter(FragmentManager fm) {
             super(fm);
@@ -518,8 +535,10 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                 case 0:
                     return getHomeFragment();
                 case 1:
-                    return getArchiveFragment();
+                    return getCategoriesFragment();
                 case 2:
+                    return getArchiveFragment();
+                case 3:
                     return getDownloadedFragment();
             }
             return null;
@@ -527,7 +546,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
     }
 }

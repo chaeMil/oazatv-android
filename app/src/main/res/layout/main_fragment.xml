@@ -124,6 +124,40 @@
 
         </android.support.design.widget.TabLayout>
 
+        <RelativeLayout
+            android:id="@+id/logo_wrapper"
+            tools:background="@color/colorPrimary"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="4dp">
+
+            <TextView
+                android:text="@string/app_name"
+                android:id="@+id/tab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="4dp"
+                android:paddingRight="10dp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/icon"
+                android:layout_toEndOf="@+id/icon" />
+
+            <ImageView
+                android:id="@+id/icon"
+                android:src="@drawable/ic_home_white"
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+        </RelativeLayout>
+
     </RelativeLayout>
 
     <ImageView
@@ -281,7 +315,7 @@
     <RelativeLayout
         android:background="@color/colorPrimary"
         android:id="@+id/splash"
-        tools:visibility="visible"
+        tools:visibility="gone"
         android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
