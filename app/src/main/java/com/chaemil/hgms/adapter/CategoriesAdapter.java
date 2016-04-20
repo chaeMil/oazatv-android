@@ -90,43 +90,36 @@ public class CategoriesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        ViewHolder holder;
         final Video video = (Video) getChild(groupPosition, childPosition);
 
-        if (convertView == null) {
-            LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.archive_item, null);
+        LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = vi.inflate(R.layout.archive_item, null);
 
-            holder = new ViewHolder();
-            holder.mainView = (RelativeLayout) convertView.findViewById(R.id.main_view);
-            holder.thumb = (VideoThumbImageView) convertView.findViewById(R.id.thumb);
-            holder.name = (TextView) convertView.findViewById(R.id.name);
-            holder.date = (TextView) convertView.findViewById(R.id.date);
-            holder.views = (TextView) convertView.findViewById(R.id.views);
-            holder.more = (ImageButton) convertView.findViewById(R.id.context_menu);
+        RelativeLayout mainView = (RelativeLayout) convertView.findViewById(R.id.main_view);
+        VideoThumbImageView thumb = (VideoThumbImageView) convertView.findViewById(R.id.thumb);
+        TextView name = (TextView) convertView.findViewById(R.id.name);
+        TextView date = (TextView) convertView.findViewById(R.id.date);
+        TextView views = (TextView) convertView.findViewById(R.id.views);
+        ImageButton more = (ImageButton) convertView.findViewById(R.id.context_menu);
 
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
 
-        holder.mainView.setOnClickListener(new View.OnClickListener() {
+        mainView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mainActivity.playNewVideo(video);
             }
         });
-        holder.name.setText(video.getName());
-        holder.date.setText(video.getDate());
-        holder.views.setText(video.getViews() + " " + context.getString(R.string.views));
-        holder.more.setVisibility(View.VISIBLE);
-        holder.more.setOnClickListener(new View.OnClickListener() {
+        name.setText(video.getName());
+        date.setText(video.getDate());
+        views.setText(video.getViews() + " " + context.getString(R.string.views));
+        more.setVisibility(View.VISIBLE);
+        more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AdapterUtils.contextDialog(context, mainActivity, CategoriesAdapter.this, video);
             }
         });
-        Ion.with(context).load(video.getThumbFile()).intoImageView(holder.thumb);
+        Ion.with(context).load(video.getThumbFile()).intoImageView(thumb);
 
         return convertView;
     }
@@ -134,16 +127,5 @@ public class CategoriesAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return false;
-    }
-
-    public class ViewHolder {
-
-        private RelativeLayout mainView;
-        public VideoThumbImageView thumb;
-        public TextView name;
-        public TextView date;
-        public TextView views;
-        public ImageButton more;
-
     }
 }
