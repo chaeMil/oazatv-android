@@ -13,6 +13,7 @@
     <color name="transparent_white">#0fffffff</color>
     <color name="download_cover">#c2ffffff</color>
     <color name="colorPrimaryAlpha">#ce4285f4</color>
+    <color name="home_switcher_bg">#dbffffff</color>
 
 
     <!-- google's material design colours from

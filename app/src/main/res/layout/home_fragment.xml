@@ -4,48 +4,6 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/switcher_wrapper"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_alignParentTop="true"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:background="@color/transparent_white">
-
-        <Button
-            android:id="@+id/featured_button"
-            android:text="@string/featured"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:background="@drawable/app_round_button_bg_active"
-            android:textColor="@color/white"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp" />
-
-        <Button
-            android:id="@+id/new_and_popular_button"
-            android:text="@string/new_and_popular"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:background="@drawable/app_round_button_bg"
-            android:textColor="@color/white"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp" />
-
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/featured_wrapper"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -60,7 +18,7 @@
             android:id="@+id/featured_grid_view"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="508dp"
+            android:layout_height="match_parent"
             android:paddingBottom="75dp"
             android:paddingTop="70dp">
 
@@ -138,6 +96,47 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:clickable="true"
+        android:id="@+id/switcher_wrapper"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@color/home_switcher_bg">
 
+        <Button
+            android:id="@+id/featured_button"
+            android:text="@string/featured"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/app_round_button_bg_active"
+            android:textColor="@color/white"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/new_and_popular_button"
+            android:text="@string/new_and_popular"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/app_round_button_bg"
+            android:textColor="@color/white"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
+
+
+    </LinearLayout>
 
 </RelativeLayout>
