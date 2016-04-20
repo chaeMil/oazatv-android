@@ -73,6 +73,7 @@ public class CategoriesAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         String categoryName = getGroup(groupPosition).getName();
+        Category category = getGroup(groupPosition);
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -80,7 +81,7 @@ public class CategoriesAdapter extends BaseExpandableListAdapter {
         }
 
         TextView categoryNameView = (TextView) convertView.findViewById(R.id.category_name);
-        categoryNameView.setText(categoryName);
+        categoryNameView.setText(categoryName + " (" + category.getVideos().size() + ")");
 
         return convertView;
     }
