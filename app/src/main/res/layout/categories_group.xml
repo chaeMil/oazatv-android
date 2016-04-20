@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:padding="16dp"
+        android:padding="20dp"
         android:id="@+id/category_name"
         android:textColor="@color/white"
         android:textAllCaps="true"
