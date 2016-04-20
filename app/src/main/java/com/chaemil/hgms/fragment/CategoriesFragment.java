@@ -25,7 +25,7 @@ import java.util.ArrayList;
  */
 public class CategoriesFragment extends BaseFragment {
 
-    private ArrayList<Category> categories;
+    private ArrayList<Category> categories = new ArrayList<>();
     private ExpandableListView categoriesList;
     private CategoriesAdapter categoriesAdapter;
 
@@ -66,6 +66,8 @@ public class CategoriesFragment extends BaseFragment {
                 if (response != null) {
                     categories = ResponseFactory.parseCategories(response);
                 }
+
+                setupUI();
                 break;
         }
     }
