@@ -178,7 +178,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         if (savedInstanceState == null) {
             pager.setAdapter(new MainFragmentsAdapter(context.getSupportFragmentManager()));
             pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-            pager.setOffscreenPageLimit(2);
+            pager.setOffscreenPageLimit(3);
             settingsFab.hide(false);
             downloadOnWifiSwitch.setChecked(sharedPreferences.loadDownloadOnWifi());
             streamOnlyAudioSwitch.setChecked(sharedPreferences.loadStreamAudio());
