@@ -55,6 +55,9 @@ public class CategoriesFragment extends BaseFragment {
         categoriesAdapter = new CategoriesAdapter(getContext(), categories,
                 ((MainActivity) getActivity()));
         categoriesList.setAdapter(categoriesAdapter);
+        categoriesList.setDividerHeight(0);
+        categoriesList.setGroupIndicator(getResources()
+                .getDrawable(R.drawable.categories_list_indicator));
     }
 
     @Override
