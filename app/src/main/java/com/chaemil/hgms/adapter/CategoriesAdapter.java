@@ -1,6 +1,7 @@
 package com.chaemil.hgms.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,7 +81,10 @@ public class CategoriesAdapter extends BaseExpandableListAdapter {
             convertView = infalInflater.inflate(R.layout.categories_group, null);
         }
 
+        RelativeLayout background = (RelativeLayout) convertView.findViewById(R.id.background);
         TextView categoryNameView = (TextView) convertView.findViewById(R.id.category_name);
+
+        background.setBackgroundColor(Color.parseColor(category.getColor()));
         categoryNameView.setText(categoryName + " (" + category.getVideos().size() + ")");
 
         return convertView;
