@@ -25,6 +25,7 @@ public class Constants {
     public static final String API_POST_ANALYTICS_PING_ALIVE = API + "ping-alive/";
     public static final String API_POST_VIEW_PREFIX = API + "video/";
     public static final String API_POST_VIEW_SUFFIX = "/count-view";
+    public static final String API_GET_CATEGORIES = API + "categories/";
 
     public static final String JSON_POST_NICK = "nick";
     public static final String JSON_POST_EMAIL = "email";
@@ -88,5 +89,5 @@ public class Constants {
     public static final String JSON_YOUTUBE_LINK = "youtube_link";
     public static final String JSON_BOTTOM_TEXT_CS = "bottom_text_cs";
     public static final String JSON_BOTTOM_TEXT_EN = "bottom_text_en";
-
+    public static final String JSON_COLOR = "color";
 }

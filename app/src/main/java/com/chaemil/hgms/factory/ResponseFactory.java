@@ -2,6 +2,7 @@ package com.chaemil.hgms.factory;
 
 
 import com.chaemil.hgms.model.ArchiveItem;
+import com.chaemil.hgms.model.Category;
 import com.chaemil.hgms.model.Homepage;
 import com.chaemil.hgms.model.LiveStream;
 import com.chaemil.hgms.model.Photo;
@@ -286,6 +287,44 @@ public class ResponseFactory {
             String bottomTextEN = response.getString(Constants.JSON_BOTTOM_TEXT_EN);
 
             return new LiveStream(onAir, youtubeLink, bottomTextCS, bottomTextEN);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static ArrayList<Category> parseCategories(JSONArray response) {
+        try {
+            ArrayList<Category> categories = new ArrayList<>();
+            for(int i = 0; i < response.length(); i++) {
+                Category category = parseCategory(response.getJSONObject(i));
+                categories.add(category);
+            }
+
+            return categories;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static Category parseCategory(JSONObject response) {
+
+        try {
+            int id = response.getInt(Constants.JSON_ID);
+            String nameCS = response.getString(Constants.JSON_NAME_CS);
+            String nameEN = response.getString(Constants.JSON_NAME_EN);
+            String color = response.getString(Constants.JSON_COLOR);
+            JSONArray jsonVideos = response.getJSONArray(Constants.JSON_VIDEOS);
+            ArrayList<Video> videos = new ArrayList<>();
+            for(int i = 0; i < jsonVideos.length(); i++) {
+                Video video = parseVideo(jsonVideos.getJSONObject(i));
+                videos.add(video);
+            }
+
+            return new Category(id, nameCS, nameEN, color, videos);
         } catch (JSONException e) {
             e.printStackTrace();
         }
