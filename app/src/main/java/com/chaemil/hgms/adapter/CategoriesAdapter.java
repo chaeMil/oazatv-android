@@ -58,12 +58,12 @@ public class CategoriesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getGroupId(int groupPosition) {
-        return categories.get(groupPosition).getId();
+        return 0;
     }
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        return categories.get(groupPosition).getVideos().get(childPosition).getId();
+        return 0;
     }
 
     @Override

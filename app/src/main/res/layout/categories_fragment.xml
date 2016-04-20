@@ -4,9 +4,18 @@
 
     <ExpandableListView
         android:id="@+id/categories_list"
+        android:paddingBottom="75dp"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     </ExpandableListView>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

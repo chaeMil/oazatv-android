@@ -649,7 +649,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                 SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
             }
 
-            if (!imagesAlreadyBlurred && thumb != null) {
+            if (!imagesAlreadyBlurred && thumb != null && VideoPlayerFragment.this.isAdded()) {
                 if (getContext() != null) {
                     SmartLog.Log(SmartLog.LogLevel.DEBUG, "resizeAndBlurBg", "blurring bg image");
                     Bitmap originalBitmap = thumb;

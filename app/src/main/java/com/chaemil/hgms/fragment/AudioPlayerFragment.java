@@ -743,7 +743,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                 SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
             }
 
-            if (!imagesAlreadyBlurred && thumb != null) {
+            if (!imagesAlreadyBlurred && thumb != null && AudioPlayerFragment.this.isAdded()) {
                 SmartLog.Log(SmartLog.LogLevel.DEBUG, "resizeAndBlurBg", "blurring bg image");
                 Bitmap originalBitmap = thumb;
                 Bitmap blurredPlayerBitmap = BitmapUtils.blur(getContext(), originalBitmap, 25);

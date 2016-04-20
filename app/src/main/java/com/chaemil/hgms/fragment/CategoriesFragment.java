@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ProgressBar;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.R;
@@ -28,6 +29,7 @@ public class CategoriesFragment extends BaseFragment {
     private ArrayList<Category> categories = new ArrayList<>();
     private ExpandableListView categoriesList;
     private CategoriesAdapter categoriesAdapter;
+    private ProgressBar progress;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class CategoriesFragment extends BaseFragment {
 
     private void getUI(ViewGroup rootView) {
         categoriesList = (ExpandableListView) rootView.findViewById(R.id.categories_list);
+        progress = (ProgressBar) rootView.findViewById(R.id.progress);
     }
 
     public void setupUI() {
@@ -68,6 +71,7 @@ public class CategoriesFragment extends BaseFragment {
             case GET_CATEGORIES:
                 if (response != null) {
                     categories = ResponseFactory.parseCategories(response);
+                    progress.setVisibility(View.GONE);
                 }
 
                 setupUI();
