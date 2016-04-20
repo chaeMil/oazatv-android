@@ -64,8 +64,7 @@ public class CategoriesFragment extends BaseFragment {
 
         categoriesGrid.setAdapter(categoriesAdapter);
         categoriesGrid.setDividerHeight(0);
-        categoriesGrid.setGroupIndicator(getResources()
-                .getDrawable(R.drawable.categories_grid_indicator));
+        //categoriesGrid.setGroupIndicator(getResources().getDrawable(R.drawable.categories_grid_indicator));
 
     }
 
