@@ -15,8 +15,10 @@ import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.SmartLog;
+import com.crashlytics.android.Crashlytics;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.orm.SugarContext;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by chaemil on 3.12.15.
@@ -30,6 +32,7 @@ public class OazaApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         AnalyticsService.init(this);
     }
 
