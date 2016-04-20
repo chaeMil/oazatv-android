@@ -46,6 +46,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="75dp"
+        android:scrollbarSize="4dp"
+        android:scrollbarThumbVertical="@color/colorPrimaryWashed"
         android:layout_below="@+id/free_space_wrapper">
 
     </GridView>

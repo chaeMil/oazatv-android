@@ -6,6 +6,8 @@
         android:id="@+id/categories_list"
         android:paddingBottom="75dp"
         android:clipToPadding="false"
+        android:scrollbarSize="4dp"
+        android:scrollbarThumbVertical="@color/colorPrimaryWashed"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

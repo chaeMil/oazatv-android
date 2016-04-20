@@ -17,6 +17,8 @@
             android:clipToPadding="false"
             android:id="@+id/featured_grid_view"
             android:scrollbars="vertical"
+            android:scrollbarSize="4dp"
+            android:scrollbarThumbVertical="@color/colorPrimaryWashed"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="75dp"
@@ -37,6 +39,8 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scrollbarSize="4dp"
+            android:scrollbarThumbVertical="@color/colorPrimaryWashed"
             android:id="@+id/scrollView">
 
 
