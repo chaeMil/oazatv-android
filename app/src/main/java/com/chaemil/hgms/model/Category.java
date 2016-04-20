@@ -1,6 +1,9 @@
 package com.chaemil.hgms.model;
 
+import com.chaemil.hgms.utils.Constants;
+
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by chaemil on 20.4.16.
@@ -8,16 +11,30 @@ import java.util.ArrayList;
 public class Category {
     private int id;
     private String nameCS;
-    private String nameEn;
+    private String nameEN;
     private String color;
     private ArrayList<Video> videos;
 
-    public Category(int id, String nameCS, String nameEn, String color, ArrayList<Video> videos) {
+    public Category(int id, String nameCS, String nameEN, String color, ArrayList<Video> videos) {
         this.id = id;
         this.nameCS = nameCS;
-        this.nameEn = nameEn;
+        this.nameEN = nameEN;
         this.color = color;
         this.videos = videos;
+    }
+
+    public String getName() {
+        switch (Locale.getDefault().getLanguage()) {
+
+            case Constants.SK:
+                return getNameCS();
+            case Constants.CS:
+                return getNameCS();
+            case Constants.EN:
+                return getNameEN();
+            default:
+                return getNameEN();
+        }
     }
 
     public int getId() {
@@ -36,12 +53,12 @@ public class Category {
         this.nameCS = nameCS;
     }
 
-    public String getNameEn() {
-        return nameEn;
+    public String getNameEN() {
+        return nameEN;
     }
 
-    public void setNameEn(String nameEn) {
-        this.nameEn = nameEn;
+    public void setNameEN(String nameEN) {
+        this.nameEN = nameEN;
     }
 
     public String getColor() {

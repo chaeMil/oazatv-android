@@ -4,21 +4,30 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.adapter.CategoriesAdapter;
 import com.chaemil.hgms.factory.RequestFactory;
+import com.chaemil.hgms.factory.ResponseFactory;
+import com.chaemil.hgms.model.Category;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.MyRequestService;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by chaemil on 19.4.16.
  */
 public class CategoriesFragment extends BaseFragment {
 
-    private Bundle upUI;
+    private ArrayList<Category> categories;
+    private ExpandableListView categoriesList;
+    private CategoriesAdapter categoriesAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -28,7 +37,7 @@ public class CategoriesFragment extends BaseFragment {
 
         getData();
         getUI(rootView);
-        setupUI(savedInstanceState);
+        setupUI();
 
         return rootView;
     }
@@ -39,11 +48,13 @@ public class CategoriesFragment extends BaseFragment {
     }
 
     private void getUI(ViewGroup rootView) {
-
+        categoriesList = (ExpandableListView) rootView.findViewById(R.id.categories_list);
     }
 
-    public void setupUI(Bundle upUI) {
-        this.upUI = upUI;
+    public void setupUI() {
+        categoriesAdapter = new CategoriesAdapter(getContext(), categories,
+                ((MainActivity) getActivity()));
+        categoriesList.setAdapter(categoriesAdapter);
     }
 
     @Override
@@ -52,7 +63,10 @@ public class CategoriesFragment extends BaseFragment {
 
         switch (requestType) {
             case GET_CATEGORIES:
-
+                if (response != null) {
+                    categories = ResponseFactory.parseCategories(response);
+                }
+                break;
         }
     }
 }

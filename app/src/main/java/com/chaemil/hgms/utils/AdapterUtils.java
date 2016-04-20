@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.adapter.CategoriesAdapter;
 import com.chaemil.hgms.model.Video;
 import com.github.johnpersano.supertoasts.SuperToast;
 
@@ -16,7 +17,8 @@ import com.github.johnpersano.supertoasts.SuperToast;
  */
 public class AdapterUtils {
 
-    public static void contextDialog(final Context context, final MainActivity mainActivity, final ArrayAdapter arrayAdapter, final Video video) {
+    public static void contextDialog(final Context context, final MainActivity mainActivity,
+                                     final Object adapter, final Video video) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         String[] menu;
@@ -30,7 +32,7 @@ public class AdapterUtils {
                 public void onClick(DialogInterface dialog, int which) {
                     switch(which) {
                         case 0:
-                            downloadAudio(context, mainActivity, arrayAdapter, video);
+                            downloadAudio(context, mainActivity, adapter, video);
                             dialog.dismiss();
                             break;
                         case 1:
@@ -64,10 +66,15 @@ public class AdapterUtils {
         builder.create().show();
     }
 
-    public static void downloadAudio(Context context, MainActivity mainActivity, ArrayAdapter arrayAdapter, Video video) {
+    public static void downloadAudio(Context context, MainActivity mainActivity, Object arrayAdapter, Video video) {
         ((OazaApp) mainActivity.getApplication()).addToDownloadQueue(video);
         mainActivity.startDownloadService();
-        arrayAdapter.notifyDataSetChanged();
+        if (arrayAdapter instanceof ArrayAdapter) {
+            ((ArrayAdapter) arrayAdapter).notifyDataSetChanged();
+        }
+        if (arrayAdapter instanceof CategoriesAdapter) {
+            ((CategoriesAdapter) arrayAdapter).notifyDataSetChanged();
+        }
         mainActivity.getMainFragment().getDownloadedFragment().notifyDatasetChanged();
         SuperToast.create(context, context.getString(R.string.added_to_download_queue), SuperToast.Duration.MEDIUM).show();
     }

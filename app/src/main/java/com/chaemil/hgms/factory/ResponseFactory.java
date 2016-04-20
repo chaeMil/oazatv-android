@@ -294,11 +294,12 @@ public class ResponseFactory {
         return null;
     }
 
-    public static ArrayList<Category> parseCategories(JSONArray response) {
+    public static ArrayList<Category> parseCategories(JSONObject response) {
         try {
+            JSONArray jsonArray = response.getJSONArray(Constants.JSON_CATEGORIES);
             ArrayList<Category> categories = new ArrayList<>();
-            for(int i = 0; i < response.length(); i++) {
-                Category category = parseCategory(response.getJSONObject(i));
+            for(int i = 0; i < jsonArray.length(); i++) {
+                Category category = parseCategory(jsonArray.getJSONObject(i));
                 categories.add(category);
             }
 
