@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -16,6 +15,8 @@ import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.Category;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.utils.SmartLog;
+import com.chaemil.hgms.view.ExpandableGridView;
 
 import org.json.JSONObject;
 
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 public class CategoriesFragment extends BaseFragment {
 
     private ArrayList<Category> categories = new ArrayList<>();
-    private ExpandableListView categoriesList;
+    private ExpandableGridView categoriesGrid;
     private CategoriesAdapter categoriesAdapter;
     private ProgressBar progress;
 
@@ -50,17 +51,30 @@ public class CategoriesFragment extends BaseFragment {
     }
 
     private void getUI(ViewGroup rootView) {
-        categoriesList = (ExpandableListView) rootView.findViewById(R.id.categories_list);
+        categoriesGrid = (ExpandableGridView) rootView.findViewById(R.id.categories_grid);
         progress = (ProgressBar) rootView.findViewById(R.id.progress);
     }
 
     public void setupUI() {
         categoriesAdapter = new CategoriesAdapter(getContext(), categories,
                 ((MainActivity) getActivity()));
-        categoriesList.setAdapter(categoriesAdapter);
-        categoriesList.setDividerHeight(0);
-        categoriesList.setGroupIndicator(getResources()
-                .getDrawable(R.drawable.categories_list_indicator));
+
+        int columns = getResources().getInteger(R.integer.archive_columns);
+        categoriesGrid.setNumColumns(columns);
+
+        categoriesGrid.setAdapter(categoriesAdapter);
+        categoriesGrid.setDividerHeight(0);
+        categoriesGrid.setGroupIndicator(getResources()
+                .getDrawable(R.drawable.categories_grid_indicator));
+
+    }
+
+    public void adjustLayout() {
+        if (isAdded()) {
+            int columns = getResources().getInteger(R.integer.archive_columns);
+            categoriesGrid.setNumColumns(columns);
+            categoriesGrid.setAdapter(categoriesAdapter);
+        }
     }
 
     @Override

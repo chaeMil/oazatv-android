@@ -112,7 +112,7 @@ public class ArchiveFragment extends BaseFragment {
     public void adjustLayout() {
 
         if (isAdded()) {
-            final int columns = getResources().getInteger(R.integer.archive_columns);
+            int columns = getResources().getInteger(R.integer.archive_columns);
             archiveGridView.setNumColumns(columns);
         }
 

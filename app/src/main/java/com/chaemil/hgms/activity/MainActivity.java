@@ -287,6 +287,7 @@ public class MainActivity extends BaseActivity implements
         if (getMainFragment() != null) {
             getMainFragment().getArchiveFragment().adjustLayout();
             getMainFragment().getDownloadedFragment().adjustLayout();
+            getMainFragment().getCategoriesFragment().adjustLayout();
 
             if (getMainFragment().getPhotoAlbumFragment() != null) {
                 getMainFragment().getPhotoAlbumFragment().adjustLayout();

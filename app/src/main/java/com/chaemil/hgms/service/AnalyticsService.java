@@ -28,6 +28,7 @@ public class AnalyticsService implements RequestFactoryListener {
 
     private static AnalyticsService analyticsService;
     private static final String TAG = "AnalyticsService";
+    private static final int HEARTBEAT = 30 * 1000;
 
     private Context context;
     private String page = "";
@@ -42,7 +43,7 @@ public class AnalyticsService implements RequestFactoryListener {
             public void run() {
                 postKeepAlive(page);
             }
-        }, 0, 10 * 1000);
+        }, 0, HEARTBEAT);
     }
 
     public static AnalyticsService getInstance() {

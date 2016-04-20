@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <ExpandableListView
-        android:id="@+id/categories_list"
+    <com.chaemil.hgms.view.ExpandableGridView
+        android:id="@+id/categories_grid"
         android:paddingBottom="75dp"
         android:clipToPadding="false"
         android:scrollbarSize="4dp"
@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </ExpandableListView>
+    </com.chaemil.hgms.view.ExpandableGridView>
 
     <ProgressBar
         android:id="@+id/progress"

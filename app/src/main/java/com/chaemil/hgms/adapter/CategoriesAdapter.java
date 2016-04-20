@@ -2,7 +2,6 @@ package com.chaemil.hgms.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,12 +46,12 @@ public class CategoriesAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public Category getGroup(int groupPosition) {
+    public Object getGroup(int groupPosition) {
         return categories.get(groupPosition);
     }
 
     @Override
-    public Video getChild(int groupPosition, int childPosition) {
+    public Object getChild(int groupPosition, int childPosition) {
         return categories.get(groupPosition).getVideos().get(childPosition);
     }
 
@@ -73,8 +72,7 @@ public class CategoriesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        String categoryName = getGroup(groupPosition).getName();
-        Category category = getGroup(groupPosition);
+        Category category = (Category) getGroup(groupPosition);
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -85,16 +83,16 @@ public class CategoriesAdapter extends BaseExpandableListAdapter {
         TextView categoryNameView = (TextView) convertView.findViewById(R.id.category_name);
 
         background.setBackgroundColor(Color.parseColor(category.getColor()));
-        categoryNameView.setText(categoryName + " (" + category.getVideos().size() + ")");
+        categoryNameView.setText(category.getName() + " (" + category.getVideos().size() + ")");
 
         return convertView;
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         ViewHolder holder;
+        final Video video = (Video) getChild(groupPosition, childPosition);
 
-        final Video video = getGroup(groupPosition).getVideos().get(childPosition);
         if (convertView == null) {
             LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.archive_item, null);
@@ -108,8 +106,7 @@ public class CategoriesAdapter extends BaseExpandableListAdapter {
             holder.more = (ImageButton) convertView.findViewById(R.id.context_menu);
 
             convertView.setTag(holder);
-        }
-        else {
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
