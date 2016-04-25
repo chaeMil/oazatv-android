@@ -111,7 +111,7 @@ public class BitmapUtils {
                 (int) (b.getHeight() * factorToUse), false);
     }
 
-    public static File saveToFile(Context context, Bitmap bitmap, String filename) {
+    public static File saveToFile(Context context, Bitmap bitmap, String filename, int quality) {
         OutputStream outStream = null;
 
         File file = new File(context.getExternalCacheDir() + "/" + filename);
@@ -122,7 +122,7 @@ public class BitmapUtils {
 
         try {
             outStream = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, outStream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outStream);
             outStream.flush();
             outStream.close();
         } catch (Exception e) {
