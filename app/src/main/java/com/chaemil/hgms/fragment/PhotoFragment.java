@@ -40,6 +40,13 @@ public class PhotoFragment extends Fragment implements FutureCallback<Bitmap> {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        image.resetScaleAndCenter();
+    }
+
     private void setupUI() {
         Ion.with(getActivity())
                 .load(photo.getThumb2048())
