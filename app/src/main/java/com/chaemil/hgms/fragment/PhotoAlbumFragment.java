@@ -123,14 +123,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
         adapter.notifyDataSetChanged();
         photosAdapter.notifyDataSetChanged();
 
-        if (album.getDescription().equals("")) {
-            description.setVisibility(View.GONE);
-        } else {
-            description.setText(album.getDescription());
-            grid.setPadding(0,
-                    DimensUtils.getTextViewHeight(description),
-                    0, 0);
-        }
+        adjustLayout();
     }
 
     public void showPhoto(int position) {
@@ -151,6 +144,15 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     public void adjustLayout() {
         if (isAdded()) {
             grid.setColumnWidth(getThumbWidth());
+
+            if (album.getDescription().equals("")) {
+                description.setVisibility(View.GONE);
+            } else {
+                description.setText(album.getDescription());
+                grid.setPadding(0,
+                        DimensUtils.getTextViewHeight(description),
+                        0, 0);
+            }
         }
     }
 
