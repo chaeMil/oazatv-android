@@ -25,3 +25,9 @@
     native <methods>;
 }
 -keep class android.support.v8.renderscript.** { *; }
+
+# fixes for Fabric to get crashes
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+-printmapping mapping.txt
