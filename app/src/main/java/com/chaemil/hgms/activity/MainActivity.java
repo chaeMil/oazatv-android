@@ -38,6 +38,7 @@ import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.service.TrackService;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
@@ -102,6 +103,8 @@ public class MainActivity extends BaseActivity implements
             Intent downloadService = new Intent(this, DownloadService.class);
             startService(downloadService);
         }
+
+        TrackService.init(this);
     }
 
     private void setupReceiver() {

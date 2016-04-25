@@ -11,14 +11,19 @@ import android.support.v8.renderscript.Element;
 import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.ScriptIntrinsicBlur;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
 /**
  * Created by chaemil on 2.12.15.
  */
 public class BitmapUtils {
+
+    private static final int IMAGE_QUALITY = 50;
 
     public static Bitmap blur(Context context, Bitmap image, int blurRadius) {
         if (null == image) return null;
@@ -95,5 +100,34 @@ public class BitmapUtils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    // Scale and keep aspect ratio
+    public static Bitmap scaleToFill(Bitmap b, int width, int height) {
+        float factorH = height / (float) b.getWidth();
+        float factorW = width / (float) b.getWidth();
+        float factorToUse = (factorH > factorW) ? factorW : factorH;
+        return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factorToUse),
+                (int) (b.getHeight() * factorToUse), false);
+    }
+
+    public static File saveToFile(Context context, Bitmap bitmap, String filename) {
+        OutputStream outStream = null;
+
+        File file = new File(context.getExternalCacheDir() + "/" + filename);
+
+        if (file.exists()) {
+            return null;
+        }
+
+        try {
+            outStream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, outStream);
+            outStream.flush();
+            outStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
     }
 }
