@@ -30,4 +30,4 @@
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception
--printmapping mapping.txt
+-printmapping build/outputs/mapping/release/mapping.txt
