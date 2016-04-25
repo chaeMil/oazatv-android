@@ -283,7 +283,6 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void adjustLayout() {
-
         if (getMainFragment() != null) {
             getMainFragment().getArchiveFragment().adjustLayout();
             getMainFragment().getDownloadedFragment().adjustLayout();
