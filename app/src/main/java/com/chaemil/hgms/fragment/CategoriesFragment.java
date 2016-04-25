@@ -1,11 +1,13 @@
 package com.chaemil.hgms.fragment;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
@@ -25,12 +27,13 @@ import java.util.ArrayList;
 /**
  * Created by chaemil on 19.4.16.
  */
-public class CategoriesFragment extends BaseFragment {
+public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private ArrayList<Category> categories = new ArrayList<>();
     private ExpandableGridView categoriesGrid;
     private CategoriesAdapter categoriesAdapter;
     private ProgressBar progress;
+    private SwipeRefreshLayout swipeRefresh;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class CategoriesFragment extends BaseFragment {
     private void getUI(ViewGroup rootView) {
         categoriesGrid = (ExpandableGridView) rootView.findViewById(R.id.categories_grid);
         progress = (ProgressBar) rootView.findViewById(R.id.progress);
+        swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
     }
 
     public void setupUI() {
@@ -64,7 +68,7 @@ public class CategoriesFragment extends BaseFragment {
 
         categoriesGrid.setAdapter(categoriesAdapter);
         categoriesGrid.setDividerHeight(0);
-        //categoriesGrid.setGroupIndicator(getResources().getDrawable(R.drawable.categories_grid_indicator));
+        swipeRefresh.setOnRefreshListener(this);
 
     }
 
@@ -88,7 +92,20 @@ public class CategoriesFragment extends BaseFragment {
                 }
 
                 setupUI();
+                swipeRefresh.setRefreshing(false);
                 break;
         }
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError exception) {
+        super.onErrorResponse(exception);
+
+        swipeRefresh.setRefreshing(false);
+    }
+
+    @Override
+    public void onRefresh() {
+        getData();
     }
 }
