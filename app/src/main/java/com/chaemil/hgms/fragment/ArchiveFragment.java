@@ -2,6 +2,7 @@ package com.chaemil.hgms.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -36,13 +37,14 @@ import java.util.ArrayList;
 /**
  * Created by chaemil on 2.12.15.
  */
-public class ArchiveFragment extends BaseFragment {
+public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private ArrayList<ArchiveItem> archive = new ArrayList<>();
     private GridView archiveGridView;
     private ProgressBar progress;
     private ArchiveAdapter archiveAdapter;
     private ProgressBar endlessProgress;
+    private SwipeRefreshLayout swipeRefresh;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,7 @@ public class ArchiveFragment extends BaseFragment {
 
         archiveGridView.setAdapter(archiveAdapter);
         archiveGridView.setOnScrollListener(endlessScrollListener());
+        swipeRefresh.setOnRefreshListener(this);
 
         adjustLayout();
     }
@@ -122,6 +125,7 @@ public class ArchiveFragment extends BaseFragment {
         archiveGridView = (GridView) rootView.findViewById(R.id.archive_grid_view);
         progress = (ProgressBar) rootView.findViewById(R.id.progress);
         endlessProgress = (ProgressBar) rootView.findViewById(R.id.endless_progress);
+        swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
     }
 
     @Override
@@ -141,6 +145,7 @@ public class ArchiveFragment extends BaseFragment {
 
                 progress.setVisibility(View.GONE);
                 endlessProgress.setVisibility(View.GONE);
+                swipeRefresh.setRefreshing(false);
 
                 break;
 
@@ -150,5 +155,12 @@ public class ArchiveFragment extends BaseFragment {
     @Override
     public void onErrorResponse(VolleyError exception) {
         super.onErrorResponse(exception);
+        swipeRefresh.setRefreshing(false);
+    }
+
+    @Override
+    public void onRefresh() {
+        archive.clear();
+        getArchivePage(1);
     }
 }

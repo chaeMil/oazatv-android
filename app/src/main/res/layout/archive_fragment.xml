@@ -11,17 +11,24 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="12dp" />
 
-    <GridView
-        android:clipToPadding="false"
-        android:id="@+id/archive_grid_view"
-        android:scrollbarSize="4dp"
-        android:scrollbarThumbVertical="@color/colorPrimaryWashed"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:paddingBottom="75dp">
+        android:layout_height="wrap_content">
 
-    </GridView>
+        <GridView
+            android:clipToPadding="false"
+            android:id="@+id/archive_grid_view"
+            android:scrollbarSize="4dp"
+            android:scrollbarThumbVertical="@color/colorPrimaryWashed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:paddingBottom="75dp">
+
+        </GridView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <ProgressBar
         android:id="@+id/progress"

@@ -6,6 +6,7 @@
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <com.chaemil.hgms.view.ExpandableGridView
             android:id="@+id/categories_grid"
             android:paddingBottom="75dp"
