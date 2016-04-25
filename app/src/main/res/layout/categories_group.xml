@@ -6,6 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/indicator"
+        android:src="@drawable/down_arrow"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
     <TextView
         android:padding="16dp"
         android:id="@+id/category_name"
@@ -15,6 +24,7 @@
         tools:text="category name (5)"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="20dp" />
+        android:layout_marginLeft="20dp"
+        android:gravity="center_vertical" />
 
 </RelativeLayout>

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -81,9 +82,15 @@ public class CategoriesAdapter extends BaseExpandableListAdapter {
 
         RelativeLayout background = (RelativeLayout) convertView.findViewById(R.id.background);
         TextView categoryNameView = (TextView) convertView.findViewById(R.id.category_name);
+        ImageView indicator = (ImageView) convertView.findViewById(R.id.indicator);
 
         background.setBackgroundColor(Color.parseColor(category.getColor()));
         categoryNameView.setText(category.getName() + " (" + category.getVideos().size() + ")");
+        if (isExpanded) {
+            indicator.setImageDrawable(context.getResources().getDrawable(R.drawable.up_arrow));
+        } else {
+            indicator.setImageDrawable(context.getResources().getDrawable(R.drawable.down_arrow));
+        }
 
         return convertView;
     }
