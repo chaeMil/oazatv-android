@@ -5,6 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/description"
+        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ornare, turpis eget tincidunt mollis, nulla metus accumsan diam, vel faucibus mauris ante quis arcu. Morbi finibus, lectus et venenatis dictum, mi justo eleifend nibh, nec euismod dolor sem at nulla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed semper, magna vitae venenatis gravida, nunc magna malesuada magna"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp" />
+
     <GridView
         android:id="@+id/gridView"
         android:layout_width="fill_parent"

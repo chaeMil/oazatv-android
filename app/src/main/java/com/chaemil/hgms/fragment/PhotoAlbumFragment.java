@@ -12,6 +12,8 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -28,6 +30,7 @@ import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.SmartLog;
 
 import org.json.JSONObject;
@@ -44,6 +47,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     private ImageView download;
     private ProgressBar progress;
     private ImageView retry;
+    private TextView description;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,6 +97,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
         download = (ImageView) rootView.findViewById(R.id.download);
         progress = (ProgressBar) rootView.findViewById(R.id.progress);
         retry = (ImageView) rootView.findViewById(R.id.retry);
+        description = (TextView) rootView.findViewById(R.id.description);
     }
 
     private void setupUI() {
@@ -117,6 +122,15 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
 
         adapter.notifyDataSetChanged();
         photosAdapter.notifyDataSetChanged();
+
+        if (album.getDescription().equals("")) {
+            description.setVisibility(View.GONE);
+        } else {
+            description.setText(album.getDescription());
+            grid.setPadding(0,
+                    DimensUtils.getTextViewHeight(description),
+                    0, 0);
+        }
     }
 
     public void showPhoto(int position) {
