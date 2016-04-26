@@ -69,7 +69,9 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     @Override
     public void onResume() {
         super.onResume();
-        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.PHOTOALBUM_FRAGMENT + "albumHash: " + album.getHash());
+        if (album != null && album.getHash() != null) {
+            AnalyticsService.getInstance().setPage(AnalyticsService.Pages.PHOTOALBUM_FRAGMENT + "albumHash: " + album.getHash());
+        }
     }
 
     public void setAlbum(PhotoAlbum album) {
