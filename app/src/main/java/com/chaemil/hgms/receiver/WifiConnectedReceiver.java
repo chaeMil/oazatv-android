@@ -13,6 +13,7 @@ import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.TrackService;
 import com.chaemil.hgms.utils.SharedPrefUtils;
+import com.chaemil.hgms.utils.SmartLog;
 
 /**
  * Created by chaemil on 8.2.16.
@@ -29,7 +30,13 @@ public class WifiConnectedReceiver extends BroadcastReceiver {
             Intent downloadService = new Intent(context, DownloadService.class);
             context.startService(downloadService);
 
-            TrackService.init(context);
+            try {
+                if (TrackService.getInstance() == null) {
+                    TrackService.init(context.getApplicationContext());
+                }
+            } catch (Exception e) {
+                SmartLog.Log(SmartLog.LogLevel.DEBUG, "exception", e.toString());
+            }
 
         }
 
@@ -44,7 +51,7 @@ public class WifiConnectedReceiver extends BroadcastReceiver {
 
         }
 
-        MainActivity mainActivity =  ((OazaApp) context.getApplicationContext()).getMainActivity();
+        MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
         if (mainActivity != null) {
             if (netInfo != null && netInfo.isConnectedOrConnecting()) {
                 mainActivity.hideStatusMessage();
