@@ -104,7 +104,7 @@ public class MainActivity extends BaseActivity implements
             startService(downloadService);
         }
 
-        TrackService.init(this);
+        //TrackService.init(this);
     }
 
     private void setupReceiver() {

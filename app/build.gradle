@@ -23,7 +23,7 @@ android {
         applicationId "com.chaemil.hgms"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 2016042502
+        versionCode 2016042601
         versionName "2.0"
 
         multiDexEnabled true

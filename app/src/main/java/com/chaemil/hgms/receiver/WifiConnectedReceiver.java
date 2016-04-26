@@ -30,11 +30,11 @@ public class WifiConnectedReceiver extends BroadcastReceiver {
             Intent downloadService = new Intent(context, DownloadService.class);
             context.startService(downloadService);
 
-            try {
+            /*try {
                 TrackService.init(context.getApplicationContext());
             } catch (Exception e) {
                 SmartLog.Log(SmartLog.LogLevel.DEBUG, "exception", e.toString());
-            }
+            }*/
 
         }
 
