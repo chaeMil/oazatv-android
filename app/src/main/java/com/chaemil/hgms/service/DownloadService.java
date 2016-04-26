@@ -107,6 +107,9 @@ public class DownloadService extends IntentService {
     }
 
     private void startDownload() {
+
+        System.gc();
+
         createNotification();
 
         ((OazaApp) getApplicationContext()).setDownloadService(this);

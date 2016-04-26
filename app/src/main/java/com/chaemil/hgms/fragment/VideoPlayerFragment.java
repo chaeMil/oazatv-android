@@ -640,6 +640,8 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         @Override
         protected Object doInBackground(Object[] params) {
 
+            System.gc();
+
             try {
                 thumb = BitmapUtils.getBitmapFromURL(currentVideo.getThumbFile());
                 if (thumb == null) {

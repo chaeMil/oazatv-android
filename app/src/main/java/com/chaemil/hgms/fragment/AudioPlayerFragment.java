@@ -734,6 +734,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         @Override
         protected Object doInBackground(Object[] params) {
 
+            System.gc();
+
             try {
                 getImages();
                 if (thumb == null) {
