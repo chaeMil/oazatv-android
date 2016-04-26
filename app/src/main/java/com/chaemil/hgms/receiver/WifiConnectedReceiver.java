@@ -31,9 +31,7 @@ public class WifiConnectedReceiver extends BroadcastReceiver {
             context.startService(downloadService);
 
             try {
-                if (TrackService.getInstance() == null) {
-                    TrackService.init(context.getApplicationContext());
-                }
+                TrackService.init(context.getApplicationContext());
             } catch (Exception e) {
                 SmartLog.Log(SmartLog.LogLevel.DEBUG, "exception", e.toString());
             }
