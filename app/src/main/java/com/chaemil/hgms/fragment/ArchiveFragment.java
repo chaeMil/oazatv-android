@@ -149,6 +149,7 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
                     connectionErrorWrapper.setVisibility(View.GONE);
                 }
 
+
                 break;
 
         }
