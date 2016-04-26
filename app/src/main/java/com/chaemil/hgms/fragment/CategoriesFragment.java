@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.android.volley.VolleyError;
@@ -34,6 +35,7 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
     private CategoriesAdapter categoriesAdapter;
     private ProgressBar progress;
     private SwipeRefreshLayout swipeRefresh;
+    private LinearLayout connectionErrorWrapper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
         categoriesGrid = (ExpandableGridView) rootView.findViewById(R.id.categories_grid);
         progress = (ProgressBar) rootView.findViewById(R.id.progress);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
+        connectionErrorWrapper = (LinearLayout) rootView.findViewById(R.id.connection_error_wrapper);
     }
 
     public void setupUI() {
@@ -89,10 +92,12 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
                 if (response != null) {
                     categories = ResponseFactory.parseCategories(response);
                     progress.setVisibility(View.GONE);
+                    swipeRefresh.setRefreshing(false);
+                    connectionErrorWrapper.setVisibility(View.GONE);
                 }
 
                 setupUI();
-                swipeRefresh.setRefreshing(false);
+
                 break;
         }
     }
@@ -102,6 +107,8 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
         super.onErrorResponse(exception);
 
         swipeRefresh.setRefreshing(false);
+        connectionErrorWrapper.setVisibility(View.VISIBLE);
+        progress.setVisibility(View.GONE);
     }
 
     @Override

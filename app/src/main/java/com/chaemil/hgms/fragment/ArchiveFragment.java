@@ -45,6 +45,7 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
     private ArchiveAdapter archiveAdapter;
     private ProgressBar endlessProgress;
     private SwipeRefreshLayout swipeRefresh;
+    private LinearLayout connectionErrorWrapper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,6 +127,7 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
         progress = (ProgressBar) rootView.findViewById(R.id.progress);
         endlessProgress = (ProgressBar) rootView.findViewById(R.id.endless_progress);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
+        connectionErrorWrapper = (LinearLayout) rootView.findViewById(R.id.connection_error_wrapper);
     }
 
     @Override
@@ -141,11 +143,11 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
                 if (newItems != null) {
                     archive.addAll(newItems);
                     archiveAdapter.notifyDataSetChanged();
+                    progress.setVisibility(View.GONE);
+                    endlessProgress.setVisibility(View.VISIBLE);
+                    swipeRefresh.setRefreshing(false);
+                    connectionErrorWrapper.setVisibility(View.GONE);
                 }
-
-                progress.setVisibility(View.GONE);
-                endlessProgress.setVisibility(View.GONE);
-                swipeRefresh.setRefreshing(false);
 
                 break;
 
@@ -156,6 +158,9 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
     public void onErrorResponse(VolleyError exception) {
         super.onErrorResponse(exception);
         swipeRefresh.setRefreshing(false);
+        connectionErrorWrapper.setVisibility(View.VISIBLE);
+        progress.setVisibility(View.GONE);
+        endlessProgress.setVisibility(View.GONE);
     }
 
     @Override
