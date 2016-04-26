@@ -11,6 +11,7 @@ import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.service.DownloadService;
+import com.chaemil.hgms.service.TrackService;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 
 /**
@@ -27,6 +28,8 @@ public class WifiConnectedReceiver extends BroadcastReceiver {
 
             Intent downloadService = new Intent(context, DownloadService.class);
             context.startService(downloadService);
+
+            TrackService.init(context);
 
         }
 

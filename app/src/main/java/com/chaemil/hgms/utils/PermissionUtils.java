@@ -2,6 +2,7 @@ package com.chaemil.hgms.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
@@ -16,17 +17,19 @@ public class PermissionUtils {
     private static final int WRITE_EXTERNAL_STORAGE_REQUEST = 1;
     public static String TAG = "PermissionUtils";
 
-    public static boolean isStoragePermissionGranted(Activity activity) {
+    public static boolean isStoragePermissionGranted(Context context) {
         if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            if (checkSelfPermission(context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
                 Log.v(TAG,"Permission is granted");
                 return true;
             } else {
 
                 Log.v(TAG,"Permission is revoked");
-                activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        WRITE_EXTERNAL_STORAGE_REQUEST);
+                if (context instanceof Activity) {
+                    ((Activity) context).requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            WRITE_EXTERNAL_STORAGE_REQUEST);
+                }
                 return false;
             }
         }
