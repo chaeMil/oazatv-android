@@ -113,6 +113,7 @@
 
         <Button
             android:id="@+id/featured_button"
+            android:stateListAnimator="@null"
             android:text="@string/featured"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
@@ -127,6 +128,7 @@
 
         <Button
             android:id="@+id/new_and_popular_button"
+            android:stateListAnimator="@null"
             android:text="@string/new_and_popular"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
