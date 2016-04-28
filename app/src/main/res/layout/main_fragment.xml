@@ -133,12 +133,12 @@
                 android:id="@+id/icon"
                 android:src="@drawable/ic_home_white"
                 android:layout_width="match_parent"
-                android:layout_weight="4"
-                android:layout_height="48dp"
+                android:layout_weight="0.75"
+                android:layout_height="40dp"
                 android:layout_gravity="center_vertical" />
 
             <View
-                android:layout_weight="1"
+                android:layout_weight="0.25"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
