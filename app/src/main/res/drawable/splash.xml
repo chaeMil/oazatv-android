@@ -4,4 +4,18 @@
     <item
         android:drawable="@color/colorPrimary"/>
 
+    <item
+        android:top="-60dp">
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/splash_logo"/>
+    </item>
+
+    <item
+        android:top="160dp">
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/splash_text"/>
+    </item>
+
 </layer-list>
