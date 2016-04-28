@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Oáza.tv</string>
+    <string name="app_name" translatable="false">Oáza.tv</string>
 
     <string name="exception_network_timeout">connection failed</string>
     <string name="something_went_wrong">something went wrong</string>
@@ -15,7 +15,7 @@
     <string name="downloaded">Downloaded</string>
     <string name="resuming_from_saved_time">Resuming from saved time</string>
     <string name="cannot_play_audio_file">Can\'t play audio file</string>
-    <string name="audio_focus_not_granted">ERROR: Audio focus not granted!</string>
+    <string name="audio_focus_not_granted" translatable="false">ERROR: Audio focus not granted!</string>
     <string name="play">play</string>
     <string name="pause">pause</string>
     <string name="downloading_audio">Downloading audio</string>
@@ -45,7 +45,7 @@
     <string name="new_and_popular"><![CDATA[New & popular]]></string>
     <string name="now_on_air">now on air!</string>
     <string name="watch">Watch!</string>
-    <string name="player_error">Error initializing YouTube player: %s</string>
+    <string name="player_error" translatable="false">Error initializing YouTube player: %s</string>
     <string name="stream_has_ended">Stream has ended</string>
     <string name="live_stream_share">Oáza.tv - Livestream</string>
     <string name="share_live_stream">Share live stream</string>
@@ -56,8 +56,8 @@
     <string name="connection_error">Connection error</string>
     <string name="none_downloaded_hint">You didn\'t downloaded any audio files. To download and play offline tap the three dots next to the video and download there.</string>
     <string name="tutorial_text_1">Let\'s dive into this fresh &amp; new experience!</string>
-    <string name="tutorial_title_2">Rejoice</string>
-    <string name="tutorial_text_2">With always new and refreshing content</string>
+    <string name="tutorial_title_2">Rejoice!</string>
+    <string name="tutorial_text_2">With always new and refreshing content.</string>
     <string name="tutorial_title_3">Archive, categories, photo albums.</string>
     <string name="tutorial_text_3">Browse through huge library of preachings, conferences, teachings and more...</string>
     <string name="tutorial_title_4">Listen on the way.</string>
