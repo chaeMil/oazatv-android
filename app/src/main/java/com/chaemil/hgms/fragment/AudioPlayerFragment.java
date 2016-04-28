@@ -775,6 +775,9 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             }, 400);
 
             imagesAlreadyBlurred = true;
+            thumb = null;
+            bgDrawable = null;
+            System.gc();
         }
     }
 }
