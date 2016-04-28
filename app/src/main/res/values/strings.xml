@@ -55,4 +55,11 @@
     <string name="space_used">Used</string>
     <string name="connection_error">Connection error</string>
     <string name="none_downloaded_hint">You didn\'t downloaded any audio files. To download and play offline tap the three dots next to the video and download there.</string>
+    <string name="tutorial_text_1">Let\'s dive into this fresh &amp; new experience!</string>
+    <string name="tutorial_title_2">Rejoice</string>
+    <string name="tutorial_text_2">With always new and refreshing content</string>
+    <string name="tutorial_title_3">Archive, categories, photo albums.</string>
+    <string name="tutorial_text_3">Browse through huge library of preachings, conferences, teachings and more...</string>
+    <string name="tutorial_title_4">Listen on the way.</string>
+    <string name="tutorial_text_4">Download audio to listen wen you are on the way or offline.</string>
 </resources>

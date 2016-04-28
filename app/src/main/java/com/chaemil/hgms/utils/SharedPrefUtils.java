@@ -14,6 +14,7 @@ public class SharedPrefUtils {
     public static final String PREFERENCES_STREAM_ON_WIFI = "stream_on_wifi";
     public static final String PREFERENCES_STREAM_AUDIO = "stream_audio";
     public static final String PREFERENCE_USER_ID = "user_id";
+    public static final String PREFERENCES_FIRST_LAUNCH = "first_launch";
 
     public static SharedPrefUtils getInstance(Context context) {
         if (sharedPrefUtils == null) {
@@ -65,7 +66,19 @@ public class SharedPrefUtils {
         return sharedPreferences.getString(PREFERENCE_USER_ID, null);
     }
 
+    public void saveFirstLaunch(boolean value) {
+        editor.putBoolean(PREFERENCES_FIRST_LAUNCH, value);
+        editor.commit();
+    }
+
+    public boolean loadFirstLaunch() {
+        return sharedPreferences.getBoolean(PREFERENCES_FIRST_LAUNCH, true);
+    }
+
     public void deleteUserData() {
+        editor.remove(PREFERENCES_FIRST_LAUNCH);
+        editor.remove(PREFERENCES_STREAM_AUDIO);
+        editor.remove(PREFERENCES_STREAM_ON_WIFI);
         editor.remove(PREFERENCES_DOWNLOAD_ON_WIFI);
         editor.commit();
     }

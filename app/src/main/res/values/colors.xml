@@ -313,5 +313,11 @@
     <color name="md_blue_grey_800">#37474F</color>
     <color name="md_blue_grey_900">#263238</color>
     <color name="transparent">#00ffffff</color>
+    <color name="tutorial_2_bg">#335182</color>
+    <color name="tutorial_2_bg_dark">#335182</color>
+    <color name="tutorial_3_bg">#E4DCB9</color>
+    <color name="tutorial_3_bg_dark">#BFB898</color>
+    <color name="tutorial_4_bg">#C9CACE</color>
+    <color name="tutorial_4_bg_dark">#B5B6BB</color>
 
 </resources>

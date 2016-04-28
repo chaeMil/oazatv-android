@@ -23,7 +23,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.TutorialActivity">
+        <activity android:name=".activity.TutorialActivity"
+            android:theme="@style/Theme.Intro">
 
         </activity>
 
