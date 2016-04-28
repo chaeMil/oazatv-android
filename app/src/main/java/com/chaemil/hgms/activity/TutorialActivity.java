@@ -3,6 +3,7 @@ package com.chaemil.hgms.activity;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
@@ -64,5 +65,14 @@ public class TutorialActivity extends IntroActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if (((OazaApp) getApplication()).splashActivity != null) {
+            ((OazaApp) getApplication()).splashActivity.finish();
+        }
     }
 }

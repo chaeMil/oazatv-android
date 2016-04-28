@@ -10,6 +10,7 @@ import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.activity.SplashActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.DownloadService;
@@ -28,6 +29,7 @@ public class OazaApp extends Application {
     private boolean downloadingNow = false;
     private DownloadService downloadService;
     private MainActivity mainActivity;
+    public SplashActivity splashActivity;
 
     @Override
     public void onCreate() {

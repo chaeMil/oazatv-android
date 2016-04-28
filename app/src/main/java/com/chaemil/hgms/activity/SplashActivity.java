@@ -2,6 +2,7 @@ package com.chaemil.hgms.activity;
 
 import android.content.Intent;
 
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 
@@ -10,19 +11,17 @@ import com.chaemil.hgms.utils.SharedPrefUtils;
  */
 public class SplashActivity extends BaseActivity {
 
-    private SharedPrefUtils sharedPrefUtils;
-
     @Override
     protected void onResume() {
         super.onResume();
-
+        ((OazaApp) getApplication()).splashActivity = this;
         init();
     }
 
     private void init() {
         changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
 
-        sharedPrefUtils = SharedPrefUtils.getInstance(this);
+        SharedPrefUtils sharedPrefUtils = SharedPrefUtils.getInstance(this);
         if (sharedPrefUtils.loadFirstLaunch()) {
             startTutorial();
         } else {
