@@ -89,7 +89,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private ImageView share;
     private RelativeLayout splash;
     private CategoriesFragment categoriesFragment;
-    private RelativeLayout logoWrapper;
+    private LinearLayout logoWrapper;
 
     @Override
     public void onAttach(Activity activity) {
@@ -162,7 +162,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         streamOnlyAudioSwitch = (SwitchCompat) rootView.findViewById(R.id.stream_only_audio_switch);
         share = (ImageView) rootView.findViewById(R.id.share);
         splash = (RelativeLayout) rootView.findViewById(R.id.splash);
-        logoWrapper = (RelativeLayout) rootView.findViewById(R.id.logo_wrapper);
+        logoWrapper = (LinearLayout) rootView.findViewById(R.id.logo_wrapper);
     }
 
     private void setupUI(Bundle savedInstanceState) {
