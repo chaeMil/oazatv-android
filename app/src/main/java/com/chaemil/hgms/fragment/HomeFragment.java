@@ -80,7 +80,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     @Override
     public void onResume() {
         super.onResume();
-        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.ARCHIVE_FRAGMENT);
+        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.HOME_FRAGMENT);
     }
 
     private void getData() {
