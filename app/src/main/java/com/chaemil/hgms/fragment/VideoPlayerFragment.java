@@ -602,7 +602,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
-    public void onErrorResponse(VolleyError exception) {
+    public void onErrorResponse(VolleyError exception, RequestType requestType) {
         BaseActivity.responseError(exception, getActivity());
     }
 }

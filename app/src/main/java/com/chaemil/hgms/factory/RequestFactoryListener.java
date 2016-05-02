@@ -7,5 +7,5 @@ import org.json.JSONObject;
 
 public interface RequestFactoryListener {
     public void onSuccessResponse(JSONObject response, RequestType requestType);
-    public void onErrorResponse(VolleyError exception);
+    public void onErrorResponse(VolleyError exception, RequestType requestType);
 }

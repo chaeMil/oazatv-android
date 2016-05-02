@@ -21,7 +21,7 @@ public class BaseFragment extends Fragment implements RequestFactoryListener {
     }
 
     @Override
-    public void onErrorResponse(VolleyError exception) {
+    public void onErrorResponse(VolleyError exception, RequestType requestType) {
         SmartLog.Log(SmartLog.LogLevel.ERROR,
                 "jsonResponse",
                 String.valueOf(BaseActivity.responseError(exception, getActivity())));

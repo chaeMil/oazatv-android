@@ -1,7 +1,6 @@
 package com.chaemil.hgms.factory;
 
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.android.volley.Request;
@@ -30,7 +29,7 @@ public class RequestFactory {
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.SEARCH),
-                createMyReqErrorListener(listener));
+                createMyReqErrorListener(listener, RequestType.SEARCH));
     }
 
     public static JsonObjectRequest getArchive(RequestFactoryListener listener, int page) {
@@ -43,7 +42,7 @@ public class RequestFactory {
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.GET_ARCHIVE),
-                createMyReqErrorListener(listener));
+                createMyReqErrorListener(listener, RequestType.GET_ARCHIVE));
     }
 
     public static JsonObjectRequest getPhotoAlbum(RequestFactoryListener listener, String albumHash) {
@@ -56,7 +55,7 @@ public class RequestFactory {
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.GET_PHOTO_ALBUM),
-                createMyReqErrorListener(listener));
+                createMyReqErrorListener(listener, RequestType.GET_PHOTO_ALBUM));
     }
 
     public static JsonObjectRequest getHomepage(RequestFactoryListener listener) {
@@ -69,7 +68,7 @@ public class RequestFactory {
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.GET_HOMEPAGE),
-                createMyReqErrorListener(listener));
+                createMyReqErrorListener(listener, RequestType.GET_HOMEPAGE));
     }
 
     public static JsonObjectRequest getLiveStream(RequestFactoryListener listener) {
@@ -82,7 +81,7 @@ public class RequestFactory {
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.GET_LIVESTREAM),
-                createMyReqErrorListener(listener));
+                createMyReqErrorListener(listener, RequestType.GET_LIVESTREAM));
     }
 
     public static JsonObjectRequest postAnalyticsAlive(RequestFactoryListener listener,
@@ -105,7 +104,7 @@ public class RequestFactory {
 
         return new JsonObjectRequest(Request.Method.POST, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.POST_ANALYTICS_ALIVE),
-                createMyReqErrorListener(listener));
+                createMyReqErrorListener(listener, RequestType.POST_ANALYTICS_ALIVE));
     }
 
     public static JsonObjectRequest postVideoView(RequestFactoryListener listener, String hash) {
@@ -118,7 +117,7 @@ public class RequestFactory {
 
         return new JsonObjectRequest(Request.Method.POST, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.POST_VIDEO_VIEW),
-                createMyReqErrorListener(listener));
+                createMyReqErrorListener(listener, RequestType.POST_VIDEO_VIEW));
     }
 
     public static JsonObjectRequest getCategories(RequestFactoryListener listener) {
@@ -131,7 +130,7 @@ public class RequestFactory {
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.GET_CATEGORIES),
-                createMyReqErrorListener(listener));
+                createMyReqErrorListener(listener, RequestType.GET_CATEGORIES));
     }
 
     private static Response.Listener<JSONObject> createMyReqSuccessListener(
@@ -145,11 +144,11 @@ public class RequestFactory {
     }
 
     private static Response.ErrorListener createMyReqErrorListener(
-            final RequestFactoryListener listener) {
+            final RequestFactoryListener listener, final RequestType requestType) {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                listener.onErrorResponse(error);
+                listener.onErrorResponse(error, requestType);
             }
         };
     }

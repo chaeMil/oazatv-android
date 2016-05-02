@@ -103,8 +103,8 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     @Override
-    public void onErrorResponse(VolleyError exception) {
-        super.onErrorResponse(exception);
+    public void onErrorResponse(VolleyError exception, RequestType requestType) {
+        super.onErrorResponse(exception, requestType);
 
         swipeRefresh.setRefreshing(false);
         connectionErrorWrapper.setVisibility(View.VISIBLE);

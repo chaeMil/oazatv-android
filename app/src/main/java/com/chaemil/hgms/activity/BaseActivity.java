@@ -119,7 +119,7 @@ public class BaseActivity extends AppCompatActivity implements RequestFactoryLis
     }
 
     @Override
-    public void onErrorResponse(VolleyError exception) {
+    public void onErrorResponse(VolleyError exception, RequestType requestType) {
         SmartLog.Log(SmartLog.LogLevel.ERROR,
                 "jsonResponse",
                 String.valueOf(responseError(exception, this)));

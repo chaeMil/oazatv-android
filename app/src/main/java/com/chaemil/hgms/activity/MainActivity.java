@@ -25,6 +25,7 @@ import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
@@ -550,5 +551,14 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
-
+    @Override
+    public void onErrorResponse(VolleyError exception, RequestType requestType) {
+        switch (requestType) {
+            case GET_LIVESTREAM:
+                SmartLog.Log(SmartLog.LogLevel.ERROR, "error", exception.toString());
+                break;
+            default:
+                super.onErrorResponse(exception, requestType);
+        }
+    }
 }

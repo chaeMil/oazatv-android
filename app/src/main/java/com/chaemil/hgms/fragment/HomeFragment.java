@@ -183,8 +183,8 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     }
 
     @Override
-    public void onErrorResponse(VolleyError exception) {
-        super.onErrorResponse(exception);
+    public void onErrorResponse(VolleyError exception, RequestType requestType) {
+        super.onErrorResponse(exception, requestType);
 
         if (!init) {
             initRetry -= 1;

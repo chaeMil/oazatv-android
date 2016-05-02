@@ -191,8 +191,8 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     }
 
     @Override
-    public void onErrorResponse(VolleyError exception) {
-        super.onErrorResponse(exception);
+    public void onErrorResponse(VolleyError exception, RequestType requestType) {
+        super.onErrorResponse(exception, requestType);
 
         progress.setVisibility(View.GONE);
         retry.setVisibility(View.VISIBLE);
