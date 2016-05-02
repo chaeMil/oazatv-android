@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
@@ -78,7 +79,9 @@ public class AnalyticsService implements RequestFactoryListener {
     }
 
     private void postKeepAlive(String page) {
-        if (NetworkUtils.isConnected(context) && AnalyticsUtils.isDisplayOn(context)) {
+        if (NetworkUtils.isConnected(context)
+                && AnalyticsUtils.isDisplayOn(context)
+                && (((OazaApp) context).appVisible)) {
             JsonObjectRequest keepAlive = RequestFactory.postAnalyticsAlive(this, context, ip, page);
             MyRequestService.getRequestQueue().add(keepAlive);
         }

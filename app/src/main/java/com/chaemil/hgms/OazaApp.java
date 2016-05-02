@@ -30,6 +30,7 @@ public class OazaApp extends Application {
     private DownloadService downloadService;
     private MainActivity mainActivity;
     public SplashActivity splashActivity;
+    public boolean appVisible = false;
 
     @Override
     public void onCreate() {

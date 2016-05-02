@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
@@ -24,6 +25,7 @@ import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.LocalUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.ShareUtils;
+import com.crashlytics.android.Crashlytics;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -34,6 +36,8 @@ import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by chaemil on 16.4.16.
@@ -63,6 +67,18 @@ public class YoutubePlayer extends YouTubeBaseActivity implements YouTubePlayer.
         setupLiveRequestTimer();
 
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.LIVESTREAM);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((OazaApp) getApplication()).appVisible = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ((OazaApp) getApplication()).appVisible = false;
     }
 
     private void setupUI() {

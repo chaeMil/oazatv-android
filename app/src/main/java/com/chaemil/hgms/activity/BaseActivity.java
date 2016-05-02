@@ -23,6 +23,7 @@ import com.android.volley.ParseError;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.Photo;
@@ -55,6 +56,18 @@ public class BaseActivity extends AppCompatActivity implements RequestFactoryLis
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((OazaApp) getApplication()).appVisible = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ((OazaApp) getApplication()).appVisible = false;
     }
 
     public void setFullscreen(boolean full) {
