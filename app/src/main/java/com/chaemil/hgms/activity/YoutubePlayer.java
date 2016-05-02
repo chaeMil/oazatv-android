@@ -193,7 +193,7 @@ public class YoutubePlayer extends YouTubeBaseActivity implements YouTubePlayer.
     }
 
     @Override
-    public void onErrorResponse(VolleyError exception) {
+    public void onErrorResponse(VolleyError exception, RequestType requestType) {
         BaseActivity.responseError(exception, this);
     }
 }

@@ -97,7 +97,7 @@ public class AnalyticsService implements RequestFactoryListener {
     }
 
     @Override
-    public void onErrorResponse(VolleyError exception) {
+    public void onErrorResponse(VolleyError exception, RequestType requestType) {
         SmartLog.Log(SmartLog.LogLevel.ERROR, TAG, exception.toString());
     }
 
