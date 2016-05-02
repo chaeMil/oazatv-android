@@ -14,16 +14,9 @@
         <RelativeLayout
             android:clickable="true"
             android:id="@+id/player_bg_wrapper"
-            android:alpha="0.5"
+            android:background="@color/colorPrimaryDarkest"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/player_bg"
-                android:scaleType="centerCrop"
-                tools:src="@drawable/placeholder" />
 
         </RelativeLayout>
 

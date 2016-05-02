@@ -59,12 +59,9 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     private static final String IMAGES_ALREADY_BLURRED = "images_already_blurred";
     private static final String BG_DRAWABLE = "bg_drawable";
     private static final String CURRENT_TIME = "current_time";
-    private ImageView playerBg;
     private RelativeLayout miniPlayer;
     private ImageView miniPlayerImageView;
     private RelativeLayout playerToolbar;
-    private boolean imagesAlreadyBlurred = false;
-    private BitmapDrawable bgDrawable;
     private TextView miniPlayerText;
     private TextView playerTitle;
     private VideoView videoView;
@@ -96,6 +93,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     private Timer hideControlsTimer;
     private int controlsTimeHide = 0;
     private Handler uiHandler;
+    private RelativeLayout playerBgWrapper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,13 +134,6 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.video_player_fragment, container, false);
 
-        if (savedInstanceState != null) {
-            imagesAlreadyBlurred = savedInstanceState.getBoolean(IMAGES_ALREADY_BLURRED);
-
-            bgDrawable = new BitmapDrawable(getResources(),
-                    (Bitmap) savedInstanceState.getParcelable(BG_DRAWABLE));
-        }
-
         getUI(rootView);
         activateUI(false);
         setupUI();
@@ -182,16 +173,6 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(IMAGES_ALREADY_BLURRED, imagesAlreadyBlurred);
-        if (bgDrawable != null) {
-            outState.putParcelable(BG_DRAWABLE, BitmapUtils.drawableToBitmap(bgDrawable));
-        }
-        outState.putInt(CURRENT_TIME, videoView.getCurrentPosition());
-    }
-
-    @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
@@ -201,7 +182,6 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
     private void getUI(ViewGroup rootView) {
         miniPlayer = (RelativeLayout) rootView.findViewById(R.id.mini_player);
-        playerBg = (ImageView) rootView.findViewById(R.id.player_bg);
         miniPlayerImageView = (ImageView) rootView.findViewById(R.id.mini_player_image);
         miniPlayerText = (TextView) rootView.findViewById(R.id.mini_player_text);
         playerToolbar = (RelativeLayout) rootView.findViewById(R.id.toolbar);
@@ -224,6 +204,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         description = (TextView) rootView.findViewById(R.id.description);
         tags = (TextView) rootView.findViewById(R.id.tags);
         infoLayout = (RelativeLayout) rootView.findViewById(R.id.info_layout);
+        playerBgWrapper = (RelativeLayout) rootView.findViewById(R.id.player_bg_wrapper);
     }
 
     private void setupUI() {
@@ -333,8 +314,8 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                 .setBackgroundColor(getResources().getColor(R.color.black));
 
         playerToolbar.setVisibility(View.GONE);
-        playerBg.setVisibility(View.GONE);
         infoLayout.setVisibility(View.GONE);
+        playerBgWrapper.setBackgroundColor(getResources().getColor(R.color.black));
 
         videoWrapper.setLayoutParams(videoWrapperParamsFullscreen);
         ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(false);
@@ -355,8 +336,8 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                 .setBackgroundColor(getResources().getColor(R.color.white));
 
         playerToolbar.setVisibility(View.VISIBLE);
-        playerBg.setVisibility(View.VISIBLE);
         infoLayout.setVisibility(View.VISIBLE);
+        playerBgWrapper.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDarkest));
 
         videoWrapper.setLayoutParams(videoWrapperParamsNormal);
         ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(true);
@@ -569,12 +550,6 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-
-                imagesAlreadyBlurred = false;
-                bgDrawable = null;
-
-                resizeAndBlurBg();
-
                 activateUI(true);
                 videoView.stopPlayback();
                 videoView.setVideoPath(video.getVideoFile());
@@ -587,10 +562,6 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT + "videoHash: " + currentVideo.getHash());
         postVideoView();
 
-    }
-
-    private void resizeAndBlurBg() {
-        new ComputeImage().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public RelativeLayout getPlayerToolbar() {
@@ -632,60 +603,5 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     @Override
     public void onErrorResponse(VolleyError exception) {
         BaseActivity.responseError(exception, getActivity());
-    }
-
-    private class ComputeImage extends AsyncTask {
-
-
-        @Override
-        protected Object doInBackground(Object[] params) {
-
-            System.gc();
-
-            try {
-                thumb = BitmapUtils.getBitmapFromURL(currentVideo.getThumbFile());
-                if (thumb == null) {
-                    thumb = BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.placeholder));
-                }
-            } catch (Exception e) {
-                SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
-            }
-
-            if (!imagesAlreadyBlurred && thumb != null && VideoPlayerFragment.this.isAdded()) {
-                if (getContext() != null) {
-                    SmartLog.Log(SmartLog.LogLevel.DEBUG, "resizeAndBlurBg", "blurring bg image");
-                    Bitmap originalBitmap = thumb;
-                    Bitmap blurredPlayerBitmap = BitmapUtils.blur(getContext(), originalBitmap, 25);
-                    Bitmap resizedBitmap = BitmapUtils.resizeImageForImageView(blurredPlayerBitmap, 255);
-                    bgDrawable = new BitmapDrawable(getResources(), resizedBitmap);
-                }
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-
-            YoYo.with(Techniques.FadeOut).duration(400).playOn(playerBg);
-            YoYo.with(Techniques.FadeOut).duration(400).playOn(miniPlayerImageView);
-
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    playerBg.setImageDrawable(bgDrawable);
-
-                    YoYo.with(Techniques.FadeIn).duration(400).playOn(playerBg);
-                    YoYo.with(Techniques.FadeIn).duration(400).playOn(miniPlayerImageView);
-                }
-            }, 400);
-
-            imagesAlreadyBlurred = true;
-            thumb = null;
-            bgDrawable = null;
-            System.gc();
-        }
     }
 }

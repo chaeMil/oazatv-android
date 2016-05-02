@@ -78,12 +78,9 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     public static final String NOTIFY_FF = "notify_ff";
     public static final String NOTIFY_OPEN = "notify_open";
     public static final String NOTIFY_DELETE = "notify_delete";
-    private ImageView playerBg;
     private RelativeLayout miniPlayer;
     private ImageView miniPlayerImageView;
     private RelativeLayout playerToolbar;
-    private boolean imagesAlreadyBlurred = false;
-    private BitmapDrawable bgDrawable;
     private TextView miniPlayerText;
     private TextView playerTitle;
     private CircleButton playPause;
@@ -160,13 +157,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.audio_player_fragment, container, false);
 
-        if (savedInstanceState != null) {
-            imagesAlreadyBlurred = savedInstanceState.getBoolean(IMAGES_ALREADY_BLURRED);
-
-            bgDrawable = new BitmapDrawable(getResources(),
-                    (Bitmap) savedInstanceState.getParcelable(BG_DRAWABLE));
-        }
-
         getUI(rootView);
         activateUI(false);
         setupUI();
@@ -188,10 +178,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(IMAGES_ALREADY_BLURRED, imagesAlreadyBlurred);
-        if (bgDrawable != null) {
-            outState.putParcelable(BG_DRAWABLE, BitmapUtils.drawableToBitmap(bgDrawable));
-        }
         if (audioPlayer != null) {
             try {
                 outState.putInt(CURRENT_TIME, audioPlayer.getCurrentPosition());
@@ -211,7 +197,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
     private void getUI(ViewGroup rootView) {
         miniPlayer = (RelativeLayout) rootView.findViewById(R.id.mini_player);
-        playerBg = (ImageView) rootView.findViewById(R.id.player_bg);
         miniPlayerImageView = (ImageView) rootView.findViewById(R.id.mini_player_image);
         miniPlayerText = (TextView) rootView.findViewById(R.id.mini_player_text);
         playerToolbar = (RelativeLayout) rootView.findViewById(R.id.toolbar);
@@ -586,13 +571,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             @Override
             public void run() {
 
-                imagesAlreadyBlurred = false;
-                bgDrawable = null;
-
-                resizeAndBlurBg();
-
                 createNotification();
-
                 wifiLock.acquire();
 
                 try {
@@ -629,10 +608,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         if (notificationManager != null) {
             notificationManager.cancel(NOTIFICATION_ID);
         }
-    }
-
-    private void resizeAndBlurBg() {
-        new ComputeImage().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public RelativeLayout getPlayerToolbar() {
@@ -727,58 +702,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     @Override
     public void onErrorResponse(VolleyError exception) {
         BaseActivity.responseError(exception, getActivity());
-    }
-
-    private class ComputeImage extends AsyncTask {
-
-        @Override
-        protected Object doInBackground(Object[] params) {
-
-            System.gc();
-
-            try {
-                getImages();
-                if (thumb == null) {
-                    thumb = BitmapUtils.drawableToBitmap(getResources().getDrawable(R.drawable.placeholder));
-                }
-            } catch (Exception e) {
-                SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
-            }
-
-            if (!imagesAlreadyBlurred && thumb != null && AudioPlayerFragment.this.isAdded()) {
-                SmartLog.Log(SmartLog.LogLevel.DEBUG, "resizeAndBlurBg", "blurring bg image");
-                Bitmap originalBitmap = thumb;
-                Bitmap blurredPlayerBitmap = BitmapUtils.blur(getContext(), originalBitmap, 25);
-                Bitmap resizedBitmap = BitmapUtils.resizeImageForImageView(blurredPlayerBitmap, 255);
-                bgDrawable = new BitmapDrawable(getResources(), resizedBitmap);
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-
-            YoYo.with(Techniques.FadeOut).duration(400).playOn(playerBg);
-            YoYo.with(Techniques.FadeOut).duration(400).playOn(miniPlayerImageView);
-
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    playerBg.setImageDrawable(bgDrawable);
-
-                    YoYo.with(Techniques.FadeIn).duration(400).playOn(playerBg);
-                    YoYo.with(Techniques.FadeIn).duration(400).playOn(miniPlayerImageView);
-                }
-            }, 400);
-
-            imagesAlreadyBlurred = true;
-            thumb = null;
-            bgDrawable = null;
-            System.gc();
-        }
     }
 }
 
