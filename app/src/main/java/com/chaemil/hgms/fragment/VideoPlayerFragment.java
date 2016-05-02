@@ -217,6 +217,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         back.setOnClickListener(this);
         share.setOnClickListener(this);
         fullscreenExit.setOnClickListener(this);
+        playerBgWrapper.setOnClickListener(this);
 
         int bottomMargin = (int) DimensUtils.pxFromDp(getActivity(),
                 getResources().getInteger(R.integer.video_player_wrapper_bottom_margin));
@@ -288,6 +289,10 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.fullscreen_exit:
                 cancelFullscreenPlayer();
+                break;
+            case R.id.player_bg_wrapper:
+                toggleControls(true);
+                resetHideControlsTimer();
                 break;
         }
     }
