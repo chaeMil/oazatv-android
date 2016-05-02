@@ -1,7 +1,11 @@
 package com.chaemil.hgms.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+
+import com.chaemil.hgms.R;
+import com.chaemil.hgms.model.Video;
 
 /**
  * Created by chaemil on 16.4.16.
@@ -16,5 +20,17 @@ public class ShareUtils {
         share.putExtra(Intent.EXTRA_TEXT, link);
 
         context.startActivity(Intent.createChooser(share, shareMessage));
+    }
+
+    public static void shareVideoLink(Activity activity, Video video) {
+        ShareUtils.shareLink(activity, Constants.VIDEO_LINK + video.getHash(),
+                video.getNameCS() + " | " + video.getNameEN(),
+                activity.getString(R.string.share_video));
+    }
+
+    public static void shareAudioLink(Activity activity, Video audio) {
+        ShareUtils.shareLink(activity, Constants.AUDIO_LINK + audio.getHash(),
+                audio.getNameCS() + " | " + audio.getNameEN(),
+                activity.getString(R.string.share_video));
     }
 }

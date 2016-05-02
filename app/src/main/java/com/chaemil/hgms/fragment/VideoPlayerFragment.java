@@ -285,7 +285,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                 ((MainActivity) getActivity()).collapsePanel();
                 break;
             case R.id.share:
-                shareVideoLink();
+                ShareUtils.shareVideoLink(getActivity(), currentVideo);
                 break;
             case R.id.fullscreen_exit:
                 cancelFullscreenPlayer();
@@ -472,11 +472,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void shareVideoLink() {
-        ShareUtils.shareLink(getActivity(), Constants.VIDEO_LINK + currentVideo.getHash(),
-                currentVideo.getNameCS() + " | " + currentVideo.getNameEN(),
-                getString(R.string.share_video));
-    }
+
 
     public void switchMiniPlayer(boolean show) {
         if (isAdded()) {

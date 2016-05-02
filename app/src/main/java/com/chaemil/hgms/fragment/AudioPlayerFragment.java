@@ -273,7 +273,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                 ((MainActivity) getActivity()).collapsePanel();
                 break;
             case R.id.share:
-                shareAudioLink();
+                ShareUtils.shareAudioLink(getActivity(), currentAudio);
                 break;
         }
     }
@@ -368,11 +368,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void shareAudioLink() {
-        ShareUtils.shareLink(getActivity(), Constants.AUDIO_LINK + currentAudio.getHash(),
-                currentAudio.getNameCS() + " | " + currentAudio.getNameEN(),
-                getString(R.string.share_video));
-    }
+
 
     public void seekFF() {
         audioPlayer.seekTo(audioPlayer.getCurrentPosition() + 10000);

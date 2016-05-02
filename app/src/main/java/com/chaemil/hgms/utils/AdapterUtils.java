@@ -25,7 +25,8 @@ public class AdapterUtils {
 
         if (Video.getDownloadStatus(((OazaApp) context.getApplicationContext()), video.getServerId()) == Video.NOT_DOWNLOADED) {
             menu = new String[] {context.getString(R.string.download_audio),
-                    context.getString(R.string.stream_audio)};
+                    context.getString(R.string.stream_audio),
+                    context.getString(R.string.share_video)};
 
             builder.setItems(menu, new DialogInterface.OnClickListener() {
                 @Override
@@ -39,6 +40,9 @@ public class AdapterUtils {
                             mainActivity.playNewAudio(video);
                             dialog.dismiss();
                             break;
+                        case 2:
+                            ShareUtils.shareVideoLink(mainActivity, video);
+                            break;
                     }
                 }
             });
@@ -46,7 +50,8 @@ public class AdapterUtils {
         }
 
         if (Video.getDownloadStatus(((OazaApp) context.getApplicationContext()), video.getServerId()) == Video.DOWNLOADED) {
-            menu = new String[] {context.getString(R.string.play_downloaded_audio)};
+            menu = new String[] {context.getString(R.string.play_downloaded_audio),
+                    context.getString(R.string.share_video)};
 
             builder.setItems(menu, new DialogInterface.OnClickListener() {
                 @Override
@@ -56,6 +61,8 @@ public class AdapterUtils {
                             mainActivity.playNewAudio(video);
                             dialog.dismiss();
                             break;
+                        case 1:
+                            ShareUtils.shareVideoLink(mainActivity, video);
                     }
                 }
             });
