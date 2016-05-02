@@ -22,8 +22,9 @@ public class AdapterUtils {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         String[] menu;
+        int videoStatus = Video.getDownloadStatus(((OazaApp) context.getApplicationContext()), video.getServerId());
 
-        if (Video.getDownloadStatus(((OazaApp) context.getApplicationContext()), video.getServerId()) == Video.NOT_DOWNLOADED) {
+        if (videoStatus == Video.NOT_DOWNLOADED) {
             menu = new String[] {context.getString(R.string.download_audio),
                     context.getString(R.string.stream_audio),
                     context.getString(R.string.share_video)};
@@ -49,7 +50,9 @@ public class AdapterUtils {
 
         }
 
-        if (Video.getDownloadStatus(((OazaApp) context.getApplicationContext()), video.getServerId()) == Video.DOWNLOADED) {
+        if (videoStatus == Video.DOWNLOADED
+                || videoStatus == Video.CURRENTLY_DOWNLOADING
+                || videoStatus == Video.IN_DOWNLOAD_QUEUE) {
             menu = new String[] {context.getString(R.string.play_downloaded_audio),
                     context.getString(R.string.share_video)};
 
