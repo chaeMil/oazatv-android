@@ -101,7 +101,10 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
             setupSwitcher();
 
-            ((MainActivity) getActivity()).getMainFragment().hideSplash();
+            MainFragment mainFragment = ((MainActivity) getActivity()).getMainFragment();
+            if (mainFragment != null) {
+                mainFragment.hideSplash();
+            }
         }
     }
 
