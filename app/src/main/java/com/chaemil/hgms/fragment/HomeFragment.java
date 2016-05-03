@@ -105,6 +105,8 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
             if (mainFragment != null) {
                 mainFragment.hideSplash();
             }
+
+            adjustLayout();
         }
     }
 
@@ -117,6 +119,15 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
         featuredWrapper = (LinearLayout) rootView.findViewById(R.id.featured_wrapper);
         newAndPopularWrapper = (LinearLayout) rootView.findViewById(R.id.new_and_popular_wrapper);
         featuredGridView = (GridView) rootView.findViewById(R.id.featured_grid_view);
+    }
+
+    public void adjustLayout() {
+
+        if (isAdded()) {
+            int columns = getResources().getInteger(R.integer.archive_columns);
+            featuredGridView.setNumColumns(columns);
+        }
+
     }
 
     private void setupSwitcher() {
