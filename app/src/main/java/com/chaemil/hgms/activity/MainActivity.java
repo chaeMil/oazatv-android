@@ -37,6 +37,7 @@ import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.fragment.MainFragment;
 import com.chaemil.hgms.fragment.VideoPlayerFragment;
 import com.chaemil.hgms.model.LiveStream;
+import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
@@ -127,6 +128,12 @@ public class MainActivity extends BaseActivity implements
                 String videoHash = pathArray[pathArray.length - 1];
                 Request getVideo = RequestFactory.getVideo(this, videoHash);
                 MyRequestService.getRequestQueue().add(getVideo);
+            }
+
+            if (path.contains("/album/view")) {
+                String albumHash = pathArray[pathArray.length - 1];
+                Request getAlbum = RequestFactory.getPhotoAlbum(this, albumHash);
+                MyRequestService.getRequestQueue().add(getAlbum);
             }
         }
     }
@@ -576,6 +583,15 @@ public class MainActivity extends BaseActivity implements
                 if (video != null) {
                     if (deepLink) {
                         playNewVideo(video);
+                        deepLink = false;
+                    }
+                }
+                break;
+            case GET_PHOTO_ALBUM:
+                PhotoAlbum photoAlbum = ResponseFactory.parseAlbum(response);
+                if (photoAlbum != null) {
+                    if (deepLink) {
+                        getMainFragment().openAlbum(photoAlbum);
                         deepLink = false;
                     }
                 }

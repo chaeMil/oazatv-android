@@ -45,6 +45,15 @@
                     android:pathPrefix="/beta/video/watch/" />
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="oaza.tv"
+                    android:pathPrefix="/beta/album/view/" />
+            </intent-filter>
+
         </activity>
 
         <activity android:name=".activity.YoutubePlayer"
