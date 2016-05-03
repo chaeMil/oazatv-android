@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +26,7 @@ import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
@@ -75,6 +77,7 @@ public class MainActivity extends BaseActivity implements
     private Timer liveRequestTimer;
     private LiveStream liveStream;
     private TextView liveStreamMessageWatch;
+    private boolean deepLink;
 
     @Override
     protected void onResume() {
@@ -105,7 +108,27 @@ public class MainActivity extends BaseActivity implements
             startService(downloadService);
         }
 
+        parseDeepLink();
+
         //TrackService.init(this);
+    }
+
+    private void parseDeepLink() {
+        Intent intent = getIntent();
+        Uri data = intent.getData();
+        deepLink = true;
+
+        if (data != null) {
+            SmartLog.Log(SmartLog.LogLevel.DEBUG, "data", data.toString());
+            String path = data.getPath();
+            String[] pathArray = path.split("/");
+
+            if (path.contains("/video/watch")) {
+                String videoHash = pathArray[pathArray.length - 1];
+                Request getVideo = RequestFactory.getVideo(this, videoHash);
+                MyRequestService.getRequestQueue().add(getVideo);
+            }
+        }
     }
 
     private void setupReceiver() {
@@ -539,13 +562,22 @@ public class MainActivity extends BaseActivity implements
 
         switch (requestType) {
             case GET_LIVESTREAM:
-
                 liveStream = ResponseFactory.parseLiveStream(response);
                 if (liveStream != null && liveStream.getOnAir()) {
                     showStatusMessage(getString(R.string.app_name) + " " + getString(R.string.now_on_air),
                             getResources().getColor(R.color.md_green_700), true);
                 } else {
                     hideStatusMessage();
+                }
+                break;
+
+            case GET_VIDEO:
+                Video video = ResponseFactory.parseVideo(response);
+                if (video != null) {
+                    if (deepLink) {
+                        playNewVideo(video);
+                        deepLink = false;
+                    }
                 }
                 break;
         }

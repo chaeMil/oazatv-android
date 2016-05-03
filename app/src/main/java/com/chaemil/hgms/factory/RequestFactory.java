@@ -133,6 +133,19 @@ public class RequestFactory {
                 createMyReqErrorListener(listener, RequestType.GET_CATEGORIES));
     }
 
+    public static JsonObjectRequest getVideo(RequestFactoryListener listener, String videoHash) {
+        String url = Constants.API_GET_VIDEO + videoHash;
+
+        JSONObject jsonObject = new JSONObject();
+
+        SmartLog.Log(SmartLog.LogLevel.INFO, "getVideo", "get " + url);
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+
+        return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
+                createMyReqSuccessListener(listener, RequestType.GET_VIDEO),
+                createMyReqErrorListener(listener, RequestType.GET_VIDEO));
+    }
+
     private static Response.Listener<JSONObject> createMyReqSuccessListener(
             final RequestFactoryListener listener, final RequestType requestType) {
         return new Response.Listener<JSONObject>() {
