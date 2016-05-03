@@ -25,7 +25,7 @@ public class ResponseFactory {
         try {
 
             if (response.has(Constants.JSON_SEARCH)) {
-                if (response.get(Constants.JSON_SEARCH) instanceof JSONObject) {
+                if (response.get(Constants.JSON_SEARCH) instanceof JSONArray) {
 
                     ArrayList<ArchiveItem> result = new ArrayList<>();
 
