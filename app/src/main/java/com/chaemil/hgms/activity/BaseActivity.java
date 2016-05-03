@@ -140,13 +140,11 @@ public class BaseActivity extends AppCompatActivity implements RequestFactoryLis
             }
         }
 
-        if (error == null) {
-            error = getString(R.string.something_went_wrong);
+        if (error != null) {
+            SuperToast.create(getApplicationContext(), error,
+                    SuperToast.Duration.SHORT,
+                    Style.getStyle(Style.RED)).show();
         }
-
-        SuperToast.create(getApplicationContext(), error,
-                SuperToast.Duration.SHORT,
-                Style.getStyle(Style.RED)).show();
     }
 
     public static JSONObject responseError(VolleyError error, Context context) {
@@ -154,10 +152,10 @@ public class BaseActivity extends AppCompatActivity implements RequestFactoryLis
         if (error instanceof TimeoutError || error instanceof NoConnectionError) {
 
             if (context != null) {
-                SuperToast.create(context,
+                /*SuperToast.create(context,
                         context.getString(R.string.exception_network_timeout),
                         SuperToast.Duration.MEDIUM,
-                        Style.getStyle(Style.RED)).show();
+                        Style.getStyle(Style.RED)).show();*/
             }
 
         } else if (error instanceof AuthFailureError) {
