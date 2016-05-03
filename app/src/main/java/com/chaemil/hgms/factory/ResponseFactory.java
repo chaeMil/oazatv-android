@@ -29,24 +29,12 @@ public class ResponseFactory {
 
                     ArrayList<ArchiveItem> result = new ArrayList<>();
 
-                    JSONArray jsonVideos = response.getJSONObject(Constants.JSON_SEARCH)
-                            .getJSONArray(Constants.JSON_VIDEOS);
+                    JSONArray jsonArray = response.getJSONArray(Constants.JSON_SEARCH);
 
-                    for (int v = 0; v < jsonVideos.length(); v++) {
-                        Video video = parseVideo(jsonVideos.getJSONObject(v));
-                        ArchiveItem archiveItem = new ArchiveItem();
-                        archiveItem.setVideo(video);
-                        result.add(archiveItem);
-                    }
+                    for (int i = 0; i < jsonArray.length(); i++) {
 
-                    JSONArray jsonAlbums = response.getJSONObject(Constants.JSON_SEARCH)
-                            .getJSONArray(Constants.JSON_ALBUMS);
+                        result.add(parseArchiveItem(jsonArray.getJSONObject(i)));
 
-                    for (int a = 0; a < jsonAlbums.length(); a++) {
-                        PhotoAlbum photoAlbum = parseAlbum(jsonAlbums.getJSONObject(a));
-                        ArchiveItem archiveItem = new ArchiveItem();
-                        archiveItem.setAlbum(photoAlbum);
-                        result.add(archiveItem);
                     }
 
                     return result;
@@ -165,6 +153,33 @@ public class ResponseFactory {
         return null;
     }
 
+    private static ArchiveItem parseArchiveItem(JSONObject response) {
+        ArchiveItem archiveItem = new ArchiveItem();
+        try {
+            switch (response.getString(Constants.JSON_TYPE)) {
+
+                case Constants.JSON_TYPE_VIDEO:
+
+                    Video video = parseVideo(response);
+                    archiveItem.setVideo(video);
+
+                    break;
+
+                case Constants.JSON_TYPE_ALBUM:
+
+                    PhotoAlbum photoAlbum = parseAlbum(response);
+                    archiveItem.setAlbum(photoAlbum);
+
+                    break;
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return archiveItem;
+    }
+
     public static ArrayList<ArchiveItem> parseArchive(JSONObject response) {
 
         try {
@@ -175,32 +190,7 @@ public class ResponseFactory {
                 ArrayList<ArchiveItem> archive = new ArrayList<>();
 
                 for (int c = 0; c < archiveJson.length(); c++) {
-
-                    ArchiveItem archiveItem = new ArchiveItem();
-
-                    switch (archiveJson.getJSONObject(c).getString(Constants.JSON_TYPE)) {
-
-                        case Constants.JSON_TYPE_VIDEO:
-
-                            Video video = parseVideo(archiveJson.getJSONObject(c));
-
-                            archiveItem.setVideo(video);
-
-                            archive.add(archiveItem);
-                            break;
-
-                        case Constants.JSON_TYPE_ALBUM:
-
-                            PhotoAlbum photoAlbum = parseAlbum(archiveJson.getJSONObject(c));
-
-                            archiveItem.setAlbum(photoAlbum);
-
-                            archive.add(archiveItem);
-                            break;
-
-                    }
-
-
+                    archive.add(parseArchiveItem(archiveJson.getJSONObject(c)));
                 }
 
                 return archive;
@@ -250,23 +240,7 @@ public class ResponseFactory {
                 JSONArray featuredJsonArray = response.getJSONArray(Constants.JSON_FEATURED);
                 for(int i = 0; i < featuredJsonArray.length(); i++) {
 
-                    ArchiveItem archiveItem = new ArchiveItem();
-                    switch (featuredJsonArray.getJSONObject(i).getString(Constants.JSON_TYPE)) {
-                        case Constants.JSON_TYPE_VIDEO:
-
-                            Video video = parseVideo(featuredJsonArray.getJSONObject(i));
-                            archiveItem.setVideo(video);
-                            featured.add(archiveItem);
-                            break;
-
-                        case Constants.JSON_TYPE_ALBUM:
-
-                            PhotoAlbum photoAlbum = parseAlbum(featuredJsonArray.getJSONObject(i));
-                            archiveItem.setAlbum(photoAlbum);
-                            featured.add(archiveItem);
-                            break;
-
-                    }
+                    featured.add(parseArchiveItem(featuredJsonArray.getJSONObject(i)));
                 }
             }
 
