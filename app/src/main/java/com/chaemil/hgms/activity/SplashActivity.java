@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.utils.FileUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 
 /**
@@ -23,6 +24,7 @@ public class SplashActivity extends BaseActivity {
 
         SharedPrefUtils sharedPrefUtils = SharedPrefUtils.getInstance(this);
         if (sharedPrefUtils.loadFirstLaunch()) {
+            FileUtils.clearApplicationData(getApplicationContext());
             startTutorial();
         } else {
             startMainActivity();
