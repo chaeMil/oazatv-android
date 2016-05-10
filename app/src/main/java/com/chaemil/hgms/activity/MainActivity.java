@@ -387,7 +387,9 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onBackPressed() {
 
-        if (getMainFragment().getSearchView().isSearchOpen()) {
+        if ( getMainFragment() != null
+                && getMainFragment().getSearchView() != null
+                && getMainFragment().getSearchView().isSearchOpen()) {
 
             getMainFragment().getSearchView().closeSearch();
 
