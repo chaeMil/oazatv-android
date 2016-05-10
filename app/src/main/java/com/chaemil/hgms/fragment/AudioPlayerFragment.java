@@ -139,10 +139,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT);
 
-        GAUtils.sendGAScreen(
-                ((OazaApp) getActivity().getApplication()),
-                "AudioPlayer",
-                currentAudio.getNameCS());
     }
 
     @Override
@@ -576,6 +572,10 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         postVideoView();
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: " + currentAudio.getHash());
 
+        GAUtils.sendGAScreen(
+                ((OazaApp) getActivity().getApplication()),
+                "AudioPlayer",
+                currentAudio.getNameCS());
     }
 
     public void releasePlayer() {

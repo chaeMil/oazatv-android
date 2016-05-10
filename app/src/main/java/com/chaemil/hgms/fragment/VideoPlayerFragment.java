@@ -128,11 +128,6 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
 
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT);
-
-        GAUtils.sendGAScreen(
-                ((OazaApp) getActivity().getApplication()),
-                "VideoPlayer",
-                currentVideo.getNameCS());
     }
 
     @Override
@@ -568,6 +563,11 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT + "videoHash: " + currentVideo.getHash());
         postVideoView();
+
+        GAUtils.sendGAScreen(
+                ((OazaApp) getActivity().getApplication()),
+                "VideoPlayer",
+                currentVideo.getNameCS());
 
     }
 
