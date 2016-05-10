@@ -60,6 +60,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import at.markushi.ui.CircleButton;
 
@@ -108,6 +110,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private ImageView share;
     private TextView description;
     private TextView tags;
+    private TimerTask timerTask;
+    private Timer timer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,7 +142,13 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         }
 
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT);
+        setupTimer();
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopTimer();
     }
 
     @Override
@@ -160,6 +170,42 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         setupUI();
 
         return rootView;
+    }
+
+    private void setupTimer() {
+        stopTimer();
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        postGA();
+                    }
+                });
+            }
+        };
+        resetTimer();
+    }
+
+    private void resetTimer() {
+        timer = new Timer();
+        timer.scheduleAtFixedRate(timerTask, 5000, 5000);
+    }
+
+    private void stopTimer() {
+        if (timer != null) {
+            timer.cancel();
+        }
+    }
+
+    private void postGA() {
+        if (audioPlayer.isPlaying()) {
+            GAUtils.sendGAScreen(
+                    ((OazaApp) getActivity().getApplication()),
+                    "AudioPlayer",
+                    currentAudio.getNameCS());
+        }
     }
 
     private void postVideoView() {
@@ -572,10 +618,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         postVideoView();
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: " + currentAudio.getHash());
 
-        GAUtils.sendGAScreen(
-                ((OazaApp) getActivity().getApplication()),
-                "AudioPlayer",
-                currentAudio.getNameCS());
+        postGA();
     }
 
     public void releasePlayer() {

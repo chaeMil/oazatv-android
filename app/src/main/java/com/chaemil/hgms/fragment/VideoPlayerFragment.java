@@ -96,6 +96,8 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
     private int controlsTimeHide = 0;
     private Handler uiHandler;
     private RelativeLayout playerBgWrapper;
+    private TimerTask timerTask;
+    private Timer timer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,7 +115,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         videoView.pause();
 
         saveCurrentVideoTime();
-
+        stopTimer();
     }
 
     @Override
@@ -128,6 +130,8 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
 
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT);
+
+        setupTimer();
     }
 
     @Override
@@ -160,6 +164,42 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
                 uiHandler.post(runnable);
             }
         }, 1000, 1000);
+    }
+
+    private void setupTimer() {
+        stopTimer();
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        postGA();
+                    }
+                });
+            }
+        };
+        resetTimer();
+    }
+
+    private void resetTimer() {
+        timer = new Timer();
+        timer.scheduleAtFixedRate(timerTask, 5000, 5000);
+    }
+
+    private void stopTimer() {
+        if (timer != null) {
+            timer.cancel();
+        }
+    }
+
+    private void postGA() {
+        if (videoView.isPlaying()) {
+            GAUtils.sendGAScreen(
+                    ((OazaApp) getActivity().getApplication()),
+                    "VideoPlayer",
+                    currentVideo.getNameCS());
+        }
     }
 
     private void postVideoView() {
@@ -564,11 +604,7 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT + "videoHash: " + currentVideo.getHash());
         postVideoView();
 
-        GAUtils.sendGAScreen(
-                ((OazaApp) getActivity().getApplication()),
-                "VideoPlayer",
-                currentVideo.getNameCS());
-
+        postGA();
     }
 
     public RelativeLayout getPlayerToolbar() {
