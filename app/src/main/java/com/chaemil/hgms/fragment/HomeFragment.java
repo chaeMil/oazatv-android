@@ -50,7 +50,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     private static final int NEW_AND_POPULAR = 1;
 
     private boolean init = false;
-    private int initRetry = 5;
+    private int initRetry = 3;
     private Homepage homepage;
     private HListView newestVideos;
     private HListView newestAlbums;
@@ -189,7 +189,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
                 homepage = ResponseFactory.parseHomepage(response);
                 setupUI();
                 init = true;
-                initRetry = 5;
+                initRetry = 3;
 
                 break;
 
