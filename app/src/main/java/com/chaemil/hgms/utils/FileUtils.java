@@ -63,14 +63,16 @@ public class FileUtils {
     }
 
     public static void clearApplicationData(Context context) {
-        File cache = context.getExternalFilesDir(null);
-        File appDir = new File(cache.getParent());
-        if (appDir.exists()) {
-            String[] children = appDir.list();
-            for (String s : children) {
-                if (!s.equals("lib")) {
-                    deleteDir(new File(appDir, s));
-                    Log.i("TAG", "**************** File /data/data/APP_PACKAGE/" + s + " DELETED *******************");
+        File dir = context.getExternalFilesDir(null);
+        if (dir != null) {
+            File appDir = new File(dir.getParent());
+            if (appDir.exists()) {
+                String[] children = appDir.list();
+                for (String s : children) {
+                    if (!s.equals("lib")) {
+                        deleteDir(new File(appDir, s));
+                        Log.i("TAG", "**************** File /data/data/APP_PACKAGE/" + s + " DELETED *******************");
+                    }
                 }
             }
         }
