@@ -90,7 +90,6 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private int duration;
     private int currentTimeInt;
     private AppCompatSeekBar seekBar;
-    private Bitmap thumb;
     private Video currentAudio;
     private CircleButton miniPlayerPause;
     private ProgressBar bufferBar;
@@ -101,11 +100,8 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     private WifiManager.WifiLock wifiLock;
     private AudioManager audioManager;
     private FragmentActivity mainActivity;
-    private boolean downloaded;
     private NotificationManager notificationManager;
-    private Notification notification;
     private NotificationCompat.Builder notificationBuilder;
-    private Bitmap unblurredThumb;
     private ImageView back;
     private ImageView share;
     private TextView description;
@@ -443,11 +439,13 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         Intent delete = new Intent(NOTIFY_DELETE);
         PendingIntent pDelete = PendingIntent.getBroadcast(mainActivity, 0, delete, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        Bitmap notificationThumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
+
         notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getActivity())
                 .setContentTitle(currentAudio.getName())
                 .setContentText(currentAudio.getDate())
                 .setSmallIcon(R.drawable.white_logo)
-                .setLargeIcon(unblurredThumb)
+                .setLargeIcon(notificationThumb)
                 .setContentIntent(pOpen)
                 .setOngoing(true)
                 .setDeleteIntent(pDelete)
@@ -486,31 +484,9 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
         ((MainActivity) getActivity()).hidePanel();
     }
 
-    private void getImages() {
-        if (downloaded) {
-            String thumbFile = getContext().getExternalFilesDir(null) + "/" + currentAudio.getHash() + ".jpg";
-            thumb = BitmapFactory.decodeFile(thumbFile);
-            unblurredThumb = BitmapFactory.decodeFile(thumbFile);
-        } else {
-            thumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
-            unblurredThumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
-        }
-
-        try {
-            notificationBuilder.setLargeIcon(unblurredThumb);
-            notificationManager.notify(NOTIFICATION_ID,
-                    notificationBuilder.build());
-        } catch (Exception e) {
-            SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
-        }
-    }
-
     public void playNewAudio(final Video audio, final boolean downloaded) {
 
         saveCurrentAudioTime();
-
-        this.downloaded = downloaded;
-
         Video savedAudio = null;
 
         try {
