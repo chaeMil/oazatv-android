@@ -63,16 +63,17 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     public void setupUI() {
-        categoriesAdapter = new CategoriesAdapter(getContext(), categories,
-                ((MainActivity) getActivity()));
+        if (isAdded()) {
+            categoriesAdapter = new CategoriesAdapter(getContext(), categories,
+                    ((MainActivity) getActivity()));
 
-        int columns = getResources().getInteger(R.integer.archive_columns);
-        categoriesGrid.setNumColumns(columns);
+            int columns = getResources().getInteger(R.integer.archive_columns);
+            categoriesGrid.setNumColumns(columns);
 
-        categoriesGrid.setAdapter(categoriesAdapter);
-        categoriesGrid.setDividerHeight(0);
-        swipeRefresh.setOnRefreshListener(this);
-
+            categoriesGrid.setAdapter(categoriesAdapter);
+            categoriesGrid.setDividerHeight(0);
+            swipeRefresh.setOnRefreshListener(this);
+        }
     }
 
     public void adjustLayout() {
