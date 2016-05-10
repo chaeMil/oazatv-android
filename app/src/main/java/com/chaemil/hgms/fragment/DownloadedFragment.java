@@ -21,6 +21,8 @@ import com.chaemil.hgms.utils.SmartLog;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by chaemil on 2.12.15.
@@ -34,6 +36,8 @@ public class DownloadedFragment extends BaseFragment {
     private View oazaSpace;
     private TextView spaceText;
     private RelativeLayout noneDownloaded;
+    private TimerTask timerTask;
+    private Timer timer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +57,40 @@ public class DownloadedFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.DOWNLOADED_FRAGMENT);
+        setupTimer();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopTimer();
+    }
+
+    private void setupTimer() {
+        stopTimer();
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDatasetChanged();
+                    }
+                });
+            }
+        };
+        resetTimer();
+    }
+
+    private void resetTimer() {
+        timer = new Timer();
+        timer.scheduleAtFixedRate(timerTask, 5000, 5000);
+    }
+
+    private void stopTimer() {
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
     @Override

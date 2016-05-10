@@ -5,6 +5,7 @@ import android.content.Context;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.utils.Constants;
+import com.chaemil.hgms.utils.SmartLog;
 import com.orm.SugarRecord;
 
 import java.io.File;
@@ -100,17 +101,26 @@ public class Video extends SugarRecord {
     }
 
     public static List<Video> getDownloadQueue() {
-        List<Video> list = Video.find(Video.class, "in_download_queue = ? AND downloaded = ?", String.valueOf(1), String.valueOf(0));
         ArrayList<Video> queue = new ArrayList<>();
+        List<Video> list = new ArrayList<Video>();
+        try {
+             list = Video.find(Video.class, "in_download_queue = ? AND downloaded = ?", String.valueOf(1), String.valueOf(0));
+        } catch (Exception e) {
+            SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
+        }
         queue.addAll(list);
 
         return queue;
     }
 
     public static List<Video> getWholeDownloadQueue() {
-        List<Video> list = Video.find(Video.class, "in_download_queue = 1 OR downloaded = 1 ORDER BY id DESC");
         ArrayList<Video> queue = new ArrayList<>();
-        queue.addAll(list);
+        try {
+            List<Video> list = Video.find(Video.class, "in_download_queue = 1 OR downloaded = 1 ORDER BY id DESC");
+            queue.addAll(list);
+        } catch (Exception e) {
+            SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
+        }
 
         return queue;
     }
