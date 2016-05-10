@@ -422,46 +422,50 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
 
     private void createNotification() {
 
-        notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        if (getActivity() != null
+                && getActivity().getSystemService(Context.NOTIFICATION_SERVICE) != null) {
 
-        Intent open = new Intent(NOTIFY_OPEN);
-        PendingIntent pOpen = PendingIntent.getBroadcast(mainActivity, 0, open, PendingIntent.FLAG_UPDATE_CURRENT);
+            notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent pause = new Intent(NOTIFY_PLAY_PAUSE);
-        PendingIntent pPause = PendingIntent.getBroadcast(mainActivity, 0, pause, PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent open = new Intent(NOTIFY_OPEN);
+            PendingIntent pOpen = PendingIntent.getBroadcast(mainActivity, 0, open, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent ff = new Intent(NOTIFY_FF);
-        PendingIntent pFf = PendingIntent.getBroadcast(mainActivity, 0, ff, PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent pause = new Intent(NOTIFY_PLAY_PAUSE);
+            PendingIntent pPause = PendingIntent.getBroadcast(mainActivity, 0, pause, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent rew = new Intent(NOTIFY_REW);
-        PendingIntent pRew = PendingIntent.getBroadcast(mainActivity, 0, rew, PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent ff = new Intent(NOTIFY_FF);
+            PendingIntent pFf = PendingIntent.getBroadcast(mainActivity, 0, ff, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent delete = new Intent(NOTIFY_DELETE);
-        PendingIntent pDelete = PendingIntent.getBroadcast(mainActivity, 0, delete, PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent rew = new Intent(NOTIFY_REW);
+            PendingIntent pRew = PendingIntent.getBroadcast(mainActivity, 0, rew, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Bitmap notificationThumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
+            Intent delete = new Intent(NOTIFY_DELETE);
+            PendingIntent pDelete = PendingIntent.getBroadcast(mainActivity, 0, delete, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getActivity())
-                .setContentTitle(currentAudio.getName())
-                .setContentText(currentAudio.getDate())
-                .setSmallIcon(R.drawable.white_logo)
-                .setLargeIcon(notificationThumb)
-                .setContentIntent(pOpen)
-                .setOngoing(true)
-                .setDeleteIntent(pDelete)
-                .addAction(R.drawable.rew, "", pRew)
-                .addAction(R.drawable.pause, "", pPause)
-                .addAction(R.drawable.ff, "", pFf)
-                .setStyle(new NotificationCompat.MediaStyle()
-                                .setShowActionsInCompactView(0, 1, 2)
-                );
+            Bitmap notificationThumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
 
-        int sdk = android.os.Build.VERSION.SDK_INT;
-        if (sdk >= Build.VERSION_CODES.LOLLIPOP) {
-            notificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
+            notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getActivity())
+                    .setContentTitle(currentAudio.getName())
+                    .setContentText(currentAudio.getDate())
+                    .setSmallIcon(R.drawable.white_logo)
+                    .setLargeIcon(notificationThumb)
+                    .setContentIntent(pOpen)
+                    .setOngoing(true)
+                    .setDeleteIntent(pDelete)
+                    .addAction(R.drawable.rew, "", pRew)
+                    .addAction(R.drawable.pause, "", pPause)
+                    .addAction(R.drawable.ff, "", pFf)
+                    .setStyle(new NotificationCompat.MediaStyle()
+                            .setShowActionsInCompactView(0, 1, 2)
+                    );
+
+            int sdk = android.os.Build.VERSION.SDK_INT;
+            if (sdk >= Build.VERSION_CODES.LOLLIPOP) {
+                notificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
+            }
+
+            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
         }
-
-        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
 
     public void saveCurrentAudioTime() {
