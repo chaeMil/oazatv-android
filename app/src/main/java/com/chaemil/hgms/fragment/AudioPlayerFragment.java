@@ -54,6 +54,7 @@ import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
@@ -490,13 +491,10 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             Intent delete = new Intent(NOTIFY_DELETE);
             PendingIntent pDelete = PendingIntent.getBroadcast(mainActivity, 0, delete, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            Bitmap notificationThumb = BitmapUtils.getBitmapFromURL(currentAudio.getThumbFile());
-
             notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getActivity())
                     .setContentTitle(currentAudio.getName())
                     .setContentText(currentAudio.getDate())
                     .setSmallIcon(R.drawable.white_logo)
-                    .setLargeIcon(notificationThumb)
                     .setContentIntent(pOpen)
                     .setOngoing(true)
                     .setDeleteIntent(pDelete)
@@ -513,6 +511,17 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
             }
 
             notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+
+            Ion.with(getActivity())
+                    .load(currentAudio.getThumbFile())
+                    .asBitmap()
+                    .setCallback(new FutureCallback<Bitmap>() {
+                @Override
+                public void onCompleted(Exception e, Bitmap result) {
+                    notificationBuilder.setLargeIcon(result);
+                    notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+                }
+            });
         }
     }
 

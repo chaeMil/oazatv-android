@@ -129,4 +129,10 @@ public class BitmapUtils {
         }
         return file;
     }
+
+    public static Bitmap getBitmapFromFile(String path) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        return BitmapFactory.decodeFile(path, options);
+    }
 }
