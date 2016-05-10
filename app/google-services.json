@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_number": "656322942062",
+    "project_id": "oaza-tv"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:656322942062:android:51dc4e5cd56925f2",
+        "android_client_info": {
+          "package_name": "com.chaemil.hgms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "656322942062-kmd0jaq20ejfsjc23empi87sa09ojdd9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUbhoeEqNlRE-e2ECWrIY26yCKIDgYR6E"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-46402880-6"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
