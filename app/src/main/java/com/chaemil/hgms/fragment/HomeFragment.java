@@ -204,9 +204,13 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
             initRetry -= 1;
 
             if (initRetry <= 0) {
-                ((MainActivity) getActivity()).getMainFragment().goToDownloaded();
-                ((MainActivity) getActivity()).getMainFragment().hideSplash();
-                SuperToast.create(getActivity(), getString(R.string.connection_error), Toast.LENGTH_LONG).show();
+                if (getActivity() != null
+                        && ((MainActivity) getActivity()).getMainFragment() != null) {
+
+                    ((MainActivity) getActivity()).getMainFragment().goToDownloaded();
+                    ((MainActivity) getActivity()).getMainFragment().hideSplash();
+                    SuperToast.create(getActivity(), getString(R.string.connection_error), Toast.LENGTH_LONG).show();
+                }
             } else {
                 JsonObjectRequest request = RequestFactory.getHomepage(this);
                 MyRequestService.getRequestQueue().add(request);

@@ -510,7 +510,9 @@ public class MainActivity extends BaseActivity implements
             switch (intent.getAction()) {
 
                 case AudioPlayerFragment.NOTIFY_PLAY_PAUSE:
-                    getAudioPlayerFragment().playPauseAudio();
+                    if (getAudioPlayerFragment() != null) {
+                        getAudioPlayerFragment().playPauseAudio();
+                    }
                     break;
                 case AudioPlayerFragment.NOTIFY_OPEN:
 
@@ -522,10 +524,14 @@ public class MainActivity extends BaseActivity implements
 
                     break;
                 case AudioPlayerFragment.NOTIFY_FF:
-                    getAudioPlayerFragment().seekFF();
+                    if (getAudioPlayerFragment() != null) {
+                        getAudioPlayerFragment().seekFF();
+                    }
                     break;
                 case AudioPlayerFragment.NOTIFY_REW:
-                    getAudioPlayerFragment().seekREW();
+                    if (getAudioPlayerFragment() != null) {
+                        getAudioPlayerFragment().seekREW();
+                    }
                     break;
                 case AudioPlayerFragment.NOTIFY_DELETE:
                     hidePanel();
