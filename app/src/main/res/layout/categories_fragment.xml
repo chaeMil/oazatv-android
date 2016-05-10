@@ -7,8 +7,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.chaemil.hgms.view.ExpandableGridView
-            android:id="@+id/categories_grid"
+        <ExpandableListView
+            android:id="@+id/categories_list"
             android:paddingBottom="75dp"
             android:clipToPadding="false"
             android:scrollbarSize="4dp"
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </com.chaemil.hgms.view.ExpandableGridView>
+        </ExpandableListView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

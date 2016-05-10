@@ -387,7 +387,7 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onBackPressed() {
 
-        if ( getMainFragment() != null
+        if (getMainFragment() != null
                 && getMainFragment().getSearchView() != null
                 && getMainFragment().getSearchView().isSearchOpen()) {
 
@@ -405,7 +405,9 @@ public class MainActivity extends BaseActivity implements
                 collapsePanel();
             }
 
-        } else if (getMainFragment().getPhotoalbumWrapper().getVisibility() == View.VISIBLE) {
+        } else if (getMainFragment() != null
+                    && getMainFragment().getPhotoAlbumFragment() != null
+                    && getMainFragment().getPhotoalbumWrapper().getVisibility() == View.VISIBLE) {
 
             ViewPager photosViewPager = getMainFragment().getPhotoAlbumFragment().getPhotosViewPager();
             GridView grid = getMainFragment().getPhotoAlbumFragment().getGrid();
