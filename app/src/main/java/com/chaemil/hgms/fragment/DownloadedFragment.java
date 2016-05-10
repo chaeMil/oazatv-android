@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.DownloadedAdapter;
@@ -16,6 +17,7 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.FileUtils;
+import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.SmartLog;
 
 import java.math.BigDecimal;
@@ -58,6 +60,10 @@ public class DownloadedFragment extends BaseFragment {
         super.onResume();
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.DOWNLOADED_FRAGMENT);
         setupTimer();
+
+        GAUtils.sendGAScreen(
+                ((OazaApp) getActivity().getApplication()),
+                "Downloaded");
     }
 
     @Override

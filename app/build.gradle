@@ -9,6 +9,7 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'com.google.gms.google-services'
 
 repositories {
     maven { url "https://maven.fabric.io/public" }
@@ -70,4 +71,5 @@ dependencies {
     compile 'com.mikhaellopez:circularprogressbar:1.1.1'
     compile 'it.sephiroth.android.library.horizontallistview:hlistview:1.2.2'
     compile 'com.heinrichreimersoftware:material-intro:1.4'
+    compile 'com.google.android.gms:play-services-analytics:8.3.0'
 }

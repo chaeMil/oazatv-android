@@ -1,11 +1,7 @@
 package com.chaemil.hgms;
 
 import android.app.Application;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
@@ -15,10 +11,11 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.MyRequestService;
-import com.chaemil.hgms.utils.SmartLog;
 import com.crashlytics.android.Crashlytics;
-import com.github.johnpersano.supertoasts.SuperToast;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 import com.orm.SugarContext;
+
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -31,6 +28,7 @@ public class OazaApp extends Application {
     private MainActivity mainActivity;
     public SplashActivity splashActivity;
     public boolean appVisible = false;
+    private Tracker mTracker;
 
     @Override
     public void onCreate() {
@@ -51,6 +49,14 @@ public class OazaApp extends Application {
     public void onTerminate() {
         super.onTerminate();
         Log.d("", "onTerminate");
+    }
+
+    synchronized public Tracker getDefaultTracker() {
+        if (mTracker == null) {
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            mTracker = analytics.newTracker("UA-46402880-6");
+        }
+        return mTracker;
     }
 
     public boolean isDownloadingNow() {

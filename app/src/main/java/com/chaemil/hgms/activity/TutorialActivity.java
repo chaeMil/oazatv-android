@@ -5,6 +5,7 @@ import android.support.v4.view.ViewPager;
 
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
@@ -74,5 +75,14 @@ public class TutorialActivity extends IntroActivity {
         if (((OazaApp) getApplication()).splashActivity != null) {
             ((OazaApp) getApplication()).splashActivity.finish();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        GAUtils.sendGAScreen(
+                ((OazaApp) getApplication()),
+                "Tutorial");
     }
 }

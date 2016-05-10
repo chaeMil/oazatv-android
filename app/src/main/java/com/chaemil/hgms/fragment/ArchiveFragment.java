@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.ArchiveAdapter;
@@ -27,6 +28,7 @@ import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.EndlessScrollListener;
+import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.SmartLog;
 
 import org.json.JSONObject;
@@ -61,6 +63,10 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
     public void onResume() {
         super.onResume();
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.ARCHIVE_FRAGMENT);
+
+        GAUtils.sendGAScreen(
+                ((OazaApp) getActivity().getApplication()),
+                "Archive");
     }
 
     @Override

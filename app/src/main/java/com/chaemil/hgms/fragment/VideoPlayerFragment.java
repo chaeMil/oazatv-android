@@ -22,6 +22,7 @@ import android.widget.VideoView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.activity.MainActivity;
@@ -34,6 +35,7 @@ import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.BitmapUtils;
 import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.DimensUtils;
+import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.OnSwipeTouchListener;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SmartLog;
@@ -127,6 +129,10 @@ public class VideoPlayerFragment extends Fragment implements View.OnClickListene
 
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT);
 
+        GAUtils.sendGAScreen(
+                ((OazaApp) getActivity().getApplication()),
+                "VideoPlayer",
+                currentVideo.getNameCS());
     }
 
     @Override

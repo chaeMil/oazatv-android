@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.CategoriesAdapter;
@@ -19,6 +20,7 @@ import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.Category;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.utils.GAUtils;
 
 import org.json.JSONObject;
 
@@ -47,6 +49,15 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
         setupUI();
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        GAUtils.sendGAScreen(
+                ((OazaApp) getActivity().getApplication()),
+                "Categories");
     }
 
     private void getData() {

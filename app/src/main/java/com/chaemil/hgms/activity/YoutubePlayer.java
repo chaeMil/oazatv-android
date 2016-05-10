@@ -22,6 +22,7 @@ import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.Constants;
+import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.LocalUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.ShareUtils;
@@ -73,6 +74,10 @@ public class YoutubePlayer extends YouTubeBaseActivity implements YouTubePlayer.
     protected void onResume() {
         super.onResume();
         ((OazaApp) getApplication()).appVisible = true;
+
+        GAUtils.sendGAScreen(
+                ((OazaApp) getApplication()),
+                "LiveStream");
     }
 
     @Override

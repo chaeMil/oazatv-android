@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.activity.MainActivity;
@@ -31,6 +32,7 @@ import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.DimensUtils;
+import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.SmartLog;
 
 import org.json.JSONObject;
@@ -71,6 +73,11 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
         super.onResume();
         if (album != null && album.getHash() != null) {
             AnalyticsService.getInstance().setPage(AnalyticsService.Pages.PHOTOALBUM_FRAGMENT + "albumHash: " + album.getHash());
+
+            GAUtils.sendGAScreen(
+                    ((OazaApp) getActivity().getApplication()),
+                    "Photoalbum",
+                    album.getNameCS());
         }
     }
 

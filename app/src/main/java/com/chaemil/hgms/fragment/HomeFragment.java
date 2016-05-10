@@ -26,6 +26,7 @@ import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.AnalyticsUtils;
+import com.chaemil.hgms.utils.GAUtils;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
@@ -81,6 +82,10 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     public void onResume() {
         super.onResume();
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.HOME_FRAGMENT);
+
+        GAUtils.sendGAScreen(
+                ((OazaApp) getActivity().getApplication()),
+                "Home");
     }
 
     private void getData() {
