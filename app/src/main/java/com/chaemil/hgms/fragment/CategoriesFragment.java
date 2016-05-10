@@ -19,7 +19,6 @@ import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.Category;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.MyRequestService;
-import com.chaemil.hgms.view.ExpandableGridView;
 
 import org.json.JSONObject;
 
