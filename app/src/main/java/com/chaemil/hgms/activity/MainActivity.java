@@ -425,7 +425,9 @@ public class MainActivity extends BaseActivity implements
                 getMainFragment().closeAlbum();
             }
 
-        } else if (getMainFragment().getSettingsCard().getVisibility() == View.VISIBLE) {
+        } else if (getMainFragment() != null
+                && getMainFragment().getSettingsCard() != null
+                && getMainFragment().getSettingsCard().getVisibility() == View.VISIBLE) {
 
             getMainFragment().hideSettings();
 
