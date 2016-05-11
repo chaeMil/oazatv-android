@@ -111,7 +111,7 @@ public class MainActivity extends BaseActivity implements
 
         parseDeepLink();
 
-        //TrackService.init(this);
+        TrackService.init(this);
     }
 
     private void parseDeepLink() {
