@@ -201,7 +201,7 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     private void postGA() {
-        if (audioPlayer.isPlaying()) {
+        if (audioPlayer != null && audioPlayer.isPlaying()) {
             GAUtils.sendGAScreen(
                     ((OazaApp) getActivity().getApplication()),
                     "AudioPlayer",
