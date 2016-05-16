@@ -610,15 +610,17 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
                 wifiLock.acquire();
 
                 try {
-                    audioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    if (downloaded) {
-                        audioPlayer.setDataSource(getContext().getExternalFilesDir(null) + "/" + currentAudio.getHash() + ".mp3");
-                    } else {
-                        audioPlayer.setDataSource(currentAudio.getAudioFile());
+                    if (audioPlayer != null) {
+                        audioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                        if (downloaded) {
+                            audioPlayer.setDataSource(getContext().getExternalFilesDir(null) + "/" + currentAudio.getHash() + ".mp3");
+                        } else {
+                            audioPlayer.setDataSource(currentAudio.getAudioFile());
+                        }
+                        audioPlayer.setWakeMode(getActivity(), PowerManager.PARTIAL_WAKE_LOCK);
+                        audioPlayer.prepareAsync();
+                        audioPlayer.setOnPreparedListener(AudioPlayerFragment.this);
                     }
-                    audioPlayer.setWakeMode(getActivity(), PowerManager.PARTIAL_WAKE_LOCK);
-                    audioPlayer.prepareAsync();
-                    audioPlayer.setOnPreparedListener(AudioPlayerFragment.this);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
