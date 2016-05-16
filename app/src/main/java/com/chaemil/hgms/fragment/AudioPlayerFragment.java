@@ -406,10 +406,12 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     public void playPauseAudio() {
         saveCurrentAudioTime();
 
-        if (audioPlayer.isPlaying()) {
-            pauseAudio();
-        } else {
-            playAudio();
+        if (audioPlayer != null) {
+            if (audioPlayer.isPlaying()) {
+                pauseAudio();
+            } else {
+                playAudio();
+            }
         }
     }
 
