@@ -426,19 +426,21 @@ public class AudioPlayerFragment extends Fragment implements View.OnClickListene
     }
 
     public void pauseAudio() {
-        audioPlayer.pause();
+        if (audioPlayer != null) {
+            audioPlayer.pause();
 
-        if (wifiLock.isHeld()) {
-            wifiLock.release();
+            if (wifiLock.isHeld()) {
+                wifiLock.release();
+            }
+
+            notificationBuilder.setOngoing(false)
+                    .mActions.get(1).icon = R.drawable.play;
+            notificationManager.notify(NOTIFICATION_ID,
+                    notificationBuilder.build());
+
+            playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
         }
-
-        notificationBuilder.setOngoing(false)
-                .mActions.get(1).icon = R.drawable.play;
-        notificationManager.notify(NOTIFICATION_ID,
-                notificationBuilder.build());
-
-        playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
-        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
     }
 
     public void playAudio() {
