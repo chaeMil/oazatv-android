@@ -474,7 +474,9 @@ public class MainActivity extends BaseActivity implements
     }
 
     public void notifyDownloadFinished() {
-        getMainFragment().getDownloadedFragment().notifyDownloadFinished();
+        if (getMainFragment() != null && getMainFragment().getDownloadedFragment() != null) {
+            getMainFragment().getDownloadedFragment().notifyDownloadFinished();
+        }
     }
 
     public void notifyDownloadStarted() {
