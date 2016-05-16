@@ -22,9 +22,13 @@ public class FileUtils {
 
     public static long getFreeSpace(){
         long availableSpace = -1L;
-        StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
-        availableSpace = (long) stat.getFreeBlocks() * (long) stat.getBlockSize();
-        return availableSpace;
+        if (isSDPresent()) {
+            StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
+            availableSpace = (long) stat.getFreeBlocks() * (long) stat.getBlockSize();
+            return availableSpace;
+        } else {
+            return 0;
+        }
     }
 
     public static long getExternalStorageSize() {
