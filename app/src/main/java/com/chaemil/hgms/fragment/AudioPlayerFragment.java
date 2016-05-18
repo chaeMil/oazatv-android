@@ -69,7 +69,7 @@ import at.markushi.ui.CircleButton;
 /**
  * Created by chaemil on 2.12.15.
  */
-public class AudioPlayerFragment extends Fragment implements View.OnClickListener,
+public class AudioPlayerFragment extends BaseFragment implements View.OnClickListener,
         MediaPlayer.OnPreparedListener, SeekBar.OnSeekBarChangeListener,
         AudioManager.OnAudioFocusChangeListener, RequestFactoryListener {
 

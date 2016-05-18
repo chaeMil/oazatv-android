@@ -54,7 +54,7 @@ import at.markushi.ui.CircleButton;
 /**
  * Created by chaemil on 2.12.15.
  */
-public class VideoPlayerFragment extends Fragment implements View.OnClickListener, View.OnTouchListener,
+public class VideoPlayerFragment extends BaseFragment implements View.OnClickListener, View.OnTouchListener,
         MediaPlayer.OnPreparedListener, SeekBar.OnSeekBarChangeListener, RequestFactoryListener {
 
     public static final String TAG = "player_fragment";

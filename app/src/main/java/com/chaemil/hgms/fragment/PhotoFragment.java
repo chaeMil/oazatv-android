@@ -21,7 +21,7 @@ import com.koushikdutta.ion.Ion;
 /**
  * Created by chaemil on 21.7.15.
  */
-public class PhotoFragment extends Fragment implements FutureCallback<Bitmap> {
+public class PhotoFragment extends BaseFragment implements FutureCallback<Bitmap> {
     private SubsamplingScaleImageView image;
     private TextView label;
     private Photo photo;

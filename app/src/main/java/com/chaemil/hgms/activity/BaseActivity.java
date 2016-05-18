@@ -35,6 +35,7 @@ import com.chaemil.hgms.utils.StringUtils;
 import com.crashlytics.android.Crashlytics;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.util.Style;
+import com.orm.SugarContext;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +57,7 @@ public class BaseActivity extends AppCompatActivity implements RequestFactoryLis
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
+        SugarContext.init(this);
     }
 
     @Override

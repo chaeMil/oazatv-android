@@ -49,6 +49,7 @@ import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
+import com.orm.SugarContext;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONObject;

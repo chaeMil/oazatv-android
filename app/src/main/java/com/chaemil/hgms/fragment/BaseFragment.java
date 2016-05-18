@@ -1,5 +1,7 @@
 package com.chaemil.hgms.fragment;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.android.volley.VolleyError;
@@ -7,6 +9,7 @@ import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.utils.SmartLog;
+import com.orm.SugarContext;
 
 import org.json.JSONObject;
 
@@ -14,6 +17,12 @@ import org.json.JSONObject;
  * Created by chaemil on 18.12.15.
  */
 public class BaseFragment extends Fragment implements RequestFactoryListener {
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        SugarContext.init(getActivity());
+    }
 
     @Override
     public void onSuccessResponse(JSONObject response, RequestType requestType) {
