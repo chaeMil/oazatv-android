@@ -119,4 +119,12 @@ public class OazaApp extends Application {
     public ServiceConnection getObserverServiceConnection() {
         return observerServiceConnection;
     }
+
+    public void restartBackgroundService() {
+        observerIntent = new Intent(this, ObserverService.class);
+        stopService(observerIntent);
+        startService(observerIntent);
+        bindService(observerIntent, observerServiceConnection, BIND_AUTO_CREATE);
+    }
+
 }

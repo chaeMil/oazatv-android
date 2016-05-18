@@ -115,6 +115,12 @@ public class MainActivity extends BaseActivity implements
         TrackService.init(this);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        ((OazaApp) getApplication()).restartBackgroundService();
+    }
+
     private void parseDeepLink() {
         Intent intent = getIntent();
         Uri data = intent.getData();
