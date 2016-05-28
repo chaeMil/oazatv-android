@@ -27,11 +27,6 @@ public class BootAndUpdateReceiver extends BroadcastReceiver {
             Intent downloadService = new Intent(context, DownloadService.class);
             context.startService(downloadService);
 
-            Intent locationIntentService = ((OazaApp) context.getApplicationContext()).getObserverIntent();
-            ServiceConnection locationServiceConnection = ((OazaApp) context.getApplicationContext()).getObserverServiceConnection();
-
-            context.getApplicationContext()
-                    .bindService(locationIntentService, locationServiceConnection, Context.BIND_AUTO_CREATE);
         }
     }
 }

@@ -8,13 +8,9 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.chaemil.hgms.OazaApp;
-import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.service.DownloadService;
-import com.chaemil.hgms.service.ObserverService;
-import com.chaemil.hgms.service.TrackService;
 import com.chaemil.hgms.utils.SharedPrefUtils;
-import com.chaemil.hgms.utils.SmartLog;
 
 /**
  * Created by chaemil on 8.2.16.
