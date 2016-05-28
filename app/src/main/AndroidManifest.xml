@@ -42,7 +42,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http"
                     android:host="oaza.tv"
-                    android:pathPrefix="/beta/video/watch/" />
+                    android:pathPrefix="/video/watch/" />
             </intent-filter>
 
             <intent-filter>
@@ -51,7 +51,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http"
                     android:host="oaza.tv"
-                    android:pathPrefix="/beta/album/view/" />
+                    android:pathPrefix="/album/view/" />
             </intent-filter>
 
         </activity>

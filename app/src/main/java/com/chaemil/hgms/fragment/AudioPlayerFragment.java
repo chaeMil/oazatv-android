@@ -119,13 +119,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        audioPlayer = new MediaPlayer();
-
-        wifiLock = ((WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE))
-                .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
-
-        audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
-
         mainActivity = getActivity();
     }
 
@@ -133,7 +126,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     public void onResume() {
         super.onResume();
 
-        int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
+        /*int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);
 
         if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
@@ -143,7 +136,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         }
 
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT);
-        setupTimer();
+        setupTimer();*/
     }
 
     @Override
@@ -418,15 +411,15 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
 
     public void seekFF() {
-        audioPlayer.seekTo(audioPlayer.getCurrentPosition() + 10000);
+        //audioPlayer.seekTo(audioPlayer.getCurrentPosition() + 10000);
     }
 
     public void seekREW() {
-        audioPlayer.seekTo(audioPlayer.getCurrentPosition() - 30 * 1000);
+        //audioPlayer.seekTo(audioPlayer.getCurrentPosition() - 30 * 1000);
     }
 
     public void pauseAudio() {
-        if (audioPlayer != null) {
+        /*if (audioPlayer != null) {
             audioPlayer.pause();
 
             if (wifiLock.isHeld()) {
@@ -440,11 +433,11 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
             playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
             miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
-        }
+        }*/
     }
 
     public void playAudio() {
-        audioPlayer.start();
+        /*audioPlayer.start();
 
         notificationBuilder.setOngoing(true)
                 .mActions.get(1).icon = R.drawable.pause;
@@ -458,7 +451,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
         if (seekBar != null) {
             seekBar.postDelayed(onEverySecond, 1000);
-        }
+        }*/
     }
 
     public void switchMiniPlayer(boolean show) {
@@ -473,75 +466,19 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
-    private void createNotification() {
-
-        if (getActivity() != null
-                && getActivity().getSystemService(Context.NOTIFICATION_SERVICE) != null) {
-
-            notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-
-            Intent open = new Intent(NOTIFY_OPEN);
-            PendingIntent pOpen = PendingIntent.getBroadcast(mainActivity, 0, open, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Intent pause = new Intent(NOTIFY_PLAY_PAUSE);
-            PendingIntent pPause = PendingIntent.getBroadcast(mainActivity, 0, pause, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Intent ff = new Intent(NOTIFY_FF);
-            PendingIntent pFf = PendingIntent.getBroadcast(mainActivity, 0, ff, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Intent rew = new Intent(NOTIFY_REW);
-            PendingIntent pRew = PendingIntent.getBroadcast(mainActivity, 0, rew, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Intent delete = new Intent(NOTIFY_DELETE);
-            PendingIntent pDelete = PendingIntent.getBroadcast(mainActivity, 0, delete, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getActivity())
-                    .setContentTitle(currentAudio.getName())
-                    .setContentText(currentAudio.getDate())
-                    .setSmallIcon(R.drawable.white_logo)
-                    .setContentIntent(pOpen)
-                    .setOngoing(true)
-                    .setDeleteIntent(pDelete)
-                    .addAction(R.drawable.rew, "", pRew)
-                    .addAction(R.drawable.pause, "", pPause)
-                    .addAction(R.drawable.ff, "", pFf)
-                    .setStyle(new NotificationCompat.MediaStyle()
-                            .setShowActionsInCompactView(0, 1, 2)
-                    );
-
-            int sdk = android.os.Build.VERSION.SDK_INT;
-            if (sdk >= Build.VERSION_CODES.LOLLIPOP) {
-                notificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
-            }
-
-            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-
-            Ion.with(getActivity())
-                    .load(currentAudio.getThumbFile())
-                    .asBitmap()
-                    .setCallback(new FutureCallback<Bitmap>() {
-                @Override
-                public void onCompleted(Exception e, Bitmap result) {
-                    notificationBuilder.setLargeIcon(result);
-                    notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-                }
-            });
-        }
-    }
-
     public void saveCurrentAudioTime() {
-        if (audioPlayer != null && currentAudio != null) {
+        /*if (audioPlayer != null && currentAudio != null) {
             try {
                 currentAudio.setCurrentTime(audioPlayer.getCurrentPosition());
             } catch (Exception e) {
                 e.printStackTrace();
             }
             currentAudio.save();
-        }
+        }*/
     }
 
     public Video getCurrentAudio() {
-        return currentAudio;
+        return null;
     }
 
     public void closePlayer() {
@@ -603,32 +540,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
         ((MainActivity) getActivity()).expandPanel();
 
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
 
-                createNotification();
-                wifiLock.acquire();
-
-                try {
-                    if (audioPlayer != null) {
-                        audioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                        if (downloaded) {
-                            audioPlayer.setDataSource(getContext().getExternalFilesDir(null) + "/" + currentAudio.getHash() + ".mp3");
-                        } else {
-                            audioPlayer.setDataSource(currentAudio.getAudioFile());
-                        }
-                        audioPlayer.setWakeMode(getActivity(), PowerManager.PARTIAL_WAKE_LOCK);
-                        audioPlayer.prepareAsync();
-                        audioPlayer.setOnPreparedListener(AudioPlayerFragment.this);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, 500);
 
         postVideoView();
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: " + currentAudio.getHash());
@@ -637,9 +549,9 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     public void releasePlayer() {
-        if (audioPlayer != null) {
+        /*if (audioPlayer != null) {
             audioPlayer.release();
-        }
+        }*/
         if (wifiLock != null) {
             if (wifiLock.isHeld()) {
                 wifiLock.release();
@@ -659,7 +571,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     public MediaPlayer getAudioPlayer() {
-        return audioPlayer;
+        return null;
     }
 
     @Override
@@ -683,7 +595,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onAudioFocusChange(int focusChange) {
-        switch (focusChange) {
+        /*switch (focusChange) {
             case AudioManager.AUDIOFOCUS_LOSS:
                 // Lost focus for an unbounded amount of time: stop playback and release media player
                 if (audioPlayer != null) {
@@ -727,7 +639,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                     }
                 }
                 break;
-        }
+        }*/
     }
 
     @Override
