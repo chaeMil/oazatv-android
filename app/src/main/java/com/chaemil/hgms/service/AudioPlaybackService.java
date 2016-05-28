@@ -12,8 +12,20 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
+import android.view.View;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.BaseActivity;
+import com.chaemil.hgms.factory.RequestFactory;
+import com.chaemil.hgms.factory.RequestFactoryListener;
+import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.utils.SmartLog;
+import com.github.johnpersano.supertoasts.SuperToast;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -22,7 +34,7 @@ import java.io.IOException;
  */
 public class AudioPlaybackService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
-        MediaPlayer.OnCompletionListener {
+        MediaPlayer.OnCompletionListener, RequestFactoryListener {
 
     private static final int NOTIFICATION_ID = 1111;
     public static final String AUDIO = "current_audio";
@@ -46,9 +58,8 @@ public class AudioPlaybackService extends Service implements
         if (intent != null) {
             if (intent.getParcelableExtra(AUDIO) != null) {
                 currentAudio = intent.getParcelableExtra(AUDIO);
-                downloaded = intent.getBooleanExtra(DOWNLOADED, false
-                );
-                playNewAudio(currentAudio, downloaded);
+                downloaded = intent.getBooleanExtra(DOWNLOADED, false);
+                playNewAudio();
             }
         }
 
@@ -95,18 +106,43 @@ public class AudioPlaybackService extends Service implements
         return currentAudio;
     }
 
-    public void playNewAudio(final Video audio, final boolean downloaded) {
+    public MediaPlayer getAudioPlayer() {
+        return player;
+    }
+
+    private void postVideoView() {
+        JsonObjectRequest postView = RequestFactory.postVideoView(this, currentAudio.getHash());
+        MyRequestService.getRequestQueue().add(postView);
+    }
+
+    public void playNewAudio() {
 
         createNotification();
         wifiLock.acquire();
+
+        Video savedAudio = null;
+
+        try {
+            savedAudio = Video.findByServerId(currentAudio.getServerId());
+        } catch (Exception e) {
+            SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
+        }
+
+        if (savedAudio != null) {
+            this.currentAudio = savedAudio;
+
+            SuperToast.create(getApplication(),
+                    getString(R.string.resuming_from_saved_time),
+                    SuperToast.Duration.SHORT).show();
+        }
 
         try {
             if (player != null) {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 if (downloaded) {
-                    player.setDataSource(getApplication().getExternalFilesDir(null) + "/" + audio.getHash() + ".mp3");
+                    player.setDataSource(getApplication().getExternalFilesDir(null) + "/" + currentAudio.getHash() + ".mp3");
                 } else {
-                    player.setDataSource(audio.getAudioFile());
+                    player.setDataSource(currentAudio.getAudioFile());
                 }
                 player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
                 player.prepareAsync();
@@ -198,33 +234,47 @@ public class AudioPlaybackService extends Service implements
         //seekBar.postDelayed(onEverySecond, 1000);
         //YoYo.with(Techniques.FadeIn).duration(350).delay(250).playOn(audioThumb);
 
-        /*mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+        mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
             @Override
             public void onBufferingUpdate(MediaPlayer mp, int percent) {
 
                 float temp = ((float) mp.getCurrentPosition() / (float) mp.getDuration()) * 100;
                 if (Math.abs(percent - temp) < 1) {
-                    bufferFail++;
+                    /*bufferFail++;
                     if (bufferFail == 15) {
                         SmartLog.Log(SmartLog.LogLevel.WARN, "bufferFail", "buffering failed");
-                    }
+                    }*/
                 }
             }
-        });*/
+        });
 
-        /*mp.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+        mp.setOnInfoListener(new MediaPlayer.OnInfoListener() {
             @Override
             public boolean onInfo(MediaPlayer mp, int what, int extra) {
                 if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-                    bufferBar.setVisibility(View.VISIBLE);
+                    //bufferBar.setVisibility(View.VISIBLE);
                     saveCurrentAudioTime();
                 }
                 if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-                    bufferBar.setVisibility(View.GONE);
+                    //bufferBar.setVisibility(View.GONE);
                     saveCurrentAudioTime();
                 }
                 return false;
             }
-        });*/
+        });
+    }
+
+    @Override
+    public void onSuccessResponse(JSONObject response, RequestType requestType) {
+        switch(requestType) {
+            case POST_VIDEO_VIEW:
+                SmartLog.Log(SmartLog.LogLevel.DEBUG, "postedVideoView", "ok");
+                break;
+        }
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError exception, RequestType requestType) {
+        BaseActivity.responseError(exception, getApplication());
     }
 }

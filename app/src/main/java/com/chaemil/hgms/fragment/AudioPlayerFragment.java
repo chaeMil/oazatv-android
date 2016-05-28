@@ -7,8 +7,10 @@ package com.chaemil.hgms.fragment;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -19,6 +21,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -44,6 +47,7 @@ import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
+import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.BitmapUtils;
 import com.chaemil.hgms.utils.Constants;
@@ -51,6 +55,7 @@ import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.OnSwipeTouchListener;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SmartLog;
+import com.chaemil.hgms.service.AudioPlaybackService.AudioPlaybackBind;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
@@ -95,31 +100,26 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private int duration;
     private int currentTimeInt;
     private AppCompatSeekBar seekBar;
-    private Video currentAudio;
     private CircleButton miniPlayerPause;
     private ProgressBar bufferBar;
     private int bufferFail;
     private ViewGroup rootView;
-    private MediaPlayer audioPlayer;
     private ImageView audioThumb;
-    private WifiManager.WifiLock wifiLock;
-    private AudioManager audioManager;
-    private FragmentActivity mainActivity;
-    private NotificationManager notificationManager;
-    private NotificationCompat.Builder notificationBuilder;
+    private MainActivity mainActivity;
     private ImageView back;
     private ImageView share;
     private TextView description;
     private TextView tags;
     private TimerTask timerTask;
     private Timer timer;
+    private Intent playIntent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        mainActivity = getActivity();
+        mainActivity = (MainActivity) getActivity();
     }
 
     @Override
@@ -151,7 +151,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
         releasePlayer();
 
-        saveCurrentAudioTime();
+        //saveCurrentAudioTime();
     }
 
     @Override
@@ -194,17 +194,12 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void postGA() {
-        if (audioPlayer != null && audioPlayer.isPlaying()) {
+        /*if (audioPlayer != null && audioPlayer.isPlaying()) {
             GAUtils.sendGAScreen(
                     ((OazaApp) getActivity().getApplication()),
                     "AudioPlayer",
                     currentAudio.getNameCS());
-        }
-    }
-
-    private void postVideoView() {
-        JsonObjectRequest postView = RequestFactory.postVideoView(this, currentAudio.getHash());
-        MyRequestService.getRequestQueue().add(postView);
+        }*/
     }
 
     private void activateUI(boolean state) {
@@ -216,21 +211,21 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (audioPlayer != null) {
+        /*if (audioPlayer != null) {
             try {
                 outState.putInt(CURRENT_TIME, audioPlayer.getCurrentPosition());
             } catch (Exception e) {
                 SmartLog.Log(SmartLog.LogLevel.DEBUG, "exception", e.toString());
             }
-        }
+        }*/
     }
 
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if (savedInstanceState != null) {
+        /*if (savedInstanceState != null) {
             audioPlayer.seekTo(savedInstanceState.getInt(CURRENT_TIME));
-        }
+        }*/
     }
 
     private void getUI(ViewGroup rootView) {
@@ -276,7 +271,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void swipeDismissPlayer(boolean right) {
-        saveCurrentAudioTime();
+        //saveCurrentAudioTime();
 
         pauseAudio();
         releasePlayer();
@@ -311,7 +306,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                 ((MainActivity) getActivity()).collapsePanel();
                 break;
             case R.id.share:
-                ShareUtils.shareAudioLink(getActivity(), currentAudio);
+                ShareUtils.shareAudioLink(getActivity(), getCurrentAudio());
                 break;
         }
     }
@@ -319,47 +314,18 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onPrepared(MediaPlayer mp) {
         activateUI(true);
-        audioPlayer.start();
+        /*audioPlayer.start();
         audioPlayer.seekTo(currentAudio.getCurrentTime());
-        duration = audioPlayer.getDuration();
+        duration = audioPlayer.getDuration();*/
         seekBar.setMax(duration);
         seekBar.postDelayed(onEverySecond, 1000);
         YoYo.with(Techniques.FadeIn).duration(350).delay(250).playOn(audioThumb);
-
-        mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
-            @Override
-            public void onBufferingUpdate(MediaPlayer mp, int percent) {
-
-                float temp = ((float) mp.getCurrentPosition() / (float) mp.getDuration()) * 100;
-                if (Math.abs(percent - temp) < 1) {
-                    bufferFail++;
-                    if (bufferFail == 15) {
-                        SmartLog.Log(SmartLog.LogLevel.WARN, "bufferFail", "buffering failed");
-                    }
-                }
-            }
-        });
-
-        mp.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-            @Override
-            public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-                    bufferBar.setVisibility(View.VISIBLE);
-                    saveCurrentAudioTime();
-                }
-                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-                    bufferBar.setVisibility(View.GONE);
-                    saveCurrentAudioTime();
-                }
-                return false;
-            }
-        });
     }
 
     private Runnable onEverySecond = new Runnable() {
         @Override
         public void run(){
-            try {
+            /*try {
                 if (seekBar != null && audioPlayer != null) {
                     seekBar.setProgress(audioPlayer.getCurrentPosition());
                 }
@@ -372,12 +338,12 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
         }
     };
 
     private void updateTime() {
-        currentTimeInt = audioPlayer.getCurrentPosition();
+        //currentTimeInt = audioPlayer.getCurrentPosition();
 
         int dSeconds = (duration / 1000) % 60 ;
         int dMinutes = ((duration / (1000*60)) % 60);
@@ -397,15 +363,14 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     public void playPauseAudio() {
-        saveCurrentAudioTime();
 
-        if (audioPlayer != null) {
+        /*if (audioPlayer != null) {
             if (audioPlayer.isPlaying()) {
                 pauseAudio();
             } else {
                 playAudio();
             }
-        }
+        }*/
     }
 
 
@@ -466,19 +431,8 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
-    public void saveCurrentAudioTime() {
-        /*if (audioPlayer != null && currentAudio != null) {
-            try {
-                currentAudio.setCurrentTime(audioPlayer.getCurrentPosition());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            currentAudio.save();
-        }*/
-    }
-
     public Video getCurrentAudio() {
-        return null;
+        return mainActivity.playbackService.getCurrentAudio();
     }
 
     public void closePlayer() {
@@ -488,78 +442,65 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
     public void playNewAudio(final Video audio, final boolean downloaded) {
 
-        saveCurrentAudioTime();
-        Video savedAudio = null;
-
-        try {
-            savedAudio = Video.findByServerId(audio.getServerId());
-        } catch (Exception e) {
-            SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
+        if (playIntent == null){
+            playIntent = new Intent(mainActivity, AudioPlaybackService.class);
+            mainActivity.bindService(playIntent, mainActivity.playbackConnection, Context.BIND_AUTO_CREATE);
+            mainActivity.startService(playIntent);
         }
 
-        if (savedAudio != null) {
-            this.currentAudio = savedAudio;
+        if (mainActivity.playbackBound) {
 
-            SuperToast.create(getActivity(),
-                    getString(R.string.resuming_from_saved_time),
-                    SuperToast.Duration.SHORT).show();
-        } else {
-            this.currentAudio = audio;
-        }
+            Ion.with(getActivity()).load(getCurrentAudio().getThumbFile()).intoImageView(audioThumb);
+            Ion.with(getActivity()).load(getCurrentAudio().getThumbFile()).intoImageView(miniPlayerImageView);
 
-        Ion.with(getActivity()).load(currentAudio.getThumbFile()).intoImageView(audioThumb);
-        Ion.with(getActivity()).load(currentAudio.getThumbFile()).intoImageView(miniPlayerImageView);
+            playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
 
-        playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-
-        String downloadedString = "";
-        if (downloaded) {
-            downloadedString = "[" + getString(R.string.downloaded) + "] ";
-        }
-
-        miniPlayerText.setText(downloadedString + audio.getName());
-        playerTitle.setText(downloadedString + audio.getName());
-        if (!currentAudio.getDescription().equals("")) {
-            description.setText(currentAudio.getDescription());
-        } else {
-            description.setVisibility(View.GONE);
-        }
-        if (!currentAudio.getTags().equals("")) {
-            String tagsString = "";
-            for (String tag : currentAudio.getTags().split(",")) {
-                tagsString += "#" + tag + " ";
+            String downloadedString = "";
+            if (downloaded) {
+                downloadedString = "[" + getString(R.string.downloaded) + "] ";
             }
-            tags.setText(tagsString);
-        } else {
-            tags.setVisibility(View.GONE);
+
+            miniPlayerText.setText(downloadedString + audio.getName());
+            playerTitle.setText(downloadedString + audio.getName());
+            if (!getCurrentAudio().getDescription().equals("")) {
+                description.setText(getCurrentAudio().getDescription());
+            } else {
+                description.setVisibility(View.GONE);
+            }
+            if (!getCurrentAudio().getTags().equals("")) {
+                String tagsString = "";
+                for (String tag : getCurrentAudio().getTags().split(",")) {
+                    tagsString += "#" + tag + " ";
+                }
+                tags.setText(tagsString);
+            } else {
+                tags.setVisibility(View.GONE);
+            }
+
+            currentTime.setText("00:00:00");
+            totalTime.setText("???");
+
+            ((MainActivity) getActivity()).expandPanel();
+
+            AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: " + getCurrentAudio().getHash());
+
+            postGA();
         }
-
-        currentTime.setText("00:00:00");
-        totalTime.setText("???");
-
-        ((MainActivity) getActivity()).expandPanel();
-
-
-
-        postVideoView();
-        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: " + currentAudio.getHash());
-
-        postGA();
     }
 
     public void releasePlayer() {
         /*if (audioPlayer != null) {
             audioPlayer.release();
         }*/
-        if (wifiLock != null) {
+        /*if (wifiLock != null) {
             if (wifiLock.isHeld()) {
                 wifiLock.release();
             }
         }
         if (notificationManager != null) {
             notificationManager.cancel(NOTIFICATION_ID);
-        }
+        }*/
     }
 
     public RelativeLayout getPlayerToolbar() {
@@ -571,16 +512,16 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     public MediaPlayer getAudioPlayer() {
-        return null;
+        return mainActivity.playbackService.getAudioPlayer();
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (fromUser) {
+        /*if (fromUser) {
             audioPlayer.seekTo(progress);
             updateTime();
             saveCurrentAudioTime();
-        }
+        }*/
     }
 
     @Override
@@ -644,16 +585,12 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onSuccessResponse(JSONObject response, RequestType requestType) {
-        switch(requestType) {
-            case POST_VIDEO_VIEW:
-                SmartLog.Log(SmartLog.LogLevel.DEBUG, "postedVideoView", "ok");
-                break;
-        }
+
     }
 
     @Override
     public void onErrorResponse(VolleyError exception, RequestType requestType) {
-        BaseActivity.responseError(exception, getActivity());
+
     }
 }
 

@@ -2,9 +2,11 @@ package com.chaemil.hgms.activity;
 
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -16,6 +18,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.TextViewCompat;
@@ -40,6 +43,7 @@ import com.chaemil.hgms.model.LiveStream;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.NetworkUtils;
@@ -162,7 +166,7 @@ public class MainActivity extends BaseActivity implements
                 public void run() {
                     getLiveStream();
                 }
-            }, 0, 10 * 1000);
+            }, 0, 30 * 1000);
         } else {
             noConnectionMessage();
         }
@@ -502,6 +506,23 @@ public class MainActivity extends BaseActivity implements
         statusMessageWrapper.setVisibility(View.GONE);
         changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
     }
+
+    public AudioPlaybackService playbackService;
+    public boolean playbackBound;
+    public ServiceConnection playbackConnection = new ServiceConnection(){
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            AudioPlaybackService.AudioPlaybackBind binder = (AudioPlaybackService.AudioPlaybackBind)service;
+            playbackService = binder.getService();
+            playbackBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            playbackBound = false;
+        }
+    };
 
     private class MainActivityReceiver extends BroadcastReceiver {
 

@@ -61,13 +61,8 @@
 
         </activity>
 
-        <service android:name=".service.DownloadService">
-
-        </service>
-
-        <service android:name=".service.ObserverService">
-
-        </service>
+        <service android:name=".service.DownloadService" />
+        <service android:name=".service.AudioPlaybackService" />
 
         <receiver android:name=".receiver.BootAndUpdateReceiver">
             <intent-filter>
