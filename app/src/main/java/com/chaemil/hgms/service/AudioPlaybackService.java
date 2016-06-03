@@ -64,17 +64,6 @@ public class AudioPlaybackService extends Service implements
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-
-        initMusicPlayer();
-        setupReceiver();
-        if (intent != null) {
-            if (intent.getParcelableExtra(AUDIO) != null) {
-                currentAudio = intent.getParcelableExtra(AUDIO);
-                downloaded = intent.getBooleanExtra(DOWNLOADED, false);
-                playNewAudio();
-            }
-        }
-
         return audioPlaybackBind;
     }
 
@@ -85,12 +74,6 @@ public class AudioPlaybackService extends Service implements
         return false;
     }
 
-    public void onCreate() {
-        super.onCreate();
-        audioPos = 0;
-        player = new MediaPlayer();
-    }
-
     @Override
     public void onDestroy() {
         stop();
@@ -99,7 +82,23 @@ public class AudioPlaybackService extends Service implements
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        init(intent);
         return START_STICKY;
+    }
+
+    private void init(Intent bindIntent) {
+        audioPos = 0;
+        player = new MediaPlayer();
+
+        initMusicPlayer();
+        setupReceiver();
+        if (bindIntent != null) {
+            if (bindIntent.getParcelableExtra(AUDIO) != null) {
+                currentAudio = bindIntent.getParcelableExtra(AUDIO);
+                downloaded = bindIntent.getBooleanExtra(DOWNLOADED, false);
+                playNewAudio();
+            }
+        }
     }
 
     public void initMusicPlayer(){

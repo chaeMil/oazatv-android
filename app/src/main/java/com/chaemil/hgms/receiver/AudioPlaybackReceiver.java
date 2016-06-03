@@ -63,6 +63,7 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
                     app.getMainActivity().hidePanel();
                     app.getMainActivity().playAudioIntent = null;
                     service.stop();
+                    app.stopService(new Intent(app, AudioPlaybackService.class));
                 }
                 break;
 
