@@ -1,13 +1,18 @@
 package com.chaemil.hgms.service;
 
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
@@ -16,14 +21,19 @@ import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
+import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.utils.SmartLog;
 import com.github.johnpersano.supertoasts.SuperToast;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
 
@@ -48,13 +58,15 @@ public class AudioPlaybackService extends Service implements
     private NotificationCompat.Builder notificationBuilder;
     private int duration;
     private final AudioPlaybackBind audioPlaybackBind = new AudioPlaybackBind();
-    private boolean downloaded = false;
+    private AudioPlaybackReceiver audioPlaybackReceiver;
+    private boolean downloaded;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
 
         initMusicPlayer();
+        setupReceiver();
         if (intent != null) {
             if (intent.getParcelableExtra(AUDIO) != null) {
                 currentAudio = intent.getParcelableExtra(AUDIO);
@@ -79,6 +91,17 @@ public class AudioPlaybackService extends Service implements
         player = new MediaPlayer();
     }
 
+    @Override
+    public void onDestroy() {
+        stop();
+        super.onDestroy();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
+    }
+
     public void initMusicPlayer(){
         player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -89,6 +112,18 @@ public class AudioPlaybackService extends Service implements
 
         wifiLock = ((WifiManager) getApplication().getSystemService(Context.WIFI_SERVICE))
                 .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
+    }
+
+    private void setupReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(AudioPlayerFragment.NOTIFY_PLAY_PAUSE);
+        filter.addAction(AudioPlayerFragment.NOTIFY_OPEN);
+        filter.addAction(AudioPlayerFragment.NOTIFY_FF);
+        filter.addAction(AudioPlayerFragment.NOTIFY_REW);
+        filter.addAction(AudioPlayerFragment.NOTIFY_DELETE);
+
+        audioPlaybackReceiver = new AudioPlaybackReceiver(this, ((OazaApp) getApplication()));
+        registerReceiver(audioPlaybackReceiver, filter);
     }
 
     public void saveCurrentAudioTime() {
@@ -113,6 +148,50 @@ public class AudioPlaybackService extends Service implements
     private void postVideoView() {
         JsonObjectRequest postView = RequestFactory.postVideoView(this, currentAudio.getHash());
         MyRequestService.getRequestQueue().add(postView);
+    }
+
+    public void playPauseAudio() {
+        if (player != null) {
+            if (player.isPlaying()) {
+                pauseAudio();
+            } else {
+                playAudio();
+            }
+        }
+    }
+
+    public void pauseAudio() {
+        if (player != null) {
+            player.pause();
+
+            if (wifiLock.isHeld()) {
+                wifiLock.release();
+            }
+
+            notificationBuilder.mActions.get(1).icon = R.drawable.play;
+            notificationManager.notify(NOTIFICATION_ID,
+                    notificationBuilder.build());
+
+            /*playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));*/
+        }
+    }
+
+    public void playAudio() {
+        player.start();
+
+        notificationBuilder.mActions.get(1).icon = R.drawable.pause;
+        notificationManager.notify(NOTIFICATION_ID,
+                notificationBuilder.build());
+
+        wifiLock.acquire();
+
+        /*playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+
+        if (seekBar != null) {
+            seekBar.postDelayed(onEverySecond, 1000);
+        }*/
     }
 
     public void playNewAudio() {
@@ -155,38 +234,39 @@ public class AudioPlaybackService extends Service implements
 
     private void createNotification() {
 
-        /*if (getApplication() != null
+        if (getApplication() != null
                 && getApplication().getSystemService(Context.NOTIFICATION_SERVICE) != null) {
 
             notificationManager = (NotificationManager) getApplication().getSystemService(Context.NOTIFICATION_SERVICE);
 
-            Intent open = new Intent(NOTIFY_OPEN);
-            PendingIntent pOpen = PendingIntent.getBroadcast(mainActivity, 0, open, PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent open = new Intent(AudioPlayerFragment.NOTIFY_OPEN);
+            PendingIntent pOpen = PendingIntent.getBroadcast(getApplication(), 0, open, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            Intent pause = new Intent(NOTIFY_PLAY_PAUSE);
-            PendingIntent pPause = PendingIntent.getBroadcast(mainActivity, 0, pause, PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent pause = new Intent(AudioPlayerFragment.NOTIFY_PLAY_PAUSE);
+            PendingIntent pPause = PendingIntent.getBroadcast(getApplication(), 0, pause, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            Intent ff = new Intent(NOTIFY_FF);
-            PendingIntent pFf = PendingIntent.getBroadcast(mainActivity, 0, ff, PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent ff = new Intent(AudioPlayerFragment.NOTIFY_FF);
+            PendingIntent pFf = PendingIntent.getBroadcast(getApplication(), 0, ff, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            Intent rew = new Intent(NOTIFY_REW);
-            PendingIntent pRew = PendingIntent.getBroadcast(mainActivity, 0, rew, PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent rew = new Intent(AudioPlayerFragment.NOTIFY_REW);
+            PendingIntent pRew = PendingIntent.getBroadcast(getApplication(), 0, rew, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            Intent delete = new Intent(NOTIFY_DELETE);
-            PendingIntent pDelete = PendingIntent.getBroadcast(mainActivity, 0, delete, PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent delete = new Intent(AudioPlayerFragment.NOTIFY_DELETE);
+            PendingIntent pDelete = PendingIntent.getBroadcast(getApplication(), 0, delete, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getActivity())
+            notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplication())
                     .setContentTitle(currentAudio.getName())
                     .setContentText(currentAudio.getDate())
                     .setSmallIcon(R.drawable.white_logo)
                     .setContentIntent(pOpen)
-                    .setOngoing(true)
                     .setDeleteIntent(pDelete)
+                    .setAutoCancel(true)
                     .addAction(R.drawable.rew, "", pRew)
                     .addAction(R.drawable.pause, "", pPause)
                     .addAction(R.drawable.ff, "", pFf)
+                    .addAction(R.drawable.ic_close, "", pDelete)
                     .setStyle(new NotificationCompat.MediaStyle()
-                            .setShowActionsInCompactView(0, 1, 2)
+                            .setShowActionsInCompactView(0, 1, 2, 3)
                     );
 
             int sdk = android.os.Build.VERSION.SDK_INT;
@@ -195,6 +275,7 @@ public class AudioPlaybackService extends Service implements
             }
 
             notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+            startForeground(NOTIFICATION_ID, notificationBuilder.build());
 
             Ion.with(getApplication())
                     .load(currentAudio.getThumbFile())
@@ -206,7 +287,16 @@ public class AudioPlaybackService extends Service implements
                             notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
                         }
                     });
-        }*/
+        }
+    }
+
+    public void stop() {
+        saveCurrentAudioTime();
+        player.stop();
+        player = null;
+        unregisterReceiver(audioPlaybackReceiver);
+        stopForeground(true);
+        stopSelf();
     }
 
     public class AudioPlaybackBind extends Binder {

@@ -1,6 +1,8 @@
 package com.chaemil.hgms.model;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.service.DownloadService;
@@ -16,7 +18,7 @@ import java.util.Locale;
 /**
  * Created by chaemil on 18.12.15.
  */
-public class Video extends SugarRecord {
+public class Video extends SugarRecord implements Parcelable {
 
     public static final int NOT_DOWNLOADED = 0;
     public static final int IN_DOWNLOAD_QUEUE = 1;
@@ -104,7 +106,7 @@ public class Video extends SugarRecord {
         ArrayList<Video> queue = new ArrayList<>();
         List<Video> list = new ArrayList<Video>();
         try {
-             list = Video.find(Video.class, "in_download_queue = ? AND downloaded = ?", String.valueOf(1), String.valueOf(0));
+            list = Video.find(Video.class, "in_download_queue = ? AND downloaded = ?", String.valueOf(1), String.valueOf(0));
         } catch (Exception e) {
             SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
         }
@@ -276,4 +278,68 @@ public class Video extends SugarRecord {
     public int getCurrentTime() {
         return currentTime;
     }
+
+    protected Video(Parcel in) {
+        id = in.readByte() == 0x00 ? null : in.readLong();
+        serverId = in.readInt();
+        hash = in.readString();
+        date = in.readString();
+        nameCS = in.readString();
+        nameEN = in.readString();
+        tags = in.readString();
+        videoFile = in.readString();
+        audioFile = in.readString();
+        thumbFile = in.readString();
+        views = in.readInt();
+        categories = in.readString();
+        descriptionCS = in.readString();
+        descriptionEN = in.readString();
+        downloaded = in.readByte() != 0x00;
+        inDownloadQueue = in.readByte() != 0x00;
+        currentTime = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeLong(id);
+        }
+        dest.writeInt(serverId);
+        dest.writeString(hash);
+        dest.writeString(date);
+        dest.writeString(nameCS);
+        dest.writeString(nameEN);
+        dest.writeString(tags);
+        dest.writeString(videoFile);
+        dest.writeString(audioFile);
+        dest.writeString(thumbFile);
+        dest.writeInt(views);
+        dest.writeString(categories);
+        dest.writeString(descriptionCS);
+        dest.writeString(descriptionEN);
+        dest.writeByte((byte) (downloaded ? 0x01 : 0x00));
+        dest.writeByte((byte) (inDownloadQueue ? 0x01 : 0x00));
+        dest.writeInt(currentTime);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Video> CREATOR = new Parcelable.Creator<Video>() {
+        @Override
+        public Video createFromParcel(Parcel in) {
+            return new Video(in);
+        }
+
+        @Override
+        public Video[] newArray(int size) {
+            return new Video[size];
+        }
+    };
 }

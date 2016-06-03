@@ -273,7 +273,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private void swipeDismissPlayer(boolean right) {
         //saveCurrentAudioTime();
 
-        pauseAudio();
+        //pauseAudio();
         releasePlayer();
         if (right) {
             YoYo.with(Techniques.SlideOutRight).duration(300).playOn(miniPlayer);
@@ -294,13 +294,13 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.play_pause:
-                playPauseAudio();
+                //playPauseAudio();
                 break;
             case R.id.rew:
                 seekREW();
                 break;
             case R.id.mini_play_pause:
-                playPauseAudio();
+                //playPauseAudio();
                 break;
             case R.id.back:
                 ((MainActivity) getActivity()).collapsePanel();
@@ -362,61 +362,12 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
-    public void playPauseAudio() {
-
-        /*if (audioPlayer != null) {
-            if (audioPlayer.isPlaying()) {
-                pauseAudio();
-            } else {
-                playAudio();
-            }
-        }*/
-    }
-
-
-
     public void seekFF() {
         //audioPlayer.seekTo(audioPlayer.getCurrentPosition() + 10000);
     }
 
     public void seekREW() {
         //audioPlayer.seekTo(audioPlayer.getCurrentPosition() - 30 * 1000);
-    }
-
-    public void pauseAudio() {
-        /*if (audioPlayer != null) {
-            audioPlayer.pause();
-
-            if (wifiLock.isHeld()) {
-                wifiLock.release();
-            }
-
-            notificationBuilder.setOngoing(false)
-                    .mActions.get(1).icon = R.drawable.play;
-            notificationManager.notify(NOTIFICATION_ID,
-                    notificationBuilder.build());
-
-            playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
-            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
-        }*/
-    }
-
-    public void playAudio() {
-        /*audioPlayer.start();
-
-        notificationBuilder.setOngoing(true)
-                .mActions.get(1).icon = R.drawable.pause;
-        notificationManager.notify(NOTIFICATION_ID,
-                notificationBuilder.build());
-
-        wifiLock.acquire();
-
-        playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-
-        if (seekBar != null) {
-            seekBar.postDelayed(onEverySecond, 1000);
-        }*/
     }
 
     public void switchMiniPlayer(boolean show) {
@@ -441,12 +392,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     public void playNewAudio(final Video audio, final boolean downloaded) {
-
-        if (playIntent == null){
-            playIntent = new Intent(mainActivity, AudioPlaybackService.class);
-            mainActivity.bindService(playIntent, mainActivity.playbackConnection, Context.BIND_AUTO_CREATE);
-            mainActivity.startService(playIntent);
-        }
 
         if (mainActivity.playbackBound) {
 

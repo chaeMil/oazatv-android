@@ -43,6 +43,7 @@ import com.chaemil.hgms.model.LiveStream;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.receiver.MainActivityReceiver;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.MyRequestService;
@@ -82,6 +83,7 @@ public class MainActivity extends BaseActivity implements
     private LiveStream liveStream;
     private TextView liveStreamMessageWatch;
     private boolean deepLink;
+    public Intent playAudioIntent;
 
     @Override
     protected void onResume() {
@@ -141,17 +143,12 @@ public class MainActivity extends BaseActivity implements
 
     private void setupReceiver() {
         IntentFilter filter = new IntentFilter();
-        filter.addAction(AudioPlayerFragment.NOTIFY_PLAY_PAUSE);
-        filter.addAction(AudioPlayerFragment.NOTIFY_OPEN);
-        filter.addAction(AudioPlayerFragment.NOTIFY_FF);
-        filter.addAction(AudioPlayerFragment.NOTIFY_REW);
-        filter.addAction(AudioPlayerFragment.NOTIFY_DELETE);
         filter.addAction(DownloadService.DOWNLOAD_COMPLETE);
         filter.addAction(DownloadService.DOWNLOAD_STARTED);
         filter.addAction(DownloadService.OPEN_DOWNLOADS);
         filter.addAction(DownloadService.KILL_DOWNLOAD);
 
-        mainActivityReceiver = new MainActivityReceiver();
+        mainActivityReceiver = new MainActivityReceiver(this);
         registerReceiver(mainActivityReceiver, filter);
     }
 
@@ -189,7 +186,7 @@ public class MainActivity extends BaseActivity implements
         unregisterReceiver(mainActivityReceiver);
     }
 
-    private void bringToFront() {
+    public void bringToFront() {
         Intent i = new Intent(getBaseContext(), MainActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Intent.FLAG_ACTIVITY_NEW_TASK);
         getBaseContext().startActivity(i);
@@ -280,16 +277,25 @@ public class MainActivity extends BaseActivity implements
 
     }
 
-    public void playNewAudio(final Video video) {
+    public void playNewAudio(final Video audio) {
 
         boolean downloaded = false;
-        if (Video.getDownloadStatus(((OazaApp) getApplication()), video.getServerId()) == Video.DOWNLOADED) {
+        if (Video.getDownloadStatus(((OazaApp) getApplication()), audio.getServerId()) == Video.DOWNLOADED) {
             downloaded = true;
         }
 
         if (!downloaded && sharedPreferences.loadStreamOnWifi() && !wifi.isConnected()) {
             SuperToast.create(this, getString(R.string.cannot_play_without_wifi), SuperToast.Duration.MEDIUM).show();
         } else {
+
+            if (playAudioIntent == null){
+                playAudioIntent = new Intent(this, AudioPlaybackService.class);
+                playAudioIntent.putExtra(AudioPlaybackService.AUDIO, audio);
+                playAudioIntent.putExtra(AudioPlaybackService.DOWNLOADED, downloaded);
+                bindService(playAudioIntent, playbackConnection, Context.BIND_AUTO_CREATE);
+                startService(playAudioIntent);
+            }
+
             videoPlayerFragment = null;
             audioPlayerFragment = new AudioPlayerFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -302,7 +308,7 @@ public class MainActivity extends BaseActivity implements
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    getAudioPlayerFragment().playNewAudio(video, finalDownloaded);
+                    getAudioPlayerFragment().playNewAudio(audio, finalDownloaded);
                 }
             }, 600);
         }
@@ -523,78 +529,6 @@ public class MainActivity extends BaseActivity implements
             playbackBound = false;
         }
     };
-
-    private class MainActivityReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            SmartLog.Log(SmartLog.LogLevel.DEBUG, "onReceive", intent.getAction());
-
-            switch (intent.getAction()) {
-
-                case AudioPlayerFragment.NOTIFY_PLAY_PAUSE:
-                    if (getAudioPlayerFragment() != null) {
-                        getAudioPlayerFragment().playPauseAudio();
-                    }
-                    break;
-                case AudioPlayerFragment.NOTIFY_OPEN:
-
-                    Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-                    context.sendBroadcast(it);
-
-                    bringToFront();
-                    expandPanel();
-
-                    break;
-                case AudioPlayerFragment.NOTIFY_FF:
-                    if (getAudioPlayerFragment() != null) {
-                        getAudioPlayerFragment().seekFF();
-                    }
-                    break;
-                case AudioPlayerFragment.NOTIFY_REW:
-                    if (getAudioPlayerFragment() != null) {
-                        getAudioPlayerFragment().seekREW();
-                    }
-                    break;
-                case AudioPlayerFragment.NOTIFY_DELETE:
-                    hidePanel();
-                    break;
-                case DownloadService.DOWNLOAD_COMPLETE:
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            notifyDownloadFinished();
-                        }
-                    }, 1000);
-                    break;
-                case DownloadService.DOWNLOAD_STARTED:
-                    notifyDownloadStarted();
-                    break;
-                case DownloadService.OPEN_DOWNLOADS:
-                    bringToFront();
-                    if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
-                        collapsePanel();
-                    }
-                    if (getMainFragment().isAlbumOpened()) {
-                        getMainFragment().closeAlbum();
-                    }
-                    getMainFragment().hideSettings();
-                    getMainFragment().getSearchView().closeSearch();
-                    getMainFragment().getPager().setCurrentItem(2);
-                    break;
-                case DownloadService.KILL_DOWNLOAD:
-                    if (((OazaApp) context.getApplicationContext()).getDownloadService() != null) {
-                        ((OazaApp) context.getApplicationContext()).getDownloadService().killCurrentDownload();
-                    }
-                    break;
-
-            }
-
-
-        }
-    }
 
     @Override
     public void onSuccessResponse(JSONObject response, RequestType requestType) {

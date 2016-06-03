@@ -57,6 +57,11 @@ public class DownloadService extends IntentService {
         init();
     }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
+    }
+
     private void init() {
 
         openDownloads = new Intent(OPEN_DOWNLOADS);
