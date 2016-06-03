@@ -38,7 +38,7 @@ public class AdapterUtils {
                             dialog.dismiss();
                             break;
                         case 1:
-                            mainActivity.playNewAudio(video);
+                            mainActivity.playNewAudio(video, true);
                             dialog.dismiss();
                             break;
                         case 2:
@@ -61,7 +61,7 @@ public class AdapterUtils {
                 public void onClick(DialogInterface dialog, int which) {
                     switch(which) {
                         case 0:
-                            mainActivity.playNewAudio(video);
+                            mainActivity.playNewAudio(video, true);
                             dialog.dismiss();
                             break;
                         case 1:

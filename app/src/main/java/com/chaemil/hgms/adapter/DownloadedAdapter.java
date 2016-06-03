@@ -73,7 +73,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
             @Override
             public void onClick(View v) {
                 if (video.isDownloaded()) {
-                    mainActivity.playNewAudio(video);
+                    mainActivity.playNewAudio(video, true);
                 }
             }
         });

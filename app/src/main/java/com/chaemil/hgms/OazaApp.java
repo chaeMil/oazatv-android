@@ -1,6 +1,8 @@
 package com.chaemil.hgms;
 
+import android.app.ActivityManager;
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.support.multidex.MultiDex;
@@ -40,6 +42,12 @@ public class OazaApp extends Application {
         AnalyticsService.init(this);
         MultiDex.install(this);
         MyRequestService.init(this);
+
+        if (isMyServiceRunning(AudioPlaybackService.class)) {
+            if (AudioPlaybackService.getInstance() != null) {
+                playbackService = AudioPlaybackService.getInstance();
+            }
+        }
     }
 
     @Override
@@ -92,4 +100,13 @@ public class OazaApp extends Application {
         this.mainActivity = mainActivity;
     }
 
+    public boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

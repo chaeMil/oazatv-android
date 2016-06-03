@@ -62,6 +62,11 @@ public class AudioPlaybackService extends Service implements
     private AudioPlaybackReceiver audioPlaybackReceiver;
     private boolean downloaded;
     private int notificationID;
+    private static AudioPlaybackService instance = null;
+
+    public static AudioPlaybackService getInstance() {
+        return instance;
+    }
 
     @Nullable
     @Override
@@ -89,6 +94,8 @@ public class AudioPlaybackService extends Service implements
     }
 
     private void init(Intent bindIntent) {
+        instance = this;
+
         ((OazaApp) getApplication()).playbackService = this;
 
         Random random = new Random();
@@ -145,6 +152,10 @@ public class AudioPlaybackService extends Service implements
 
     public Video getCurrentAudio() {
         return currentAudio;
+    }
+
+    public boolean getIsPlayingDownloaded() {
+        return downloaded;
     }
 
     public MediaPlayer getAudioPlayer() {
@@ -292,15 +303,22 @@ public class AudioPlaybackService extends Service implements
             player = null;
         }
 
-        unregisterReceiver(audioPlaybackReceiver);
+        if (audioPlaybackReceiver != null) {
+            try {
+                unregisterReceiver(audioPlaybackReceiver);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         stopForeground(true);
         stopSelf();
     }
 
     public class AudioPlaybackBind extends Binder {
+
         public AudioPlaybackService getService() {
-            return AudioPlaybackService.this;
+            return getInstance();
         }
     }
 

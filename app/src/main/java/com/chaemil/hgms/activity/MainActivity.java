@@ -91,6 +91,8 @@ public class MainActivity extends BaseActivity implements
         adjustLayout();
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+
+        reconnectToPlaybackService();
     }
 
     @Override
@@ -271,12 +273,33 @@ public class MainActivity extends BaseActivity implements
             if (sharedPreferences.loadStreamOnWifi()) {
                 SuperToast.create(this, getString(R.string.cannot_play_without_wifi), SuperToast.Duration.MEDIUM).show();
             } else if (sharedPreferences.loadStreamAudio()) {
-                playNewAudio(video);
+                playNewAudio(video, true);
             } else {
                 playVideo(video);
             }
         }
 
+    }
+
+    private void reconnectToPlaybackService() {
+        AudioPlaybackService service = ((OazaApp) getApplication()).playbackService;
+        if (service != null) {
+            if (getPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN) {
+                getPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+
+            if (getAudioPlayerFragment() == null) {
+                audioPlayerFragment = new AudioPlayerFragment();
+            }
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.player_fragment, audioPlayerFragment, AudioPlayerFragment.TAG);
+            transaction.commit();
+
+            getAudioPlayerFragment().playNewAudio(this,
+                    service.getCurrentAudio(),
+                    service.getIsPlayingDownloaded());
+        }
     }
 
     private void stopAudioPlaybackService() {
@@ -304,7 +327,7 @@ public class MainActivity extends BaseActivity implements
         startService(playAudioIntent);
     }
 
-    public void playNewAudio(final Video audio) {
+    public void playNewAudio(final Video audio, boolean expandPanel) {
 
         boolean downloaded = false;
         if (Video.getDownloadStatus(((OazaApp) getApplication()), audio.getServerId()) == Video.DOWNLOADED) {
@@ -321,15 +344,18 @@ public class MainActivity extends BaseActivity implements
             audioPlayerFragment = new AudioPlayerFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.player_fragment, audioPlayerFragment, AudioPlayerFragment.TAG);
+
             transaction.commit();
-            expandPanel();
+            if (expandPanel) {
+                expandPanel();
+            }
 
             Handler handler = new Handler();
             final boolean finalDownloaded = downloaded;
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    getAudioPlayerFragment().playNewAudio(audio, finalDownloaded);
+                    getAudioPlayerFragment().playNewAudio(MainActivity.this, audio, finalDownloaded);
                 }
             }, 600);
         }
@@ -535,19 +561,17 @@ public class MainActivity extends BaseActivity implements
     }
 
     public AudioPlaybackService playbackService;
-    public boolean playbackBound;
     public ServiceConnection playbackConnection = new ServiceConnection(){
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             AudioPlaybackService.AudioPlaybackBind binder = (AudioPlaybackService.AudioPlaybackBind)service;
             playbackService = binder.getService();
-            playbackBound = true;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            playbackBound = false;
+
         }
     };
 
