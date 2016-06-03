@@ -38,6 +38,7 @@ import com.koushikdutta.ion.Ion;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Random;
 
 /**
  * Created by chaemil on 28.5.16.
@@ -46,7 +47,6 @@ public class AudioPlaybackService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener, RequestFactoryListener {
 
-    private static final int NOTIFICATION_ID = 1111;
     public static final String AUDIO = "current_audio";
     public static final String DOWNLOADED = "downloaded";
 
@@ -60,6 +60,7 @@ public class AudioPlaybackService extends Service implements
     private final AudioPlaybackBind audioPlaybackBind = new AudioPlaybackBind();
     private AudioPlaybackReceiver audioPlaybackReceiver;
     private boolean downloaded;
+    private int notificationID;
 
     @Nullable
     @Override
@@ -87,6 +88,11 @@ public class AudioPlaybackService extends Service implements
     }
 
     private void init(Intent bindIntent) {
+        ((OazaApp) getApplication()).playbackService = this;
+
+        Random random = new Random();
+        notificationID = random.nextInt(200 - 0 + 1);
+
         audioPos = 0;
         player = new MediaPlayer();
 
@@ -168,7 +174,7 @@ public class AudioPlaybackService extends Service implements
             }
 
             notificationBuilder.mActions.get(1).icon = R.drawable.play;
-            notificationManager.notify(NOTIFICATION_ID,
+            notificationManager.notify(notificationID,
                     notificationBuilder.build());
 
             /*playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
@@ -180,7 +186,7 @@ public class AudioPlaybackService extends Service implements
         player.start();
 
         notificationBuilder.mActions.get(1).icon = R.drawable.pause;
-        notificationManager.notify(NOTIFICATION_ID,
+        notificationManager.notify(notificationID,
                 notificationBuilder.build());
 
         wifiLock.acquire();
@@ -273,8 +279,8 @@ public class AudioPlaybackService extends Service implements
                 notificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
             }
 
-            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-            startForeground(NOTIFICATION_ID, notificationBuilder.build());
+            notificationManager.notify(notificationID, notificationBuilder.build());
+            startForeground(notificationID, notificationBuilder.build());
 
             Ion.with(getApplication())
                     .load(currentAudio.getThumbFile())
@@ -283,17 +289,24 @@ public class AudioPlaybackService extends Service implements
                         @Override
                         public void onCompleted(Exception e, Bitmap result) {
                             notificationBuilder.setLargeIcon(result);
-                            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+                            notificationManager.notify(notificationID, notificationBuilder.build());
                         }
                     });
         }
     }
 
     public void stop() {
+        ((OazaApp) getApplication()).playbackService = null;
+
         saveCurrentAudioTime();
-        player.stop();
-        player = null;
+
+        if (player != null) {
+            player.stop();
+            player = null;
+        }
+
         unregisterReceiver(audioPlaybackReceiver);
+
         stopForeground(true);
         stopSelf();
     }

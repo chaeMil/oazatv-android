@@ -277,6 +277,24 @@ public class MainActivity extends BaseActivity implements
 
     }
 
+    private void startAudioPlaybackService(Video audio, boolean downloaded) {
+        if(isMyServiceRunning(AudioPlaybackService.class)) {
+            if (playAudioIntent != null) {
+                Video currentlyPlaying = playAudioIntent.getParcelableExtra(AudioPlaybackService.AUDIO);
+                if (!currentlyPlaying.equals(audio)) {
+                    if (((OazaApp) getApplication()).playbackService != null) {
+                        ((OazaApp) getApplication()).playbackService.stop();
+                    }
+                }
+            }
+        }
+        playAudioIntent = new Intent(this, AudioPlaybackService.class);
+        playAudioIntent.putExtra(AudioPlaybackService.AUDIO, audio);
+        playAudioIntent.putExtra(AudioPlaybackService.DOWNLOADED, downloaded);
+        bindService(playAudioIntent, playbackConnection, Context.BIND_AUTO_CREATE);
+        startService(playAudioIntent);
+    }
+
     public void playNewAudio(final Video audio) {
 
         boolean downloaded = false;
@@ -288,13 +306,7 @@ public class MainActivity extends BaseActivity implements
             SuperToast.create(this, getString(R.string.cannot_play_without_wifi), SuperToast.Duration.MEDIUM).show();
         } else {
 
-            if (playAudioIntent == null){
-                playAudioIntent = new Intent(this, AudioPlaybackService.class);
-                playAudioIntent.putExtra(AudioPlaybackService.AUDIO, audio);
-                playAudioIntent.putExtra(AudioPlaybackService.DOWNLOADED, downloaded);
-                bindService(playAudioIntent, playbackConnection, Context.BIND_AUTO_CREATE);
-                startService(playAudioIntent);
-            }
+            startAudioPlaybackService(audio, downloaded);
 
             videoPlayerFragment = null;
             audioPlayerFragment = new AudioPlayerFragment();

@@ -10,6 +10,7 @@ import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.activity.SplashActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
+import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.crashlytics.android.Crashlytics;
@@ -29,8 +30,7 @@ public class OazaApp extends Application {
     public SplashActivity splashActivity;
     public boolean appVisible = false;
     private Tracker mTracker;
-    private ServiceConnection observerService;
-    private Intent observerIntent;
+    public AudioPlaybackService playbackService;
 
     @Override
     public void onCreate() {
