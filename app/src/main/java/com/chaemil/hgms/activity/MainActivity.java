@@ -296,9 +296,9 @@ public class MainActivity extends BaseActivity implements
             transaction.replace(R.id.player_fragment, audioPlayerFragment, AudioPlayerFragment.TAG);
             transaction.commit();
 
-            getAudioPlayerFragment().playNewAudio(this,
+            /*getAudioPlayerFragment().playNewAudio(this,
                     service.getCurrentAudio(),
-                    service.getIsPlayingDownloaded());
+                    service.getIsPlayingDownloaded());*/
         }
     }
 
@@ -485,12 +485,6 @@ public class MainActivity extends BaseActivity implements
 
             getMainFragment().hideSettings();
 
-        } else if (getAudioPlayerFragment() != null) {
-            if (getAudioPlayerFragment().getAudioPlayer() != null) {
-                moveTaskToBack(true);
-            } else {
-                finish();
-            }
         } else if (((OazaApp) getApplication()).isDownloadingNow()) {
             moveTaskToBack(true);
         } else {
