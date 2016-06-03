@@ -38,6 +38,7 @@ import com.koushikdutta.ion.Ion;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -242,34 +243,20 @@ public class AudioPlaybackService extends Service implements
         if (getApplication() != null
                 && getApplication().getSystemService(Context.NOTIFICATION_SERVICE) != null) {
 
+            ArrayList<PendingIntent> intents = AudioPlaybackPendingIntents.generate(getApplication());
+
             notificationManager = (NotificationManager) getApplication().getSystemService(Context.NOTIFICATION_SERVICE);
-
-            Intent open = new Intent(AudioPlayerFragment.NOTIFY_OPEN);
-            PendingIntent pOpen = PendingIntent.getBroadcast(getApplication(), 0, open, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Intent pause = new Intent(AudioPlayerFragment.NOTIFY_PLAY_PAUSE);
-            PendingIntent pPause = PendingIntent.getBroadcast(getApplication(), 0, pause, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Intent ff = new Intent(AudioPlayerFragment.NOTIFY_FF);
-            PendingIntent pFf = PendingIntent.getBroadcast(getApplication(), 0, ff, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Intent rew = new Intent(AudioPlayerFragment.NOTIFY_REW);
-            PendingIntent pRew = PendingIntent.getBroadcast(getApplication(), 0, rew, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Intent delete = new Intent(AudioPlayerFragment.NOTIFY_DELETE);
-            PendingIntent pDelete = PendingIntent.getBroadcast(getApplication(), 0, delete, PendingIntent.FLAG_UPDATE_CURRENT);
-
             notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplication())
                     .setContentTitle(currentAudio.getName())
                     .setContentText(currentAudio.getDate())
                     .setSmallIcon(R.drawable.white_logo)
-                    .setContentIntent(pOpen)
-                    .setDeleteIntent(pDelete)
+                    .setContentIntent(intents.get(0))
+                    .setDeleteIntent(intents.get(4))
                     .setAutoCancel(true)
-                    .addAction(R.drawable.rew, "", pRew)
-                    .addAction(R.drawable.pause, "", pPause)
-                    .addAction(R.drawable.ff, "", pFf)
-                    .addAction(R.drawable.ic_close, "", pDelete)
+                    .addAction(R.drawable.rew, "", intents.get(3))
+                    .addAction(R.drawable.pause, "", intents.get(1))
+                    .addAction(R.drawable.ff, "", intents.get(2))
+                    .addAction(R.drawable.ic_close, "", intents.get(4))
                     .setStyle(new NotificationCompat.MediaStyle()
                             .setShowActionsInCompactView(0, 1, 2, 3)
                     );

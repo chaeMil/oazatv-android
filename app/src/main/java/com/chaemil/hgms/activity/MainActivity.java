@@ -263,6 +263,8 @@ public class MainActivity extends BaseActivity implements
 
     public void playNewVideo(final Video video) {
 
+        stopAudioPlaybackService();
+
         if (wifi.isConnected()) {
             playVideo(video);
         } else {
@@ -277,17 +279,24 @@ public class MainActivity extends BaseActivity implements
 
     }
 
+    private void stopAudioPlaybackService() {
+        if(((OazaApp) getApplication()).playbackService != null) {
+            ((OazaApp) getApplication()).playbackService.stop();
+        }
+    }
+
     private void startAudioPlaybackService(Video audio, boolean downloaded) {
-        if(isMyServiceRunning(AudioPlaybackService.class)) {
+        if(((OazaApp) getApplication()).playbackService != null) {
             if (playAudioIntent != null) {
-                Video currentlyPlaying = playAudioIntent.getParcelableExtra(AudioPlaybackService.AUDIO);
-                if (!currentlyPlaying.equals(audio)) {
-                    if (((OazaApp) getApplication()).playbackService != null) {
-                        ((OazaApp) getApplication()).playbackService.stop();
-                    }
+                Video currentlyPlayingAudio = playAudioIntent.getParcelableExtra(AudioPlaybackService.AUDIO);
+                if (!currentlyPlayingAudio.equals(audio)) {
+                    stopAudioPlaybackService();
+                } else {
+                    return;
                 }
             }
         }
+
         playAudioIntent = new Intent(this, AudioPlaybackService.class);
         playAudioIntent.putExtra(AudioPlaybackService.AUDIO, audio);
         playAudioIntent.putExtra(AudioPlaybackService.DOWNLOADED, downloaded);
