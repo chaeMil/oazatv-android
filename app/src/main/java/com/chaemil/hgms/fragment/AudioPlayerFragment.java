@@ -405,39 +405,41 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         Video audio = ((OazaApp) getActivity().getApplication()).playbackService.getCurrentAudio();
         boolean downloaded = ((OazaApp) getActivity().getApplication()).playbackService.getIsPlayingDownloaded();
 
-        Ion.with(context).load(getCurrentAudio().getThumbFile()).intoImageView(audioThumb);
-        Ion.with(context).load(getCurrentAudio().getThumbFile()).intoImageView(miniPlayerImageView);
+        if (audio != getCurrentAudio()) {
+            Ion.with(context).load(getCurrentAudio().getThumbFile()).intoImageView(audioThumb);
+            Ion.with(context).load(getCurrentAudio().getThumbFile()).intoImageView(miniPlayerImageView);
 
-        playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+            playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
 
-        String downloadedString = "";
-        if (downloaded) {
-            downloadedString = "[" + getString(R.string.downloaded) + "] ";
-        }
-
-        miniPlayerText.setText(downloadedString + audio.getName());
-        playerTitle.setText(downloadedString + audio.getName());
-        if (!getCurrentAudio().getDescription().equals("")) {
-            description.setText(getCurrentAudio().getDescription());
-        } else {
-            description.setVisibility(View.GONE);
-        }
-        if (!getCurrentAudio().getTags().equals("")) {
-            String tagsString = "";
-            for (String tag : getCurrentAudio().getTags().split(",")) {
-                tagsString += "#" + tag + " ";
+            String downloadedString = "";
+            if (downloaded) {
+                downloadedString = "[" + getString(R.string.downloaded) + "] ";
             }
-            tags.setText(tagsString);
-        } else {
-            tags.setVisibility(View.GONE);
-        }
 
-        currentTime.setText("00:00:00");
-        totalTime.setText("???");
+            miniPlayerText.setText(downloadedString + audio.getName());
+            playerTitle.setText(downloadedString + audio.getName());
+            if (!getCurrentAudio().getDescription().equals("")) {
+                description.setText(getCurrentAudio().getDescription());
+            } else {
+                description.setVisibility(View.GONE);
+            }
+            if (!getCurrentAudio().getTags().equals("")) {
+                String tagsString = "";
+                for (String tag : getCurrentAudio().getTags().split(",")) {
+                    tagsString += "#" + tag + " ";
+                }
+                tags.setText(tagsString);
+            } else {
+                tags.setVisibility(View.GONE);
+            }
+
+            currentTime.setText("00:00:00");
+            totalTime.setText("???");
+        }
     }
 
-    public void playNewAudio(Context context, final Video audio, final boolean downloaded) {
+    public void playNewAudio(Context context) {
         reconnectToService(context);
 
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: " + getCurrentAudio().getHash());

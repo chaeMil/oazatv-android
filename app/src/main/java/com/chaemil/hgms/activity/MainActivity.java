@@ -352,11 +352,10 @@ public class MainActivity extends BaseActivity implements
                 transaction.commit();
 
                 Handler handler = new Handler();
-                final boolean finalDownloaded = downloaded;
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getAudioPlayerFragment().playNewAudio(MainActivity.this, audio, finalDownloaded);
+                        getAudioPlayerFragment().playNewAudio(MainActivity.this);
                     }
                 }, 600);
             }
