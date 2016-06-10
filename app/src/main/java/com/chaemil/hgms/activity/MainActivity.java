@@ -1,7 +1,6 @@
 package com.chaemil.hgms.activity;
 
 import android.app.ActivityManager;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -21,10 +19,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.TextViewCompat;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -290,6 +285,7 @@ public class MainActivity extends BaseActivity implements
 
             if (getAudioPlayerFragment() == null) {
                 audioPlayerFragment = new AudioPlayerFragment();
+                audioPlayerFragment.init(true);
             }
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -338,26 +334,32 @@ public class MainActivity extends BaseActivity implements
             SuperToast.create(this, getString(R.string.cannot_play_without_wifi), SuperToast.Duration.MEDIUM).show();
         } else {
 
-            startAudioPlaybackService(audio, downloaded);
-
-            videoPlayerFragment = null;
-            audioPlayerFragment = new AudioPlayerFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.player_fragment, audioPlayerFragment, AudioPlayerFragment.TAG);
-
-            transaction.commit();
             if (expandPanel) {
                 expandPanel();
             }
 
-            Handler handler = new Handler();
-            final boolean finalDownloaded = downloaded;
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    getAudioPlayerFragment().playNewAudio(MainActivity.this, audio, finalDownloaded);
-                }
-            }, 600);
+            if (!((OazaApp) getApplication()).isMyServiceRunning(AudioPlaybackService.class)
+                    || ((((OazaApp) getApplication()).playbackService != null)
+                        && ((OazaApp) getApplication()).playbackService.getCurrentAudio() != audio)) {
+
+                startAudioPlaybackService(audio, downloaded);
+
+                videoPlayerFragment = null;
+                audioPlayerFragment = new AudioPlayerFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.player_fragment, audioPlayerFragment, AudioPlayerFragment.TAG);
+
+                transaction.commit();
+
+                Handler handler = new Handler();
+                final boolean finalDownloaded = downloaded;
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getAudioPlayerFragment().playNewAudio(MainActivity.this, audio, finalDownloaded);
+                    }
+                }, 600);
+            }
         }
 
     }

@@ -50,6 +50,7 @@ public class AudioPlaybackService extends Service implements
 
     public static final String AUDIO = "current_audio";
     public static final String DOWNLOADED = "downloaded";
+    private static final int NOTIFICATION_ID = 1111;
 
     private MediaPlayer player;
     private int audioPos;
@@ -98,8 +99,7 @@ public class AudioPlaybackService extends Service implements
 
         ((OazaApp) getApplication()).playbackService = this;
 
-        Random random = new Random();
-        notificationID = random.nextInt(200 - 0 + 1);
+        notificationID = NOTIFICATION_ID;
 
         audioPos = 0;
         player = new MediaPlayer();

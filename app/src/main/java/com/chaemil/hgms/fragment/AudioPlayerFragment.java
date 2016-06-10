@@ -113,6 +113,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private TimerTask timerTask;
     private Timer timer;
     private Intent playIntent;
+    private boolean isReconnecting = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -154,6 +155,10 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         //saveCurrentAudioTime();
     }
 
+    public void init(boolean isReconnecting) {
+        this.isReconnecting = isReconnecting;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -162,6 +167,10 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         getUI(rootView);
         activateUI(false);
         setupUI();
+
+        if (isReconnecting) {
+            reconnectToService(mainActivity);
+        }
 
         return rootView;
     }
@@ -391,7 +400,11 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         ((MainActivity) getActivity()).hidePanel();
     }
 
-    public void playNewAudio(Context context, final Video audio, final boolean downloaded) {
+    public void reconnectToService(Context context) {
+
+        Video audio = ((OazaApp) getActivity().getApplication()).playbackService.getCurrentAudio();
+        boolean downloaded = ((OazaApp) getActivity().getApplication()).playbackService.getIsPlayingDownloaded();
+
         Ion.with(context).load(getCurrentAudio().getThumbFile()).intoImageView(audioThumb);
         Ion.with(context).load(getCurrentAudio().getThumbFile()).intoImageView(miniPlayerImageView);
 
@@ -422,6 +435,10 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
         currentTime.setText("00:00:00");
         totalTime.setText("???");
+    }
+
+    public void playNewAudio(Context context, final Video audio, final boolean downloaded) {
+        reconnectToService(context);
 
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: " + getCurrentAudio().getHash());
 
