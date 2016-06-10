@@ -15,7 +15,9 @@ import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.utils.Constants;
 import com.crashlytics.android.Crashlytics;
+import com.github.pedrovgs.lynx.LynxShakeDetector;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
@@ -42,6 +44,9 @@ public class OazaApp extends Application {
         AnalyticsService.init(this);
         MultiDex.install(this);
         MyRequestService.init(this);
+
+        LynxShakeDetector lynxShakeDetector = new LynxShakeDetector(this);
+        lynxShakeDetector.init();
 
         if (isMyServiceRunning(AudioPlaybackService.class)) {
             if (AudioPlaybackService.getInstance() != null) {

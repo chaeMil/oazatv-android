@@ -220,8 +220,8 @@ public class BaseActivity extends AppCompatActivity implements RequestFactoryLis
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults[0]== PackageManager.PERMISSION_GRANTED){
-            Log.v(PermissionUtils.TAG, "Permission: " + permissions[0]+ "was " + grantResults[0]);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.v(PermissionUtils.TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
 
             if (photoToDownload != null) {
                 manager.enqueue(request);
@@ -238,15 +238,5 @@ public class BaseActivity extends AppCompatActivity implements RequestFactoryLis
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(color);
         }
-    }
-
-    public boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
     }
 }

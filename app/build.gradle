@@ -72,4 +72,5 @@ dependencies {
     compile 'it.sephiroth.android.library.horizontallistview:hlistview:1.2.2'
     compile 'com.heinrichreimersoftware:material-intro:1.4'
     compile 'com.google.android.gms:play-services-analytics:8.3.0'
+    compile 'com.github.pedrovgs:lynx:1.6'
 }
