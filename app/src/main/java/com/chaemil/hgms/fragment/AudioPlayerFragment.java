@@ -46,7 +46,9 @@ import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.service.AnalyticsService;
+import com.chaemil.hgms.service.AudioPlaybackPendingIntents;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.BitmapUtils;
@@ -79,15 +81,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         AudioManager.OnAudioFocusChangeListener, RequestFactoryListener {
 
     public static final String TAG = "audio_player_fragment";
-    private static final String IMAGES_ALREADY_BLURRED = "images_already_blurred";
-    private static final String BG_DRAWABLE = "bg_drawable";
-    private static final String CURRENT_TIME = "current_time";
-    private static final int NOTIFICATION_ID = 1111;
-    public static final String NOTIFY_PLAY_PAUSE = "notify_play_pause";
-    public static final String NOTIFY_REW = "notify_rew";
-    public static final String NOTIFY_FF = "notify_ff";
-    public static final String NOTIFY_OPEN = "notify_open";
-    public static final String NOTIFY_DELETE = "notify_delete";
     private RelativeLayout miniPlayer;
     private ImageView miniPlayerImageView;
     private RelativeLayout playerToolbar;
@@ -303,16 +296,24 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.play_pause:
-                //playPauseAudio();
+                if (mainActivity != null) {
+                    mainActivity.sendBroadcast(new Intent(AudioPlaybackReceiver.NOTIFY_PLAY_PAUSE));
+                }
                 break;
             case R.id.rew:
-                seekREW();
+                if (mainActivity != null) {
+                    mainActivity.sendBroadcast(new Intent(AudioPlaybackReceiver.NOTIFY_PLAY_PAUSE));
+                }
                 break;
             case R.id.mini_play_pause:
-                //playPauseAudio();
+                if (mainActivity != null) {
+                    mainActivity.sendBroadcast(new Intent(AudioPlaybackReceiver.NOTIFY_PLAY_PAUSE));
+                }
                 break;
             case R.id.back:
-                ((MainActivity) getActivity()).collapsePanel();
+                if (mainActivity != null) {
+                    mainActivity.collapsePanel();
+                }
                 break;
             case R.id.share:
                 ShareUtils.shareAudioLink(getActivity(), getCurrentAudio());
@@ -369,14 +370,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
             currentTime.setText(String.format("%02d:%02d:%02d", cHours, cMinutes, cSeconds));
             totalTime.setText(String.format("%02d:%02d:%02d", dHours, dMinutes, dSeconds));
         }
-    }
-
-    public void seekFF() {
-        //audioPlayer.seekTo(audioPlayer.getCurrentPosition() + 10000);
-    }
-
-    public void seekREW() {
-        //audioPlayer.seekTo(audioPlayer.getCurrentPosition() - 30 * 1000);
     }
 
     public void switchMiniPlayer(boolean show) {

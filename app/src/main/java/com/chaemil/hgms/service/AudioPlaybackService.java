@@ -129,11 +129,11 @@ public class AudioPlaybackService extends Service implements
 
     private void setupReceiver() {
         IntentFilter filter = new IntentFilter();
-        filter.addAction(AudioPlayerFragment.NOTIFY_PLAY_PAUSE);
-        filter.addAction(AudioPlayerFragment.NOTIFY_OPEN);
-        filter.addAction(AudioPlayerFragment.NOTIFY_FF);
-        filter.addAction(AudioPlayerFragment.NOTIFY_REW);
-        filter.addAction(AudioPlayerFragment.NOTIFY_DELETE);
+        filter.addAction(AudioPlaybackReceiver.NOTIFY_PLAY_PAUSE);
+        filter.addAction(AudioPlaybackReceiver.NOTIFY_OPEN);
+        filter.addAction(AudioPlaybackReceiver.NOTIFY_FF);
+        filter.addAction(AudioPlaybackReceiver.NOTIFY_REW);
+        filter.addAction(AudioPlaybackReceiver.NOTIFY_DELETE);
 
         audioPlaybackReceiver = new AudioPlaybackReceiver(this, ((OazaApp) getApplication()));
         registerReceiver(audioPlaybackReceiver, filter);
@@ -314,6 +314,15 @@ public class AudioPlaybackService extends Service implements
         stopForeground(true);
         stopSelf();
     }
+
+    public void seekFF() {
+        player.seekTo(player.getCurrentPosition() + 10000);
+    }
+
+    public void seekREW() {
+        player.seekTo(player.getCurrentPosition() - 30 * 1000);
+    }
+
 
     public class AudioPlaybackBind extends Binder {
 

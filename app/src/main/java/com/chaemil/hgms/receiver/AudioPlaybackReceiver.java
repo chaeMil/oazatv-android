@@ -22,6 +22,12 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
     private final AudioPlaybackService service;
     private final OazaApp app;
 
+    public static final String NOTIFY_PLAY_PAUSE = "notify_play_pause";
+    public static final String NOTIFY_REW = "notify_rew";
+    public static final String NOTIFY_FF = "notify_ff";
+    public static final String NOTIFY_OPEN = "notify_open";
+    public static final String NOTIFY_DELETE = "notify_delete";
+
     public AudioPlaybackReceiver(AudioPlaybackService service, OazaApp app) {
         this.service = service;
         this.app = app;
@@ -34,31 +40,31 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
 
         switch (intent.getAction()) {
 
-            case AudioPlayerFragment.NOTIFY_PLAY_PAUSE:
+            case NOTIFY_PLAY_PAUSE:
                 if (service != null) {
                     service.playPauseAudio();
                 }
                 break;
-            /*case AudioPlayerFragment.NOTIFY_OPEN:
+            case NOTIFY_OPEN:
 
-                Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+                /*Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
                 context.sendBroadcast(it);
 
                 mainActivity.bringToFront();
-                mainActivity.expandPanel();
+                mainActivity.expandPanel();*/
 
                 break;
-            case AudioPlayerFragment.NOTIFY_FF:
-                if (mainActivity.getAudioPlayerFragment() != null) {
-                    mainActivity.getAudioPlayerFragment().seekFF();
+            case NOTIFY_FF:
+                if (service != null) {
+                    service.seekFF();
                 }
                 break;
-            case AudioPlayerFragment.NOTIFY_REW:
-                if (mainActivity.getAudioPlayerFragment() != null) {
-                    mainActivity.getAudioPlayerFragment().seekREW();
+            case NOTIFY_REW:
+                if (service != null) {
+                    service.seekREW();
                 }
-                break;*/
-            case AudioPlayerFragment.NOTIFY_DELETE:
+                break;
+            case NOTIFY_DELETE:
                 if (app != null && app.getMainActivity() != null) {
                     app.getMainActivity().hidePanel();
                     app.getMainActivity().playAudioIntent = null;
