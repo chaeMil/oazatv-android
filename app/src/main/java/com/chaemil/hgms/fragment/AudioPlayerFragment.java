@@ -77,8 +77,7 @@ import at.markushi.ui.CircleButton;
  * Created by chaemil on 2.12.15.
  */
 public class AudioPlayerFragment extends BaseFragment implements View.OnClickListener,
-        MediaPlayer.OnPreparedListener, SeekBar.OnSeekBarChangeListener,
-        AudioManager.OnAudioFocusChangeListener, RequestFactoryListener {
+         SeekBar.OnSeekBarChangeListener, RequestFactoryListener {
 
     public static final String TAG = "audio_player_fragment";
     private RelativeLayout miniPlayer;
@@ -90,7 +89,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private CircleButton rew;
     private TextView currentTime;
     private TextView totalTime;
-    private int duration;
     private int currentTimeInt;
     private AppCompatSeekBar seekBar;
     private CircleButton miniPlayerPause;
@@ -107,6 +105,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private Timer timer;
     private Intent playIntent;
     private boolean isReconnecting = false;
+    private int audioDuration;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,6 +118,9 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
+
+        refreshPlayButtons();
+        activateUI(true);
 
         /*int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);
@@ -164,6 +166,8 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         if (isReconnecting) {
             reconnectToService(mainActivity);
         }
+
+        refreshPlayButtons();
 
         return rootView;
     }
@@ -270,6 +274,9 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                 swipeDismissPlayer(false);
             }
         });
+
+        seekBar.setMax(getAudioDuration());
+        seekBar.postDelayed(onEverySecond, 1000);
     }
 
     private void swipeDismissPlayer(boolean right) {
@@ -298,16 +305,19 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
             case R.id.play_pause:
                 if (mainActivity != null) {
                     mainActivity.sendBroadcast(new Intent(AudioPlaybackReceiver.NOTIFY_PLAY_PAUSE));
+                    refreshPlayButtons();
                 }
                 break;
             case R.id.rew:
                 if (mainActivity != null) {
-                    mainActivity.sendBroadcast(new Intent(AudioPlaybackReceiver.NOTIFY_PLAY_PAUSE));
+                    mainActivity.sendBroadcast(new Intent(AudioPlaybackReceiver.NOTIFY_REW));
+                    updateTime();
                 }
                 break;
             case R.id.mini_play_pause:
                 if (mainActivity != null) {
                     mainActivity.sendBroadcast(new Intent(AudioPlaybackReceiver.NOTIFY_PLAY_PAUSE));
+                    refreshPlayButtons();
                 }
                 break;
             case R.id.back:
@@ -321,54 +331,69 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-        activateUI(true);
-        /*audioPlayer.start();
-        audioPlayer.seekTo(currentAudio.getCurrentTime());
-        duration = audioPlayer.getDuration();*/
-        seekBar.setMax(duration);
-        seekBar.postDelayed(onEverySecond, 1000);
-        YoYo.with(Techniques.FadeIn).duration(350).delay(250).playOn(audioThumb);
+    private void refreshPlayButtons() {
+        if (isServicePlayingAudio()) {
+            playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+        } else {
+            playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+        }
+    }
+
+    private boolean isServicePlayingAudio() {
+        AudioPlaybackService service = getService();
+        return service != null && service.getAudioPlayer().isPlaying();
+    }
+
+    private int getAudioDuration() {
+        AudioPlaybackService service = getService();
+        if (service != null) {
+            return service.getAudioPlayer().getDuration();
+        }
+        return 0;
     }
 
     private Runnable onEverySecond = new Runnable() {
         @Override
         public void run(){
-            /*try {
-                if (seekBar != null && audioPlayer != null) {
-                    seekBar.setProgress(audioPlayer.getCurrentPosition());
-                }
-
-                if (audioPlayer != null && audioPlayer.isPlaying()) {
-                    if (seekBar != null) {
-                        seekBar.postDelayed(onEverySecond, 1000);
-                    }
+            try {
+                if (seekBar != null) {
+                    seekBar.postDelayed(onEverySecond, 1000);
                     updateTime();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            }*/
+            }
         }
     };
 
     private void updateTime() {
-        //currentTimeInt = audioPlayer.getCurrentPosition();
+        AudioPlaybackService service = getService();
 
-        int dSeconds = (duration / 1000) % 60 ;
-        int dMinutes = ((duration / (1000*60)) % 60);
-        int dHours   = ((duration / (1000*60*60)) % 24);
+        if (service != null) {
 
-        int cSeconds = (currentTimeInt / 1000) % 60 ;
-        int cMinutes = ((currentTimeInt / (1000*60)) % 60);
-        int cHours   = ((currentTimeInt / (1000*60*60)) % 24);
+            currentTimeInt = service.getAudioPlayer().getCurrentPosition();
+            audioDuration = getAudioDuration();
+            seekBar.setMax(audioDuration);
+            seekBar.setProgress(currentTimeInt);
 
-        if(dHours == 0){
-            currentTime.setText(String.format("%02d:%02d", cMinutes, cSeconds));
-            totalTime.setText(String.format("%02d:%02d", dMinutes, dSeconds));
-        } else{
-            currentTime.setText(String.format("%02d:%02d:%02d", cHours, cMinutes, cSeconds));
-            totalTime.setText(String.format("%02d:%02d:%02d", dHours, dMinutes, dSeconds));
+            int dSeconds = (audioDuration / 1000) % 60;
+            int dMinutes = ((audioDuration / (1000 * 60)) % 60);
+            int dHours = ((audioDuration / (1000 * 60 * 60)) % 24);
+
+            int cSeconds = (currentTimeInt / 1000) % 60;
+            int cMinutes = ((currentTimeInt / (1000 * 60)) % 60);
+            int cHours = ((currentTimeInt / (1000 * 60 * 60)) % 24);
+
+            if (dHours == 0) {
+                currentTime.setText(String.format("%02d:%02d", cMinutes, cSeconds));
+                totalTime.setText(String.format("%02d:%02d", dMinutes, dSeconds));
+            } else {
+                currentTime.setText(String.format("%02d:%02d:%02d", cHours, cMinutes, cSeconds));
+                totalTime.setText(String.format("%02d:%02d:%02d", dHours, dMinutes, dSeconds));
+            }
+
         }
     }
 
@@ -395,8 +420,8 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
     public void reconnectToService(Context context) {
 
-        Video audio = ((OazaApp) getActivity().getApplication()).playbackService.getCurrentAudio();
-        boolean downloaded = ((OazaApp) getActivity().getApplication()).playbackService.getIsPlayingDownloaded();
+        Video audio = getService().getCurrentAudio();
+        boolean downloaded = getService().getIsPlayingDownloaded();
 
         Ion.with(context).load(getCurrentAudio().getThumbFile()).intoImageView(audioThumb);
         Ion.with(context).load(getCurrentAudio().getThumbFile()).intoImageView(miniPlayerImageView);
@@ -467,11 +492,18 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        /*if (fromUser) {
-            audioPlayer.seekTo(progress);
-            updateTime();
-            saveCurrentAudioTime();
-        }*/
+        if (fromUser) {
+            AudioPlaybackService service = getService();
+            if (service != null) {
+                service.getAudioPlayer().seekTo(progress);
+                updateTime();
+                service.saveCurrentAudioTime();
+            }
+        }
+    }
+
+    private AudioPlaybackService getService() {
+        return ((OazaApp) mainActivity.getApplication()).playbackService;
     }
 
     @Override
@@ -484,7 +516,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
     }
 
-    @Override
+
     public void onAudioFocusChange(int focusChange) {
         /*switch (focusChange) {
             case AudioManager.AUDIOFOCUS_LOSS:
