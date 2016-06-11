@@ -28,6 +28,8 @@ import io.fabric.sdk.android.Fabric;
  */
 public class OazaApp extends Application {
 
+    public static final boolean DEVELOPMENT = true;
+
     private boolean downloadingNow = false;
     private DownloadService downloadService;
     private MainActivity mainActivity;
@@ -40,8 +42,10 @@ public class OazaApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Fabric.with(this, new Crashlytics());
-        AnalyticsService.init(this);
+        if (!DEVELOPMENT) {
+            Fabric.with(this, new Crashlytics());
+        }
+            AnalyticsService.init(this);
         MultiDex.install(this);
         MyRequestService.init(this);
 

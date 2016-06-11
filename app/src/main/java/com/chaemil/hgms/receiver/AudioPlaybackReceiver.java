@@ -1,5 +1,6 @@
 package com.chaemil.hgms.receiver;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -47,11 +48,19 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
                 break;
             case NOTIFY_OPEN:
 
-                /*Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+                Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
                 context.sendBroadcast(it);
 
-                mainActivity.bringToFront();
-                mainActivity.expandPanel();*/
+                MainActivity mainActivity = app.getMainActivity();
+                if (mainActivity != null) {
+                    mainActivity.bringToFront();
+                    mainActivity.expandPanel();
+                } else {
+                    Intent activity = new Intent(app, MainActivity.class);
+                    activity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    activity.putExtra(MainActivity.EXPAND_PANEL, true);
+                    app.startActivity(activity);
+                }
 
                 break;
             case NOTIFY_FF:

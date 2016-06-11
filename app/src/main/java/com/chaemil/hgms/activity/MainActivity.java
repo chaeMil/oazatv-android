@@ -61,6 +61,7 @@ import java.util.TimerTask;
 public class MainActivity extends BaseActivity implements
         SlidingUpPanelLayout.PanelSlideListener {
 
+    public static final String EXPAND_PANEL = "expand_panel";
     private SlidingUpPanelLayout panelLayout;
     private VideoPlayerFragment videoPlayerFragment;
     private AudioPlayerFragment audioPlayerFragment;
@@ -109,6 +110,10 @@ public class MainActivity extends BaseActivity implements
         if (!((OazaApp) getApplication()).isDownloadingNow()) {
             Intent downloadService = new Intent(this, DownloadService.class);
             startService(downloadService);
+        }
+
+        if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
+            expandPanel();
         }
 
         parseDeepLink();

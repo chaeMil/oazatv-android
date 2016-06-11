@@ -432,9 +432,10 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
     public void playNewAudio(Context context) {
         reconnectToService(context);
-
-        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: " + getCurrentAudio().getHash());
-
+        activateUI(true);
+        AnalyticsService.getInstance()
+                .setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: "
+                        + getCurrentAudio().getHash());
         postGA();
     }
 
