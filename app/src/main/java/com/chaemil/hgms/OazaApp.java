@@ -42,15 +42,15 @@ public class OazaApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        if (!DEVELOPMENT) {
-            Fabric.with(this, new Crashlytics());
+        if (DEVELOPMENT) {
+            LynxShakeDetector lynxShakeDetector = new LynxShakeDetector(this);
+            lynxShakeDetector.init();
         }
-            AnalyticsService.init(this);
+
+        Fabric.with(this, new Crashlytics());
+        AnalyticsService.init(this);
         MultiDex.install(this);
         MyRequestService.init(this);
-
-        LynxShakeDetector lynxShakeDetector = new LynxShakeDetector(this);
-        lynxShakeDetector.init();
 
         if (isMyServiceRunning(AudioPlaybackService.class)) {
             if (AudioPlaybackService.getInstance() != null) {
