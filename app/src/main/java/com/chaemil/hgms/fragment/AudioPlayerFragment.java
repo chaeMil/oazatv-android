@@ -122,6 +122,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         super.onResume();
 
         refreshPlayButtons();
+        switchMiniPlayer(!mainActivity.isPanelExpanded());
         activateUI(true);
 
         /*int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
