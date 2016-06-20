@@ -65,6 +65,7 @@ public class Constants {
     public static final String JSON_NAME_CS = "name_cs";
     public static final String JSON_NAME_EN = "name_en";
     public static final String JSON_TAGS = "tags";
+    public static final String JSON_MP4_FILE_LOWRES = "mp4_file_lowres";
     public static final String JSON_MP4_FILE = "mp4_file";
     public static final String JSON_MP3_FILE = "mp3_file";
     public static final String THUMB_FILE = "thumb_file";

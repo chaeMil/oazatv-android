@@ -1,6 +1,8 @@
 package com.chaemil.hgms.factory;
 
 
+import android.content.Context;
+
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.Category;
 import com.chaemil.hgms.model.Homepage;
@@ -64,6 +66,7 @@ public class ResponseFactory {
             String nameCS = response.getString(Constants.JSON_NAME_CS);
             String nameEN = response.getString(Constants.JSON_NAME_EN);
             String tags = response.getString(Constants.JSON_TAGS);
+            String videoFileLowRes = response.getString(Constants.JSON_MP4_FILE_LOWRES);
             String videoFile = response.getString(Constants.JSON_MP4_FILE);
             String audioFile = response.getString(Constants.JSON_MP3_FILE);
             String thumbFile = response.getString(Constants.THUMB_FILE);
@@ -72,7 +75,7 @@ public class ResponseFactory {
             String descriptionCS = response.getString(Constants.JSON_DESCRIPTION_CS);
             String descriptionEN = response.getString(Constants.JSON_DESCRIPTION_EN);
 
-            return new Video(serverId, hash, date, nameCS, nameEN, tags, videoFile, audioFile,
+            return new Video(serverId, hash, date, nameCS, nameEN, tags, videoFileLowRes, videoFile, audioFile,
                     thumbFile, views, categories, descriptionCS, descriptionEN, false);
 
         } catch (JSONException e) {

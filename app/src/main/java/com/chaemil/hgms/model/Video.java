@@ -32,6 +32,7 @@ public class Video extends SugarRecord implements Parcelable {
     private String nameCS;
     private String nameEN;
     private String tags;
+    private String videoFileLowRes;
     private String videoFile;
     private String audioFile;
     private String thumbFile;
@@ -47,7 +48,7 @@ public class Video extends SugarRecord implements Parcelable {
     }
 
     public Video(int serverId, String hash, String date, String nameCS,
-                 String nameEN, String tags, String videoFile, String audioFile,
+                 String nameEN, String tags, String videoFileLowRes, String videoFile, String audioFile,
                  String thumbFile, int views, String categories,
                  String descriptionCS, String descriptionEN, boolean downloaded) {
         this.serverId = serverId;
@@ -56,6 +57,7 @@ public class Video extends SugarRecord implements Parcelable {
         this.nameCS = nameCS;
         this.nameEN = nameEN;
         this.tags = tags;
+        this.videoFileLowRes = videoFileLowRes;
         this.videoFile = videoFile;
         this.audioFile = audioFile;
         this.thumbFile = thumbFile;
@@ -243,6 +245,10 @@ public class Video extends SugarRecord implements Parcelable {
         return tags;
     }
 
+    public String getVideoFileLowRes() {
+        return videoFileLowRes;
+    }
+
     public String getVideoFile() {
         return videoFile;
     }
@@ -287,6 +293,7 @@ public class Video extends SugarRecord implements Parcelable {
         nameCS = in.readString();
         nameEN = in.readString();
         tags = in.readString();
+        videoFileLowRes = in.readString();
         videoFile = in.readString();
         audioFile = in.readString();
         thumbFile = in.readString();
@@ -318,6 +325,7 @@ public class Video extends SugarRecord implements Parcelable {
         dest.writeString(nameCS);
         dest.writeString(nameEN);
         dest.writeString(tags);
+        dest.writeString(videoFileLowRes);
         dest.writeString(videoFile);
         dest.writeString(audioFile);
         dest.writeString(thumbFile);

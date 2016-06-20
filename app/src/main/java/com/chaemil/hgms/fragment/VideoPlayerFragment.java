@@ -602,7 +602,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             public void run() {
                 activateUI(true);
                 videoView.stopPlayback();
-                videoView.setVideoPath(video.getVideoFile());
+                videoView.setVideoPath(video.getVideoFileLowRes()); //TODO lowres as default for now
                 videoView.start();
                 videoView.seekTo(currentVideo.getCurrentTime());
 
