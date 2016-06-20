@@ -378,9 +378,11 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         if (isAdded()) {
             if (show) {
                 playerToolbar.setVisibility(View.GONE);
+                miniPlayerSwipe.setVisibility(View.VISIBLE);
                 miniPlayer.setVisibility(View.VISIBLE);
             } else {
                 playerToolbar.setVisibility(View.VISIBLE);
+                miniPlayerSwipe.setVisibility(View.GONE);
                 miniPlayer.setVisibility(View.GONE);
             }
         }
