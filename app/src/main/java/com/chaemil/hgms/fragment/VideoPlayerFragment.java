@@ -1,5 +1,6 @@
 package com.chaemil.hgms.fragment;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
@@ -30,6 +31,7 @@ import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.BitmapUtils;
@@ -50,6 +52,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import at.markushi.ui.CircleButton;
+import ru.rambler.libs.swipe_layout.SwipeLayout;
 
 /**
  * Created by chaemil on 2.12.15.
@@ -98,6 +101,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private RelativeLayout playerBgWrapper;
     private TimerTask timerTask;
     private Timer timer;
+    private SwipeLayout miniPlayerSwipe;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -246,6 +250,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         tags = (TextView) rootView.findViewById(R.id.tags);
         infoLayout = (RelativeLayout) rootView.findViewById(R.id.info_layout);
         playerBgWrapper = (RelativeLayout) rootView.findViewById(R.id.player_bg_wrapper);
+        miniPlayerSwipe = (SwipeLayout) rootView.findViewById(R.id.mini_player_swipe);
     }
 
     private void setupUI() {
@@ -259,6 +264,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         share.setOnClickListener(this);
         fullscreenExit.setOnClickListener(this);
         playerBgWrapper.setOnClickListener(this);
+        miniPlayerSwipe.setOnSwipeListener(createSwipeListener());
 
         int bottomMargin = (int) DimensUtils.pxFromDp(getActivity(),
                 getResources().getInteger(R.integer.video_player_wrapper_bottom_margin));
@@ -270,39 +276,39 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         videoWrapperParamsFullscreen = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         videoWrapperParamsFullscreen.setMargins(0, 0, 0, 0);  // left, top, right, bottom
-
-        miniPlayer.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
-            @Override
-            public void onSwipeRight() {
-                super.onSwipeRight();
-                swipeDismissPlayer(true);
-            }
-
-            @Override
-            public void onSwipeLeft() {
-                super.onSwipeLeft();
-                swipeDismissPlayer(false);
-            }
-        });
     }
 
-    private void swipeDismissPlayer(boolean right) {
-        saveCurrentVideoTime();
-
-        videoView.pause();
-        if (right) {
-            YoYo.with(Techniques.SlideOutRight).duration(300).playOn(miniPlayer);
-        } else {
-            YoYo.with(Techniques.SlideOutLeft).duration(300).playOn(miniPlayer);
-        }
-
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+    private SwipeLayout.OnSwipeListener createSwipeListener() {
+        return new SwipeLayout.OnSwipeListener() {
             @Override
-            public void run() {
-                ((MainActivity) getActivity()).hidePanel();
+            public void onBeginSwipe(SwipeLayout swipeLayout, boolean moveToRight) {
+
             }
-        }, 300);
+
+            @Override
+            public void onSwipeClampReached(SwipeLayout swipeLayout, boolean moveToRight) {
+                swipeDismissPlayer();
+            }
+
+            @Override
+            public void onLeftStickyEdge(SwipeLayout swipeLayout, boolean moveToRight) {
+
+            }
+
+            @Override
+            public void onRightStickyEdge(SwipeLayout swipeLayout, boolean moveToRight) {
+
+            }
+        };
+    }
+
+    private void swipeDismissPlayer() {
+        saveCurrentVideoTime();
+        videoView.pause();
+
+        MainActivity mainActivity = ((MainActivity) getActivity());
+        mainActivity.hidePanel();
+        mainActivity.getSupportFragmentManager().beginTransaction().remove(this).commit();
     }
 
     @Override

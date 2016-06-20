@@ -4,29 +4,11 @@ package com.chaemil.hgms.fragment;
  * Created by chaemil on 5.1.16.
  */
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
-import android.os.PowerManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,12 +20,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.activity.MainActivity;
-import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
@@ -51,28 +30,18 @@ import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.AudioPlaybackPendingIntents;
 import com.chaemil.hgms.service.AudioPlaybackService;
-import com.chaemil.hgms.service.MyRequestService;
-import com.chaemil.hgms.utils.BitmapUtils;
-import com.chaemil.hgms.utils.Constants;
-import com.chaemil.hgms.utils.GAUtils;
-import com.chaemil.hgms.utils.OnSwipeTouchListener;
 import com.chaemil.hgms.utils.ShareUtils;
-import com.chaemil.hgms.utils.SmartLog;
-import com.chaemil.hgms.service.AudioPlaybackService.AudioPlaybackBind;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.github.johnpersano.supertoasts.SuperToast;
-import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import at.markushi.ui.CircleButton;
+import ru.rambler.libs.swipe_layout.SwipeLayout;
 
 /**
  * Created by chaemil on 2.12.15.
@@ -108,6 +77,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private boolean isReconnecting = false;
     private int audioDuration;
     private AudioPlaybackReceiver audioPlaybackReceiver;
+    private SwipeLayout miniPlayerSwipe;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -236,6 +206,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         share = (ImageView) rootView.findViewById(R.id.share);
         description = (TextView) rootView.findViewById(R.id.description);
         tags = (TextView) rootView.findViewById(R.id.tags);
+        miniPlayerSwipe = (SwipeLayout) rootView.findViewById(R.id.mini_player_swipe);
     }
 
     private void setupUI() {
@@ -244,23 +215,36 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         rew.setOnClickListener(this);
         miniPlayerPause.setOnClickListener(this);
         share.setOnClickListener(this);
-        miniPlayer.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
-            @Override
-            public void onSwipeRight() {
-                super.onSwipeRight();
-                swipeDismissPlayer(true);
-            }
-
-            @Override
-            public void onSwipeLeft() {
-                super.onSwipeLeft();
-                swipeDismissPlayer(false);
-            }
-        });
-
         seekBar.setMax(getAudioDuration());
         seekBar.postDelayed(onEverySecond, 1000);
+        miniPlayerSwipe.setOnSwipeListener(createSwipeListener());
+
         refreshPlayButtons();
+    }
+
+    private SwipeLayout.OnSwipeListener createSwipeListener() {
+        return new SwipeLayout.OnSwipeListener() {
+            @Override
+            public void onBeginSwipe(SwipeLayout swipeLayout, boolean moveToRight) {
+
+            }
+
+            @Override
+            public void onSwipeClampReached(SwipeLayout swipeLayout, boolean moveToRight) {
+                Intent delete = new Intent(AudioPlaybackReceiver.NOTIFY_DELETE);
+                getActivity().sendBroadcast(delete);
+            }
+
+            @Override
+            public void onLeftStickyEdge(SwipeLayout swipeLayout, boolean moveToRight) {
+
+            }
+
+            @Override
+            public void onRightStickyEdge(SwipeLayout swipeLayout, boolean moveToRight) {
+
+            }
+        };
     }
 
     private void swipeDismissPlayer(boolean right) {

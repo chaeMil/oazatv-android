@@ -79,47 +79,71 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:visibility="visible"
-                tools:visibility="gone"
-                android:id="@+id/mini_player"
-                android:background="@color/black"
+
+            <ru.rambler.libs.swipe_layout.SwipeLayout
+                android:id="@+id/mini_player_swipe"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:scaleType="centerCrop"
-                    android:id="@+id/mini_player_image"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp" />
+                <RelativeLayout
+                    android:visibility="visible"
+                    tools:visibility="visible"
+                    android:id="@+id/mini_player"
+                    android:background="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <at.markushi.ui.CircleButton
-                    android:id="@+id/mini_play_pause"
-                    android:layout_width="60dp"
+                    <ImageView
+                        android:scaleType="centerCrop"
+                        android:id="@+id/mini_player_image"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp" />
+
+                    <at.markushi.ui.CircleButton
+                        android:id="@+id/mini_play_pause"
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/pause"
+                        app:cb_color="@color/gray"
+                        app:cb_pressedRingWidth="3dip"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Show player"
+                        android:textSize="18dp"
+                        android:textColor="@color/gray"
+                        android:textStyle="bold"
+                        android:id="@+id/mini_player_text"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/mini_play_pause"
+                        android:layout_toRightOf="@+id/mini_player_image"
+                        android:singleLine="true"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginLeft="8dp" />
+
+                </RelativeLayout>
+
+                <!--RIGHT-->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/pause"
-                    app:cb_color="@color/transparent_white"
-                    app:cb_pressedRingWidth="3dip"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true" />
+                    android:background="@color/white"
+                    app:gravity="right">
+                </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Show player"
-                    android:textSize="18dp"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:id="@+id/mini_player_text"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/mini_play_pause"
-                    android:layout_toRightOf="@+id/mini_player_image"
-                    android:singleLine="true"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginLeft="8dp" />
+                <!--LEFT-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    app:gravity="left">
+                </LinearLayout>
 
-            </RelativeLayout>
+            </ru.rambler.libs.swipe_layout.SwipeLayout>
         </RelativeLayout>
 
         <RelativeLayout
