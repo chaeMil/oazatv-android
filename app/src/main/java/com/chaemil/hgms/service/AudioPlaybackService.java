@@ -30,6 +30,7 @@ import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
+import com.chaemil.hgms.receiver.ReceiverListener;
 import com.chaemil.hgms.utils.SmartLog;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.async.future.FutureCallback;
@@ -46,7 +47,7 @@ import java.util.Random;
  */
 public class AudioPlaybackService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
-        MediaPlayer.OnCompletionListener, RequestFactoryListener {
+        MediaPlayer.OnCompletionListener, RequestFactoryListener, ReceiverListener {
 
     public static final String AUDIO = "current_audio";
     public static final String DOWNLOADED = "downloaded";

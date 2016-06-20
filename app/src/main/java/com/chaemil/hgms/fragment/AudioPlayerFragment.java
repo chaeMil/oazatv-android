@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -106,6 +107,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private Intent playIntent;
     private boolean isReconnecting = false;
     private int audioDuration;
+    private AudioPlaybackReceiver audioPlaybackReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -212,26 +214,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         playPause.setEnabled(state);
         rew.setEnabled(state);
         seekBar.setEnabled(state);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        /*if (audioPlayer != null) {
-            try {
-                outState.putInt(CURRENT_TIME, audioPlayer.getCurrentPosition());
-            } catch (Exception e) {
-                SmartLog.Log(SmartLog.LogLevel.DEBUG, "exception", e.toString());
-            }
-        }*/
-    }
-
-    @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        /*if (savedInstanceState != null) {
-            audioPlayer.seekTo(savedInstanceState.getInt(CURRENT_TIME));
-        }*/
     }
 
     private void getUI(ViewGroup rootView) {
@@ -573,6 +555,10 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onErrorResponse(VolleyError exception, RequestType requestType) {
 
+    }
+
+    public void playPause() {
+        refreshPlayButtons();
     }
 }
 

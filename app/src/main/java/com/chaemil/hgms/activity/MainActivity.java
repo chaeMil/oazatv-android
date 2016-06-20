@@ -38,7 +38,9 @@ import com.chaemil.hgms.model.LiveStream;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.receiver.MainActivityReceiver;
+import com.chaemil.hgms.receiver.ReceiverListener;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.MyRequestService;
@@ -59,7 +61,7 @@ import java.util.TimerTask;
  * Created by chaemil on 2.12.15.
  */
 public class MainActivity extends BaseActivity implements
-        SlidingUpPanelLayout.PanelSlideListener {
+        SlidingUpPanelLayout.PanelSlideListener, ReceiverListener {
 
     public static final String EXPAND_PANEL = "expand_panel";
     private SlidingUpPanelLayout panelLayout;
@@ -80,6 +82,7 @@ public class MainActivity extends BaseActivity implements
     private TextView liveStreamMessageWatch;
     private boolean deepLink;
     public Intent playAudioIntent;
+    private AudioPlaybackReceiver audioPlaybackReceiver;
 
     @Override
     protected void onResume() {
@@ -105,6 +108,7 @@ public class MainActivity extends BaseActivity implements
         getUI();
         setupUI(savedInstanceState);
         setupReceiver();
+        setupPlaybackReceiver();
         setupLiveRequestTimer();
 
         if (!((OazaApp) getApplication()).isDownloadingNow()) {
@@ -154,6 +158,18 @@ public class MainActivity extends BaseActivity implements
         registerReceiver(mainActivityReceiver, filter);
     }
 
+    private void setupPlaybackReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(AudioPlaybackReceiver.NOTIFY_PLAY_PAUSE);
+        filter.addAction(AudioPlaybackReceiver.NOTIFY_OPEN);
+        filter.addAction(AudioPlaybackReceiver.NOTIFY_FF);
+        filter.addAction(AudioPlaybackReceiver.NOTIFY_REW);
+        filter.addAction(AudioPlaybackReceiver.NOTIFY_DELETE);
+
+        audioPlaybackReceiver = new AudioPlaybackReceiver(this, ((OazaApp) getApplication()));
+        registerReceiver(audioPlaybackReceiver, filter);
+    }
+
     public void setupLiveRequestTimer() {
         if (liveRequestTimer != null) {
             liveRequestTimer.cancel();
@@ -186,6 +202,7 @@ public class MainActivity extends BaseActivity implements
         super.onDestroy();
         ((OazaApp) getApplication()).setMainActivity(null);
         unregisterReceiver(mainActivityReceiver);
+        unregisterReceiver(audioPlaybackReceiver);
     }
 
     public void bringToFront() {
@@ -620,5 +637,27 @@ public class MainActivity extends BaseActivity implements
             default:
                 super.onErrorResponse(exception, requestType);
         }
+    }
+
+    @Override
+    public void playPauseAudio() {
+        if (getAudioPlayerFragment() != null) {
+            getAudioPlayerFragment().playPause();
+        }
+    }
+
+    @Override
+    public void seekFF() {
+
+    }
+
+    @Override
+    public void seekREW() {
+
+    }
+
+    @Override
+    public void stop() {
+
     }
 }

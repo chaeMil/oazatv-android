@@ -19,8 +19,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
  */
 public class AudioPlaybackReceiver extends BroadcastReceiver {
 
-
-    private final AudioPlaybackService service;
+    private final ReceiverListener listener;
     private final OazaApp app;
 
     public static final String NOTIFY_PLAY_PAUSE = "notify_play_pause";
@@ -29,8 +28,9 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
     public static final String NOTIFY_OPEN = "notify_open";
     public static final String NOTIFY_DELETE = "notify_delete";
 
-    public AudioPlaybackReceiver(AudioPlaybackService service, OazaApp app) {
-        this.service = service;
+
+    public AudioPlaybackReceiver(ReceiverListener listener, OazaApp app) {
+        this.listener = listener;
         this.app = app;
     }
 
@@ -42,8 +42,8 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
         switch (intent.getAction()) {
 
             case NOTIFY_PLAY_PAUSE:
-                if (service != null) {
-                    service.playPauseAudio();
+                if (listener != null) {
+                    listener.playPauseAudio();
                 }
                 break;
             case NOTIFY_OPEN:
@@ -64,13 +64,13 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
 
                 break;
             case NOTIFY_FF:
-                if (service != null) {
-                    service.seekFF();
+                if (listener != null) {
+                    listener.seekFF();
                 }
                 break;
             case NOTIFY_REW:
-                if (service != null) {
-                    service.seekREW();
+                if (listener != null) {
+                    listener.seekREW();
                 }
                 break;
             case NOTIFY_DELETE:
@@ -79,7 +79,7 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
                     app.getMainActivity().playAudioIntent = null;
                     app.stopService(new Intent(app, AudioPlaybackService.class));
                 }
-                service.stop();
+                listener.stop();
                 break;
 
         }
