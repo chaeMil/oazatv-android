@@ -20,13 +20,14 @@ import com.crashlytics.android.Crashlytics;
 import com.github.pedrovgs.lynx.LynxShakeDetector;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.orm.SugarApp;
 
 import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by chaemil on 3.12.15.
  */
-public class OazaApp extends Application {
+public class OazaApp extends SugarApp {
 
     public static final boolean DEVELOPMENT = true;
 
