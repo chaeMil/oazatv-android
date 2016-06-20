@@ -9,6 +9,8 @@ import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.utils.SmartLog;
 
+import java.util.Objects;
+
 /**
  * Created by chaemil on 3.6.16.
  */
@@ -23,7 +25,6 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
     public static final String NOTIFY_OPEN = "notify_open";
     public static final String NOTIFY_DELETE = "notify_delete";
 
-
     public AudioPlaybackReceiver(PlaybackReceiverListener listener, OazaApp app) {
         this.listener = listener;
         this.app = app;
@@ -33,7 +34,6 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "onReceive", intent.getAction());
-
         switch (intent.getAction()) {
 
             case NOTIFY_PLAY_PAUSE:
@@ -78,7 +78,5 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
                 break;
 
         }
-
-
     }
 }

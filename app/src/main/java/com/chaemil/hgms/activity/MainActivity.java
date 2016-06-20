@@ -404,6 +404,10 @@ public class MainActivity extends BaseActivity implements
                 getMainFragment().getPhotoAlbumFragment().adjustLayout();
             }
         }
+
+        if (getAudioPlayerFragment() != null) {
+            getAudioPlayerFragment().switchMiniPlayer(!isPanelExpanded());
+        }
     }
 
     @Override

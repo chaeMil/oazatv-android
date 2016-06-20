@@ -77,12 +77,17 @@ public class AudioPlaybackService extends Service implements
     public boolean onUnbind(Intent intent){
         player.stop();
         player.release();
+
+        unregisterPlaybackReceiver();
+
         return false;
     }
 
     @Override
     public void onDestroy() {
         playbackStop();
+        unregisterPlaybackReceiver();
+
         super.onDestroy();
     }
 
@@ -104,6 +109,7 @@ public class AudioPlaybackService extends Service implements
 
         initMusicPlayer();
         setupReceiver();
+
         if (bindIntent != null) {
             if (bindIntent.getParcelableExtra(AUDIO) != null) {
                 currentAudio = bindIntent.getParcelableExtra(AUDIO);
@@ -126,6 +132,8 @@ public class AudioPlaybackService extends Service implements
     }
 
     private void setupReceiver() {
+        unregisterPlaybackReceiver();
+
         IntentFilter filter = new IntentFilter();
         filter.addAction(AudioPlaybackReceiver.NOTIFY_PLAY_PAUSE);
         filter.addAction(AudioPlaybackReceiver.NOTIFY_OPEN);
@@ -135,6 +143,17 @@ public class AudioPlaybackService extends Service implements
 
         audioPlaybackReceiver = new AudioPlaybackReceiver(this, ((OazaApp) getApplication()));
         registerReceiver(audioPlaybackReceiver, filter);
+    }
+
+    private void unregisterPlaybackReceiver() {
+        if (audioPlaybackReceiver != null) {
+            try {
+                unregisterReceiver(audioPlaybackReceiver);
+                audioPlaybackReceiver = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void saveCurrentAudioTime() {
@@ -255,6 +274,8 @@ public class AudioPlaybackService extends Service implements
             ArrayList<PendingIntent> intents = AudioPlaybackPendingIntents.generate(getApplication());
 
             notificationManager = (NotificationManager) getApplication().getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(NOTIFICATION_ID);
+
             notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplication())
                     .setContentTitle(currentAudio.getName())
                     .setContentText(currentAudio.getDate())

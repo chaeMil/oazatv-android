@@ -315,12 +315,14 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void refreshPlayButtons() {
-        if (isServicePlayingAudio()) {
-            playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-        } else {
-            playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
-            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+        if (isAdded()) {
+            if (isServicePlayingAudio()) {
+                playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+                miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+            } else {
+                playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+                miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+            }
         }
     }
 
@@ -346,9 +348,11 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         public void run(){
             try {
                 if (seekBar != null) {
-                    seekBar.postDelayed(onEverySecond, 1000);
                     updateTime();
                     refreshPlayButtons();
+                    if (isAdded()) {
+                        seekBar.postDelayed(onEverySecond, 1000);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
