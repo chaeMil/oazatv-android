@@ -19,7 +19,7 @@ public class AudioPlaybackPendingIntents {
         PendingIntent pOpen = PendingIntent.getBroadcast(context, 0, open, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent pause = new Intent(AudioPlaybackReceiver.NOTIFY_PLAY_PAUSE);
-        PendingIntent pPause = PendingIntent.getBroadcast(context, 0, pause, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pPause = PendingIntent.getBroadcast(context, 0, pause, PendingIntent.FLAG_CANCEL_CURRENT);
 
         Intent ff = new Intent(AudioPlaybackReceiver.NOTIFY_FF);
         PendingIntent pFf = PendingIntent.getBroadcast(context, 0, ff, PendingIntent.FLAG_UPDATE_CURRENT);

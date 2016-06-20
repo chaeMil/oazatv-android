@@ -17,7 +17,6 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
-import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -26,11 +25,10 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
-import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
-import com.chaemil.hgms.receiver.ReceiverListener;
+import com.chaemil.hgms.receiver.PlaybackReceiverListener;
 import com.chaemil.hgms.utils.SmartLog;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.async.future.FutureCallback;
@@ -40,14 +38,13 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by chaemil on 28.5.16.
  */
 public class AudioPlaybackService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
-        MediaPlayer.OnCompletionListener, RequestFactoryListener, ReceiverListener {
+        MediaPlayer.OnCompletionListener, RequestFactoryListener, PlaybackReceiverListener {
 
     public static final String AUDIO = "current_audio";
     public static final String DOWNLOADED = "downloaded";
@@ -85,7 +82,7 @@ public class AudioPlaybackService extends Service implements
 
     @Override
     public void onDestroy() {
-        stop();
+        playbackStop();
         super.onDestroy();
     }
 
@@ -168,7 +165,7 @@ public class AudioPlaybackService extends Service implements
         MyRequestService.getRequestQueue().add(postView);
     }
 
-    public void playPauseAudio() {
+    public void playbackPlayPauseAudio() {
         if (player != null) {
             if (player.isPlaying()) {
                 pauseAudio();
@@ -294,7 +291,7 @@ public class AudioPlaybackService extends Service implements
         }
     }
 
-    public void stop() {
+    public void playbackStop() {
         ((OazaApp) getApplication()).playbackService = null;
 
         saveCurrentAudioTime();
@@ -316,11 +313,11 @@ public class AudioPlaybackService extends Service implements
         stopSelf();
     }
 
-    public void seekFF() {
+    public void playbackSeekFF() {
         player.seekTo(player.getCurrentPosition() + 10000);
     }
 
-    public void seekREW() {
+    public void playbackSeekREW() {
         player.seekTo(player.getCurrentPosition() - 30 * 1000);
     }
 

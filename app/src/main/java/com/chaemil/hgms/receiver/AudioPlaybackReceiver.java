@@ -1,25 +1,20 @@
 package com.chaemil.hgms.receiver;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.activity.MainActivity;
-import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.service.AudioPlaybackService;
-import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.utils.SmartLog;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
  * Created by chaemil on 3.6.16.
  */
 public class AudioPlaybackReceiver extends BroadcastReceiver {
 
-    private final ReceiverListener listener;
+    private final PlaybackReceiverListener listener;
     private final OazaApp app;
 
     public static final String NOTIFY_PLAY_PAUSE = "notify_play_pause";
@@ -29,7 +24,7 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
     public static final String NOTIFY_DELETE = "notify_delete";
 
 
-    public AudioPlaybackReceiver(ReceiverListener listener, OazaApp app) {
+    public AudioPlaybackReceiver(PlaybackReceiverListener listener, OazaApp app) {
         this.listener = listener;
         this.app = app;
     }
@@ -43,7 +38,7 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
 
             case NOTIFY_PLAY_PAUSE:
                 if (listener != null) {
-                    listener.playPauseAudio();
+                    listener.playbackPlayPauseAudio();
                 }
                 break;
             case NOTIFY_OPEN:
@@ -65,12 +60,12 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
                 break;
             case NOTIFY_FF:
                 if (listener != null) {
-                    listener.seekFF();
+                    listener.playbackSeekFF();
                 }
                 break;
             case NOTIFY_REW:
                 if (listener != null) {
-                    listener.seekREW();
+                    listener.playbackSeekREW();
                 }
                 break;
             case NOTIFY_DELETE:
@@ -79,7 +74,7 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
                     app.getMainActivity().playAudioIntent = null;
                     app.stopService(new Intent(app, AudioPlaybackService.class));
                 }
-                listener.stop();
+                listener.playbackStop();
                 break;
 
         }

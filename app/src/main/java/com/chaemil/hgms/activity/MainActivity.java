@@ -40,7 +40,7 @@ import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.receiver.MainActivityReceiver;
-import com.chaemil.hgms.receiver.ReceiverListener;
+import com.chaemil.hgms.receiver.PlaybackReceiverListener;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.MyRequestService;
@@ -61,7 +61,7 @@ import java.util.TimerTask;
  * Created by chaemil on 2.12.15.
  */
 public class MainActivity extends BaseActivity implements
-        SlidingUpPanelLayout.PanelSlideListener, ReceiverListener {
+        SlidingUpPanelLayout.PanelSlideListener, PlaybackReceiverListener {
 
     public static final String EXPAND_PANEL = "expand_panel";
     private SlidingUpPanelLayout panelLayout;
@@ -322,7 +322,7 @@ public class MainActivity extends BaseActivity implements
 
     private void stopAudioPlaybackService() {
         if(((OazaApp) getApplication()).playbackService != null) {
-            ((OazaApp) getApplication()).playbackService.stop();
+            ((OazaApp) getApplication()).playbackService.playbackStop();
         }
     }
 
@@ -360,10 +360,10 @@ public class MainActivity extends BaseActivity implements
                 expandPanel();
             }
 
-            if (!((OazaApp) getApplication()).isMyServiceRunning(AudioPlaybackService.class)
-                    || ((((OazaApp) getApplication()).playbackService != null)
-                        && ((OazaApp) getApplication()).playbackService.getCurrentAudio() != audio)) {
+            if (((OazaApp) getApplication()).playbackService == null
+                    || ((OazaApp) getApplication()).playbackService.getCurrentAudio() != audio) {
 
+                stopService(new Intent(this, AudioPlaybackService.class));
                 startAudioPlaybackService(audio, downloaded);
 
                 videoPlayerFragment = null;
@@ -640,24 +640,24 @@ public class MainActivity extends BaseActivity implements
     }
 
     @Override
-    public void playPauseAudio() {
+    public void playbackPlayPauseAudio() {
         if (getAudioPlayerFragment() != null) {
             getAudioPlayerFragment().playPause();
         }
     }
 
     @Override
-    public void seekFF() {
+    public void playbackSeekFF() {
 
     }
 
     @Override
-    public void seekREW() {
+    public void playbackSeekREW() {
 
     }
 
     @Override
-    public void stop() {
+    public void playbackStop() {
 
     }
 }

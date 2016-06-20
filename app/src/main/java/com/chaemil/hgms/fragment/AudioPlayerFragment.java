@@ -259,6 +259,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
         seekBar.setMax(getAudioDuration());
         seekBar.postDelayed(onEverySecond, 1000);
+        refreshPlayButtons();
     }
 
     private void swipeDismissPlayer(boolean right) {
@@ -315,17 +316,21 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
     private void refreshPlayButtons() {
         if (isServicePlayingAudio()) {
-            playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
-            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
-        } else {
             playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
             miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+        } else {
+            playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
         }
     }
 
     private boolean isServicePlayingAudio() {
         AudioPlaybackService service = getService();
-        return service != null && service.getAudioPlayer().isPlaying();
+        if (service != null) {
+            return service.getAudioPlayer().isPlaying();
+        } else {
+            return false;
+        }
     }
 
     private int getAudioDuration() {
@@ -343,6 +348,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                 if (seekBar != null) {
                     seekBar.postDelayed(onEverySecond, 1000);
                     updateTime();
+                    refreshPlayButtons();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -502,7 +508,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     public void onAudioFocusChange(int focusChange) {
         /*switch (focusChange) {
             case AudioManager.AUDIOFOCUS_LOSS:
-                // Lost focus for an unbounded amount of time: stop playback and release media player
+                // Lost focus for an unbounded amount of time: playbackStop playback and release media player
                 if (audioPlayer != null) {
                     try {
                         if (audioPlayer.isPlaying()) {
@@ -517,7 +523,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                 break;
 
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                // Lost focus for a short time, but we have to stop
+                // Lost focus for a short time, but we have to playbackStop
                 // playback. We don't release the media player because playback
                 // is likely to resume
                 if (audioPlayer != null) {
