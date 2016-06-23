@@ -1,12 +1,19 @@
 package com.chaemil.hgms.service;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.v7.app.NotificationCompat;
 
+import com.chaemil.hgms.R;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.NetworkUtils;
-import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.koushikdutta.async.future.Future;
@@ -26,7 +33,14 @@ public class DownloadManager implements ProgressCallback, FutureCallback<File> {
 
     public static final int WAITING = 0;
     public static final int DOWNLOADING = 1;
-    public static final int FINISHED = 3;
+    public static final int FINISHED = 2;
+
+    private static final int NOTIFICATION_ID = 5000;
+
+    public static final String DOWNLOAD_COMPLETE = "downloadComplete";
+    public static final String DOWNLOAD_STARTED = "downloadStarted";
+    public static final String OPEN_DOWNLOADS = "openDownloads";
+    public static final String KILL_DOWNLOAD = "killDownload";
 
     private static DownloadManager instance = null;
     private static List<Video> downloadQueue = new ArrayList<>();
@@ -37,19 +51,28 @@ public class DownloadManager implements ProgressCallback, FutureCallback<File> {
     private long percentDownloaded;
     private boolean isDownloadingNow;
     private int currentDownloadState = WAITING;
+    private NotificationCompat.Builder notificationBuilder;
+    private NotificationManager notificationManager;
+    private Intent openDownloads;
+    private PendingIntent pOpenDownloads;
+    private Intent killDownload;
+    private PendingIntent pKillDownload;
+    private Handler notificationHandler;
 
     private DownloadManager(Context context) {
         this.context = context;
     }
 
     public static void init(Context context) {
-        instance = new DownloadManager(context);
-        connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        updateDownloadQueue();
+        if (instance == null) {
+            instance = new DownloadManager(context);
+            connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            updateDownloadQueue();
+        }
     }
 
-    public DownloadManager getInstance() {
+    public static DownloadManager getInstance() {
         return instance;
     }
 
@@ -65,6 +88,8 @@ public class DownloadManager implements ProgressCallback, FutureCallback<File> {
         if (!downloadQueue.contains(video)) {
             downloadQueue.add(video);
         }
+
+        startDownload();
     }
 
     public void removeVideoFromQueue(Video video) {
@@ -103,10 +128,15 @@ public class DownloadManager implements ProgressCallback, FutureCallback<File> {
     private void startDownload() {
         currentDownload = getFirstVideoToDownload();
 
+        Intent i = new Intent(DOWNLOAD_STARTED);
+        context.sendBroadcast(i);
+
         if (!isDownloadingNow() && canStartDownload()) {
             if (currentDownload != null) {
                 isDownloadingNow = true;
                 currentDownloadState = WAITING;
+
+                createNotification();
 
                 downloadThumb(currentDownload);
                 downloadAudio(currentDownload);
@@ -139,6 +169,20 @@ public class DownloadManager implements ProgressCallback, FutureCallback<File> {
     @Override
     public void onProgress(long downloaded, long total) {
         percentDownloaded = (long) ((float) downloaded / total * 100);
+
+        if (notificationHandler == null) {
+            notificationHandler = new Handler(Looper.getMainLooper());
+            notificationHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    updateNotificationPercent(percentDownloaded);
+                    if (notificationHandler != null) {
+                        notificationHandler.postDelayed(this, 500);
+                    }
+                }
+            }, 500);
+        }
+
     }
 
     @Override
@@ -160,12 +204,65 @@ public class DownloadManager implements ProgressCallback, FutureCallback<File> {
 
             if (downloadedAudio != null) {
                 currentDownloadState += 1;
-                downloadedAudio.setDownloaded(true);
+                videoDownloaded(currentDownload);
             }
         }
 
         if (currentDownloadState == FINISHED) {
             startDownload();
         }
+    }
+
+    private void createNotification() {
+        openDownloads = new Intent(OPEN_DOWNLOADS);
+        pOpenDownloads = PendingIntent.getBroadcast(context, 0, openDownloads, PendingIntent.FLAG_UPDATE_CURRENT);
+        killDownload = new Intent(KILL_DOWNLOAD);
+        pKillDownload = PendingIntent.getBroadcast(context, 0, killDownload, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notificationBuilder = new NotificationCompat.Builder(context);
+        notificationBuilder.setContentTitle(currentDownload.getName())
+                .setContentText(context.getResources().getString(R.string.downloading_audio))
+                .setProgress(100, 0, false)
+                .setOngoing(true)
+                .setContentIntent(pOpenDownloads)
+                .addAction(R.drawable.ic_close, context.getString(R.string.cancel_download), pKillDownload)
+                .setSmallIcon(R.drawable.download);
+
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+    }
+
+    private void updateNotificationPercent(double percentDownloaded) {
+        notificationBuilder.setProgress(100, (int) percentDownloaded, false);
+        notificationManager.notify(5000, notificationBuilder.build());
+    }
+
+    private void updateNotificationComplete() {
+        notificationBuilder.setProgress(0, 0, false);
+        notificationBuilder.setContentText(context.getString(R.string.download_completed));
+        notificationBuilder.mActions.clear();
+        notificationBuilder.setOngoing(false);
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+    }
+
+    private void updateNotificationCanceled() {
+        notificationBuilder.setProgress(0, 0, false);
+        notificationBuilder.setContentText(context.getString(R.string.download_canceled));
+        notificationBuilder.mActions.clear();
+        notificationBuilder.setOngoing(false);
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+    }
+
+    private void videoDownloaded(Video video) {
+        Intent i = new Intent(DOWNLOAD_COMPLETE);
+        context.sendBroadcast(i);
+
+        notificationHandler = null;
+
+        video.setInDownloadQueue(false);
+        video.setDownloaded(true);
+        video.save();
+
+        updateNotificationComplete();
     }
 }

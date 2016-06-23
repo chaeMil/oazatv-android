@@ -77,8 +77,7 @@ public class AdapterUtils {
     }
 
     public static void downloadAudio(Context context, MainActivity mainActivity, Object arrayAdapter, Video video) {
-        ((OazaApp) mainActivity.getApplication()).addToDownloadQueue(video);
-        mainActivity.startDownloadService();
+        ((OazaApp) context.getApplicationContext()).downloadService.downloadVideo(video);
         if (arrayAdapter instanceof ArrayAdapter) {
             ((ArrayAdapter) arrayAdapter).notifyDataSetChanged();
         }

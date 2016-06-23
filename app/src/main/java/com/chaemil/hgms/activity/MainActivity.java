@@ -42,6 +42,7 @@ import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.receiver.MainActivityReceiver;
 import com.chaemil.hgms.receiver.PlaybackReceiverListener;
 import com.chaemil.hgms.service.AudioPlaybackService;
+import com.chaemil.hgms.service.DownloadManager;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.MyRequestService;
 import com.chaemil.hgms.utils.NetworkUtils;
@@ -111,11 +112,6 @@ public class MainActivity extends BaseActivity implements
         setupPlaybackReceiver();
         setupLiveRequestTimer();
 
-        if (!((OazaApp) getApplication()).isDownloadingNow()) {
-            Intent downloadService = new Intent(this, DownloadService.class);
-            startService(downloadService);
-        }
-
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();
         }
@@ -149,10 +145,10 @@ public class MainActivity extends BaseActivity implements
 
     private void setupReceiver() {
         IntentFilter filter = new IntentFilter();
-        filter.addAction(DownloadService.DOWNLOAD_COMPLETE);
-        filter.addAction(DownloadService.DOWNLOAD_STARTED);
-        filter.addAction(DownloadService.OPEN_DOWNLOADS);
-        filter.addAction(DownloadService.KILL_DOWNLOAD);
+        filter.addAction(DownloadManager.DOWNLOAD_COMPLETE);
+        filter.addAction(DownloadManager.DOWNLOAD_STARTED);
+        filter.addAction(DownloadManager.OPEN_DOWNLOADS);
+        filter.addAction(DownloadManager.KILL_DOWNLOAD);
 
         mainActivityReceiver = new MainActivityReceiver(this);
         registerReceiver(mainActivityReceiver, filter);
@@ -512,8 +508,6 @@ public class MainActivity extends BaseActivity implements
 
             getMainFragment().hideSettings();
 
-        } else if (((OazaApp) getApplication()).isDownloadingNow()) {
-            moveTaskToBack(true);
         } else {
             finish();
         }

@@ -2,6 +2,7 @@ package com.chaemil.hgms;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
@@ -28,7 +29,6 @@ public class OazaApp extends SugarApp {
 
     public static final boolean DEVELOPMENT = true;
 
-    private boolean downloadingNow = false;
     private MainActivity mainActivity;
     public SplashActivity splashActivity;
     public boolean appVisible = false;
@@ -49,11 +49,21 @@ public class OazaApp extends SugarApp {
         AnalyticsService.init(this);
         MultiDex.install(this);
         MyRequestService.init(this);
-        DownloadManager.init(this);
 
         if (isMyServiceRunning(AudioPlaybackService.class)) {
             if (AudioPlaybackService.getInstance() != null) {
                 playbackService = AudioPlaybackService.getInstance();
+            }
+        }
+
+        if (!isMyServiceRunning(DownloadService.class)) {
+            startService(new Intent(this, DownloadService.class));
+        }
+
+        if (isMyServiceRunning(DownloadService.class)) {
+            if (DownloadService.getInstance(this) != null) {
+                downloadService = DownloadService.getInstance(this);
+                downloadService.setContext(this);
             }
         }
     }
@@ -70,26 +80,6 @@ public class OazaApp extends SugarApp {
             mTracker = analytics.newTracker("UA-46402880-6");
         }
         return mTracker;
-    }
-
-    public boolean isDownloadingNow() {
-        return downloadingNow;
-    }
-
-    public void setDownloadingNow(boolean downloadingNow) {
-        this.downloadingNow = downloadingNow;
-    }
-
-    public void addToDownloadQueue(Video video) {
-        Video savedVideo = Video.findByServerId(video.getServerId());
-
-        if (savedVideo == null) {
-            savedVideo = video;
-        }
-
-        savedVideo.setInDownloadQueue(true);
-        savedVideo.setDownloaded(false);
-        savedVideo.save();
     }
 
     public MainActivity getMainActivity() {

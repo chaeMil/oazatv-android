@@ -1,11 +1,8 @@
 package com.chaemil.hgms.service;
 
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -13,29 +10,18 @@ import android.support.annotation.Nullable;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.model.Video;
 
-import java.util.List;
-
 /**
  * Created by chaemil on 8.1.16.
  */
 public class DownloadService extends Service {
-    public static final String NAME = "DownloadService";
-    private static final int NOTIFICATION_ID = 5000;
-    public static final String DOWNLOAD_COMPLETE = "downloadComplete";
-    public static final String DOWNLOAD_STARTED = "downloadStarted";
-    public static final String OPEN_DOWNLOADS = "openDownloads";
-    public static final String KILL_DOWNLOAD = "killDownload";
-
     private static DownloadService instance = null;
     private final DownloadServiceBind downloadServiceBind = new DownloadServiceBind();
-    private Intent openDownloads;
-    private PendingIntent pOpenDownloads;
-    private Intent killDownload;
-    private PendingIntent pKillDownload;
-    private Thread notificationThread;
+    private Context context;
 
-
-    public static DownloadService getInstance() {
+    public static DownloadService getInstance(Context context) {
+        if (instance == null) {
+            init(context);
+        }
         return instance;
     }
 
@@ -46,34 +32,43 @@ public class DownloadService extends Service {
     }
 
     @Override
-    public boolean onUnbind(Intent intent){
-
-
-        return false;
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        init();
         return START_STICKY;
     }
 
-    private void init() {
-        if (instance == null) {
-            instance = this;
+    public static void init(Context context) {
+        if (instance == null && context != null) {
+            instance = new DownloadService();
+            instance.setContext(context);
+            instance.createDownloadManager();
 
-            ((OazaApp) getApplication()).downloadService = this;
+            ((OazaApp) context).downloadService = instance;
 
-            openDownloads = new Intent(OPEN_DOWNLOADS);
-            pOpenDownloads = PendingIntent.getBroadcast(getApplicationContext(), 0, openDownloads, PendingIntent.FLAG_UPDATE_CURRENT);
-            killDownload = new Intent(KILL_DOWNLOAD);
-            pKillDownload = PendingIntent.getBroadcast(this, 0, killDownload, PendingIntent.FLAG_UPDATE_CURRENT);
         }
     }
 
+    private void createDownloadManager() {
+        if (context != null) {
+            DownloadManager.init(context);
+        }
+    }
+
+    public void downloadVideo(Video video) {
+        DownloadManager.getInstance().addVideoToQueue(video);
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     public class DownloadServiceBind extends Binder {
-        public DownloadService getService() {
-            return getInstance();
+        public DownloadService getService(Context context) {
+            return getInstance(context);
         }
     }
 
