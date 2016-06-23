@@ -55,9 +55,9 @@ public class MainActivityReceiver extends BroadcastReceiver {
                 mainActivity.getMainFragment().getPager().setCurrentItem(2);
                 break;
             case DownloadService.KILL_DOWNLOAD:
-                if (((OazaApp) context.getApplicationContext()).getDownloadService() != null) {
-                    ((OazaApp) context.getApplicationContext()).getDownloadService().killCurrentDownload();
-                }
+                /*if (((OazaApp) context.getApplicationContext()).downloadService != null) {
+                    ((OazaApp) context.getApplicationContext()).downloadService.killCurrentDownload();
+                }*/
                 break;
 
         }

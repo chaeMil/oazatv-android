@@ -184,11 +184,11 @@ public class Video extends SugarRecord implements Parcelable {
     }
 
     public boolean isCurrentlyDownloading(OazaApp oazaApp) {
-        if (oazaApp.getDownloadService() != null) {
-            DownloadService downloadService = oazaApp.getDownloadService();
+        /*if (oazaApp.downloadService != null) {
+            DownloadService downloadService = oazaApp.downloadService;
             Video currentDownload = downloadService.getCurrentDownload();
             return currentDownload.serverId == this.serverId;
-        }
+        }*/
         return false;
     }
 

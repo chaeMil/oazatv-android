@@ -32,11 +32,11 @@ public class WifiConnectedReceiver extends BroadcastReceiver {
         else {
             Log.d("WifiReceiver", "Don't have Wifi Connection");
 
-            if (((OazaApp) context.getApplicationContext()).getDownloadService() != null) {
+            /*if (((OazaApp) context.getApplicationContext()).getDownloadService() != null) {
                 if (SharedPrefUtils.getInstance(context).loadDownloadOnWifi()) {
                     ((OazaApp) context.getApplicationContext()).getDownloadService().killCurrentDownload();
                 }
-            }
+            }*/
 
         }
 
