@@ -1,11 +1,9 @@
 package com.chaemil.hgms.activity;
 
 import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -16,7 +14,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -44,7 +41,7 @@ import com.chaemil.hgms.receiver.PlaybackReceiverListener;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.DownloadManager;
 import com.chaemil.hgms.service.DownloadService;
-import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
@@ -133,13 +130,13 @@ public class MainActivity extends BaseActivity implements
             if (path.contains("/video/watch")) {
                 String videoHash = pathArray[pathArray.length - 1];
                 Request getVideo = RequestFactory.getVideo(this, videoHash);
-                MyRequestService.getRequestQueue().add(getVideo);
+                RequestService.getRequestQueue().add(getVideo);
             }
 
             if (path.contains("/album/view")) {
                 String albumHash = pathArray[pathArray.length - 1];
                 Request getAlbum = RequestFactory.getPhotoAlbum(this, albumHash);
-                MyRequestService.getRequestQueue().add(getAlbum);
+                RequestService.getRequestQueue().add(getAlbum);
             }
         }
     }
@@ -191,7 +188,7 @@ public class MainActivity extends BaseActivity implements
 
     private void getLiveStream() {
         JsonObjectRequest request = RequestFactory.getLiveStream(MainActivity.this);
-        MyRequestService.getRequestQueue().add(request);
+        RequestService.getRequestQueue().add(request);
     }
 
     @Override

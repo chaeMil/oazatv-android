@@ -1,14 +1,10 @@
 package com.chaemil.hgms.fragment;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -31,14 +27,10 @@ import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
-import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.service.AnalyticsService;
-import com.chaemil.hgms.service.MyRequestService;
-import com.chaemil.hgms.utils.BitmapUtils;
-import com.chaemil.hgms.utils.Constants;
+import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.GAUtils;
-import com.chaemil.hgms.utils.OnSwipeTouchListener;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
@@ -208,7 +200,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     private void postVideoView() {
         JsonObjectRequest postView = RequestFactory.postVideoView(this, currentVideo.getHash());
-        MyRequestService.getRequestQueue().add(postView);
+        RequestService.getRequestQueue().add(postView);
     }
 
     private void activateUI(boolean state) {

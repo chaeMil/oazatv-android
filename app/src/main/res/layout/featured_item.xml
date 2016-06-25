@@ -8,18 +8,15 @@
     <RelativeLayout
         android:id="@+id/main_view"
         android:layout_width="match_parent"
-        android:layout_height="105dp">
+        android:layout_height="wrap_content"
+        android:padding="8dp">
 
         <com.chaemil.hgms.view.VideoThumbImageView
             android:scaleType="centerCrop"
             android:id="@+id/thumb"
             android:background="@color/dark_gray"
-            android:layout_width="170dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="2dp" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <TextView
             tools:text="Video name sooooo long"
@@ -30,13 +27,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"
-            android:layout_alignParentTop="true"
-            android:layout_alignLeft="@+id/date"
-            android:layout_alignStart="@+id/date"
-            android:layout_marginTop="8dp"
+            tools:ignore="MissingPrefix"
+            android:layout_below="@+id/thumb"
+            android:layout_marginTop="6dp"
             android:layout_toLeftOf="@+id/context_menu"
             android:layout_toStartOf="@+id/context_menu"
-            tools:ignore="MissingPrefix" />
+            android:layout_marginLeft="2dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,10 +40,9 @@
             tools:text="29.12.2015"
             android:id="@+id/date"
             android:textColor="@color/md_grey_700"
+            android:layout_marginTop="2dp"
             android:layout_below="@+id/name"
-            android:layout_toRightOf="@+id/thumb"
-            android:layout_toEndOf="@+id/thumb"
-            android:layout_marginTop="2dp" />
+            android:layout_marginLeft="2dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -56,10 +51,10 @@
             android:id="@+id/views"
             android:textColor="@color/md_grey_700"
             android:gravity="right"
-            android:layout_below="@+id/date"
-            android:layout_toRightOf="@+id/thumb"
-            android:layout_toEndOf="@+id/thumb"
-            android:layout_marginTop="2dp" />
+            android:layout_marginTop="2dp"
+            android:layout_toRightOf="@+id/date"
+            android:layout_below="@+id/name"
+            android:layout_marginLeft="16dp" />
 
         <ImageButton
             android:layout_width="40dp"
@@ -67,9 +62,11 @@
             android:id="@+id/context_menu"
             android:background="@drawable/transparent_ripple"
             android:src="@drawable/ic_action_navigation_more_vert"
-            android:layout_alignParentTop="true"
+            android:layout_below="@+id/thumb"
+            android:layout_alignParentEnd="false"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_marginTop="6dp"
+            android:layout_marginRight="-8dp" />
 
     </RelativeLayout>
 

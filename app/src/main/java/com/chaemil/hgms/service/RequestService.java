@@ -5,10 +5,10 @@ import android.content.Context;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-public class MyRequestService {
+public class RequestService {
     private static RequestQueue requestQueue;
 
-    private MyRequestService() {}
+    private RequestService() {}
 
     public static void init(Context context) {
         requestQueue = Volley.newRequestQueue(context);

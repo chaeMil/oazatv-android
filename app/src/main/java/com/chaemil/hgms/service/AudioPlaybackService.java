@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
-import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -170,7 +169,7 @@ public class AudioPlaybackService extends Service implements
 
     private void postVideoView() {
         JsonObjectRequest postView = RequestFactory.postVideoView(this, currentAudio.getHash());
-        MyRequestService.getRequestQueue().add(postView);
+        RequestService.getRequestQueue().add(postView);
     }
 
     public void playbackPlayPauseAudio() {

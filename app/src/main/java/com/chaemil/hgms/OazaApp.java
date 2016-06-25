@@ -8,12 +8,10 @@ import android.util.Log;
 
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.activity.SplashActivity;
-import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.AudioPlaybackService;
-import com.chaemil.hgms.service.DownloadManager;
 import com.chaemil.hgms.service.DownloadService;
-import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.service.RequestService;
 import com.crashlytics.android.Crashlytics;
 import com.github.pedrovgs.lynx.LynxShakeDetector;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -49,7 +47,7 @@ public class OazaApp extends SugarApp {
         Fabric.with(this, new Crashlytics());
         AnalyticsService.init(this);
         MultiDex.install(this);
-        MyRequestService.init(this);
+        RequestService.init(this);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath(getString(R.string.default_font))
@@ -62,9 +60,9 @@ public class OazaApp extends SugarApp {
             }
         }
 
-        if (!isMyServiceRunning(DownloadService.class)) {
+        /*if (!isMyServiceRunning(DownloadService.class)) {
             startService(new Intent(this, DownloadService.class));
-        }
+        }*/
 
         if (isMyServiceRunning(DownloadService.class)) {
             if (DownloadService.getInstance(this) != null) {

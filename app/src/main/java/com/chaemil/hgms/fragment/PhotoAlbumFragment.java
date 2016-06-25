@@ -12,7 +12,6 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -30,7 +29,7 @@ import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.AnalyticsService;
-import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.SmartLog;
@@ -96,7 +95,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
         }
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "getData", album.getHash());
         JsonObjectRequest getPhotos = RequestFactory.getPhotoAlbum(this, album.getHash());
-        MyRequestService.getRequestQueue().add(getPhotos);
+        RequestService.getRequestQueue().add(getPhotos);
     }
 
     private void getUI(View rootView) {

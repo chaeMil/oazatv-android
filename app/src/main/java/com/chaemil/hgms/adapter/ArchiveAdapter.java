@@ -28,13 +28,16 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
 
     private final Context context;
     private final MainActivity mainActivity;
+    private final int layout;
     private ArrayList<ArchiveItem> archive;
 
-    public ArchiveAdapter(Context context, MainActivity mainActivity, ArrayList<ArchiveItem> archive) {
+    public ArchiveAdapter(Context context, int layout, MainActivity mainActivity,
+                          ArrayList<ArchiveItem> archive) {
         super(context, 0);
         this.context = context;
         this.archive = archive;
         this.mainActivity = mainActivity;
+        this.layout = layout;
     }
 
 
@@ -44,7 +47,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
 
         if (convertView == null) {
             LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.archive_item, null);
+            convertView = vi.inflate(layout, null);
 
             holder = new ViewHolder();
             holder.mainView = (RelativeLayout) convertView.findViewById(R.id.main_view);

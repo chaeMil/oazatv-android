@@ -19,7 +19,7 @@ import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.Category;
 import com.chaemil.hgms.model.RequestType;
-import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.GAUtils;
 
 import org.json.JSONObject;
@@ -62,7 +62,7 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
 
     private void getData() {
         JsonObjectRequest request = RequestFactory.getCategories(this);
-        MyRequestService.getRequestQueue().add(request);
+        RequestService.getRequestQueue().add(request);
     }
 
     private void getUI(ViewGroup rootView) {
