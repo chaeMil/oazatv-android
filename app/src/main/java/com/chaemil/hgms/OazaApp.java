@@ -21,6 +21,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.orm.SugarApp;
 
 import io.fabric.sdk.android.Fabric;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * Created by chaemil on 3.12.15.
@@ -49,6 +50,11 @@ public class OazaApp extends SugarApp {
         AnalyticsService.init(this);
         MultiDex.install(this);
         MyRequestService.init(this);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath(getString(R.string.slab_font_thin))
+                .setFontAttrId(R.attr.fontPath)
+                .build());
 
         if (isMyServiceRunning(AudioPlaybackService.class)) {
             if (AudioPlaybackService.getInstance() != null) {
