@@ -2,5 +2,6 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="splash_screen_top_margin">-50dp</dimen>
     <integer name="video_player_wrapper_bottom_margin">173</integer>
 </resources>
