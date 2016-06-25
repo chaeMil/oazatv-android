@@ -55,7 +55,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="22sp"
+                    fontPath="@string/default_font_bold"
                     android:text="@string/newest_videos"
                     android:padding="10dp" />
 
@@ -69,9 +70,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="22sp"
+                    fontPath="@string/default_font_bold"
                     android:text="@string/newest_albums"
-                    android:padding="10dp" />
+                    android:padding="10dp"
+                    android:layout_marginTop="12dp" />
 
                 <it.sephiroth.android.library.widget.HListView
                     android:id="@+id/newest_albums"
@@ -83,9 +86,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="22sp"
+                    fontPath="@string/default_font_bold"
                     android:text="@string/popular_videos"
-                    android:padding="10dp" />
+                    android:padding="10dp"
+                    android:layout_marginTop="12dp" />
 
                 <it.sephiroth.android.library.widget.HListView
                     android:id="@+id/popular_videos"
@@ -121,6 +126,8 @@
             android:layout_height="40dp"
             android:background="@drawable/app_round_button_bg_active"
             android:textColor="@color/white"
+            android:textSize="18sp"
+            fontPath="@string/default_font_light"
             android:paddingLeft="24dp"
             android:paddingRight="24dp"
             android:layout_marginLeft="6dp"
@@ -136,6 +143,8 @@
             android:layout_height="40dp"
             android:background="@drawable/app_round_button_bg"
             android:textColor="@color/white"
+            android:textSize="18sp"
+            fontPath="@string/default_font_light"
             android:paddingLeft="24dp"
             android:paddingRight="24dp"
             android:layout_marginLeft="6dp"

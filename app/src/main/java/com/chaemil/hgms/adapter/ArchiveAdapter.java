@@ -101,7 +101,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                     }
                 });
                 holder.name.setText(photoAlbum.getName());
-                holder.date.setText(photoAlbum.getDate());
+                holder.date.setText(StringUtils.formatDate(photoAlbum.getDate(), context));
                 holder.views.setText(context.getString(R.string.photo_album));
                 holder.more.setVisibility(View.GONE);
                 Ion.with(context).load(photoAlbum.getThumbs().getThumb512()).intoImageView(holder.thumb);

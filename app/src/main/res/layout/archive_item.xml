@@ -20,7 +20,7 @@
 
     <TextView
         tools:text="Video name sooooo long"
-        fontPath="@string/slab_font"
+        fontPath="@string/default_font_bold"
         android:id="@+id/name"
         android:textSize="16sp"
         android:textColor="@color/dark_gray"

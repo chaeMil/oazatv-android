@@ -106,7 +106,7 @@ public class HomepageAdapter extends ArrayAdapter<Object> {
                 }
             });
             holder.name.setText(photoAlbum.getName());
-            holder.date.setText(photoAlbum.getDate());
+            holder.date.setText(StringUtils.formatDate(photoAlbum.getDate(), context));
             holder.views.setText(context.getString(R.string.photo_album));
             holder.more.setVisibility(View.GONE);
             Ion.with(context).load(photoAlbum.getThumbs().getThumb1024()).intoImageView(holder.thumb);
