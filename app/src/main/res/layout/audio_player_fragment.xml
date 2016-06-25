@@ -55,7 +55,7 @@
 
                 <TextView
                     android:textColor="@color/white"
-                    android:textStyle="bold"
+                    fontPath="@string/slab_font_bold"
                     android:id="@+id/player_title"
                     tools:text="Show player"
                     android:textSize="18sp"
@@ -114,6 +114,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="Show player"
+                        fontPath="@string/slab_font_bold"
                         android:textSize="18dp"
                         android:textColor="@color/gray"
                         android:textStyle="bold"
