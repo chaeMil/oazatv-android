@@ -43,44 +43,27 @@ import java.util.ArrayList;
  * Created by chaemil on 28.5.16.
  */
 public class AudioPlaybackService extends Service implements
-        MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
-        MediaPlayer.OnCompletionListener, RequestFactoryListener, PlaybackReceiverListener {
+        MediaPlayer.OnPreparedListener,
+        PlaybackReceiverListener,
+        RequestFactoryListener,
+        MediaPlayer.OnCompletionListener,
+        MediaPlayer.OnErrorListener {
 
     public static final String AUDIO = "current_audio";
     public static final String DOWNLOADED = "downloaded";
     private static final int NOTIFICATION_ID = 1111;
 
     private MediaPlayer player;
-    private int audioPos;
     private WifiManager.WifiLock wifiLock;
     private Video currentAudio;
     private NotificationManager notificationManager;
     private NotificationCompat.Builder notificationBuilder;
-    private int duration;
-    private final AudioPlaybackBind audioPlaybackBind = new AudioPlaybackBind();
     private AudioPlaybackReceiver audioPlaybackReceiver;
     private boolean downloaded;
-    private int notificationID;
     private static AudioPlaybackService instance = null;
 
     public static AudioPlaybackService getInstance() {
         return instance;
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return audioPlaybackBind;
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent){
-        player.stop();
-        player.release();
-
-        unregisterPlaybackReceiver();
-
-        return false;
     }
 
     @Override
@@ -91,37 +74,39 @@ public class AudioPlaybackService extends Service implements
         super.onDestroy();
     }
 
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        init(intent);
+
+        if (intent != null) {
+            if (intent.getParcelableExtra(AUDIO) != null) {
+                currentAudio = intent.getParcelableExtra(AUDIO);
+                downloaded = intent.getBooleanExtra(DOWNLOADED, false);
+            }
+        }
+
+        init(currentAudio);
+
         return START_STICKY;
     }
 
-    private void init(Intent bindIntent) {
+    private void init(Video currentAudio) {
         instance = this;
-
         ((OazaApp) getApplication()).playbackService = this;
-
-        notificationID = NOTIFICATION_ID;
-
-        audioPos = 0;
-        player = new MediaPlayer();
 
         initMusicPlayer();
         setupReceiver();
+        playNewAudio(currentAudio);
 
-        if (bindIntent != null) {
-            if (bindIntent.getParcelableExtra(AUDIO) != null) {
-                currentAudio = bindIntent.getParcelableExtra(AUDIO);
-                downloaded = bindIntent.getBooleanExtra(DOWNLOADED, false);
-                playNewAudio();
-            }
-        }
     }
 
     public void initMusicPlayer(){
-        player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        player = new MediaPlayer();
 
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(this);
@@ -203,7 +188,7 @@ public class AudioPlaybackService extends Service implements
             }
 
             notificationBuilder.mActions.get(1).icon = R.drawable.play;
-            notificationManager.notify(notificationID,
+            notificationManager.notify(NOTIFICATION_ID,
                     notificationBuilder.build());
 
             /*playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
@@ -215,7 +200,7 @@ public class AudioPlaybackService extends Service implements
         player.start();
 
         notificationBuilder.mActions.get(1).icon = R.drawable.pause;
-        notificationManager.notify(notificationID,
+        notificationManager.notify(NOTIFICATION_ID,
                 notificationBuilder.build());
 
         wifiLock.acquire();
@@ -228,7 +213,7 @@ public class AudioPlaybackService extends Service implements
         }*/
     }
 
-    public void playNewAudio() {
+    public void playNewAudio(Video audio) {
 
         createNotification();
         wifiLock.acquire();
@@ -236,7 +221,7 @@ public class AudioPlaybackService extends Service implements
         Video savedAudio = null;
 
         try {
-            savedAudio = Video.findByServerId(currentAudio.getServerId());
+            savedAudio = Video.findByServerId(audio.getServerId());
         } catch (Exception e) {
             SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
         }
@@ -296,8 +281,8 @@ public class AudioPlaybackService extends Service implements
                 notificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
             }
 
-            notificationManager.notify(notificationID, notificationBuilder.build());
-            startForeground(notificationID, notificationBuilder.build());
+            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+            startForeground(NOTIFICATION_ID, notificationBuilder.build());
 
             Ion.with(getApplication())
                     .load(currentAudio.getThumbFile())
@@ -306,7 +291,7 @@ public class AudioPlaybackService extends Service implements
                         @Override
                         public void onCompleted(Exception e, Bitmap result) {
                             notificationBuilder.setLargeIcon(result);
-                            notificationManager.notify(notificationID, notificationBuilder.build());
+                            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
                         }
                     });
         }
@@ -342,14 +327,6 @@ public class AudioPlaybackService extends Service implements
         player.seekTo(player.getCurrentPosition() - 30 * 1000);
     }
 
-
-    public class AudioPlaybackBind extends Binder {
-
-        public AudioPlaybackService getService() {
-            return getInstance();
-        }
-    }
-
     @Override
     public void onCompletion(MediaPlayer mp) {
 
@@ -362,9 +339,13 @@ public class AudioPlaybackService extends Service implements
 
     @Override
     public void onPrepared(MediaPlayer mp) {
+        createNotification();
+
+        player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
         player.start();
         player.seekTo(currentAudio.getCurrentTime());
-        duration = player.getDuration();
         //seekBar.setMax(duration);
         //seekBar.postDelayed(onEverySecond, 1000);
         //YoYo.with(Techniques.FadeIn).duration(350).delay(250).playOn(audioThumb);

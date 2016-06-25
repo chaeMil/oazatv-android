@@ -337,7 +337,6 @@ public class MainActivity extends BaseActivity implements
         playAudioIntent = new Intent(this, AudioPlaybackService.class);
         playAudioIntent.putExtra(AudioPlaybackService.AUDIO, audio);
         playAudioIntent.putExtra(AudioPlaybackService.DOWNLOADED, downloaded);
-        bindService(playAudioIntent, playbackConnection, Context.BIND_AUTO_CREATE);
         startService(playAudioIntent);
     }
 
@@ -574,21 +573,6 @@ public class MainActivity extends BaseActivity implements
         statusMessageWrapper.setVisibility(View.GONE);
         changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
     }
-
-    public AudioPlaybackService playbackService;
-    public ServiceConnection playbackConnection = new ServiceConnection(){
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            AudioPlaybackService.AudioPlaybackBind binder = (AudioPlaybackService.AudioPlaybackBind)service;
-            playbackService = binder.getService();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
 
     @Override
     public void onSuccessResponse(JSONObject response, RequestType requestType) {

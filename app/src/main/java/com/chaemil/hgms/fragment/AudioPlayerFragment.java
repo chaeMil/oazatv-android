@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.RequestType;
@@ -117,8 +118,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        releasePlayer();
 
         //saveCurrentAudioTime();
     }
@@ -247,26 +246,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         };
     }
 
-    private void swipeDismissPlayer(boolean right) {
-        //saveCurrentAudioTime();
-
-        //pauseAudio();
-        releasePlayer();
-        if (right) {
-            YoYo.with(Techniques.SlideOutRight).duration(300).playOn(miniPlayer);
-        } else {
-            YoYo.with(Techniques.SlideOutLeft).duration(300).playOn(miniPlayer);
-        }
-
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ((MainActivity) getActivity()).hidePanel();
-            }
-        }, 300);
-    }
-
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
@@ -322,7 +301,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
     private int getAudioDuration() {
         AudioPlaybackService service = getService();
-        if (service != null) {
+        if (service != null && service.getAudioPlayer() != null) {
             return service.getAudioPlayer().getDuration();
         }
         return 0;
@@ -348,27 +327,31 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private void updateTime() {
         AudioPlaybackService service = getService();
 
-        if (service != null) {
+        if (service != null && service.getAudioPlayer() != null) {
 
-            currentTimeInt = service.getAudioPlayer().getCurrentPosition();
-            audioDuration = getAudioDuration();
-            seekBar.setMax(audioDuration);
-            seekBar.setProgress(currentTimeInt);
+            try {
+                currentTimeInt = service.getAudioPlayer().getCurrentPosition();
+                audioDuration = getAudioDuration();
+                seekBar.setMax(audioDuration);
+                seekBar.setProgress(currentTimeInt);
 
-            int dSeconds = (audioDuration / 1000) % 60;
-            int dMinutes = ((audioDuration / (1000 * 60)) % 60);
-            int dHours = ((audioDuration / (1000 * 60 * 60)) % 24);
+                int dSeconds = (audioDuration / 1000) % 60;
+                int dMinutes = ((audioDuration / (1000 * 60)) % 60);
+                int dHours = ((audioDuration / (1000 * 60 * 60)) % 24);
 
-            int cSeconds = (currentTimeInt / 1000) % 60;
-            int cMinutes = ((currentTimeInt / (1000 * 60)) % 60);
-            int cHours = ((currentTimeInt / (1000 * 60 * 60)) % 24);
+                int cSeconds = (currentTimeInt / 1000) % 60;
+                int cMinutes = ((currentTimeInt / (1000 * 60)) % 60);
+                int cHours = ((currentTimeInt / (1000 * 60 * 60)) % 24);
 
-            if (dHours == 0) {
-                currentTime.setText(String.format("%02d:%02d", cMinutes, cSeconds));
-                totalTime.setText(String.format("%02d:%02d", dMinutes, dSeconds));
-            } else {
-                currentTime.setText(String.format("%02d:%02d:%02d", cHours, cMinutes, cSeconds));
-                totalTime.setText(String.format("%02d:%02d:%02d", dHours, dMinutes, dSeconds));
+                if (dHours == 0) {
+                    currentTime.setText(String.format("%02d:%02d", cMinutes, cSeconds));
+                    totalTime.setText(String.format("%02d:%02d", dMinutes, dSeconds));
+                } else {
+                    currentTime.setText(String.format("%02d:%02d:%02d", cHours, cMinutes, cSeconds));
+                    totalTime.setText(String.format("%02d:%02d:%02d", dHours, dMinutes, dSeconds));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         }
@@ -398,7 +381,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     public void reconnectToService(Context context) {
-
         Video audio = getService().getCurrentAudio();
         boolean downloaded = getService().getIsPlayingDownloaded();
 
@@ -441,32 +423,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                 .setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: "
                         + getCurrentAudio().getHash());
         postGA();
-    }
-
-    public void releasePlayer() {
-        /*if (audioPlayer != null) {
-            audioPlayer.release();
-        }*/
-        /*if (wifiLock != null) {
-            if (wifiLock.isHeld()) {
-                wifiLock.release();
-            }
-        }
-        if (notificationManager != null) {
-            notificationManager.cancel(NOTIFICATION_ID);
-        }*/
-    }
-
-    public RelativeLayout getPlayerToolbar() {
-        return playerToolbar;
-    }
-
-    public RelativeLayout getMiniPlayer() {
-        return miniPlayer;
-    }
-
-    public MediaPlayer getAudioPlayer() {
-        return mainActivity.playbackService.getAudioPlayer();
     }
 
     @Override

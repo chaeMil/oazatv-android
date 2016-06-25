@@ -69,7 +69,8 @@
             android:stopWithTask="false"/>
 
         <service android:name=".service.AudioPlaybackService"
-            android:stopWithTask="false"/>
+            android:stopWithTask="false"
+            android:enabled="true"/>
 
         <receiver android:name=".receiver.BootAndUpdateReceiver">
             <intent-filter>
