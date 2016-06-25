@@ -59,4 +59,5 @@
     <string name="tutorial_title_4">Poslouchejte na cestách.</string>
     <string name="tutorial_text_4">Stáhněte si audio záznamy pro poslech na cestách nebo offline.</string>
     <string name="none_downloaded_hint">Nestáhli jste žádné audio záznamy. Pro stažení a následné přehrávání offline klikněte na tři tečky vedle názvu videa a zvolte stáhnout audio.</string>
+    <string name="continue_text">Pokračovat…</string>
 </resources>

@@ -300,6 +300,7 @@ public class MainActivity extends BaseActivity implements
         if (service != null) {
             if (getPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN) {
                 getPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                getMainFragment().hideSplash(false);
             }
 
             if (getAudioPlayerFragment() == null) {

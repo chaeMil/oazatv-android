@@ -13,6 +13,7 @@ apply plugin: 'com.google.gms.google-services'
 
 repositories {
     maven { url "https://maven.fabric.io/public" }
+    maven { url "https://jitpack.io" }
 }
 
 
@@ -74,4 +75,5 @@ dependencies {
     compile 'ru.rambler.android:swipe-layout:1.0.10'
     compile 'com.google.android.gms:play-services-analytics:8.3.0'
     compile 'com.github.pedrovgs:lynx:1.6'
+    compile 'com.github.ybq:Android-SpinKit:1.0.4'
 }

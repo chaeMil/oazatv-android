@@ -3,6 +3,7 @@
 
     <string name="exception_network_timeout">connection failed</string>
     <string name="something_went_wrong">something went wrong</string>
+    <string name="continue_text">Continue…</string>
     <string name="next">Next</string>
     <string name="back">Back</string>
     <string name="finish">Finish</string>

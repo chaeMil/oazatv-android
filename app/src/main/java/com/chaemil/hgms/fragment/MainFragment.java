@@ -47,6 +47,7 @@ import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.clans.fab.FloatingActionButton;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import org.json.JSONObject;
@@ -90,6 +91,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private RelativeLayout splash;
     private CategoriesFragment categoriesFragment;
     private LinearLayout logoWrapper;
+    private TextView continueWithoutData;
+    private SpinKitView loadingView;
 
     @Override
     public void onAttach(Activity activity) {
@@ -129,16 +132,20 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     }
 
 
-    public void hideSplash() {
+    public void hideSplash(boolean animate) {
         if (splash != null) {
-            YoYo.with(Techniques.FadeOut).duration(350).playOn(splash);
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    splash.setVisibility(View.GONE);
-                }
-            }, 350);
+            if (animate) {
+                YoYo.with(Techniques.FadeOut).duration(350).playOn(splash);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        splash.setVisibility(View.GONE);
+                    }
+                }, 350);
+            } else {
+                splash.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -163,6 +170,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         share = (ImageView) rootView.findViewById(R.id.share);
         splash = (RelativeLayout) rootView.findViewById(R.id.splash);
         logoWrapper = (LinearLayout) rootView.findViewById(R.id.logo_wrapper);
+        continueWithoutData = (TextView) rootView.findViewById(R.id.continue_without_data);
+        loadingView = (SpinKitView) rootView.findViewById(R.id.loading_view);
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -174,6 +183,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         settingsFab.setOnClickListener(this);
         settingsCardBg.setOnClickListener(this);
         share.setOnClickListener(this);
+        continueWithoutData.setOnClickListener(this);
 
         if (savedInstanceState == null) {
             pager.setAdapter(new MainFragmentsAdapter(context.getSupportFragmentManager()));
@@ -415,6 +425,10 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                             album.getNameCS() + " | " + album.getNameEN(),
                             getString(R.string.share_album));
                 }
+                break;
+            case R.id.continue_without_data:
+                hideSplash(true);
+                break;
         }
     }
 
@@ -522,6 +536,18 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         }
     }
 
+    public void showContinue() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadingView.setVisibility(View.VISIBLE);
+                continueWithoutData.setVisibility(View.VISIBLE);
+                YoYo.with(Techniques.FadeIn).duration(500).playOn(continueWithoutData);
+                YoYo.with(Techniques.FadeIn).duration(500).playOn(loadingView);
+            }
+        }, 750);
+    }
 
 
     private class MainFragmentsAdapter extends FragmentPagerAdapter {

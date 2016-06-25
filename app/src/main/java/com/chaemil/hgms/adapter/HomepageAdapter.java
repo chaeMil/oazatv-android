@@ -1,8 +1,6 @@
 package com.chaemil.hgms.adapter;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +9,6 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Homepage;
@@ -19,7 +16,6 @@ import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
-import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.ion.Ion;
 
 /**
@@ -124,13 +120,24 @@ public class HomepageAdapter extends ArrayAdapter<Object> {
 
     @Override
     public int getCount() {
-        switch (display) {
-            case 0:
-                return homepage.newestVideos.size();
-            case 1:
-                return homepage.newestAlbums.size();
-            case 3:
-                return homepage.popularVideos.size();
+        if (homepage != null) {
+            switch (display) {
+                case 0:
+                    if (homepage.newestVideos != null) {
+                        return homepage.newestVideos.size();
+                    }
+                    break;
+                case 1:
+                    if (homepage.newestAlbums != null) {
+                        return homepage.newestAlbums.size();
+                    }
+                    break;
+                case 2:
+                    if (homepage.popularVideos != null) {
+                        return homepage.popularVideos.size();
+                    }
+                    break;
+            }
         }
         return 0;
     }
