@@ -133,7 +133,7 @@ public class HomepageAdapter extends ArrayAdapter<Object> {
                         return homepage.newestAlbums.size();
                     }
                     break;
-                case 2:
+                case 3:
                     if (homepage.popularVideos != null) {
                         return homepage.popularVideos.size();
                     }
