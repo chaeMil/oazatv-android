@@ -400,25 +400,29 @@ public class MainActivity extends BaseActivity implements
         }
 
         if (getAudioPlayerFragment() != null) {
-            getAudioPlayerFragment().switchMiniPlayer(!isPanelExpanded());
+            if (isPanelExpanded()) {
+                getAudioPlayerFragment().switchMiniPlayer(1);
+            } else {
+                getAudioPlayerFragment().switchMiniPlayer(0);
+            }
         }
     }
 
     @Override
     public void onPanelSlide(View panel, float slideOffset) {
-        if (slideOffset < 0.2) {
+        if (slideOffset == 0) {
             if (videoPlayerFragment != null) {
-                videoPlayerFragment.switchMiniPlayer(true);
+                videoPlayerFragment.switchMiniPlayer(slideOffset);
             }
             if (audioPlayerFragment != null) {
-                audioPlayerFragment.switchMiniPlayer(true);
+                audioPlayerFragment.switchMiniPlayer(slideOffset);
             }
         } else {
             if (videoPlayerFragment != null) {
-                videoPlayerFragment.switchMiniPlayer(false);
+                videoPlayerFragment.switchMiniPlayer(slideOffset);
             }
             if (audioPlayerFragment != null) {
-                audioPlayerFragment.switchMiniPlayer(false);
+                audioPlayerFragment.switchMiniPlayer(slideOffset);
             }
         }
     }

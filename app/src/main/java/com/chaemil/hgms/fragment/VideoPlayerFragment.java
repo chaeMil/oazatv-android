@@ -532,16 +532,24 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
 
 
-    public void switchMiniPlayer(boolean show) {
+    public void switchMiniPlayer(float alpha) {
         if (isAdded()) {
-            if (show) {
+
+            if (alpha == 0) {
                 playerToolbar.setVisibility(View.GONE);
                 miniPlayerSwipe.setVisibility(View.VISIBLE);
                 miniPlayer.setVisibility(View.VISIBLE);
-            } else {
+            } else if (alpha == 1) {
                 playerToolbar.setVisibility(View.VISIBLE);
                 miniPlayerSwipe.setVisibility(View.GONE);
                 miniPlayer.setVisibility(View.GONE);
+            } else {
+                miniPlayerSwipe.setVisibility(View.VISIBLE);
+                playerToolbar.setVisibility(View.VISIBLE);
+                miniPlayer.setVisibility(View.VISIBLE);
+
+                playerToolbar.setAlpha(alpha);
+                miniPlayer.setAlpha(1 - alpha);
             }
         }
     }
