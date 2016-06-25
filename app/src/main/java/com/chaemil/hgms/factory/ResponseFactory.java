@@ -70,13 +70,14 @@ public class ResponseFactory {
             String videoFile = response.getString(Constants.JSON_MP4_FILE);
             String audioFile = response.getString(Constants.JSON_MP3_FILE);
             String thumbFile = response.getString(Constants.THUMB_FILE);
+            String thumbColor = response.getString(Constants.THUMB_COLOR);
             int views = response.getInt(Constants.JSON_VIEWS);
             String categories = response.getString(Constants.JSON_CATEGORIES);
             String descriptionCS = response.getString(Constants.JSON_DESCRIPTION_CS);
             String descriptionEN = response.getString(Constants.JSON_DESCRIPTION_EN);
 
             return new Video(serverId, hash, date, nameCS, nameEN, tags, videoFileLowRes, videoFile, audioFile,
-                    thumbFile, views, categories, descriptionCS, descriptionEN, false);
+                    thumbFile, thumbColor, views, categories, descriptionCS, descriptionEN, false);
 
         } catch (JSONException e) {
             e.printStackTrace();

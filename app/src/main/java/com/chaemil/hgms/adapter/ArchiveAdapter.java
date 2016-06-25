@@ -1,6 +1,8 @@
 package com.chaemil.hgms.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,6 +88,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                         AdapterUtils.contextDialog(context, mainActivity, ArchiveAdapter.this, video);
                     }
                 });
+                holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
                 Ion.with(context).load(video.getThumbFile()).intoImageView(holder.thumb);
 
                 break;

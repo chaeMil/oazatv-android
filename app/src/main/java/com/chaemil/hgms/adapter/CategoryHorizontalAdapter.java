@@ -1,6 +1,7 @@
 package com.chaemil.hgms.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,6 +79,7 @@ public class CategoryHorizontalAdapter extends ArrayAdapter<Object> {
                 AdapterUtils.contextDialog(context, mainActivity, CategoryHorizontalAdapter.this, video);
             }
         });
+        holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
         Ion.with(context).load(video.getThumbFile()).intoImageView(holder.thumb);
 
         return convertView;
