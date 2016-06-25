@@ -52,7 +52,7 @@ public class OazaApp extends SugarApp {
         MyRequestService.init(this);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath(getString(R.string.slab_font_thin))
+                .setDefaultFontPath(getString(R.string.default_font))
                 .setFontAttrId(R.attr.fontPath)
                 .build());
 

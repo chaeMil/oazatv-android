@@ -250,6 +250,7 @@ public class AudioPlaybackService extends Service implements
     private void createNotification() {
 
         if (getApplication() != null
+                && currentAudio != null
                 && getApplication().getSystemService(Context.NOTIFICATION_SERVICE) != null) {
 
             ArrayList<PendingIntent> intents = AudioPlaybackPendingIntents.generate(getApplication());
