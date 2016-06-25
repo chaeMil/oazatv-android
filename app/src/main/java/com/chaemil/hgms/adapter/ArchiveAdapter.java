@@ -15,6 +15,7 @@ import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
+import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
 
@@ -73,7 +74,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                     }
                 });
                 holder.name.setText(video.getName());
-                holder.date.setText(video.getDate());
+                holder.date.setText(StringUtils.formatDate(video.getDate(), context));
                 holder.views.setText(video.getViews() + " " + context.getString(R.string.views));
                 holder.more.setVisibility(View.VISIBLE);
                 holder.more.setOnClickListener(new View.OnClickListener() {

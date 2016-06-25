@@ -78,7 +78,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
             }
         });
         holder.name.setText(video.getName());
-        holder.date.setText(video.getDate());
+        holder.date.setText(StringUtils.formatDate(video.getDate(), context));
         holder.size.setText(StringUtils.getStringSizeLengthFile(Video.getDownloadedAudioSize(context, video)));
         holder.more.setOnClickListener(new View.OnClickListener() {
             @Override
