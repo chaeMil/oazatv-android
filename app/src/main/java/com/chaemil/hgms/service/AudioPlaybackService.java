@@ -47,11 +47,14 @@ public class AudioPlaybackService extends Service implements
         PlaybackReceiverListener,
         RequestFactoryListener,
         MediaPlayer.OnCompletionListener,
-        MediaPlayer.OnErrorListener {
+        MediaPlayer.OnErrorListener,
+        MediaPlayer.OnInfoListener {
 
     public static final String AUDIO = "current_audio";
     public static final String DOWNLOADED = "downloaded";
-    private static final int NOTIFICATION_ID = 1111;
+    public static final String BUFFERING_START = "buffering_start";
+    public static final String BUFFERING_END = "buffering_end";
+    public static final int NOTIFICATION_ID = 1111;
 
     private MediaPlayer player;
     private WifiManager.WifiLock wifiLock;
@@ -111,6 +114,7 @@ public class AudioPlaybackService extends Service implements
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(this);
         player.setOnErrorListener(this);
+        player.setOnInfoListener(this);
 
         wifiLock = ((WifiManager) getApplication().getSystemService(Context.WIFI_SERVICE))
                 .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
@@ -190,9 +194,6 @@ public class AudioPlaybackService extends Service implements
             notificationBuilder.mActions.get(1).icon = R.drawable.play;
             notificationManager.notify(NOTIFICATION_ID,
                     notificationBuilder.build());
-
-            /*playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
-            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));*/
         }
     }
 
@@ -204,13 +205,6 @@ public class AudioPlaybackService extends Service implements
                 notificationBuilder.build());
 
         wifiLock.acquire();
-
-        /*playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-
-        if (seekBar != null) {
-            seekBar.postDelayed(onEverySecond, 1000);
-        }*/
     }
 
     public void playNewAudio(Video audio) {
@@ -249,6 +243,8 @@ public class AudioPlaybackService extends Service implements
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        postVideoView();
     }
 
     private void createNotification() {
@@ -346,38 +342,6 @@ public class AudioPlaybackService extends Service implements
 
         player.start();
         player.seekTo(currentAudio.getCurrentTime());
-        //seekBar.setMax(duration);
-        //seekBar.postDelayed(onEverySecond, 1000);
-        //YoYo.with(Techniques.FadeIn).duration(350).delay(250).playOn(audioThumb);
-
-        mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
-            @Override
-            public void onBufferingUpdate(MediaPlayer mp, int percent) {
-
-                float temp = ((float) mp.getCurrentPosition() / (float) mp.getDuration()) * 100;
-                if (Math.abs(percent - temp) < 1) {
-                    /*bufferFail++;
-                    if (bufferFail == 15) {
-                        SmartLog.Log(SmartLog.LogLevel.WARN, "bufferFail", "buffering failed");
-                    }*/
-                }
-            }
-        });
-
-        mp.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-            @Override
-            public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-                    //bufferBar.setVisibility(View.VISIBLE);
-                    saveCurrentAudioTime();
-                }
-                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-                    //bufferBar.setVisibility(View.GONE);
-                    saveCurrentAudioTime();
-                }
-                return false;
-            }
-        });
     }
 
     @Override
@@ -392,5 +356,20 @@ public class AudioPlaybackService extends Service implements
     @Override
     public void onErrorResponse(VolleyError exception, RequestType requestType) {
         BaseActivity.responseError(exception, getApplication());
+    }
+
+    @Override
+    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+        if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
+            Intent bufferingStart = new Intent(BUFFERING_START);
+            sendBroadcast(bufferingStart);
+            saveCurrentAudioTime();
+        }
+        if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
+            Intent bufferingEnd = new Intent(BUFFERING_END);
+            sendBroadcast(bufferingEnd);
+            saveCurrentAudioTime();
+        }
+        return false;
     }
 }

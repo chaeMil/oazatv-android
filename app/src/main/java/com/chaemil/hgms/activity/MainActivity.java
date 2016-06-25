@@ -62,7 +62,8 @@ import java.util.TimerTask;
  * Created by chaemil on 2.12.15.
  */
 public class MainActivity extends BaseActivity implements
-        SlidingUpPanelLayout.PanelSlideListener, PlaybackReceiverListener {
+        SlidingUpPanelLayout.PanelSlideListener,
+        PlaybackReceiverListener {
 
     public static final String EXPAND_PANEL = "expand_panel";
     private SlidingUpPanelLayout panelLayout;

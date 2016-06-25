@@ -76,7 +76,20 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
                 }
                 listener.playbackStop();
                 break;
-
+            case AudioPlaybackService.BUFFERING_START:
+                if (app != null
+                        && app.getMainActivity() != null
+                        && app.getMainActivity().getAudioPlayerFragment() != null) {
+                    app.getMainActivity().getAudioPlayerFragment().bufferingStart();
+                }
+                break;
+            case AudioPlaybackService.BUFFERING_END:
+                if (app != null
+                        && app.getMainActivity() != null
+                        && app.getMainActivity().getAudioPlayerFragment() != null) {
+                    app.getMainActivity().getAudioPlayerFragment().bufferingEnd();
+                }
+                break;
         }
     }
 }

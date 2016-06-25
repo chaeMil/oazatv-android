@@ -451,55 +451,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
     }
 
-
-    public void onAudioFocusChange(int focusChange) {
-        /*switch (focusChange) {
-            case AudioManager.AUDIOFOCUS_LOSS:
-                // Lost focus for an unbounded amount of time: playbackStop playback and release media player
-                if (audioPlayer != null) {
-                    try {
-                        if (audioPlayer.isPlaying()) {
-                            pauseAudio();
-                        }
-                        audioPlayer.release();
-                        audioPlayer = null;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                // Lost focus for a short time, but we have to playbackStop
-                // playback. We don't release the media player because playback
-                // is likely to resume
-                if (audioPlayer != null) {
-                    try {
-                        if (audioPlayer.isPlaying()) {
-                            pauseAudio();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                // Lost focus for a short time, but it's ok to keep playing
-                // at an attenuated level
-                if (audioPlayer != null) {
-                    try {
-                        if (audioPlayer.isPlaying()) {
-                            audioPlayer.setVolume(0.1f, 0.1f);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-        }*/
-    }
-
     @Override
     public void onSuccessResponse(JSONObject response, RequestType requestType) {
 
@@ -512,6 +463,14 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
     public void playPause() {
         refreshPlayButtons();
+    }
+
+    public void bufferingStart() {
+        bufferBar.setVisibility(View.VISIBLE);
+    }
+
+    public void bufferingEnd() {
+        bufferBar.setVisibility(View.GONE);
     }
 }
 
