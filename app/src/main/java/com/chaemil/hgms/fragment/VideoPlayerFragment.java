@@ -94,11 +94,14 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private TimerTask timerTask;
     private Timer timer;
     private SwipeLayout miniPlayerSwipe;
+    private MainActivity mainActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        mainActivity = (MainActivity) getActivity();
 
         setupUIHandler();
     }
@@ -256,6 +259,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         share.setOnClickListener(this);
         fullscreenExit.setOnClickListener(this);
         playerBgWrapper.setOnClickListener(this);
+        miniPlayer.setOnClickListener(this);
+        playerToolbar.setOnClickListener(this);
+
         miniPlayerSwipe.setOnSwipeListener(createSwipeListener());
 
         int bottomMargin = (int) DimensUtils.pxFromDp(getActivity(),
@@ -332,6 +338,19 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             case R.id.player_bg_wrapper:
                 toggleControls(true);
                 resetHideControlsTimer();
+                break;
+            case R.id.mini_player:
+            case R.id.toolbar:
+                if (mainActivity != null && mainActivity.getPanelLayout() != null) {
+                    switch(mainActivity.getPanelLayout().getPanelState()) {
+                        case EXPANDED:
+                            mainActivity.collapsePanel();
+                            break;
+                        case COLLAPSED:
+                            mainActivity.expandPanel();
+                            break;
+                    }
+                }
                 break;
         }
     }

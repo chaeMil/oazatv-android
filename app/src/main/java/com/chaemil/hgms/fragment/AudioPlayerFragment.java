@@ -35,6 +35,7 @@ import com.chaemil.hgms.utils.ShareUtils;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.koushikdutta.ion.Ion;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONObject;
 
@@ -214,9 +215,14 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         rew.setOnClickListener(this);
         miniPlayerPause.setOnClickListener(this);
         share.setOnClickListener(this);
+        miniPlayer.setOnClickListener(this);
+        playerToolbar.setOnClickListener(this);
+
         seekBar.setMax(getAudioDuration());
         seekBar.postDelayed(onEverySecond, 1000);
+
         miniPlayerSwipe.setOnSwipeListener(createSwipeListener());
+
 
         refreshPlayButtons();
     }
@@ -274,6 +280,19 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.share:
                 ShareUtils.shareAudioLink(getActivity(), getCurrentAudio());
+                break;
+            case R.id.mini_player:
+            case R.id.toolbar:
+                if (mainActivity != null && mainActivity.getPanelLayout() != null) {
+                    switch(mainActivity.getPanelLayout().getPanelState()) {
+                        case EXPANDED:
+                            mainActivity.collapsePanel();
+                            break;
+                        case COLLAPSED:
+                            mainActivity.expandPanel();
+                            break;
+                    }
+                }
                 break;
         }
     }

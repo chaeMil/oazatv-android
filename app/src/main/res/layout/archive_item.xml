@@ -22,7 +22,7 @@
         tools:text="Video name sooooo long"
         fontPath="@string/slab_font"
         android:id="@+id/name"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textColor="@color/dark_gray"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
