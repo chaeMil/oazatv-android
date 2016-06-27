@@ -36,7 +36,8 @@ import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
-import com.chaemil.hgms.receiver.MainActivityReceiver;
+import com.chaemil.hgms.receiver.DownloadServiceReceiver;
+import com.chaemil.hgms.receiver.DownloadServiceReceiverListener;
 import com.chaemil.hgms.receiver.PlaybackReceiverListener;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.DownloadService;
@@ -59,7 +60,7 @@ import java.util.TimerTask;
  */
 public class MainActivity extends BaseActivity implements
         SlidingUpPanelLayout.PanelSlideListener,
-        PlaybackReceiverListener {
+        PlaybackReceiverListener, DownloadServiceReceiverListener {
 
     public static final String EXPAND_PANEL = "expand_panel";
     private SlidingUpPanelLayout panelLayout;
@@ -67,7 +68,7 @@ public class MainActivity extends BaseActivity implements
     private AudioPlayerFragment audioPlayerFragment;
     private MainFragment mainFragment;
     private RelativeLayout mainRelativeLayout;
-    private MainActivityReceiver mainActivityReceiver;
+    private DownloadServiceReceiver downloadServiceReceiver;
     private View decorView;
     private ConnectivityManager connManager;
     private NetworkInfo wifi;
@@ -147,8 +148,8 @@ public class MainActivity extends BaseActivity implements
         filter.addAction(DownloadService.OPEN_DOWNLOADS);
         filter.addAction(DownloadService.KILL_DOWNLOAD);
 
-        mainActivityReceiver = new MainActivityReceiver(this);
-        registerReceiver(mainActivityReceiver, filter);
+        downloadServiceReceiver = new DownloadServiceReceiver(this);
+        registerReceiver(downloadServiceReceiver, filter);
     }
 
     private void setupPlaybackReceiver() {
@@ -194,7 +195,7 @@ public class MainActivity extends BaseActivity implements
     protected void onDestroy() {
         super.onDestroy();
         ((OazaApp) getApplication()).setMainActivity(null);
-        unregisterReceiver(mainActivityReceiver);
+        unregisterReceiver(downloadServiceReceiver);
         unregisterReceiver(audioPlaybackReceiver);
     }
 
@@ -543,14 +544,23 @@ public class MainActivity extends BaseActivity implements
         return false;
     }
 
-    public void notifyDownloadFinished() {
+    private void notifyDownloadDatasetChanged() {
         if (getMainFragment() != null && getMainFragment().getDownloadedFragment() != null) {
             getMainFragment().getDownloadedFragment().notifyDownloadFinished();
         }
     }
 
+    public void notifyDownloadFinished() {
+        notifyDownloadDatasetChanged();
+    }
+
     public void notifyDownloadStarted() {
-        notifyDownloadFinished();
+        notifyDownloadDatasetChanged();
+    }
+
+    @Override
+    public void notifyDownloadKilled() {
+        notifyDownloadDatasetChanged();
     }
 
     public void startDownloadService() {
