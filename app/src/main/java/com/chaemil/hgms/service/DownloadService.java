@@ -68,6 +68,9 @@ public class DownloadService extends Service implements ProgressCallback,
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        setupReceiver();
+
         if (getFirstVideoToDownload() != null) {
             startDownload();
         } else {
@@ -79,7 +82,8 @@ public class DownloadService extends Service implements ProgressCallback,
 
     @Override
     public void onDestroy() {
-        stopForeground(true);
+        unregisterReceiver(receiver);
+        cancelNotification();
         super.onDestroy();
     }
 
@@ -246,6 +250,7 @@ public class DownloadService extends Service implements ProgressCallback,
     private void updateNotificationCanceled() {
         builder = new NotificationCompat.Builder(this);
         builder.setProgress(0, 0, false)
+                .setSmallIcon(R.drawable.ic_close)
                 .setContentText(getString(R.string.download_canceled));
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
@@ -283,11 +288,18 @@ public class DownloadService extends Service implements ProgressCallback,
         video.save();
     }
 
+    public void deleteKilledDownload(Long id) {
+        Video.deleteDownloadedAudio(this, Video.findById(Video.class, id));
+    }
+
     public void killCurrentDownload() {
         if (currentIonDownload != null) {
             currentIonDownload.cancel();
+            deleteKilledDownload(currentDownload.getId());
         }
 
+        cancelNotification();
+        updateNotificationCanceled();
         startDownload();
     }
 
