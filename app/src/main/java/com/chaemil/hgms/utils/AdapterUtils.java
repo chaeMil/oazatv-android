@@ -88,7 +88,7 @@ public class AdapterUtils {
 
         audio.addToDownloadQueue();
 
-        context.startService(new Intent(context, DownloadService.class));
+        ((OazaApp) context.getApplicationContext()).startDownloadService();
 
         if (arrayAdapter instanceof ArrayAdapter) {
             ((ArrayAdapter) arrayAdapter).notifyDataSetChanged();
