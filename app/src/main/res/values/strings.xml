@@ -63,4 +63,7 @@
     <string name="tutorial_text_3">Browse through huge library of preachings, conferences, teachings and more...</string>
     <string name="tutorial_title_4">Listen on the way.</string>
     <string name="tutorial_text_4">Download audio to listen wen you are on the way or offline.</string>
+    <string name="are_you_shure">Are you shure?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.chaemil.hgms.utils;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,7 +11,11 @@ import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.CategoriesAdapter;
+import com.chaemil.hgms.adapter.DownloadedAdapter;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
+import com.chaemil.hgms.service.AudioPlaybackPendingIntents;
+import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.DownloadService;
 import com.github.johnpersano.supertoasts.SuperToast;
 
@@ -96,5 +101,25 @@ public class AdapterUtils {
 
         SuperToast.create(context, context.getString(R.string.added_to_download_queue),
                 SuperToast.Duration.MEDIUM).show();
+    }
+
+    public static void deleteAudio(Context context, MainActivity mainActivity, Video audio,
+                                   DialogInterface dialog, DownloadedAdapter adapter) {
+        if (mainActivity.getAudioPlayerFragment() != null) {
+            Video currentlyPlayingAudio = mainActivity.getAudioPlayerFragment()
+                    .getCurrentAudio();
+
+            if (currentlyPlayingAudio.equals(audio)) {
+                context.sendBroadcast(new Intent(AudioPlaybackReceiver.NOTIFY_DELETE));
+            }
+        }
+
+        Video.deleteDownloadedAudio(context, audio);
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+
+        adapter.remove(audio);
+        mainActivity.notifyDownloadDatasetChanged();
     }
 }

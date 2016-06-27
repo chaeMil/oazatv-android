@@ -18,6 +18,7 @@ import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
@@ -197,7 +198,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
             public void onClick(DialogInterface dialog, int which) {
                 switch(which) {
                     case 0:
-                        createDeleteDialog(video, videos, DownloadedAdapter.this).show();
+                        createDeleteDialog(video, DownloadedAdapter.this).show();
                         break;
                 }
             }
@@ -208,25 +209,14 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
     }
 
 
-    private AlertDialog createDeleteDialog(final Video video, final ArrayList<Video> adapterData,
+    private AlertDialog createDeleteDialog(final Video video,
                                            final DownloadedAdapter adapter) {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        if (mainActivity.getAudioPlayerFragment() != null) {
-                            Video currentlyPlayingAudio = mainActivity.getAudioPlayerFragment()
-                                    .getCurrentAudio();
-
-                            if (currentlyPlayingAudio.getHash().equals(video.getHash())) {
-                                mainActivity.getAudioPlayerFragment().closePlayer();
-                            }
-                        }
-                        Video.deleteDownloadedAudio(getContext(), video);
-                        dialog.dismiss();
-                        adapterData.remove(adapterData.indexOf(video));
-                        mainActivity.notifyDownloadFinished();
+                        AdapterUtils.deleteAudio(context, mainActivity, video, dialog, adapter);
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -237,8 +227,10 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener);
+        builder.setMessage(context.getString(R.string.are_you_shure))
+                .setPositiveButton(context.getString(R.string.yes), dialogClickListener)
+                .setNegativeButton(context.getString(R.string.no),
+                        dialogClickListener);
 
         return builder.create();
     }

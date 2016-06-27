@@ -31,6 +31,7 @@ import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.AudioPlaybackPendingIntents;
 import com.chaemil.hgms.service.AudioPlaybackService;
+import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;

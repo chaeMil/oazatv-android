@@ -544,7 +544,7 @@ public class MainActivity extends BaseActivity implements
         return false;
     }
 
-    private void notifyDownloadDatasetChanged() {
+    public void notifyDownloadDatasetChanged() {
         if (getMainFragment() != null && getMainFragment().getDownloadedFragment() != null) {
             getMainFragment().getDownloadedFragment().notifyDownloadFinished();
         }
