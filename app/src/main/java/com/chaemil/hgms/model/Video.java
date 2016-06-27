@@ -194,6 +194,11 @@ public class Video extends SugarRecord implements Parcelable {
         return false;
     }
 
+    public void addToDownloadQueue() {
+        this.setInDownloadQueue(true);
+        this.save();
+    }
+
     public void setAudioFile(String audioFile) {
         this.audioFile = audioFile;
     }

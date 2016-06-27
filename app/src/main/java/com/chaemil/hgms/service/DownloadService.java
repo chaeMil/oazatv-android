@@ -1,88 +1,221 @@
 package com.chaemil.hgms.service;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Binder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.support.v7.app.NotificationCompat;
 
-import com.chaemil.hgms.OazaApp;
+import com.chaemil.hgms.R;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.utils.NetworkUtils;
+import com.chaemil.hgms.utils.SharedPrefUtils;
+import com.chaemil.hgms.utils.SmartLog;
+import com.koushikdutta.async.future.Future;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.ProgressCallback;
+
+import java.io.File;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by chaemil on 8.1.16.
  */
-public class DownloadService extends Service {
-    private static DownloadService instance = null;
-    private final DownloadServiceBind downloadServiceBind = new DownloadServiceBind();
-    private Context context;
+public class DownloadService extends Service implements ProgressCallback, FutureCallback<File>
+{
+    private static final int NOTIFICATION_ID = 5000;
+    public static final int WAITING = 0;
+    public static final int DOWNLOADING = 1;
+    public static final int FINISHED = 2;
 
-    public static DownloadService getInstance(Context context) {
-        if (instance == null) {
-            init(context);
-        }
-        return instance;
-    }
+    public static final String DOWNLOAD_COMPLETE = "downloadComplete";
+    public static final String DOWNLOAD_STARTED = "downloadStarted";
+    public static final String OPEN_DOWNLOADS = "openDownloads";
+    public static final String KILL_DOWNLOAD = "killDownload";
+
+    private NotificationCompat.Builder builder;
+    private NotificationManager notificationManager;
+
+    private Intent openDownloads;
+    private PendingIntent pOpenDownloads;
+    private Intent killDownload;
+    private PendingIntent pKillDownload;
+    private static List<Video> downloadQueue = new ArrayList<>();
+    private Video currentDownload;
+    private long percentDownloaded;
+    private boolean isDownloadingNow;
+    private int currentDownloadState = WAITING;
+    private Handler notificationHandler;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return downloadServiceBind;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+        return null;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (getFirstVideoToDownload() != null) {
+            startDownload();
+        } else {
+            stopSelf();
+        }
+
         return START_STICKY;
     }
 
-    public static void init(Context context) {
-        if (instance == null && context != null) {
-            instance = new DownloadService();
-            instance.setContext(context);
-            instance.createDownloadManager();
+    private static void updateDownloadQueue() {
+        downloadQueue =  Video.getDownloadQueue();
+    }
 
-            ((OazaApp) context).downloadService = instance;
+    public boolean isDownloadingNow() {
+        return isDownloadingNow;
+    }
 
+    private Video getFirstVideoToDownload() {
+        updateDownloadQueue();
+        if (downloadQueue.size() > 0) {
+            return downloadQueue.get(0);
+        } else {
+            return null;
         }
     }
 
-    private void createDownloadManager() {
-        if (context != null) {
-            DownloadManager.init(context);
+    private boolean canStartDownload() {
+        SharedPrefUtils prefUtils = SharedPrefUtils.getInstance(this);
+
+        boolean downloadOnWifi = prefUtils.loadDownloadOnWifi();
+        if (downloadOnWifi && NetworkUtils.isConnectedWithWifi(this)) {
+            return true;
+        }
+
+        if (!downloadOnWifi && NetworkUtils.isConnected(this)) {
+            return true;
+        }
+
+        if (!NetworkUtils.isConnected(this)) {
+            return false;
+        }
+
+        return false;
+    }
+
+    private void startDownload() {
+        currentDownload = getFirstVideoToDownload();
+
+        Intent i = new Intent(DOWNLOAD_STARTED);
+        sendBroadcast(i);
+
+        if (!isDownloadingNow() && canStartDownload()) {
+            if (currentDownload != null) {
+                isDownloadingNow = true;
+                currentDownloadState = WAITING;
+
+                createNotification(currentDownload.getName());
+
+                downloadThumb(currentDownload);
+                downloadAudio(currentDownload);
+            }
         }
     }
 
-    public void downloadVideo(Video video) {
-        DownloadManager.getInstance().addVideoToQueue(video);
+    private Future<File> downloadThumb(Video video) {
+        return Ion.with(this)
+                .load(video.getThumbFile())
+                .write(new File(getExternalFilesDir(null), video.getHash() + ".jpg"))
+                .setCallback(new FutureCallback<File>() {
+                    @Override
+                    public void onCompleted(Exception e, File result) {
+                        if (e == null && result != null) {
+                            currentDownloadState += 1;
+                        }
+                    }
+                });
     }
 
-    public void setContext(Context context) {
-        this.context = context;
+    private Future<File> downloadAudio(Video video) {
+        return Ion.with(this)
+                .load(video.getAudioFile())
+                .progress(this)
+                .write(new File(getExternalFilesDir(null), video.getHash() + ".mp3"))
+                .setCallback(this);
     }
 
-    public class DownloadServiceBind extends Binder {
-        public DownloadService getService(Context context) {
-            return getInstance(context);
-        }
-    }
-
-    /*private void updateNotificationPercent(double downloaded, double total) {
+    @Override
+    public void onProgress(long downloaded, long total) {
         percentDownloaded = (long) ((float) downloaded / total * 100);
+
+        if (notificationHandler == null) {
+            notificationHandler = new Handler(Looper.getMainLooper());
+            notificationHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    updateNotificationPercent(percentDownloaded);
+                    if (notificationHandler != null) {
+                        notificationHandler.postDelayed(this, 500);
+                    }
+                }
+            }, 500);
+        }
+
+    }
+
+    @Override
+    public void onCompleted(Exception e, File result) {
+        if (e != null) {
+            e.printStackTrace();
+            if (e instanceof SocketException) {
+                Video corruptedDownload = Video.findByServerId(currentDownload.getServerId());
+                if (corruptedDownload != null) {
+                    corruptedDownload.setDownloaded(false);
+                }
+            }
+        }
+
+        if (result != null) {
+            SmartLog.Log(SmartLog.LogLevel.DEBUG, "fileDownloaded", result.getAbsolutePath());
+
+            Video downloadedAudio = Video.findByServerId(currentDownload.getServerId());
+
+            if (downloadedAudio != null) {
+                currentDownloadState += 1;
+                videoDownloaded(currentDownload.getId());
+            }
+        }
+
+        if (currentDownloadState == FINISHED) {
+
+            if (getFirstVideoToDownload() != null) {
+                startDownload();
+            } else {
+                updateNotificationComplete();
+                stopSelf();
+            }
+        }
+    }
+
+    public void updateNotificationPercent(long percentDownloaded) {
         builder.setProgress(100, (int) percentDownloaded, false);
         notificationManager.notify(5000, builder.build());
     }
 
     private void updateNotificationComplete() {
+        cancelNotification();
+
         builder.setProgress(0, 0, false);
+        builder.setSmallIcon(R.drawable.ic_done);
         builder.setContentText(getString(R.string.download_completed));
         builder.mActions.clear();
-        builder.setOngoing(false);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
@@ -94,9 +227,21 @@ public class DownloadService extends Service {
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
-    private void createNotification() {
+    private void cancelNotification() {
+        stopForeground(true);
+        //notificationManager.cancel(NOTIFICATION_ID);
+    }
+
+    public void createNotification(String title) {
+        openDownloads = new Intent(OPEN_DOWNLOADS);
+        pOpenDownloads = PendingIntent.getBroadcast(this, 0, openDownloads,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        killDownload = new Intent(KILL_DOWNLOAD);
+        pKillDownload = PendingIntent.getBroadcast(this, 0, killDownload,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
         builder = new NotificationCompat.Builder(this);
-        builder.setContentTitle(currentDownload.getName())
+        builder.setContentTitle(title)
                 .setContentText(getResources().getString(R.string.downloading_audio))
                 .setProgress(100, 0, false)
                 .setOngoing(true)
@@ -105,17 +250,17 @@ public class DownloadService extends Service {
                 .setSmallIcon(R.drawable.download);
 
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
+        startForeground(NOTIFICATION_ID, builder.build());
     }
 
-    private void videoDownloaded(Long id) {
+    public void videoDownloaded(Long id) {
         Video video = Video.findById(Video.class, id);
         video.setInDownloadQueue(false);
         video.setDownloaded(true);
         video.save();
     }
 
-    public void killCurrentDownload() {
+    /*public void killCurrentDownload() {
         canceled = true;
         if (currentIonDownload != null) {
             currentIonDownload.cancel();

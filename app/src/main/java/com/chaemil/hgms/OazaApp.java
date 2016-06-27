@@ -8,10 +8,12 @@ import android.util.Log;
 
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.activity.SplashActivity;
+import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.ServiceUtils;
 import com.crashlytics.android.Crashlytics;
 import com.github.pedrovgs.lynx.LynxShakeDetector;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -33,7 +35,6 @@ public class OazaApp extends SugarApp {
     public boolean appVisible = false;
     private Tracker mTracker;
     public AudioPlaybackService playbackService;
-    public DownloadService downloadService;
 
     @Override
     public void onCreate() {
@@ -54,20 +55,21 @@ public class OazaApp extends SugarApp {
                 .setFontAttrId(R.attr.fontPath)
                 .build());
 
-        if (isMyServiceRunning(AudioPlaybackService.class)) {
+        initAudioPlaybackService();
+
+        startDownloadService();
+    }
+
+    public void startDownloadService() {
+        if (!ServiceUtils.isMyServiceRunning(this, DownloadService.class)) {
+            startService(new Intent(this, DownloadService.class));
+        }
+    }
+
+    private void initAudioPlaybackService() {
+        if (ServiceUtils.isMyServiceRunning(this, AudioPlaybackService.class)) {
             if (AudioPlaybackService.getInstance() != null) {
                 playbackService = AudioPlaybackService.getInstance();
-            }
-        }
-
-        /*if (!isMyServiceRunning(DownloadService.class)) {
-            startService(new Intent(this, DownloadService.class));
-        }*/
-
-        if (isMyServiceRunning(DownloadService.class)) {
-            if (DownloadService.getInstance(this) != null) {
-                downloadService = DownloadService.getInstance(this);
-                downloadService.setContext(this);
             }
         }
     }
@@ -92,15 +94,5 @@ public class OazaApp extends SugarApp {
 
     public void setMainActivity(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
-    }
-
-    public boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
     }
 }

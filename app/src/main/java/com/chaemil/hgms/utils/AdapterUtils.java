@@ -3,6 +3,7 @@ package com.chaemil.hgms.utils;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.widget.ArrayAdapter;
 
 import com.chaemil.hgms.OazaApp;
@@ -10,6 +11,7 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.CategoriesAdapter;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.service.DownloadService;
 import com.github.johnpersano.supertoasts.SuperToast;
 
 /**
@@ -76,15 +78,23 @@ public class AdapterUtils {
         builder.create().show();
     }
 
-    public static void downloadAudio(Context context, MainActivity mainActivity, Object arrayAdapter, Video video) {
-        ((OazaApp) context.getApplicationContext()).downloadService.downloadVideo(video);
+    public static void downloadAudio(Context context, MainActivity mainActivity, Object arrayAdapter,
+                                     Video audio) {
+
+        audio.addToDownloadQueue();
+
+        context.startService(new Intent(context, DownloadService.class));
+
         if (arrayAdapter instanceof ArrayAdapter) {
             ((ArrayAdapter) arrayAdapter).notifyDataSetChanged();
         }
         if (arrayAdapter instanceof CategoriesAdapter) {
             ((CategoriesAdapter) arrayAdapter).notifyDataSetChanged();
         }
+
         mainActivity.getMainFragment().getDownloadedFragment().notifyDatasetChanged();
-        SuperToast.create(context, context.getString(R.string.added_to_download_queue), SuperToast.Duration.MEDIUM).show();
+
+        SuperToast.create(context, context.getString(R.string.added_to_download_queue),
+                SuperToast.Duration.MEDIUM).show();
     }
 }

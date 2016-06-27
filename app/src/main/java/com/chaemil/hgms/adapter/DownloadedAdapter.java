@@ -107,7 +107,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
     }
 
     private void updatePercent(final ViewHolder holder) {
-        if (((OazaApp) context.getApplicationContext()).downloadService != null) {
+        /*if (((OazaApp) context.getApplicationContext()).downloadService != null) {
             //final long percent = ((OazaApp) context.getApplicationContext()).downloadService.getCurrentDownloadProgress();
             ((Activity) context).runOnUiThread(new Runnable() {
                 @Override
@@ -115,7 +115,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
                     //holder.progress.setProgress(percent);
                 }
             });
-        }
+        }*/
     }
 
     private void cancelVideo(Video video) {

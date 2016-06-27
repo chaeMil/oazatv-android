@@ -5,10 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 
-import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.activity.MainActivity;
-import com.chaemil.hgms.fragment.AudioPlayerFragment;
-import com.chaemil.hgms.service.DownloadManager;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.utils.SmartLog;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -31,7 +28,7 @@ public class MainActivityReceiver extends BroadcastReceiver {
 
         switch (intent.getAction()) {
 
-            case DownloadManager.DOWNLOAD_COMPLETE:
+            case DownloadService.DOWNLOAD_COMPLETE:
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -40,10 +37,10 @@ public class MainActivityReceiver extends BroadcastReceiver {
                     }
                 }, 1000);
                 break;
-            case DownloadManager.DOWNLOAD_STARTED:
+            case DownloadService.DOWNLOAD_STARTED:
                 mainActivity.notifyDownloadStarted();
                 break;
-            case DownloadManager.OPEN_DOWNLOADS:
+            case DownloadService.OPEN_DOWNLOADS:
                 mainActivity.bringToFront();
                 if (mainActivity.getPanelLayout().getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
                     mainActivity.collapsePanel();
@@ -53,9 +50,9 @@ public class MainActivityReceiver extends BroadcastReceiver {
                 }
                 mainActivity.getMainFragment().hideSettings();
                 mainActivity.getMainFragment().getSearchView().closeSearch();
-                mainActivity.getMainFragment().getPager().setCurrentItem(2);
+                mainActivity.getMainFragment().getPager().setCurrentItem(3);
                 break;
-            case DownloadManager.KILL_DOWNLOAD:
+            case DownloadService.KILL_DOWNLOAD:
                 /*if (((OazaApp) context.getApplicationContext()).downloadService != null) {
                     ((OazaApp) context.getApplicationContext()).downloadService.killCurrentDownload();
                 }*/
