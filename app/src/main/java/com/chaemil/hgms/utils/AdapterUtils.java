@@ -19,6 +19,9 @@ import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.DownloadService;
 import com.github.johnpersano.supertoasts.SuperToast;
 
+import permission.auron.com.marshmallowpermissionhelper.PermissionResult;
+import permission.auron.com.marshmallowpermissionhelper.PermissionUtils;
+
 /**
  * Created by chaemil on 28.3.16.
  */
@@ -83,24 +86,37 @@ public class AdapterUtils {
         builder.create().show();
     }
 
-    public static void downloadAudio(Context context, MainActivity mainActivity, Object arrayAdapter,
-                                     Video audio) {
+    public static void downloadAudio(final Context context, final MainActivity mainActivity,
+                                     final Object arrayAdapter,
+                                     final Video audio) {
 
-        audio.addToDownloadQueue();
+        mainActivity.askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
+            @Override
+            public void permissionGranted() {
+                audio.addToDownloadQueue();
 
-        ((OazaApp) context.getApplicationContext()).startDownloadService();
+                ((OazaApp) context.getApplicationContext()).startDownloadService();
 
-        if (arrayAdapter instanceof ArrayAdapter) {
-            ((ArrayAdapter) arrayAdapter).notifyDataSetChanged();
-        }
-        if (arrayAdapter instanceof CategoriesAdapter) {
-            ((CategoriesAdapter) arrayAdapter).notifyDataSetChanged();
-        }
+                if (arrayAdapter instanceof ArrayAdapter) {
+                    ((ArrayAdapter) arrayAdapter).notifyDataSetChanged();
+                }
+                if (arrayAdapter instanceof CategoriesAdapter) {
+                    ((CategoriesAdapter) arrayAdapter).notifyDataSetChanged();
+                }
 
-        mainActivity.getMainFragment().getDownloadedFragment().notifyDatasetChanged();
+                mainActivity.getMainFragment().getDownloadedFragment().notifyDatasetChanged();
 
-        SuperToast.create(context, context.getString(R.string.added_to_download_queue),
-                SuperToast.Duration.MEDIUM).show();
+                SuperToast.create(context, context.getString(R.string.added_to_download_queue),
+                        SuperToast.Duration.MEDIUM).show();
+            }
+
+            @Override
+            public void permissionDenied() {
+                SuperToast.create(context, context.getString(R.string.permission_revoked),
+                        SuperToast.Duration.MEDIUM).show();
+            }
+        });
+
     }
 
     public static void deleteAudio(Context context, MainActivity mainActivity, Video audio,

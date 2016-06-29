@@ -1,17 +1,12 @@
 package com.chaemil.hgms.activity;
 
-import android.app.ActivityManager;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -29,7 +24,6 @@ import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.utils.Constants;
-import com.chaemil.hgms.utils.PermissionUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.chaemil.hgms.utils.StringUtils;
 import com.crashlytics.android.Crashlytics;
@@ -41,12 +35,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.fabric.sdk.android.Fabric;
+import permission.auron.com.marshmallowpermissionhelper.ActivityManagePermission;
+import permission.auron.com.marshmallowpermissionhelper.PermissionResult;
+import permission.auron.com.marshmallowpermissionhelper.PermissionUtils;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * Created by chaemil on 21.9.15.
  */
-public class BaseActivity extends AppCompatActivity implements RequestFactoryListener {
+public class BaseActivity extends ActivityManagePermission implements RequestFactoryListener {
 
     private Photo photoToDownload;
     private DownloadManager.Request request;
@@ -191,7 +188,7 @@ public class BaseActivity extends AppCompatActivity implements RequestFactoryLis
         return errorResponse;
     }
 
-    public void downloadPhoto(Photo photo) {
+    public void downloadPhoto(final Photo photo) {
 
         request = new DownloadManager.Request(Uri.parse(photo.getThumb2048()));
         request.setDescription(getString(R.string.downloading_photo));
@@ -207,30 +204,24 @@ public class BaseActivity extends AppCompatActivity implements RequestFactoryLis
 
         manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            photoToDownload = photo;
-            if (PermissionUtils.isStoragePermissionGranted(this)) {
-                manager.enqueue(request);
+        askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
+            @Override
+            public void permissionGranted() {
+                if (photoToDownload != null) {
+                    manager.enqueue(request);
+                    photoToDownload = null;
+                }
             }
-        } else {
-            manager.enqueue(request);
-        }
+
+            @Override
+            public void permissionDenied() {
+                SuperToast.create(BaseActivity.this,
+                        getString(R.string.permission_revoked),
+                        SuperToast.Duration.MEDIUM).show();
+            }
+        });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.v(PermissionUtils.TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
-
-            if (photoToDownload != null) {
-                manager.enqueue(request);
-                photoToDownload = null;
-            }
-        } else {
-            SuperToast.create(this, getString(R.string.permission_revoked), SuperToast.Duration.MEDIUM).show();
-        }
-    }
 
     public void changeStatusBarColor(int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

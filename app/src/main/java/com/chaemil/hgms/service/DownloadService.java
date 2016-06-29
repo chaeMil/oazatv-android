@@ -6,6 +6,8 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -23,6 +25,10 @@ import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.ProgressCallback;
+import com.novoda.downloadmanager.DownloadManagerBuilder;
+import com.novoda.downloadmanager.lib.Request;
+import com.novoda.downloadmanager.lib.DownloadManager;
+import com.novoda.downloadmanager.notifications.NotificationVisibility;
 
 import java.io.File;
 import java.net.SocketException;
@@ -32,8 +38,8 @@ import java.util.List;
 /**
  * Created by chaemil on 8.1.16.
  */
-public class DownloadService extends Service implements ProgressCallback,
-        FutureCallback<File>,DownloadServiceReceiverListener {
+public class DownloadService extends Service implements DownloadServiceReceiverListener
+{
     private static final int NOTIFICATION_ID = 5000;
     public static final int WAITING = 0;
     public static final int DOWNLOADING = 1;
@@ -59,6 +65,7 @@ public class DownloadService extends Service implements ProgressCallback,
     private Handler notificationHandler;
     private Future<File> currentIonDownload;
     private DownloadServiceReceiver receiver;
+    private DownloadManager downloadManager;
 
     @Nullable
     @Override
@@ -69,6 +76,7 @@ public class DownloadService extends Service implements ProgressCallback,
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        init();
         setupReceiver();
 
         if (getFirstVideoToDownload() != null) {
@@ -80,10 +88,13 @@ public class DownloadService extends Service implements ProgressCallback,
         return START_NOT_STICKY;
     }
 
+    private void init() {
+        downloadManager = DownloadManagerBuilder.from(this).build();
+    }
+
     @Override
     public void onDestroy() {
         unregisterReceiver(receiver);
-        cancelNotification();
         super.onDestroy();
     }
 
@@ -145,56 +156,41 @@ public class DownloadService extends Service implements ProgressCallback,
                 isDownloadingNow = true;
                 currentDownloadState = WAITING;
 
-                createNotification(currentDownload.getName());
-
                 downloadThumb(currentDownload);
-                currentIonDownload = downloadAudio(currentDownload);
+                downloadAudio(currentDownload);
             }
         }
     }
 
-    private Future<File> downloadThumb(Video video) {
-        return Ion.with(this)
-                .load(video.getThumbFile())
-                .write(new File(getExternalFilesDir(null), video.getHash() + ".jpg"))
-                .setCallback(new FutureCallback<File>() {
-                    @Override
-                    public void onCompleted(Exception e, File result) {
-                        if (e == null && result != null) {
-                            currentDownloadState += 1;
-                        }
-                    }
-                });
+    private void downloadThumb(Video video) {
+        Uri uri = Uri.parse(video.getThumbFile());
+        Request audioDownload = new Request(uri)
+                .setDestinationInExternalFilesDir(
+                        getExternalFilesDir(null).getAbsolutePath(),
+                        video.getHash() + ".jpg")
+                .setNotificationVisibility(NotificationVisibility.ACTIVE_OR_COMPLETE)
+                .setTitle(getString(R.string.download_audio))
+                .setDescription(video.getName())
+                .setBigPictureUrl(video.getThumbFile());
+
+        downloadManager.enqueue(audioDownload);
     }
 
-    private Future<File> downloadAudio(Video video) {
-        return Ion.with(this)
-                .load(video.getAudioFile())
-                .progress(this)
-                .write(new File(getExternalFilesDir(null), video.getHash() + ".mp3"))
-                .setCallback(this);
+    private void downloadAudio(Video video) {
+        Uri uri = Uri.parse(video.getAudioFile());
+        Request audioDownload = new Request(uri)
+                .setDestinationInExternalFilesDir(
+                        getExternalFilesDir(null).getAbsolutePath(),
+                        video.getHash() + ".mp3")
+                .setNotificationVisibility(NotificationVisibility.ACTIVE_OR_COMPLETE)
+                .setTitle(getString(R.string.download_audio))
+                .setDescription(video.getName())
+                .setBigPictureUrl(video.getThumbFile());
+
+        downloadManager.enqueue(audioDownload);
     }
 
-    @Override
-    public void onProgress(long downloaded, long total) {
-        percentDownloaded = (long) ((float) downloaded / total * 100);
-
-        if (notificationHandler == null) {
-            notificationHandler = new Handler(Looper.getMainLooper());
-            notificationHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    updateNotificationPercent(percentDownloaded);
-                    if (notificationHandler != null) {
-                        notificationHandler.postDelayed(this, 500);
-                    }
-                }
-            }, 500);
-        }
-
-    }
-
-    @Override
+    /*@Override
     public void onCompleted(Exception e, File result) {
         if (e != null) {
             e.printStackTrace();
@@ -224,62 +220,10 @@ public class DownloadService extends Service implements ProgressCallback,
             if (getFirstVideoToDownload() != null) {
                 startDownload();
             } else {
-                updateNotificationComplete();
                 stopSelf();
             }
         }
-    }
-
-    public void updateNotificationPercent(long percentDownloaded) {
-        builder.setProgress(100, (int) percentDownloaded, false);
-        notificationManager.notify(5000, builder.build());
-    }
-
-    private void updateNotificationComplete() {
-        cancelNotification();
-
-        builder = new NotificationCompat.Builder(this);
-        builder.setProgress(0, 0, false)
-                .setSmallIcon(R.drawable.ic_done)
-                .setContentIntent(PendingIntent.getActivity(this, 0, openDownloads,
-                        PendingIntent.FLAG_CANCEL_CURRENT))
-                .setContentText(getString(R.string.download_completed));
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
-    }
-
-    private void updateNotificationCanceled() {
-        builder = new NotificationCompat.Builder(this);
-        builder.setProgress(0, 0, false)
-                .setSmallIcon(R.drawable.ic_close)
-                .setContentText(getString(R.string.download_canceled));
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
-    }
-
-    private void cancelNotification() {
-        stopForeground(true);
-        //notificationManager.cancel(NOTIFICATION_ID);
-    }
-
-    public void createNotification(String title) {
-        openDownloads = new Intent(OPEN_DOWNLOADS);
-        pOpenDownloads = PendingIntent.getBroadcast(this, 0, openDownloads,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        killDownload = new Intent(KILL_DOWNLOAD);
-        pKillDownload = PendingIntent.getBroadcast(this, 0, killDownload,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        builder = new NotificationCompat.Builder(this);
-        builder.setContentTitle(title)
-                .setContentText(getResources().getString(R.string.downloading_audio))
-                .setProgress(100, 0, false)
-                .setAutoCancel(true)
-                .setContentIntent(pOpenDownloads)
-                .addAction(R.drawable.ic_close, getString(R.string.cancel_download), pKillDownload)
-                .setSmallIcon(R.drawable.download);
-
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        startForeground(NOTIFICATION_ID, builder.build());
-    }
+    }*/
 
     public void videoDownloaded(Long id) {
         Video video = Video.findById(Video.class, id);
@@ -298,8 +242,6 @@ public class DownloadService extends Service implements ProgressCallback,
             deleteKilledDownload(currentDownload.getId());
         }
 
-        cancelNotification();
-        updateNotificationCanceled();
         startDownload();
     }
 
