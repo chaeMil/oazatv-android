@@ -342,7 +342,7 @@ public class MainActivity extends BaseActivity implements
     public void playNewAudio(final Video audio, boolean expandPanel) {
 
         boolean downloaded = false;
-        if (Video.getDownloadStatus(((OazaApp) getApplication()), audio.getServerId()) == Video.DOWNLOADED) {
+        if (Video.getDownloadStatus(audio.getServerId()) == Video.DOWNLOADED) {
             downloaded = true;
         }
 
@@ -550,7 +550,8 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
-    public void notifyDownloadFinished() {
+    @Override
+    public void notifyDownloadFinished(long id) {
         notifyDownloadDatasetChanged();
     }
 

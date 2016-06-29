@@ -24,6 +24,7 @@ public class Video extends SugarRecord implements Parcelable {
     public static final int IN_DOWNLOAD_QUEUE = 1;
     public static final int DOWNLOADED = 2;
     public static final int CURRENTLY_DOWNLOADING = 3;
+    public static final String ID = "id";
 
     private Long id;
     private int serverId;
@@ -80,12 +81,9 @@ public class Video extends SugarRecord implements Parcelable {
 
     }
 
-    public static int getDownloadStatus(OazaApp oazaApp, int serverId) {
+    public static int getDownloadStatus(int serverId) {
         Video savedVideo = findByServerId(serverId);
         if (savedVideo != null) {
-            if (savedVideo.isCurrentlyDownloading(oazaApp)) {
-                return CURRENTLY_DOWNLOADING;
-            }
             if (savedVideo.isInDownloadQueue()) {
                 return IN_DOWNLOAD_QUEUE;
             }
@@ -184,15 +182,6 @@ public class Video extends SugarRecord implements Parcelable {
             default:
                 return getNameEN();
         }
-    }
-
-    public boolean isCurrentlyDownloading(OazaApp oazaApp) {
-        /*if (oazaApp.downloadService != null) {
-            DownloadService downloadService = oazaApp.downloadService;
-            Video currentDownload = downloadService.getCurrentDownload();
-            return currentDownload.serverId == this.serverId;
-        }*/
-        return false;
     }
 
     public void addToDownloadQueue() {

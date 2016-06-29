@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.os.Handler;
 
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.utils.SmartLog;
+import com.novoda.downloadmanager.lib.DownloadManager;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
@@ -27,16 +29,6 @@ public class DownloadServiceReceiver extends BroadcastReceiver {
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "onReceive", intent.getAction());
 
         switch (intent.getAction()) {
-
-            case DownloadService.DOWNLOAD_COMPLETE:
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        listener.notifyDownloadFinished();
-                    }
-                }, 1000);
-                break;
             case DownloadService.DOWNLOAD_STARTED:
                 listener.notifyDownloadStarted();
                 break;

@@ -120,7 +120,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
     }
 
     private void cancelVideo(Video video) {
-        switch (Video.getDownloadStatus(((OazaApp) context.getApplicationContext()), video.getServerId())) {
+        switch (Video.getDownloadStatus(video.getServerId())) {
             case Video.CURRENTLY_DOWNLOADING:
                 //((OazaApp) context.getApplicationContext()).getDownloadService().killCurrentDownload();
                 break;
@@ -133,7 +133,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
     }
 
     private void setupView(final ViewHolder holder, Video video) {
-        switch (Video.getDownloadStatus(((OazaApp) context.getApplicationContext()), video.getServerId())) {
+        switch (Video.getDownloadStatus(video.getServerId())) {
             case Video.CURRENTLY_DOWNLOADING:
                 holder.progress.setVisibility(View.VISIBLE);
                 holder.thumb.setAlpha(0.4f);

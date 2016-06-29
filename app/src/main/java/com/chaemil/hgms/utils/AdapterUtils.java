@@ -32,7 +32,7 @@ public class AdapterUtils {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         String[] menu;
-        int videoStatus = Video.getDownloadStatus(((OazaApp) context.getApplicationContext()), video.getServerId());
+        int videoStatus = Video.getDownloadStatus(video.getServerId());
 
         if (videoStatus == Video.NOT_DOWNLOADED) {
             menu = new String[] {context.getString(R.string.download_audio),
