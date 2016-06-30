@@ -214,7 +214,9 @@ public class MainActivity extends BaseActivity implements
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.white_logo);
-            setTaskDescription(new ActivityManager.TaskDescription(getString(R.string.app_name), bm, getResources().getColor(R.color.colorPrimary)));
+            setTaskDescription(new ActivityManager
+                    .TaskDescription(getString(R.string.app_name), bm,
+                    getResources().getColor(R.color.colorPrimary)));
         }
 
         changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -267,7 +269,9 @@ public class MainActivity extends BaseActivity implements
             playVideo(video);
         } else {
             if (sharedPreferences.loadStreamOnWifi()) {
-                SuperToast.create(this, getString(R.string.cannot_play_without_wifi), SuperToast.Duration.MEDIUM).show();
+                SuperToast.create(this,
+                        getString(R.string.cannot_play_without_wifi),
+                        SuperToast.Duration.MEDIUM).show();
             } else if (sharedPreferences.loadStreamAudio()) {
                 playNewAudio(video, true);
             } else {
@@ -325,7 +329,9 @@ public class MainActivity extends BaseActivity implements
         boolean downloaded = audio.isAudioDownloaded(this);
 
         if (!downloaded && sharedPreferences.loadStreamOnWifi() && !wifi.isConnected()) {
-            SuperToast.create(this, getString(R.string.cannot_play_without_wifi), SuperToast.Duration.MEDIUM).show();
+            SuperToast.create(this,
+                    getString(R.string.cannot_play_without_wifi),
+                    SuperToast.Duration.MEDIUM).show();
         } else {
 
             if (expandPanel) {
