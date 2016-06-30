@@ -124,7 +124,7 @@
                         android:layout_alignParentEnd="true" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         tools:text="Show player"
                         fontPath="@string/default_font_bold"
@@ -132,9 +132,10 @@
                         android:textColor="@color/gray"
                         android:id="@+id/mini_player_text"
                         android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/mini_play_pause"
                         android:layout_toRightOf="@+id/mini_player_image"
-                        android:layout_toEndOf="@+id/mini_player_image"
-                        android:layout_marginLeft="16dp" />
+                        android:maxLines="2"
+                        android:textStyle="bold" />
 
                 </RelativeLayout>
 
