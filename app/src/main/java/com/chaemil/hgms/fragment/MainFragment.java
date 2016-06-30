@@ -314,7 +314,6 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             case 3:
                 tabLayout.getTabAt(3).setIcon(R.drawable.ic_downloaded_white);
                 settingsFab.show(true);
-                getDownloadedFragment().notifyDatasetChanged();
                 break;
         }
     }

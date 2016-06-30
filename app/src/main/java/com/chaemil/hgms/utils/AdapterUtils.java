@@ -7,11 +7,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.ArrayAdapter;
 
-import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.CategoriesAdapter;
-import com.chaemil.hgms.adapter.DownloadedAdapter;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.github.johnpersano.supertoasts.SuperToast;
@@ -119,16 +117,12 @@ public class AdapterUtils {
                         long requestId = downloadManager.enqueue(request);
                         LLog.d("Download enqueued with request ID: " + requestId);
 
-                        //((OazaApp) context.getApplicationContext()).startDownloadService();
-
                         if (arrayAdapter instanceof ArrayAdapter) {
                             ((ArrayAdapter) arrayAdapter).notifyDataSetChanged();
                         }
                         if (arrayAdapter instanceof CategoriesAdapter) {
                             ((CategoriesAdapter) arrayAdapter).notifyDataSetChanged();
                         }
-
-                        mainActivity.getMainFragment().getDownloadedFragment().notifyDatasetChanged();
 
                         SuperToast.create(context, context.getString(R.string.added_to_download_queue),
                                 SuperToast.Duration.MEDIUM).show();
@@ -143,7 +137,7 @@ public class AdapterUtils {
     }
 
     public static void deleteAudio(Context context, MainActivity mainActivity, Video audio,
-                                   DialogInterface dialog, DownloadedAdapter adapter) {
+                                   DialogInterface dialog) {
         if (mainActivity.getAudioPlayerFragment() != null) {
             Video currentlyPlayingAudio = mainActivity.getAudioPlayerFragment()
                     .getCurrentAudio();
@@ -154,11 +148,10 @@ public class AdapterUtils {
         }
 
         Video.deleteDownloadedAudio(context, audio);
+
+
         if (dialog != null) {
             dialog.dismiss();
         }
-
-        adapter.remove(audio);
-        mainActivity.notifyDownloadDatasetChanged();
     }
 }

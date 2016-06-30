@@ -9,34 +9,25 @@ public class Download {
     private final int downloadStatus;
     private final long batchId;
     private final long videoId;
+    private final String filename;
 
-    public Download(long videoId, int downloadStatus, long batchId) {
+    public Download(long videoId, String filename, int downloadStatus, long batchId) {
         this.videoId = videoId;
+        this.filename = filename;
         this.downloadStatus = downloadStatus;
         this.batchId = batchId;
+    }
+
+    public String getFilename() {
+        return filename;
     }
 
     public long getVideoServerId() {
         return videoId;
     }
 
-    public String getDownloadStatusText() {
-        switch (downloadStatus) {
-            case DownloadManager.STATUS_RUNNING:
-                return "Downloading";
-            case DownloadManager.STATUS_SUCCESSFUL:
-                return "Complete";
-            case DownloadManager.STATUS_FAILED:
-                return "Failed";
-            case DownloadManager.STATUS_PENDING:
-                return "Queued";
-            case DownloadManager.STATUS_PAUSED:
-                return "Paused";
-            case DownloadManager.STATUS_DELETING:
-                return "Deleting";
-            default:
-                return "WTH";
-        }
+    public int getDownloadStatusText() {
+        return downloadStatus;
     }
 
     public long getBatchId() {

@@ -59,7 +59,7 @@ import java.util.TimerTask;
  */
 public class MainActivity extends BaseActivity implements
         SlidingUpPanelLayout.PanelSlideListener,
-        PlaybackReceiverListener, DownloadServiceReceiverListener {
+        PlaybackReceiverListener{
 
     public static final String EXPAND_PANEL = "expand_panel";
     private SlidingUpPanelLayout panelLayout;
@@ -105,7 +105,6 @@ public class MainActivity extends BaseActivity implements
 
         getUI();
         setupUI(savedInstanceState);
-        setupReceiver();
         setupPlaybackReceiver();
         setupLiveRequestTimer();
 
@@ -138,17 +137,6 @@ public class MainActivity extends BaseActivity implements
                 RequestService.getRequestQueue().add(getAlbum);
             }
         }
-    }
-
-    private void setupReceiver() {
-        IntentFilter filter = new IntentFilter();
-        /*filter.addAction(DownloadService.DOWNLOAD_COMPLETE);
-        filter.addAction(DownloadService.DOWNLOAD_STARTED);
-        filter.addAction(DownloadService.OPEN_DOWNLOADS);
-        filter.addAction(DownloadService.KILL_DOWNLOAD);*/
-
-        downloadServiceReceiver = new DownloadServiceReceiver(this);
-        registerReceiver(downloadServiceReceiver, filter);
     }
 
     private void setupPlaybackReceiver() {
@@ -542,31 +530,6 @@ public class MainActivity extends BaseActivity implements
         }
         return false;
     }
-
-    public void notifyDownloadDatasetChanged() {
-        if (getMainFragment() != null && getMainFragment().getDownloadedFragment() != null) {
-            getMainFragment().getDownloadedFragment().notifyDownloadFinished();
-        }
-    }
-
-    @Override
-    public void notifyDownloadFinished(long id) {
-        notifyDownloadDatasetChanged();
-    }
-
-    public void notifyDownloadStarted() {
-        notifyDownloadDatasetChanged();
-    }
-
-    @Override
-    public void notifyDownloadKilled() {
-        notifyDownloadDatasetChanged();
-    }
-
-    /*public void startDownloadService() {
-        Intent downloadService = new Intent(this, DownloadService.class);
-        startService(downloadService);
-    }*/
 
     public void showStatusMessage(String text, int backgroundColor, boolean liveStream) {
         statusMessageWrapper.setVisibility(View.VISIBLE);

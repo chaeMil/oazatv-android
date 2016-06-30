@@ -66,4 +66,7 @@
     <string name="are_you_shure">Are you shure?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="download_pending">pending...</string>
+    <string name="download_running">downloading</string>
+    <string name="download_paused">paused</string>
 </resources>

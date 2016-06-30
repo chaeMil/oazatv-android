@@ -27,7 +27,7 @@ public class AnalyticsService implements RequestFactoryListener {
 
     private static AnalyticsService analyticsService;
     private static final String TAG = "AnalyticsService";
-    private static final int HEARTBEAT = 30 * 1000;
+    private static final int HEARTBEAT = 60 * 1000;
 
     private Context context;
     private String page = "";

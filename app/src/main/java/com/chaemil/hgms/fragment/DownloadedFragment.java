@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.DownloadsAdapter;
 import com.chaemil.hgms.model.Download;
 import com.chaemil.hgms.service.AnalyticsService;
@@ -106,7 +107,8 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
                 queryForDownloads();
             }
         };
-        downloadsAdapter = new DownloadsAdapter(new ArrayList<Download>(), clickListener);
+        downloadsAdapter = new DownloadsAdapter(getActivity(), ((MainActivity) getActivity()),
+                new ArrayList<Download>(), clickListener);
         recyclerView.setAdapter(downloadsAdapter);
     }
 
@@ -120,14 +122,6 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
     }
 
     public void adjustLayout() {
-
-    }
-
-    public void notifyDownloadFinished() {
-
-    }
-
-    public void notifyDatasetChanged() {
 
     }
 
