@@ -74,9 +74,9 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
         holder.mainView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (video.isDownloaded()) {
+                //if (video.isDownloaded()) {
                     mainActivity.playNewAudio(video, true);
-                }
+                //}
             }
         });
         holder.name.setText(video.getName());
@@ -85,9 +85,9 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
         holder.more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (video.isDownloaded()) {
+                //if (video.isDownloaded()) {
                     contextDialog(video);
-                }
+                //}
             }
         });
         holder.cancel.setOnClickListener(new View.OnClickListener() {
@@ -120,20 +120,20 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
     }
 
     private void cancelVideo(Video video) {
-        switch (Video.getDownloadStatus(video.getServerId())) {
+        /*switch (Video.getDownloadStatus(video.getServerId())) {
             case Video.CURRENTLY_DOWNLOADING:
                 //((OazaApp) context.getApplicationContext()).getDownloadService().killCurrentDownload();
                 break;
             case Video.IN_DOWNLOAD_QUEUE:
                 video.delete();
                 break;
-        }
+        }*/
 
         mainActivity.getMainFragment().getDownloadedFragment().notifyDatasetChanged();
     }
 
     private void setupView(final ViewHolder holder, Video video) {
-        switch (Video.getDownloadStatus(video.getServerId())) {
+        /*switch (Video.getDownloadStatus(video.getServerId())) {
             case Video.CURRENTLY_DOWNLOADING:
                 holder.progress.setVisibility(View.VISIBLE);
                 holder.thumb.setAlpha(0.4f);
@@ -167,7 +167,7 @@ public class DownloadedAdapter extends ArrayAdapter<Video> {
                 }
                 holder.timer = null;
                 break;
-        }
+        }*/
     }
 
     @Override

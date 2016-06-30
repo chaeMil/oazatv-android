@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.widget.ArrayAdapter;
 
 import com.chaemil.hgms.OazaApp;
@@ -18,6 +19,11 @@ import com.chaemil.hgms.service.AudioPlaybackPendingIntents;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.DownloadService;
 import com.github.johnpersano.supertoasts.SuperToast;
+import com.novoda.downloadmanager.DownloadManagerBuilder;
+import com.novoda.downloadmanager.lib.DownloadManager;
+import com.novoda.downloadmanager.lib.Request;
+import com.novoda.downloadmanager.lib.logger.LLog;
+import com.novoda.downloadmanager.notifications.NotificationVisibility;
 
 import permission.auron.com.marshmallowpermissionhelper.PermissionResult;
 import permission.auron.com.marshmallowpermissionhelper.PermissionUtils;
@@ -32,9 +38,9 @@ public class AdapterUtils {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         String[] menu;
-        int videoStatus = Video.getDownloadStatus(video.getServerId());
+        //int videoStatus = Video.getDownloadStatus(video.getServerId());
 
-        if (videoStatus == Video.NOT_DOWNLOADED) {
+        //if (videoStatus == Video.NOT_DOWNLOADED) {
             menu = new String[] {context.getString(R.string.download_audio),
                     context.getString(R.string.stream_audio),
                     context.getString(R.string.share_video)};
@@ -58,9 +64,9 @@ public class AdapterUtils {
                 }
             });
 
-        }
+        //}
 
-        if (videoStatus == Video.DOWNLOADED
+        /*if (videoStatus == Video.DOWNLOADED
                 || videoStatus == Video.CURRENTLY_DOWNLOADING
                 || videoStatus == Video.IN_DOWNLOAD_QUEUE) {
             menu = new String[] {context.getString(R.string.play_downloaded_audio),
@@ -80,7 +86,7 @@ public class AdapterUtils {
                 }
             });
 
-        }
+        }*/
 
 
         builder.create().show();
@@ -90,33 +96,44 @@ public class AdapterUtils {
                                      final Object arrayAdapter,
                                      final Video audio) {
 
-        mainActivity.askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
-            @Override
-            public void permissionGranted() {
-                audio.addToDownloadQueue();
+        mainActivity.askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
+                new PermissionResult() {
+                    @Override
+                    public void permissionGranted() {
+                        Uri uri = Uri.parse(audio.getAudioFile());
+                        Request request = new Request(uri)
+                                .setTitle(context.getString(R.string.downloading_audio))
+                                .setDescription(audio.getName())
+                                .setBigPictureUrl(audio.getThumbFile())
+                                .setDestinationInExternalFilesDir("", audio.getHash() + ".mp3")
+                                .setNotificationVisibility(NotificationVisibility.ACTIVE_OR_COMPLETE)
+                                .alwaysAttemptResume();
 
-                ((OazaApp) context.getApplicationContext()).startDownloadService();
+                        DownloadManager downloadManager = DownloadManagerBuilder.from(context).build();
+                        long requestId = downloadManager.enqueue(request);
+                        LLog.d("Download enqueued with request ID: " + requestId);
 
-                if (arrayAdapter instanceof ArrayAdapter) {
-                    ((ArrayAdapter) arrayAdapter).notifyDataSetChanged();
-                }
-                if (arrayAdapter instanceof CategoriesAdapter) {
-                    ((CategoriesAdapter) arrayAdapter).notifyDataSetChanged();
-                }
+                        ((OazaApp) context.getApplicationContext()).startDownloadService();
 
-                mainActivity.getMainFragment().getDownloadedFragment().notifyDatasetChanged();
+                        if (arrayAdapter instanceof ArrayAdapter) {
+                            ((ArrayAdapter) arrayAdapter).notifyDataSetChanged();
+                        }
+                        if (arrayAdapter instanceof CategoriesAdapter) {
+                            ((CategoriesAdapter) arrayAdapter).notifyDataSetChanged();
+                        }
 
-                SuperToast.create(context, context.getString(R.string.added_to_download_queue),
-                        SuperToast.Duration.MEDIUM).show();
-            }
+                        mainActivity.getMainFragment().getDownloadedFragment().notifyDatasetChanged();
 
-            @Override
-            public void permissionDenied() {
-                SuperToast.create(context, context.getString(R.string.permission_revoked),
-                        SuperToast.Duration.MEDIUM).show();
-            }
-        });
+                        SuperToast.create(context, context.getString(R.string.added_to_download_queue),
+                                SuperToast.Duration.MEDIUM).show();
+                    }
 
+                    @Override
+                    public void permissionDenied() {
+                        SuperToast.create(context, context.getString(R.string.permission_revoked),
+                                SuperToast.Duration.MEDIUM).show();
+                    }
+                });
     }
 
     public static void deleteAudio(Context context, MainActivity mainActivity, Video audio,

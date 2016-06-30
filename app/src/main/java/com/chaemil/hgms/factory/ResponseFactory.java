@@ -77,7 +77,7 @@ public class ResponseFactory {
             String descriptionEN = response.getString(Constants.JSON_DESCRIPTION_EN);
 
             return new Video(serverId, hash, date, nameCS, nameEN, tags, videoFileLowRes, videoFile, audioFile,
-                    thumbFile, thumbColor, views, categories, descriptionCS, descriptionEN, false);
+                    thumbFile, thumbColor, views, categories, descriptionCS, descriptionEN);
 
         } catch (JSONException e) {
             e.printStackTrace();

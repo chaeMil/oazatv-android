@@ -34,7 +34,7 @@
     <string name="download_canceled">Stahování zrušeno</string>
     <string name="cancel_download">Zrušit stahování</string>
     <string name="downloading_photo">Stahuji fotku</string>
-    <string name="permission_revoked">Oprávnění zamýtnuto</string>
+    <string name="permission_revoked">Oprávnění zamítnuto</string>
     <string name="newest_videos">Nejnovější videa</string>
     <string name="newest_albums">Nejnovější alba</string>
     <string name="popular_videos">Populární videa</string>

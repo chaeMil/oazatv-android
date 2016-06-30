@@ -20,12 +20,6 @@ import java.util.Locale;
  */
 public class Video extends SugarRecord implements Parcelable {
 
-    public static final int NOT_DOWNLOADED = 0;
-    public static final int IN_DOWNLOAD_QUEUE = 1;
-    public static final int DOWNLOADED = 2;
-    public static final int CURRENTLY_DOWNLOADING = 3;
-    public static final String ID = "id";
-
     private Long id;
     private int serverId;
     private String hash;
@@ -42,8 +36,6 @@ public class Video extends SugarRecord implements Parcelable {
     private String categories;
     private String descriptionCS;
     private String descriptionEN;
-    private boolean downloaded;
-    private boolean inDownloadQueue;
     private int currentTime;
 
     public Video() {
@@ -52,7 +44,7 @@ public class Video extends SugarRecord implements Parcelable {
     public Video(int serverId, String hash, String date, String nameCS,
                  String nameEN, String tags, String videoFileLowRes, String videoFile, String audioFile,
                  String thumbFile, String thumbColor, int views, String categories,
-                 String descriptionCS, String descriptionEN, boolean downloaded) {
+                 String descriptionCS, String descriptionEN) {
         this.serverId = serverId;
         this.hash = hash;
         this.date = date;
@@ -68,7 +60,6 @@ public class Video extends SugarRecord implements Parcelable {
         this.categories = categories;
         this.descriptionCS = descriptionCS;
         this.descriptionEN = descriptionEN;
-        this.downloaded = downloaded;
     }
 
     public boolean equals(Object other) {
@@ -79,20 +70,6 @@ public class Video extends SugarRecord implements Parcelable {
             return false;
         }
 
-    }
-
-    public static int getDownloadStatus(int serverId) {
-        Video savedVideo = findByServerId(serverId);
-        if (savedVideo != null) {
-            if (savedVideo.isInDownloadQueue()) {
-                return IN_DOWNLOAD_QUEUE;
-            }
-            if (savedVideo.isDownloaded()) {
-                return DOWNLOADED;
-            }
-            return NOT_DOWNLOADED;
-        }
-        return NOT_DOWNLOADED;
     }
 
     public static Video findByServerId(int serverId) {
@@ -151,8 +128,6 @@ public class Video extends SugarRecord implements Parcelable {
         File thumb = new File(context.getExternalFilesDir(null) + "/" + video.getHash() + ".jpg");
         audio.delete();
         thumb.delete();
-        video.setInDownloadQueue(false);
-        video.setDownloaded(false);
         video.save();
     }
 
@@ -184,29 +159,12 @@ public class Video extends SugarRecord implements Parcelable {
         }
     }
 
-    public void addToDownloadQueue() {
-        this.setInDownloadQueue(true);
-        this.save();
-    }
-
     public void setAudioFile(String audioFile) {
         this.audioFile = audioFile;
     }
 
-    public void setDownloaded(boolean downloaded) {
-        this.downloaded = downloaded;
-    }
-
     public void setViews(int views) {
         this.views = views;
-    }
-
-    public void setInDownloadQueue(boolean inDownloadQueue) {
-        this.inDownloadQueue = inDownloadQueue;
-    }
-
-    public boolean isInDownloadQueue() {
-        return inDownloadQueue;
     }
 
     public void setCurrentTime(int currentTime) {
@@ -274,10 +232,6 @@ public class Video extends SugarRecord implements Parcelable {
         return descriptionEN;
     }
 
-    public boolean isDownloaded() {
-        return downloaded;
-    }
-
     public int getCurrentTime() {
         return currentTime;
     }
@@ -306,8 +260,6 @@ public class Video extends SugarRecord implements Parcelable {
         categories = in.readString();
         descriptionCS = in.readString();
         descriptionEN = in.readString();
-        downloaded = in.readByte() != 0x00;
-        inDownloadQueue = in.readByte() != 0x00;
         currentTime = in.readInt();
     }
 
@@ -339,8 +291,6 @@ public class Video extends SugarRecord implements Parcelable {
         dest.writeString(categories);
         dest.writeString(descriptionCS);
         dest.writeString(descriptionEN);
-        dest.writeByte((byte) (downloaded ? 0x01 : 0x00));
-        dest.writeByte((byte) (inDownloadQueue ? 0x01 : 0x00));
         dest.writeInt(currentTime);
     }
 

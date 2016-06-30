@@ -20,6 +20,7 @@
 -dontwarn com.google.common.**
 -dontwarn com.viewpagerindicator.**
 -dontwarn it.sephiroth.**
+-dontwarn okio.**
 -keep class com.chaemil.hgms.** { *; }
 -keepclasseswithmembernames class * {
     native <methods>;

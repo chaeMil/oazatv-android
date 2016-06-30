@@ -102,8 +102,8 @@ public class DownloadService extends Service implements DownloadServiceReceiverL
         public void onChange(boolean selfChange) {
             SmartLog.Log(SmartLog.LogLevel.DEBUG, "onChange", String.valueOf(selfChange));
 
-            SmartLog.Log(SmartLog.LogLevel.DEBUG,
-                    "downloadState", String.valueOf(Video.getDownloadStatus(currentDownload.getServerId())));
+            /*SmartLog.Log(SmartLog.LogLevel.DEBUG,
+                    "downloadState", String.valueOf(Video.getDownloadStatus(currentDownload.getServerId())));*/
         }
 
     };
@@ -269,8 +269,8 @@ public class DownloadService extends Service implements DownloadServiceReceiverL
 
     public void videoDownloaded(Long id) {
         Video video = Video.findById(Video.class, id);
-        video.setInDownloadQueue(false);
-        video.setDownloaded(true);
+        /*video.setInDownloadQueue(false);
+        video.setDownloaded(true);*/
         video.save();
     }
 
