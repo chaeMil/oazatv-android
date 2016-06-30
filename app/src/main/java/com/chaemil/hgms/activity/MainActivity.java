@@ -67,7 +67,6 @@ public class MainActivity extends BaseActivity implements
     private AudioPlayerFragment audioPlayerFragment;
     private MainFragment mainFragment;
     private RelativeLayout mainRelativeLayout;
-    private DownloadServiceReceiver downloadServiceReceiver;
     private View decorView;
     private ConnectivityManager connManager;
     private NetworkInfo wifi;
@@ -182,7 +181,6 @@ public class MainActivity extends BaseActivity implements
     protected void onDestroy() {
         super.onDestroy();
         ((OazaApp) getApplication()).setMainActivity(null);
-        unregisterReceiver(downloadServiceReceiver);
         unregisterReceiver(audioPlaybackReceiver);
     }
 

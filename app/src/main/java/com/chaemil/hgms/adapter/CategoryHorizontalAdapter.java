@@ -76,7 +76,7 @@ public class CategoryHorizontalAdapter extends ArrayAdapter<Object> {
         holder.more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdapterUtils.contextDialog(context, mainActivity, CategoryHorizontalAdapter.this, video);
+                AdapterUtils.contextDialog(context, mainActivity, video);
             }
         });
         holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));

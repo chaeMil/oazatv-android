@@ -28,7 +28,7 @@ import permission.auron.com.marshmallowpermissionhelper.PermissionUtils;
 public class AdapterUtils {
 
     public static void contextDialog(final Context context, final MainActivity mainActivity,
-                                     final Object adapter, final Video video) {
+                                     final Video video) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         String[] menu;
@@ -44,7 +44,7 @@ public class AdapterUtils {
                 public void onClick(DialogInterface dialog, int which) {
                     switch(which) {
                         case 0:
-                            downloadAudio(context, mainActivity, adapter, video);
+                            downloadAudio(context, mainActivity, video);
                             dialog.dismiss();
                             break;
                         case 1:
@@ -87,7 +87,6 @@ public class AdapterUtils {
     }
 
     public static void downloadAudio(final Context context, final MainActivity mainActivity,
-                                     final Object arrayAdapter,
                                      final Video audio) {
 
         mainActivity.askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
@@ -114,15 +113,7 @@ public class AdapterUtils {
                         }
 
                         DownloadManager downloadManager = DownloadManagerBuilder.from(context).build();
-                        long requestId = downloadManager.enqueue(request);
-                        LLog.d("Download enqueued with request ID: " + requestId);
-
-                        if (arrayAdapter instanceof ArrayAdapter) {
-                            ((ArrayAdapter) arrayAdapter).notifyDataSetChanged();
-                        }
-                        if (arrayAdapter instanceof CategoriesAdapter) {
-                            ((CategoriesAdapter) arrayAdapter).notifyDataSetChanged();
-                        }
+                        downloadManager.enqueue(request);
 
                         SuperToast.create(context, context.getString(R.string.added_to_download_queue),
                                 SuperToast.Duration.MEDIUM).show();
@@ -147,7 +138,7 @@ public class AdapterUtils {
             }
         }
 
-        Video.deleteDownloadedAudio(context, audio);
+        audio.deleteDownloadedAudio(context);
 
 
         if (dialog != null) {

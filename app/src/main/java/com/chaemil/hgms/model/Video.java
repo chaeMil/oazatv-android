@@ -77,17 +77,17 @@ public class Video extends SugarRecord implements Parcelable {
         }
     }
 
-    public static long getDownloadedAudioSize(Context context, Video video) {
-        File file = new File(context.getExternalFilesDir(null) + "/" + video.getHash() + ".mp3");
+    public long getDownloadedAudioSize(Context context) {
+        File file = new File(context.getExternalFilesDir(null) + "/" + getHash() + ".mp3");
         return file.length();
     }
 
-    public static void deleteDownloadedAudio(Context context, Video video) {
-        File audio = new File(context.getExternalFilesDir(null) + "/" + video.getHash() + ".mp3");
-        File thumb = new File(context.getExternalFilesDir(null) + "/" + video.getHash() + ".jpg");
+    public void deleteDownloadedAudio(Context context) {
+        File audio = new File(context.getExternalFilesDir(null) + "/" + getHash() + ".mp3");
+        File thumb = new File(context.getExternalFilesDir(null) + "/" + getHash() + ".jpg");
         audio.delete();
         thumb.delete();
-        video.save();
+        save();
     }
 
     public String getDescription() {

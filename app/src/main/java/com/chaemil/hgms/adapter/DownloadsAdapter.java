@@ -83,7 +83,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.View
                             .getDrawable(R.drawable.ic_continue_download));
                     break;
                 case DownloadManager.STATUS_SUCCESSFUL:
-                    long fileSize = Video.getDownloadedAudioSize(context, video);
+                    long fileSize = video.getDownloadedAudioSize(context);
                     String formattedSize = StringUtils.getStringSizeLengthFile(fileSize);
                     viewHolder.status.setText(formattedSize);
                     viewHolder.pauseButton.setVisibility(View.GONE);

@@ -85,7 +85,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.more.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AdapterUtils.contextDialog(context, mainActivity, ArchiveAdapter.this, video);
+                        AdapterUtils.contextDialog(context, mainActivity, video);
                     }
                 });
                 holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
