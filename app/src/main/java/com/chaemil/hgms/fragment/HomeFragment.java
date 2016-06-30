@@ -112,7 +112,9 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
                     featuredGridView.setAdapter(featuredAdapter);
                 }
             } else {
-                ((MainActivity) getActivity()).getMainFragment().showContinue();
+                if (((MainActivity) getActivity()).getMainFragment() != null) {
+                    ((MainActivity) getActivity()).getMainFragment().showContinue();
+                }
             }
 
             setupSwitcher();
