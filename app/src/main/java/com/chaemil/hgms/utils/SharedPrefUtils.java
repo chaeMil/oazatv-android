@@ -14,7 +14,7 @@ public class SharedPrefUtils {
     public static final String PREFERENCES_STREAM_ON_WIFI = "stream_on_wifi";
     public static final String PREFERENCES_STREAM_AUDIO = "stream_audio";
     public static final String PREFERENCE_USER_ID = "user_id";
-    public static final String PREFERENCES_FIRST_LAUNCH = "first_launch";
+    public static final String PREFERENCES_FIRST_LAUNCH = "first_launch_2016-06-30";
 
     public static SharedPrefUtils getInstance(Context context) {
         if (sharedPrefUtils == null) {

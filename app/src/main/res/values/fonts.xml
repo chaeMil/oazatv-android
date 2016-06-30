@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="default_font">fonts/Roboto-Regular.ttf</string>
-    <string name="default_font_medium">fonts/Roboto-Medium.ttf</string>
-    <string name="default_font_bold">fonts/Roboto-Bold.ttf</string>
-    <string name="default_font_black">fonts/Roboto-Black.ttf</string>
-    <string name="default_font_light">fonts/Roboto-Light.ttf</string>
-    <string name="default_font_Thin">fonts/Roboto-Thin.ttf</string>
-    <string name="slab_font">fonts/RobotoSlab-Regular.ttf</string>
-    <string name="slab_font_light">fonts/RobotoSlab-Light.ttf</string>
-    <string name="slab_font_bold">fonts/RobotoSlab-Bold.ttf</string>
-    <string name="slab_font_thin">fonts/RobotoSlab-Thin.ttf</string>
+    <string translatable="false" name="default_font">fonts/Roboto-Regular.ttf</string>
+    <string translatable="false" name="default_font_medium">fonts/Roboto-Medium.ttf</string>
+    <string translatable="false" name="default_font_bold">fonts/Roboto-Bold.ttf</string>
+    <string translatable="false" name="default_font_black">fonts/Roboto-Black.ttf</string>
+    <string translatable="false" name="default_font_light">fonts/Roboto-Light.ttf</string>
+    <string translatable="false" name="default_font_Thin">fonts/Roboto-Thin.ttf</string>
+    <string translatable="false" name="slab_font">fonts/RobotoSlab-Regular.ttf</string>
+    <string translatable="false" name="slab_font_light">fonts/RobotoSlab-Light.ttf</string>
+    <string translatable="false" name="slab_font_bold">fonts/RobotoSlab-Bold.ttf</string>
+    <string translatable="false" name="slab_font_thin">fonts/RobotoSlab-Thin.ttf</string>
 </resources>

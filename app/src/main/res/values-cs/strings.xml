@@ -60,4 +60,11 @@
     <string name="tutorial_text_4">Stáhněte si audio záznamy pro poslech na cestách nebo offline.</string>
     <string name="none_downloaded_hint">Nestáhli jste žádné audio záznamy. Pro stažení a následné přehrávání offline klikněte na tři tečky vedle názvu videa a zvolte stáhnout audio.</string>
     <string name="continue_text">Pokračovat…</string>
+    <string name="are_you_shure">Ste si jistí?</string>
+    <string name="download_paused">pozastaveno...</string>
+    <string name="download_pending">čeká na stažení...</string>
+    <string name="download_running">stahuje se</string>
+    <string name="no">Ne</string>
+    <string name="not_downloaded_yet">Ještě není staženo</string>
+    <string name="yes">Ano</string>
 </resources>
