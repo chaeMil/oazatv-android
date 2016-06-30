@@ -82,4 +82,5 @@ dependencies {
     compile 'com.novoda:download-manager:0.2.38'
     compile 'com.auron:permission-manage:1.0.9'
     compile 'com.afollestad.material-dialogs:core:0.8.6.1'
+    compile 'com.android.support:percent:23.4.0'
 }

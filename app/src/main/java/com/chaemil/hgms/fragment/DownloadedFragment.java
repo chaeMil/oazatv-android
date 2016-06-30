@@ -4,6 +4,7 @@ import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -37,6 +38,7 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
     private DownloadsAdapter downloadsAdapter;
     private View emptyView;
     private RecyclerView recyclerView;
+    private NestedScrollView nestedScroll;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,6 +88,7 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
     private void getUI(ViewGroup rootView) {
         emptyView = rootView.findViewById(R.id.none_downloaded);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.main_downloads_list);
+        nestedScroll = (NestedScrollView) rootView.findViewById(R.id.nested_scroll);
     }
 
     private void setup() {
@@ -119,6 +122,8 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
         downloadsAdapter = new DownloadsAdapter(getActivity(), ((MainActivity) getActivity()),
                 new ArrayList<Download>(), clickListener);
         recyclerView.setAdapter(downloadsAdapter);
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setHasFixedSize(false);
     }
 
     private void setupQueryingExample() {
