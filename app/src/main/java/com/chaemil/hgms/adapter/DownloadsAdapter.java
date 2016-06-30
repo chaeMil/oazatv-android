@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Download;
@@ -158,32 +162,40 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.View
     }
 
     private void contextDialog(final Video video) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(context);
 
         String[] menu = new String[] {context.getString(R.string.delete_downloaded_audio)};
 
-        builder.setItems(menu, new DialogInterface.OnClickListener() {
+        builder.title(video.getName())
+                .items(menu)
+                .theme(Theme.LIGHT)
+                .itemsCallback(new MaterialDialog.ListCallback() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch(which) {
+            public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                switch (which) {
                     case 0:
-                        createDeleteDialog(video).show();
+                        createDeleteDialog(context, video).show();
                         break;
                 }
             }
         });
 
 
-        builder.create().show();
+        builder.show();
     }
 
-    private AlertDialog createDeleteDialog(final Video video) {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
+    private MaterialDialog createDeleteDialog(final Context context, final Video video) {
 
+
+        MaterialDialog dialog = new MaterialDialog.Builder(context)
+                .title(video.getName())
+                .theme(Theme.LIGHT)
+                .content(context.getString(R.string.delete_downloaded_audio) + "?")
+                .positiveText(context.getString(R.string.yes))
+                .negativeText(context.getString(R.string.no))
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         DownloadManager downloadManager = DownloadManagerBuilder.from(context).build();
                         Cursor cursor = downloadManager.query(new Query().setFilterByExtraData(String.valueOf(video.getServerId())));
                         ArrayList<Integer> idsToDelete = new ArrayList<>();
@@ -202,22 +214,16 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.View
                         }
 
                         AdapterUtils.deleteAudio(context, mainActivity, video, dialog);
-                        break;
-
-                    case DialogInterface.BUTTON_NEGATIVE:
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         dialog.dismiss();
-                        break;
-                }
-            }
-        };
+                    }
+                }).build();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(context.getString(R.string.are_you_shure))
-                .setPositiveButton(context.getString(R.string.yes), dialogClickListener)
-                .setNegativeButton(context.getString(R.string.no),
-                        dialogClickListener);
-
-        return builder.create();
+        return dialog;
     }
 
 }

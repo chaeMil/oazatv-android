@@ -14,7 +14,6 @@ apply plugin: 'com.google.gms.google-services'
 repositories {
     maven { url "https://maven.fabric.io/public" }
     maven { url "https://jitpack.io" }
-    jcenter()
 }
 
 
@@ -82,4 +81,5 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     compile 'com.novoda:download-manager:0.2.38'
     compile 'com.auron:permission-manage:1.0.9'
+    compile 'com.afollestad.material-dialogs:core:0.8.6.1'
 }

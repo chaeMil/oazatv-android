@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.view.View;
 import android.widget.ArrayAdapter;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.CategoriesAdapter;
@@ -29,60 +32,66 @@ public class AdapterUtils {
 
     public static void contextDialog(final Context context, final MainActivity mainActivity,
                                      final Video video) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(context);
 
         String[] menu;
 
         boolean isAudioDownloaded = video.isAudioDownloaded(context);
 
         if (!isAudioDownloaded) {
-            menu = new String[] {context.getString(R.string.download_audio),
+
+            menu = new String[]{context.getString(R.string.download_audio),
                     context.getString(R.string.stream_audio),
                     context.getString(R.string.share_video)};
 
-            builder.setItems(menu, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch(which) {
-                        case 0:
-                            downloadAudio(context, mainActivity, video);
-                            dialog.dismiss();
-                            break;
-                        case 1:
-                            mainActivity.playNewAudio(video, true);
-                            dialog.dismiss();
-                            break;
-                        case 2:
-                            ShareUtils.shareVideoLink(mainActivity, video);
-                            break;
-                    }
-                }
-            });
-
+            builder.title(video.getName())
+                    .theme(Theme.LIGHT)
+                    .items(menu)
+                    .itemsCallback(new MaterialDialog.ListCallback() {
+                        @Override
+                        public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                            switch(which) {
+                                case 0:
+                                    downloadAudio(context, mainActivity, video);
+                                    dialog.dismiss();
+                                    break;
+                                case 1:
+                                    mainActivity.playNewAudio(video, true);
+                                    dialog.dismiss();
+                                    break;
+                                case 2:
+                                    ShareUtils.shareVideoLink(mainActivity, video);
+                                    break;
+                            }
+                        }
+                    });
         }
 
         if (isAudioDownloaded) {
+
             menu = new String[] {context.getString(R.string.play_downloaded_audio),
                     context.getString(R.string.share_video)};
 
-            builder.setItems(menu, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch(which) {
-                        case 0:
-                            mainActivity.playNewAudio(video, true);
-                            dialog.dismiss();
-                            break;
-                        case 1:
-                            ShareUtils.shareVideoLink(mainActivity, video);
-                    }
-                }
-            });
-
+            builder.title(video.getName())
+                    .theme(Theme.LIGHT)
+                    .items(menu)
+                    .itemsCallback(new MaterialDialog.ListCallback() {
+                        @Override
+                        public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                            switch(which) {
+                                case 0:
+                                    mainActivity.playNewAudio(video, true);
+                                    dialog.dismiss();
+                                    break;
+                                case 1:
+                                    ShareUtils.shareVideoLink(mainActivity, video);
+                            }
+                        }
+                    });
         }
 
-
-        builder.create().show();
+        builder.show();
     }
 
     public static void downloadAudio(final Context context, final MainActivity mainActivity,
