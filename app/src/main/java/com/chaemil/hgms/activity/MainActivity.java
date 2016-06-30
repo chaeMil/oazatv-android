@@ -293,10 +293,6 @@ public class MainActivity extends BaseActivity implements
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.player_fragment, audioPlayerFragment, AudioPlayerFragment.TAG);
             transaction.commit();
-
-            /*getAudioPlayerFragment().playNewAudio(this,
-                    service.getCurrentAudio(),
-                    service.getIsPlayingDownloaded());*/
         }
     }
 
