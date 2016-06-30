@@ -1,10 +1,14 @@
 package com.chaemil.hgms.model;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.chaemil.hgms.utils.Constants;
+import com.novoda.downloadmanager.DownloadManagerBuilder;
+import com.novoda.downloadmanager.lib.DownloadManager;
+import com.novoda.downloadmanager.lib.Query;
 import com.orm.SugarRecord;
 
 import java.io.File;
@@ -75,6 +79,24 @@ public class Video extends SugarRecord implements Parcelable {
         } else {
             return videos.get(0);
         }
+    }
+
+    public boolean isAudioDownloaded(Context context) {
+        DownloadManager downloadManager = DownloadManagerBuilder.from(context).build();
+        Cursor cursor = downloadManager.query(new Query().setFilterByExtraData(String.valueOf(getServerId())));
+
+        boolean downloaded = false;
+
+        try {
+            while (cursor.moveToNext()) {
+                long videoId = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_EXTRA_DATA));
+
+                downloaded = (videoId == getServerId());
+            }
+        } finally {
+            cursor.close();
+        }
+        return downloaded;
     }
 
     public long getDownloadedAudioSize(Context context) {

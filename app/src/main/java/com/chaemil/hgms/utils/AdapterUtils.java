@@ -32,9 +32,10 @@ public class AdapterUtils {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         String[] menu;
-        //int videoStatus = Video.getDownloadStatus(video.getServerId());
 
-        //if (videoStatus == Video.NOT_DOWNLOADED) {
+        boolean isAudioDownloaded = video.isAudioDownloaded(context);
+
+        if (!isAudioDownloaded) {
             menu = new String[] {context.getString(R.string.download_audio),
                     context.getString(R.string.stream_audio),
                     context.getString(R.string.share_video)};
@@ -58,11 +59,9 @@ public class AdapterUtils {
                 }
             });
 
-        //}
+        }
 
-        /*if (videoStatus == Video.DOWNLOADED
-                || videoStatus == Video.CURRENTLY_DOWNLOADING
-                || videoStatus == Video.IN_DOWNLOAD_QUEUE) {
+        if (isAudioDownloaded) {
             menu = new String[] {context.getString(R.string.play_downloaded_audio),
                     context.getString(R.string.share_video)};
 
@@ -80,7 +79,7 @@ public class AdapterUtils {
                 }
             });
 
-        }*/
+        }
 
 
         builder.create().show();

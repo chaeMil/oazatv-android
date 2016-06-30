@@ -326,10 +326,7 @@ public class MainActivity extends BaseActivity implements
 
     public void playNewAudio(final Video audio, boolean expandPanel) {
 
-        boolean downloaded = false;
-        /*if (Video.getDownloadStatus(audio.getServerId()) == Video.DOWNLOADED) {
-            downloaded = true;
-        }*/
+        boolean downloaded = audio.isAudioDownloaded(this);
 
         if (!downloaded && sharedPreferences.loadStreamOnWifi() && !wifi.isConnected()) {
             SuperToast.create(this, getString(R.string.cannot_play_without_wifi), SuperToast.Duration.MEDIUM).show();

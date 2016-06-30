@@ -93,6 +93,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.View
             Ion.with(context).load(video.getThumbFile()).intoImageView(viewHolder.thumb);
         }
 
+        viewHolder.root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.playNewAudio(video, true);
+            }
+        });
+
         viewHolder.pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
