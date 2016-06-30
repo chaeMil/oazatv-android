@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +17,7 @@ import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.DownloadsAdapter;
 import com.chaemil.hgms.model.Download;
 import com.chaemil.hgms.service.AnalyticsService;
+import com.chaemil.hgms.utils.FileUtils;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.QueryForDownloadsAsyncTask;
 import com.novoda.downloadmanager.DownloadManagerBuilder;
@@ -43,12 +44,18 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.downloaded_fragment, container, false);
 
-
+        getSpace();
         getUI(rootView);
         setup();
         setupUI();
         setupQueryingExample();
         return rootView;
+    }
+
+    private void getSpace() {
+        Log.d("externalMemory", FileUtils.getTotalExternalMemorySize());
+        Log.d("externalMemoryFree", FileUtils.getAvailableExternalMemorySize());
+        Log.d("appSize", FileUtils.readableFolderSize(getContext().getExternalFilesDir("")));
     }
 
     @Override

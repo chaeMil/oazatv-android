@@ -12,51 +12,91 @@ import java.text.DecimalFormat;
  * Created by chaemil on 8.2.16.
  */
 public class FileUtils {
-    public static final long SIZE_KB = 1024L;
-    public static final long SIZE_MB = SIZE_KB * SIZE_KB;
+    private static final String ERROR = "error";
 
     public static boolean externalMemoryAvailable() {
         return android.os.Environment.getExternalStorageState().equals(
                 android.os.Environment.MEDIA_MOUNTED);
     }
 
-    public static long getFreeSpace(){
-        long availableSpace = -1L;
-        if (isSDPresent()) {
-            StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
-            availableSpace = (long) stat.getFreeBlocks() * (long) stat.getBlockSize();
-            return availableSpace;
-        } else {
-            return 0;
-        }
+    public static String getAvailableInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long availableBlocks = stat.getAvailableBlocks();
+        return formatSize(availableBlocks * blockSize);
     }
 
-    public static long getExternalStorageSize() {
+    public static String getTotalInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long totalBlocks = stat.getBlockCount();
+        return formatSize(totalBlocks * blockSize);
+    }
+
+    public static String getAvailableExternalMemorySize() {
         if (externalMemoryAvailable()) {
             File path = Environment.getExternalStorageDirectory();
             StatFs stat = new StatFs(path.getPath());
             long blockSize = stat.getBlockSize();
             long availableBlocks = stat.getAvailableBlocks();
-            return availableBlocks * blockSize;
+            return formatSize(availableBlocks * blockSize);
         } else {
-            return 0;
+            return ERROR;
         }
     }
 
-    public static long getFolderSize(File f) {
-        long size = 0;
-        if (f.isDirectory()) {
-            for (File file : f.listFiles()) {
-                size += getFolderSize(file);
+    public static String getTotalExternalMemorySize() {
+        if (externalMemoryAvailable()) {
+            File path = Environment.getExternalStorageDirectory();
+            StatFs stat = new StatFs(path.getPath());
+            long blockSize = stat.getBlockSize();
+            long totalBlocks = stat.getBlockCount();
+            return formatSize(totalBlocks * blockSize);
+        } else {
+            return ERROR;
+        }
+    }
+
+    public static String formatSize(long size) {
+        String suffix = null;
+
+        if (size >= 1024) {
+            suffix = "KB";
+            size /= 1024;
+            if (size >= 1024) {
+                suffix = "MB";
+                size /= 1024;
             }
-        } else {
-            size=f.length();
         }
-        return size;
+
+        StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
+
+        int commaOffset = resultBuffer.length() - 3;
+        while (commaOffset > 0) {
+            resultBuffer.insert(commaOffset, ',');
+            commaOffset -= 3;
+        }
+
+        if (suffix != null) resultBuffer.append(suffix);
+        return resultBuffer.toString();
     }
 
-    public static boolean isSDPresent() {
-        return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+    public static long folderSize(File directory) {
+        long length = 0;
+        for (File file : directory.listFiles()) {
+            if (file.isFile())
+                length += file.length();
+            else
+                length += folderSize(file);
+        }
+        return length;
+    }
+
+    public static String readableFolderSize(File directory) {
+        long size = folderSize(directory);
+        return readableFileSize(size);
     }
 
     public static String readableFileSize(long size) {
