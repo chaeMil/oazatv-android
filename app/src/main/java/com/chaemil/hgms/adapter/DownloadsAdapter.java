@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
@@ -20,6 +21,7 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.chaemil.hgms.utils.StringUtils;
+import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.ion.Ion;
 import com.novoda.downloadmanager.DownloadManagerBuilder;
 import com.novoda.downloadmanager.lib.DownloadManager;
@@ -61,7 +63,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.View
         final Video video = Video.findByServerId((int) download.getVideoServerId());
         if (video != null) {
             viewHolder.name.setText(video.getName());
-            viewHolder.date.setText(video.getDate());
+            viewHolder.date.setText(StringUtils.formatDate(video.getDate(), context));
 
             switch (download.getDownloadStatusText()) {
                 case DownloadManager.STATUS_PENDING:
@@ -87,6 +89,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.View
                     String formattedSize = StringUtils.getStringSizeLengthFile(fileSize);
                     viewHolder.status.setText(formattedSize);
                     viewHolder.pauseButton.setVisibility(View.GONE);
+                    break;
             }
 
 
@@ -96,7 +99,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.View
         viewHolder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.playNewAudio(video, true);
+                if (download.getDownloadStatusText() == DownloadManager.STATUS_SUCCESSFUL) {
+                    mainActivity.playNewAudio(video, true);
+                } else {
+                    SuperToast.create(context,
+                            context.getString(R.string.not_downloaded_yet),
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
