@@ -1,17 +1,13 @@
 package com.chaemil.hgms;
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.activity.SplashActivity;
-import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.AudioPlaybackService;
-import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.ServiceUtils;
 import com.crashlytics.android.Crashlytics;
@@ -57,14 +53,14 @@ public class OazaApp extends SugarApp {
 
         initAudioPlaybackService();
 
-        startDownloadService();
+        //startDownloadService();
     }
 
-    public void startDownloadService() {
+    /*public void startDownloadService() {
         if (!ServiceUtils.isMyServiceRunning(this, DownloadService.class)) {
             startService(new Intent(this, DownloadService.class));
         }
-    }
+    }*/
 
     private void initAudioPlaybackService() {
         if (ServiceUtils.isMyServiceRunning(this, AudioPlaybackService.class)) {

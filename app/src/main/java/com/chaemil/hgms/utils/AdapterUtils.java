@@ -1,7 +1,6 @@
 package com.chaemil.hgms.utils;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,9 +14,6 @@ import com.chaemil.hgms.adapter.CategoriesAdapter;
 import com.chaemil.hgms.adapter.DownloadedAdapter;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
-import com.chaemil.hgms.service.AudioPlaybackPendingIntents;
-import com.chaemil.hgms.service.AudioPlaybackService;
-import com.chaemil.hgms.service.DownloadService;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.novoda.downloadmanager.DownloadManagerBuilder;
 import com.novoda.downloadmanager.lib.DownloadManager;
@@ -100,20 +96,30 @@ public class AdapterUtils {
                 new PermissionResult() {
                     @Override
                     public void permissionGranted() {
+
+                        audio.save();
+
                         Uri uri = Uri.parse(audio.getAudioFile());
                         Request request = new Request(uri)
+                                .setExtraData(String.valueOf(audio.getServerId()))
+                                .setAllowedNetworkTypes(Request.NETWORK_WIFI)
                                 .setTitle(context.getString(R.string.downloading_audio))
                                 .setDescription(audio.getName())
                                 .setBigPictureUrl(audio.getThumbFile())
                                 .setDestinationInExternalFilesDir("", audio.getHash() + ".mp3")
-                                .setNotificationVisibility(NotificationVisibility.ACTIVE_OR_COMPLETE)
-                                .alwaysAttemptResume();
+                                .setNotificationVisibility(NotificationVisibility.ACTIVE_OR_COMPLETE);
+
+                        if (!SharedPrefUtils.getInstance(context).loadDownloadOnlyOnWifi()) {
+                            request.setAllowedNetworkTypes(Request.NETWORK_MOBILE
+                                    | Request.NETWORK_WIFI
+                                    | Request.NETWORK_BLUETOOTH);
+                        }
 
                         DownloadManager downloadManager = DownloadManagerBuilder.from(context).build();
                         long requestId = downloadManager.enqueue(request);
                         LLog.d("Download enqueued with request ID: " + requestId);
 
-                        ((OazaApp) context.getApplicationContext()).startDownloadService();
+                        //((OazaApp) context.getApplicationContext()).startDownloadService();
 
                         if (arrayAdapter instanceof ArrayAdapter) {
                             ((ArrayAdapter) arrayAdapter).notifyDataSetChanged();

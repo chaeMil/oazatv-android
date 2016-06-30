@@ -65,9 +65,6 @@
 
         <activity android:name="com.github.pedrovgs.lynx.LynxActivity"/>
 
-        <service android:name=".service.DownloadService"
-            android:stopWithTask="false"/>
-
         <service android:name=".service.AudioPlaybackService"
             android:stopWithTask="false"
             android:enabled="true"/>

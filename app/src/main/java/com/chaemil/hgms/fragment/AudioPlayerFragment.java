@@ -6,9 +6,7 @@ package com.chaemil.hgms.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,21 +20,15 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.service.AnalyticsService;
-import com.chaemil.hgms.service.AudioPlaybackPendingIntents;
 import com.chaemil.hgms.service.AudioPlaybackService;
-import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.utils.ShareUtils;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.koushikdutta.ion.Ion;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONObject;
 

@@ -16,7 +16,7 @@ public class Download {
         this.batchId = batchId;
     }
 
-    public long getVideoId() {
+    public long getVideoServerId() {
         return videoId;
     }
 

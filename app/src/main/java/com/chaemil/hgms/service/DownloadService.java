@@ -16,7 +16,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.widget.Toast;
 
-import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.DownloadServiceReceiver;
@@ -26,7 +25,6 @@ import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.koushikdutta.async.future.Future;
 import com.novoda.downloadmanager.DownloadManagerBuilder;
-import com.novoda.downloadmanager.lib.Query;
 import com.novoda.downloadmanager.lib.Request;
 import com.novoda.downloadmanager.lib.DownloadManager;
 import com.novoda.downloadmanager.notifications.NotificationVisibility;
@@ -77,14 +75,14 @@ public class DownloadService extends Service implements DownloadServiceReceiverL
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        init();
+        /*init();
         setupReceivers();
 
         if (getFirstVideoToDownload() != null) {
             startDownload();
         } else {
             stopSelf();
-        }
+        }*/
 
         return START_NOT_STICKY;
     }
@@ -119,10 +117,10 @@ public class DownloadService extends Service implements DownloadServiceReceiverL
 
     private void setupReceivers() {
         IntentFilter filter = new IntentFilter();
-        filter.addAction(DownloadService.DOWNLOAD_COMPLETE);
+        /*filter.addAction(DownloadService.DOWNLOAD_COMPLETE);
         filter.addAction(DownloadService.DOWNLOAD_STARTED);
         filter.addAction(DownloadService.OPEN_DOWNLOADS);
-        filter.addAction(DownloadService.KILL_DOWNLOAD);
+        filter.addAction(DownloadService.KILL_DOWNLOAD);*/
 
         receiver = new DownloadServiceReceiver(this);
         registerReceiver(receiver, filter);
@@ -131,16 +129,11 @@ public class DownloadService extends Service implements DownloadServiceReceiverL
         registerReceiver(onNotificationClick, new IntentFilter(DownloadManager.ACTION_NOTIFICATION_CLICKED));
     }
 
-    private static void updateDownloadQueue() {
-        downloadQueue =  Video.getDownloadQueue();
-    }
-
     public boolean isDownloadingNow() {
         return isDownloadingNow;
     }
 
     private Video getFirstVideoToDownload() {
-        updateDownloadQueue();
         if (downloadQueue.size() > 0) {
             return downloadQueue.get(0);
         } else {
@@ -151,7 +144,7 @@ public class DownloadService extends Service implements DownloadServiceReceiverL
     private boolean canStartDownload() {
         SharedPrefUtils prefUtils = SharedPrefUtils.getInstance(this);
 
-        boolean downloadOnWifi = prefUtils.loadDownloadOnWifi();
+        boolean downloadOnWifi = prefUtils.loadDownloadOnlyOnWifi();
         if (downloadOnWifi && NetworkUtils.isConnectedWithWifi(this)) {
             return true;
         }
@@ -178,33 +171,17 @@ public class DownloadService extends Service implements DownloadServiceReceiverL
                 isDownloadingNow = true;
                 currentDownloadState = WAITING;
 
-                downloadThumb(currentDownload);
                 downloadAudio(currentDownload);
             }
         }
     }
 
-    private void downloadThumb(Video video) {
-        Uri uri = Uri.parse(video.getThumbFile());
-
-        boolean downloadOnWifi = SharedPrefUtils.getInstance(this).loadDownloadOnWifi();
-
-        Request audioDownload = new Request(uri)
-                .setDestinationInExternalFilesDir("", video.getHash() + ".jpg")
-                .setAllowedOverRoaming(false)
-                .setAllowedOverMetered(!downloadOnWifi)
-                .setVisibleInDownloadsUi(false)
-                .setNotificationVisibility(NotificationVisibility.HIDDEN);
-
-        downloadManager.enqueue(audioDownload);
-    }
-
     private void downloadAudio(final Video video) {
         Uri uri = Uri.parse(video.getAudioFile());
 
-        boolean downloadOnWifi = SharedPrefUtils
+        /*boolean downloadOnWifi = SharedPrefUtils
                 .getInstance(DownloadService.this)
-                .loadDownloadOnWifi();
+                .loadDownloadOnlyOnWifi();*/
 
         Request audioDownload = new Request(uri)
                 .setExtraData(String.valueOf(video.getId()))
@@ -213,7 +190,7 @@ public class DownloadService extends Service implements DownloadServiceReceiverL
                 .setTitle(getString(R.string.download_audio))
                 .setDescription(video.getName())
                 .setAllowedOverRoaming(false)
-                .setAllowedOverMetered(!downloadOnWifi)
+                //.setAllowedOverMetered(!downloadOnWifi)
                 .setVisibleInDownloadsUi(false)
                 .setBigPictureUrl(video.getThumbFile());
 

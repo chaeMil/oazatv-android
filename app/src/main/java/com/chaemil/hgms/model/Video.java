@@ -4,14 +4,10 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.chaemil.hgms.OazaApp;
-import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.utils.Constants;
-import com.chaemil.hgms.utils.SmartLog;
 import com.orm.SugarRecord;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -79,43 +75,6 @@ public class Video extends SugarRecord implements Parcelable {
         } else {
             return videos.get(0);
         }
-    }
-
-    public static List<Video> getDownloadQueue() {
-        ArrayList<Video> queue = new ArrayList<>();
-        List<Video> list = new ArrayList<Video>();
-        try {
-            list = Video.find(Video.class, "in_download_queue = ? AND downloaded = ?", String.valueOf(1), String.valueOf(0));
-        } catch (Exception e) {
-            SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
-        }
-        queue.addAll(list);
-
-        return queue;
-    }
-
-    public static List<Video> getWholeDownloadQueue() {
-        ArrayList<Video> queue = new ArrayList<>();
-        try {
-            List<Video> list = Video.find(Video.class, "in_download_queue = 1 OR downloaded = 1 ORDER BY id DESC");
-            queue.addAll(list);
-        } catch (Exception e) {
-            SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
-        }
-
-        return queue;
-    }
-
-    public static List<Video> getAllVideoFromLocalDB() {
-        return Video.findWithQuery(Video.class, "SELECT * FROM Video");
-    }
-
-    public static ArrayList<Video> getAllDownloadedVideos() {
-        List<Video> list = Video.find(Video.class, "downloaded = ?", String.valueOf(1));
-        ArrayList<Video> downloadedVideos = new ArrayList<>();
-        downloadedVideos.addAll(list);
-
-        return downloadedVideos;
     }
 
     public static long getDownloadedAudioSize(Context context, Video video) {

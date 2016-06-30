@@ -186,7 +186,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
             pager.setOffscreenPageLimit(3);
             settingsFab.hide(false);
-            downloadOnWifiSwitch.setChecked(sharedPreferences.loadDownloadOnWifi());
+            downloadOnWifiSwitch.setChecked(sharedPreferences.loadDownloadOnlyOnWifi());
             streamOnlyAudioSwitch.setChecked(sharedPreferences.loadStreamAudio());
             streamOnWifiSwitch.setChecked(sharedPreferences.loadStreamOnWifi());
         }
@@ -195,7 +195,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (sharedPreferences != null) {
-                    sharedPreferences.saveDownloadOnWifi(isChecked);
+                    sharedPreferences.saveDownloadOnlyOnWifi(isChecked);
                 }
             }
         });

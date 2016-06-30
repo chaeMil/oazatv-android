@@ -1,13 +1,9 @@
 package com.chaemil.hgms.fragment;
 
 import android.database.ContentObserver;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,17 +12,14 @@ import android.view.ViewGroup;
 
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.adapter.PauseResumeAdapter;
+import com.chaemil.hgms.adapter.DownloadsAdapter;
 import com.chaemil.hgms.model.Download;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.QueryForDownloadsAsyncTask;
 import com.novoda.downloadmanager.DownloadManagerBuilder;
 import com.novoda.downloadmanager.lib.DownloadManager;
-import com.novoda.downloadmanager.notifications.NotificationVisibility;
 import com.novoda.downloadmanager.lib.Query;
-import com.novoda.downloadmanager.lib.Request;
-import com.novoda.downloadmanager.lib.logger.LLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +31,7 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private DownloadManager downloadManager;
-    private PauseResumeAdapter pauseResumeAdapter;
+    private DownloadsAdapter downloadsAdapter;
     private View emptyView;
     private RecyclerView recyclerView;
 
@@ -102,7 +95,7 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
     private void setupUI() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        PauseResumeAdapter.Listener clickListener = new PauseResumeAdapter.Listener() {
+        DownloadsAdapter.Listener clickListener = new DownloadsAdapter.Listener() {
             @Override
             public void onItemClick(Download download) {
                 if (download.isPaused()) {
@@ -113,8 +106,8 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
                 queryForDownloads();
             }
         };
-        pauseResumeAdapter = new PauseResumeAdapter(new ArrayList<Download>(), clickListener);
-        recyclerView.setAdapter(pauseResumeAdapter);
+        downloadsAdapter = new DownloadsAdapter(new ArrayList<Download>(), clickListener);
+        recyclerView.setAdapter(downloadsAdapter);
     }
 
     private void setupQueryingExample() {
@@ -140,7 +133,7 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
 
     @Override
     public void onQueryResult(List<Download> downloads) {
-        pauseResumeAdapter.updateDownloads(downloads);
+        downloadsAdapter.updateDownloads(downloads);
         emptyView.setVisibility(downloads.isEmpty() ? View.VISIBLE : View.GONE);
     }
 }

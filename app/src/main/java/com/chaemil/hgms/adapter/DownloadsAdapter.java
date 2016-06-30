@@ -11,15 +11,16 @@ import android.widget.TextView;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.model.Download;
+import com.chaemil.hgms.model.Video;
 
 import java.util.List;
 import java.util.Locale;
 
-public class PauseResumeAdapter extends RecyclerView.Adapter<PauseResumeAdapter.ViewHolder> {
+public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.ViewHolder> {
     private final List<Download> downloads;
     private final Listener listener;
 
-    public PauseResumeAdapter(List<Download> downloads, Listener listener) {
+    public DownloadsAdapter(List<Download> downloads, Listener listener) {
         this.downloads = downloads;
         this.listener = listener;
     }
@@ -38,13 +39,18 @@ public class PauseResumeAdapter extends RecyclerView.Adapter<PauseResumeAdapter.
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         final Download download = downloads.get(position);
-        viewHolder.titleTextView.setText(String.valueOf(download.getVideoId()));
-        String text = String.format(Locale.getDefault(),
-                "%1$s : %2$s\nBatch %3$d",
-                download.getDownloadStatusText(),
-                download.getVideoId(),
-                download.getBatchId());
-        viewHolder.locationTextView.setText(text);
+
+        Video video = Video.findByServerId((int) download.getVideoServerId());
+        if (video != null) {
+            viewHolder.titleTextView.setText(video.getName());
+            String text = String.format(Locale.getDefault(),
+                    "%1$s : %2$s\nBatch %3$d",
+                    download.getDownloadStatusText(),
+                    video.getName(),
+                    download.getBatchId());
+            viewHolder.locationTextView.setText(text);
+        }
+
         viewHolder.root.setOnClickListener(
                 new View.OnClickListener() {
                     @Override

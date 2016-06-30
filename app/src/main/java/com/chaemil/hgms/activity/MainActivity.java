@@ -40,7 +40,6 @@ import com.chaemil.hgms.receiver.DownloadServiceReceiver;
 import com.chaemil.hgms.receiver.DownloadServiceReceiverListener;
 import com.chaemil.hgms.receiver.PlaybackReceiverListener;
 import com.chaemil.hgms.service.AudioPlaybackService;
-import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
@@ -143,10 +142,10 @@ public class MainActivity extends BaseActivity implements
 
     private void setupReceiver() {
         IntentFilter filter = new IntentFilter();
-        filter.addAction(DownloadService.DOWNLOAD_COMPLETE);
+        /*filter.addAction(DownloadService.DOWNLOAD_COMPLETE);
         filter.addAction(DownloadService.DOWNLOAD_STARTED);
         filter.addAction(DownloadService.OPEN_DOWNLOADS);
-        filter.addAction(DownloadService.KILL_DOWNLOAD);
+        filter.addAction(DownloadService.KILL_DOWNLOAD);*/
 
         downloadServiceReceiver = new DownloadServiceReceiver(this);
         registerReceiver(downloadServiceReceiver, filter);
@@ -564,10 +563,10 @@ public class MainActivity extends BaseActivity implements
         notifyDownloadDatasetChanged();
     }
 
-    public void startDownloadService() {
+    /*public void startDownloadService() {
         Intent downloadService = new Intent(this, DownloadService.class);
         startService(downloadService);
-    }
+    }*/
 
     public void showStatusMessage(String text, int backgroundColor, boolean liveStream) {
         statusMessageWrapper.setVisibility(View.VISIBLE);

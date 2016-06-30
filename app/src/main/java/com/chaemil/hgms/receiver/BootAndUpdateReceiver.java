@@ -3,10 +3,7 @@ package com.chaemil.hgms.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 
-import com.chaemil.hgms.OazaApp;
-import com.chaemil.hgms.service.DownloadService;
 import com.chaemil.hgms.utils.SmartLog;
 
 
@@ -24,8 +21,8 @@ public class BootAndUpdateReceiver extends BroadcastReceiver {
 
             SmartLog.Log(SmartLog.LogLevel.DEBUG, TAG, "booting");
 
-            Intent downloadService = new Intent(context, DownloadService.class);
-            context.startService(downloadService);
+            /*Intent downloadService = new Intent(context, DownloadService.class);
+            context.startService(downloadService);*/
         }
     }
 }
