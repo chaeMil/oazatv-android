@@ -52,16 +52,35 @@
 
     </android.support.percent.PercentRelativeLayout>
 
+    <View
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:id="@+id/other_apps_dot"
+        android:background="@drawable/black_circle"
+        android:layout_marginLeft="16dp"
+        android:layout_below="@+id/space_graph_wrapper"
+        android:layout_marginTop="4dp" />
+
     <TextView
         android:id="@+id/other_apps"
         fontPath="@string/default_font_bold"
         android:text="@string/other_apps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="4dp"
         android:layout_below="@+id/space_graph_wrapper"
         android:textAllCaps="true"
-        android:textSize="12dp" />
+        android:textSize="12dp"
+        android:layout_toRightOf="@+id/other_apps_dot" />
+
+    <View
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:id="@+id/app_name_dot"
+        android:background="@drawable/primary_color_circle"
+        android:layout_marginLeft="16dp"
+        android:layout_below="@+id/other_apps"
+        android:layout_marginTop="6.5dp" />
 
     <TextView
         android:id="@+id/app_name"
@@ -70,11 +89,22 @@
         android:textAllCaps="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="4dp"
         android:layout_below="@+id/other_apps"
         android:textSize="12dp"
         android:layout_marginTop="2dp"
-        android:textColor="@color/colorPrimary" />
+        android:textColor="@color/colorPrimary"
+        android:layout_toRightOf="@+id/other_apps_dot" />
+
+    <View
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:id="@+id/free_space_dot"
+        android:background="@drawable/blue_gray_circle"
+        android:layout_marginLeft="16dp"
+        android:layout_below="@+id/app_name"
+        android:layout_marginTop="6.5dp" />
+
 
     <TextView
         android:id="@+id/free_space"
@@ -83,11 +113,12 @@
         android:textAllCaps="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="4dp"
         android:layout_marginTop="2dp"
         android:layout_below="@+id/app_name"
         android:textColor="@color/md_blue_grey_300"
-        android:layout_marginBottom="32dp"
-        android:textSize="12dp" />
+        android:layout_marginBottom="16dp"
+        android:textSize="12dp"
+        android:layout_toRightOf="@+id/app_name_dot" />
 
 </RelativeLayout>
