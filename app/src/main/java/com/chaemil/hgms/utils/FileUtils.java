@@ -19,7 +19,7 @@ public class FileUtils {
                 android.os.Environment.MEDIA_MOUNTED);
     }
 
-    public static String getAvailableInternalMemorySize() {
+    public static String readableAvailableInternalMemorySize() {
         File path = Environment.getDataDirectory();
         StatFs stat = new StatFs(path.getPath());
         long blockSize = stat.getBlockSize();
@@ -27,7 +27,7 @@ public class FileUtils {
         return formatSize(availableBlocks * blockSize);
     }
 
-    public static String getTotalInternalMemorySize() {
+    public static String readableTotalInternalMemorySize() {
         File path = Environment.getDataDirectory();
         StatFs stat = new StatFs(path.getPath());
         long blockSize = stat.getBlockSize();
@@ -35,7 +35,7 @@ public class FileUtils {
         return formatSize(totalBlocks * blockSize);
     }
 
-    public static String getAvailableExternalMemorySize() {
+    public static String readableAvailableExternalMemorySize() {
         if (externalMemoryAvailable()) {
             File path = Environment.getExternalStorageDirectory();
             StatFs stat = new StatFs(path.getPath());
@@ -47,40 +47,27 @@ public class FileUtils {
         }
     }
 
-    public static String getTotalExternalMemorySize() {
+    public static String readableTotalExternalMemorySize() {
+        return formatSize(getTotalExternalMemorySize());
+    }
+
+    public static long getTotalExternalMemorySize() {
         if (externalMemoryAvailable()) {
             File path = Environment.getExternalStorageDirectory();
             StatFs stat = new StatFs(path.getPath());
             long blockSize = stat.getBlockSize();
             long totalBlocks = stat.getBlockCount();
-            return formatSize(totalBlocks * blockSize);
+            return totalBlocks * blockSize;
         } else {
-            return ERROR;
+            return 0;
         }
     }
 
     public static String formatSize(long size) {
-        String suffix = null;
-
-        if (size >= 1024) {
-            suffix = "KB";
-            size /= 1024;
-            if (size >= 1024) {
-                suffix = "MB";
-                size /= 1024;
-            }
-        }
-
-        StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
-
-        int commaOffset = resultBuffer.length() - 3;
-        while (commaOffset > 0) {
-            resultBuffer.insert(commaOffset, ',');
-            commaOffset -= 3;
-        }
-
-        if (suffix != null) resultBuffer.append(suffix);
-        return resultBuffer.toString();
+        if(size <= 0) return "0";
+        final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+        int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 
     public static long folderSize(File directory) {
@@ -97,6 +84,14 @@ public class FileUtils {
     public static String readableFolderSize(File directory) {
         long size = folderSize(directory);
         return readableFileSize(size);
+    }
+
+    public static String readableAppSize(Context context) {
+        return formatSize(appSize(context));
+    }
+
+    public static long appSize(Context context) {
+        return folderSize(context.getExternalFilesDir(""));
     }
 
     public static String readableFileSize(long size) {

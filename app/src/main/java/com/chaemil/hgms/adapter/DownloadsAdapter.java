@@ -3,12 +3,12 @@ package com.chaemil.hgms.adapter;
 /**
  * Created by chaemil on 30.6.16.
  */
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,7 +23,7 @@ import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Download;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
-import com.chaemil.hgms.utils.SmartLog;
+import com.chaemil.hgms.utils.FileUtils;
 import com.chaemil.hgms.utils.StringUtils;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.ion.Ion;
@@ -31,11 +31,15 @@ import com.novoda.downloadmanager.DownloadManagerBuilder;
 import com.novoda.downloadmanager.lib.DownloadManager;
 import com.novoda.downloadmanager.lib.Query;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.ViewHolder> {
+public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_ITEM = 1;
+    private static final int TYPE_FOOTER = 2;
+
+
     private final List<Download> downloads;
     private final Listener listener;
     private final Context context;
@@ -56,88 +60,153 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.View
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-        return new ViewHolder(View.inflate(viewGroup.getContext(), R.layout.list_item_download, null));
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if(viewType == TYPE_HEADER) {
+            View v = LayoutInflater.from (parent.getContext()).inflate (R.layout.header_item_download, parent, false);
+            return new HeaderViewHolder (v);
+        } else if(viewType == TYPE_FOOTER) {
+            View v = LayoutInflater.from (parent.getContext()).inflate (R.layout.footer_item_download, parent, false);
+            return new FooterViewHolder (v);
+        } else if(viewType == TYPE_ITEM) {
+            View v = LayoutInflater.from (parent.getContext()).inflate (R.layout.list_item_download, parent, false);
+            return new DownloadItemHolder (v);
+        }
+        return null;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        final Download download = downloads.get(position);
+    public int getItemViewType (int position) {
+        if(isPositionHeader (position)) {
+            return TYPE_HEADER;
+        } else if(isPositionFooter (position)) {
+            return TYPE_FOOTER;
+        }
+        return TYPE_ITEM;
+    }
 
-        final Video video = Video.findByServerId((int) download.getVideoServerId());
-        if (video != null) {
-            viewHolder.name.setText(video.getName());
-            viewHolder.date.setText(StringUtils.formatDate(video.getDate(), context));
+    private boolean isPositionHeader (int position) {
+        return position == 0;
+    }
 
-            switch (download.getDownloadStatusText()) {
-                case DownloadManager.STATUS_PENDING:
-                    viewHolder.status.setText(context.getString(R.string.download_pending));
-                    viewHolder.pauseButton.setVisibility(View.VISIBLE);
-                    viewHolder.pauseButton.setImageDrawable(context.getResources()
-                            .getDrawable(R.drawable.pause));
-                    break;
-                case DownloadManager.STATUS_RUNNING:
-                    viewHolder.status.setText(context.getString(R.string.download_running));
-                    viewHolder.pauseButton.setVisibility(View.VISIBLE);
-                    viewHolder.pauseButton.setImageDrawable(context.getResources()
-                            .getDrawable(R.drawable.pause));
-                    break;
-                case DownloadManager.STATUS_PAUSED:
-                    viewHolder.status.setText(context.getString(R.string.download_paused));
-                    viewHolder.pauseButton.setVisibility(View.VISIBLE);
-                    viewHolder.pauseButton.setImageDrawable(context.getResources()
-                            .getDrawable(R.drawable.ic_continue_download));
-                    break;
-                case DownloadManager.STATUS_SUCCESSFUL:
-                    long fileSize = video.getDownloadedAudioSize(context);
-                    String formattedSize = StringUtils.getStringSizeLengthFile(fileSize);
-                    viewHolder.status.setText(formattedSize);
-                    viewHolder.pauseButton.setVisibility(View.GONE);
-                    break;
-            }
+    private boolean isPositionFooter (int position) {
+        return position == downloads.size () + 1;
+    }
 
+    @Override
+    public int getItemCount () {
+        return downloads.size () + 1;
+    }
 
-            Ion.with(context).load(video.getThumbFile()).intoImageView(viewHolder.thumb);
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+        if (holder instanceof HeaderViewHolder) {
+            HeaderViewHolder headerItemHolder = (HeaderViewHolder) holder;
+            headerItemHolder.freeSpace.setText(FileUtils.readableAvailableExternalMemorySize() + " "
+                    + context.getString(R.string.space_free));
+            headerItemHolder.usedHeader.setText(FileUtils.readableAppSize(context));
         }
 
-        viewHolder.root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (download.getDownloadStatusText() == DownloadManager.STATUS_SUCCESSFUL) {
-                    mainActivity.playNewAudio(video, true);
-                } else {
-                    SuperToast.create(context,
-                            context.getString(R.string.not_downloaded_yet),
-                            Toast.LENGTH_SHORT).show();
+        if (holder instanceof DownloadItemHolder) {
+            final Download download = downloads.get(position - 1);
+
+            DownloadItemHolder downloadItemHolder = (DownloadItemHolder) holder;
+            final Video video = Video.findByServerId((int) download.getVideoServerId());
+            if (video != null) {
+                downloadItemHolder.name.setText(video.getName());
+                downloadItemHolder.date.setText(StringUtils.formatDate(video.getDate(), context));
+
+                switch (download.getDownloadStatusText()) {
+                    case DownloadManager.STATUS_PENDING:
+                        downloadItemHolder.status.setText(context.getString(R.string.download_pending));
+                        downloadItemHolder.pauseButton.setVisibility(View.VISIBLE);
+                        downloadItemHolder.pauseButton.setImageDrawable(context.getResources()
+                                .getDrawable(R.drawable.pause));
+                        break;
+                    case DownloadManager.STATUS_RUNNING:
+                        downloadItemHolder.status.setText(context.getString(R.string.download_running));
+                        downloadItemHolder.pauseButton.setVisibility(View.VISIBLE);
+                        downloadItemHolder.pauseButton.setImageDrawable(context.getResources()
+                                .getDrawable(R.drawable.pause));
+                        break;
+                    case DownloadManager.STATUS_PAUSED:
+                        downloadItemHolder.status.setText(context.getString(R.string.download_paused));
+                        downloadItemHolder.pauseButton.setVisibility(View.VISIBLE);
+                        downloadItemHolder.pauseButton.setImageDrawable(context.getResources()
+                                .getDrawable(R.drawable.ic_continue_download));
+                        break;
+                    case DownloadManager.STATUS_SUCCESSFUL:
+                        long fileSize = video.getDownloadedAudioSize(context);
+                        String formattedSize = StringUtils.getStringSizeLengthFile(fileSize);
+                        downloadItemHolder.status.setText(formattedSize);
+                        downloadItemHolder.pauseButton.setVisibility(View.GONE);
+                        break;
                 }
-            }
-        });
+                Ion.with(context).load(video.getThumbFile()).intoImageView(downloadItemHolder.thumb);
 
-        viewHolder.pauseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onItemClick(download);
-            }
-        });
+                downloadItemHolder.root.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (download.getDownloadStatusText() == DownloadManager.STATUS_SUCCESSFUL) {
+                            mainActivity.playNewAudio(video, true);
+                        } else {
+                            SuperToast.create(context,
+                                    context.getString(R.string.not_downloaded_yet),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
-        viewHolder.contextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                contextDialog(video);
-            }
-        });
-    }
+                downloadItemHolder.pauseButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onItemClick(download);
+                    }
+                });
 
-    @Override
-    public int getItemCount() {
-        return downloads.size();
+                downloadItemHolder.contextButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        contextDialog(video);
+                    }
+                });
+            }
+        }
     }
 
     public interface Listener {
         void onItemClick(Download download);
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class FooterViewHolder extends RecyclerView.ViewHolder {
+
+
+        public FooterViewHolder (View itemView) {
+            super (itemView);
+
+        }
+    }
+
+    class HeaderViewHolder extends RecyclerView.ViewHolder {
+
+        private final TextView usedHeader;
+        private final TextView freeSpace;
+
+        public HeaderViewHolder (View itemView) {
+            super (itemView);
+            usedHeader = (TextView) itemView.findViewById(R.id.oaza_app_size);
+            freeSpace = (TextView) itemView.findViewById(R.id.free_space);
+
+        }
+    }
+
+    private void getSpace() {
+        Log.d("externalMemory", FileUtils.readableTotalExternalMemorySize());
+        Log.d("externalMemoryFree", FileUtils.readableAvailableExternalMemorySize());
+        Log.d("appSize", FileUtils.readableFolderSize(context.getExternalFilesDir("")));
+    }
+
+    class DownloadItemHolder extends RecyclerView.ViewHolder {
 
         private final View root;
         private final TextView name;
@@ -148,7 +217,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.View
         private final ImageView contextButton;
         private final ImageView cancelButton;
 
-        public ViewHolder(View itemView) {
+        public DownloadItemHolder(View itemView) {
             super(itemView);
             root = itemView;
             name = (TextView) itemView.findViewById(R.id.name);
