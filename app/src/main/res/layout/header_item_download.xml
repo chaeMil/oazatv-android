@@ -59,7 +59,7 @@
         android:background="@drawable/black_circle"
         android:layout_marginLeft="16dp"
         android:layout_below="@+id/space_graph_wrapper"
-        android:layout_marginTop="4dp" />
+        android:layout_marginTop="5dp" />
 
     <TextView
         android:id="@+id/other_apps"
@@ -80,7 +80,7 @@
         android:background="@drawable/primary_color_circle"
         android:layout_marginLeft="16dp"
         android:layout_below="@+id/other_apps"
-        android:layout_marginTop="6.5dp" />
+        android:layout_marginTop="7dp" />
 
     <TextView
         android:id="@+id/app_name"
@@ -103,7 +103,7 @@
         android:background="@drawable/blue_gray_circle"
         android:layout_marginLeft="16dp"
         android:layout_below="@+id/app_name"
-        android:layout_marginTop="6.5dp" />
+        android:layout_marginTop="7dp" />
 
 
     <TextView
