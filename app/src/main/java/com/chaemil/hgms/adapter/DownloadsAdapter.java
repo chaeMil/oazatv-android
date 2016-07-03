@@ -124,11 +124,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         if (holder instanceof DownloadItemHolder) {
 
-
-            StaggeredGridLayoutManager.LayoutParams layoutParams =
-                    (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
-            layoutParams.setFullSpan(true);
-
             final Download download = downloads.get(position - 1);
 
             DownloadItemHolder downloadItemHolder = (DownloadItemHolder) holder;
