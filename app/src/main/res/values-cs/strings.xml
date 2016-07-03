@@ -67,4 +67,6 @@
     <string name="no">Ne</string>
     <string name="not_downloaded_yet">Ještě není staženo</string>
     <string name="yes">Ano</string>
+    <string name="other_apps">Ostatní aplikace</string>
+    <string name="used_by_app">používáno aplikací Oáza.tv</string>
 </resources>
