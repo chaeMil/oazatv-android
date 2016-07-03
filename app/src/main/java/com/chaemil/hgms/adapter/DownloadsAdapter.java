@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.percent.PercentLayoutHelper;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,6 +107,11 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
         if (holder instanceof HeaderViewHolder) {
+
+            StaggeredGridLayoutManager.LayoutParams layoutParams =
+                    (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
+            layoutParams.setFullSpan(true);
+
             HeaderViewHolder headerItemHolder = (HeaderViewHolder) holder;
             headerItemHolder.freeSpace.setText(FileUtils.readableAvailableExternalMemorySize() + " "
                     + context.getString(R.string.space_free));
@@ -117,6 +123,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
         if (holder instanceof DownloadItemHolder) {
+
+
+            StaggeredGridLayoutManager.LayoutParams layoutParams =
+                    (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
+            layoutParams.setFullSpan(true);
+
             final Download download = downloads.get(position - 1);
 
             DownloadItemHolder downloadItemHolder = (DownloadItemHolder) holder;

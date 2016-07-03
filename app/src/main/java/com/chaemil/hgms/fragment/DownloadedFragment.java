@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,7 +97,7 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
 
     private void setupUI() {
         int columns = getResources().getInteger(R.integer.archive_columns);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), columns));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(columns, 1));
 
         DownloadsAdapter.Listener clickListener = new DownloadsAdapter.Listener() {
             @Override
@@ -124,7 +125,7 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
     public void adjustLayout() {
         if (isAdded()) {
             int columns = getResources().getInteger(R.integer.archive_columns);
-            recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), columns));
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(columns, 1));
         }
     }
 
