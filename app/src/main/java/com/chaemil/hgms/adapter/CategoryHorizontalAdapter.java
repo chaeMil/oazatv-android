@@ -19,7 +19,7 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
-import com.koushikdutta.ion.Ion;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -80,7 +80,10 @@ public class CategoryHorizontalAdapter extends ArrayAdapter<Object> {
             }
         });
         holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
-        Ion.with(context).load(video.getThumbFile()).intoImageView(holder.thumb);
+
+        Picasso.with(context)
+                .load(video.getThumbFile())
+                .into(holder.thumb);
 
         return convertView;
     }

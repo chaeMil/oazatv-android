@@ -18,7 +18,7 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
-import com.koushikdutta.ion.Ion;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by chaemil on 28.3.16.
@@ -95,7 +95,9 @@ public class HomepageAdapter extends ArrayAdapter<Object> {
                 }
             });
             holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
-            Ion.with(context).load(video.getThumbFile()).intoImageView(holder.thumb);
+            Picasso.with(context)
+                    .load(video.getThumbFile())
+                    .into(holder.thumb);
         }
 
         if (item instanceof PhotoAlbum) {
@@ -111,7 +113,9 @@ public class HomepageAdapter extends ArrayAdapter<Object> {
             holder.date.setText(StringUtils.formatDate(photoAlbum.getDate(), context));
             holder.views.setText(context.getString(R.string.photo_album));
             holder.more.setVisibility(View.GONE);
-            Ion.with(context).load(photoAlbum.getThumbs().getThumb1024()).intoImageView(holder.thumb);
+            Picasso.with(context)
+                    .load(photoAlbum.getThumbs().getThumb1024())
+                    .into(holder.thumb);
         }
 
         return convertView;

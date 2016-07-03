@@ -30,12 +30,11 @@ import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.FileUtils;
 import com.chaemil.hgms.utils.StringUtils;
 import com.github.johnpersano.supertoasts.SuperToast;
-import com.koushikdutta.ion.Ion;
 import com.novoda.downloadmanager.DownloadManagerBuilder;
 import com.novoda.downloadmanager.lib.DownloadManager;
 import com.novoda.downloadmanager.lib.Query;
+import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,7 +157,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         downloadItemHolder.pauseButton.setVisibility(View.GONE);
                         break;
                 }
-                Ion.with(context).load(video.getThumbFile()).intoImageView(downloadItemHolder.thumb);
+
+                Picasso.with(context)
+                        .load(video.getThumbFile())
+                        .into(downloadItemHolder.thumb);
 
                 downloadItemHolder.root.setOnClickListener(new View.OnClickListener() {
                     @Override

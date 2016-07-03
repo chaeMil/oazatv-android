@@ -1,8 +1,6 @@
 package com.chaemil.hgms.factory;
 
 
-import android.content.Context;
-
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.Category;
 import com.chaemil.hgms.model.Homepage;
@@ -11,7 +9,6 @@ import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.Constants;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;

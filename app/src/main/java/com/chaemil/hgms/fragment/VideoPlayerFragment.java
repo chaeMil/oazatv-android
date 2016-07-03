@@ -36,7 +36,7 @@ import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
-import com.koushikdutta.ion.Ion;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -53,8 +53,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         MediaPlayer.OnPreparedListener, SeekBar.OnSeekBarChangeListener, RequestFactoryListener {
 
     public static final String TAG = "player_fragment";
-    private static final String IMAGES_ALREADY_BLURRED = "images_already_blurred";
-    private static final String BG_DRAWABLE = "bg_drawable";
     private static final String CURRENT_TIME = "current_time";
     private RelativeLayout miniPlayer;
     private ImageView miniPlayerImageView;
@@ -587,7 +585,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             this.currentVideo = video;
         }
 
-        Ion.with(getActivity()).load(currentVideo.getThumbFile()).intoImageView(miniPlayerImageView);
+        Picasso.with(getActivity())
+                .load(currentVideo.getThumbFile())
+                .into(miniPlayerImageView);
 
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));

@@ -28,7 +28,7 @@ import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.utils.ShareUtils;
-import com.koushikdutta.ion.Ion;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -401,17 +401,17 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         return AudioPlaybackService.getInstance().getCurrentAudio();
     }
 
-    public void closePlayer() {
-        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-        ((MainActivity) getActivity()).hidePanel();
-    }
-
     public void reconnectToService(Context context) {
         Video audio = getService().getCurrentAudio();
         boolean downloaded = getService().getIsPlayingDownloaded();
 
-        Ion.with(context).load(getCurrentAudio().getThumbFile()).intoImageView(audioThumb);
-        Ion.with(context).load(getCurrentAudio().getThumbFile()).intoImageView(miniPlayerImageView);
+        Picasso.with(context)
+                .load(getCurrentAudio().getThumbFile())
+                .into(audioThumb);
+
+        Picasso.with(context)
+                .load(getCurrentAudio().getThumbFile())
+                .into(miniPlayerImageView);
 
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
