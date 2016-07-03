@@ -5,7 +5,10 @@ package com.chaemil.hgms.adapter;
  */
 import android.content.Context;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.percent.PercentLayoutHelper;
+import android.support.percent.PercentRelativeLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +34,7 @@ import com.novoda.downloadmanager.DownloadManagerBuilder;
 import com.novoda.downloadmanager.lib.DownloadManager;
 import com.novoda.downloadmanager.lib.Query;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,12 +104,17 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
+
         if (holder instanceof HeaderViewHolder) {
             HeaderViewHolder headerItemHolder = (HeaderViewHolder) holder;
             headerItemHolder.freeSpace.setText(FileUtils.readableAvailableExternalMemorySize() + " "
                     + context.getString(R.string.space_free));
             headerItemHolder.usedHeader.setText(FileUtils.readableAppSize(context));
+
+            setupGraphs((HeaderViewHolder) holder);
+
         }
+
 
         if (holder instanceof DownloadItemHolder) {
             final Download download = downloads.get(position - 1);
@@ -172,6 +181,48 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 });
             }
         }
+
+
+    }
+
+    private void setupGraphs(final HeaderViewHolder holder) {
+
+        new AsyncTask<Void, Void, Void>() {
+
+            public float oazaSpaceGraphPercent;
+            public float otherAppsGraphPercent;
+
+            @Override
+            protected Void doInBackground( Void... voids ) {
+
+                otherAppsGraphPercent = (100.0f / (float) FileUtils.getTotalExternalMemorySize())
+                        * (float) FileUtils.getAvailableExternalMemorySize();
+
+                oazaSpaceGraphPercent = (100.0f / (float) FileUtils.getTotalExternalMemorySize())
+                        * (float) FileUtils.appSize(context);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+
+                PercentRelativeLayout.LayoutParams otherAppsParams = (PercentRelativeLayout.LayoutParams)
+                        holder.otherAppsGraph.getLayoutParams();
+                PercentLayoutHelper.PercentLayoutInfo otherAppsGraphInfo = otherAppsParams.getPercentLayoutInfo();
+                otherAppsGraphInfo.widthPercent = otherAppsGraphPercent / 100.0f;
+                holder.otherAppsGraph.requestLayout();
+
+
+                PercentRelativeLayout.LayoutParams oazaSpaceParams = (PercentRelativeLayout.LayoutParams)
+                        holder.oazaSpaceGraph.getLayoutParams();
+                PercentLayoutHelper.PercentLayoutInfo oazaSpaceGraphInfo = oazaSpaceParams.getPercentLayoutInfo();
+                oazaSpaceGraphInfo.leftMarginPercent = otherAppsGraphPercent / 100.f;
+                oazaSpaceGraphInfo.widthPercent = oazaSpaceGraphPercent / 100.0f;
+                holder.oazaSpaceGraph.requestLayout();
+
+            }
+        }.execute();
     }
 
     public interface Listener {
@@ -191,12 +242,15 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         private final TextView usedHeader;
         private final TextView freeSpace;
+        private final View otherAppsGraph;
+        private final View oazaSpaceGraph;
 
         public HeaderViewHolder (View itemView) {
             super (itemView);
             usedHeader = (TextView) itemView.findViewById(R.id.oaza_app_size);
             freeSpace = (TextView) itemView.findViewById(R.id.free_space);
-
+            otherAppsGraph = itemView.findViewById(R.id.other_apps_graph);
+            oazaSpaceGraph = itemView.findViewById(R.id.oaza_space_graph);
         }
     }
 

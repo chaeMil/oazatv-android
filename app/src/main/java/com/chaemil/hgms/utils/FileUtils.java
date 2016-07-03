@@ -36,14 +36,18 @@ public class FileUtils {
     }
 
     public static String readableAvailableExternalMemorySize() {
+        return formatSize(getAvailableExternalMemorySize());
+    }
+
+    public static long getAvailableExternalMemorySize() {
         if (externalMemoryAvailable()) {
             File path = Environment.getExternalStorageDirectory();
             StatFs stat = new StatFs(path.getPath());
             long blockSize = stat.getBlockSize();
             long availableBlocks = stat.getAvailableBlocks();
-            return formatSize(availableBlocks * blockSize);
+            return availableBlocks * blockSize;
         } else {
-            return ERROR;
+            return 0;
         }
     }
 
