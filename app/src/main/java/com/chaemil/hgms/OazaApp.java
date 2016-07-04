@@ -1,6 +1,5 @@
 package com.chaemil.hgms;
 
-import android.content.Intent;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
@@ -24,7 +23,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  */
 public class OazaApp extends SugarApp {
 
-    public static final boolean DEVELOPMENT = true;
+    public static final boolean DEVELOPMENT = false;
 
     private MainActivity mainActivity;
     public SplashActivity splashActivity;

@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -63,6 +64,8 @@ public class AudioPlaybackService extends Service implements
     private AudioPlaybackReceiver audioPlaybackReceiver;
     private boolean downloaded;
     private static AudioPlaybackService instance = null;
+    private IntentFilter noisyAudioIntent = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+    private NoisyAudioStreamReceiver noisyAudioReceiver;
 
     public static AudioPlaybackService getInstance() {
         return instance;
@@ -72,6 +75,7 @@ public class AudioPlaybackService extends Service implements
     public void onDestroy() {
         playbackStop();
         unregisterPlaybackReceiver();
+        unregisterNoisyAudioReceiver();
 
         super.onDestroy();
     }
@@ -131,6 +135,9 @@ public class AudioPlaybackService extends Service implements
 
         audioPlaybackReceiver = new AudioPlaybackReceiver(this, ((OazaApp) getApplication()));
         registerReceiver(audioPlaybackReceiver, filter);
+
+        noisyAudioReceiver = new NoisyAudioStreamReceiver();
+        registerReceiver(noisyAudioReceiver, noisyAudioIntent);
     }
 
     private void unregisterPlaybackReceiver() {
@@ -138,6 +145,17 @@ public class AudioPlaybackService extends Service implements
             try {
                 unregisterReceiver(audioPlaybackReceiver);
                 audioPlaybackReceiver = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void unregisterNoisyAudioReceiver() {
+        if (noisyAudioReceiver != null) {
+            try {
+                unregisterReceiver(noisyAudioReceiver);
+                noisyAudioReceiver = null;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -371,5 +389,14 @@ public class AudioPlaybackService extends Service implements
             saveCurrentAudioTime();
         }
         return false;
+    }
+
+    private class NoisyAudioStreamReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
+                pauseAudio();
+            }
+        }
     }
 }
