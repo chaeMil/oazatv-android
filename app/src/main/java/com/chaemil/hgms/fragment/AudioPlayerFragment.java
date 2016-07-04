@@ -466,7 +466,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         if (!getCurrentAudio().getTags().equals("")) {
             String tagsString = "";
             for (String tag : getCurrentAudio().getTags().split(",")) {
-                tagsString += "#" + tag + " ";
+                tagsString += "#" + tag.replace(" ","") + " ";
             }
             tags.setText(tagsString);
         } else {

@@ -400,6 +400,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     public void requestFullscreenPlayer() {
         ((BaseActivity) getActivity()).setFullscreen(true);
+
         getActivity().getWindow().getDecorView()
                 .setBackgroundColor(getResources().getColor(R.color.black));
 
@@ -422,6 +423,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     public void cancelFullscreenPlayer() {
         ((BaseActivity) getActivity()).setFullscreen(false);
+
         getActivity().getWindow().getDecorView()
                 .setBackgroundColor(getResources().getColor(R.color.white));
 
@@ -635,7 +637,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         if (!currentVideo.getTags().equals("")) {
             String tagsString = "";
             for (String tag : currentVideo.getTags().split(",")) {
-                tagsString += "#" + tag + " ";
+                tagsString += "#" + tag.replace(" ","") + " ";
             }
             tags.setText(tagsString);
         } else {
