@@ -10,14 +10,14 @@ import android.widget.BaseAdapter;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.view.SquareImageView;
-import com.squareup.picasso.Picasso;
+import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 
 public class PhotosAdapter extends BaseAdapter {
     private final ArrayList<Photo> photos;
+    private final int thumbWidth;
     private Activity activity;
-    private int thumbWidth;
 
     public PhotosAdapter(Activity activity, int thumbWidth, ArrayList<Photo> photos) {
         this.activity = activity;
@@ -51,9 +51,9 @@ public class PhotosAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Picasso.with(activity.getApplicationContext())
+        Ion.with(activity.getApplicationContext())
                 .load(photos.get(position).getThumb512())
-                .into(holder.image);
+                .intoImageView(holder.image);
 
         return convertView;
     }

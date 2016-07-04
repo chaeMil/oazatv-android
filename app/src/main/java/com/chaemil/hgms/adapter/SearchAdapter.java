@@ -15,7 +15,7 @@ import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
-import com.squareup.picasso.Picasso;
+import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 
@@ -63,9 +63,9 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
 
                 holder.name.setText(video.getName());
                 holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
-                Picasso.with(context)
+                Ion.with(context)
                         .load(video.getThumbFile())
-                        .into(holder.thumb);
+                        .intoImageView(holder.thumb);
                 break;
 
             case ArchiveItem.Type.ALBUM:
@@ -73,9 +73,9 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
                 final PhotoAlbum photoAlbum = archiveItem.getAlbum();
 
                 holder.name.setText(photoAlbum.getName());
-                Picasso.with(context)
+                Ion.with(context)
                         .load(photoAlbum.getThumbs().getThumb256())
-                        .into(holder.thumb);
+                        .intoImageView(holder.thumb);
                 break;
         }
 

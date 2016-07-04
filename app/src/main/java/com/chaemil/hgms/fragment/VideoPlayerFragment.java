@@ -36,7 +36,7 @@ import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
-import com.squareup.picasso.Picasso;
+import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
 
@@ -585,9 +585,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             this.currentVideo = video;
         }
 
-        Picasso.with(getActivity())
+        Ion.with(getActivity())
                 .load(currentVideo.getThumbFile())
-                .into(miniPlayerImageView);
+                .intoImageView(miniPlayerImageView);
 
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));

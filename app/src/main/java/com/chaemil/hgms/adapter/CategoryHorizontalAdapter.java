@@ -12,14 +12,11 @@ import android.widget.TextView;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
-import com.chaemil.hgms.model.ArchiveItem;
-import com.chaemil.hgms.model.Homepage;
-import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
-import com.squareup.picasso.Picasso;
+import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 
@@ -81,9 +78,9 @@ public class CategoryHorizontalAdapter extends ArrayAdapter<Object> {
         });
         holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
 
-        Picasso.with(context)
+        Ion.with(context)
                 .load(video.getThumbFile())
-                .into(holder.thumb);
+                .intoImageView(holder.thumb);
 
         return convertView;
     }

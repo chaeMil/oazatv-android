@@ -19,7 +19,7 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
-import com.squareup.picasso.Picasso;
+import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 
@@ -90,9 +90,9 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 });
                 holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
 
-                Picasso.with(context)
+                Ion.with(context)
                         .load(video.getThumbFile())
-                        .into(holder.thumb);
+                        .intoImageView(holder.thumb);
 
                 break;
 
@@ -111,9 +111,9 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.views.setText(context.getString(R.string.photo_album));
                 holder.more.setVisibility(View.GONE);
 
-                Picasso.with(context)
+                Ion.with(context)
                         .load(photoAlbum.getThumbs().getThumb512())
-                        .into(holder.thumb);
+                        .intoImageView(holder.thumb);
                 break;
         }
 
