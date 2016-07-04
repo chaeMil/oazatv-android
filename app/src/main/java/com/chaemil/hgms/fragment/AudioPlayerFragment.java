@@ -7,6 +7,7 @@ package com.chaemil.hgms.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,8 @@ import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.utils.ShareUtils;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
@@ -73,6 +76,8 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private int audioDuration;
     private AudioPlaybackReceiver audioPlaybackReceiver;
     private SwipeLayout miniPlayerSwipe;
+    private ImageView info;
+    private RelativeLayout infoLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -206,6 +211,8 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         description = (TextView) rootView.findViewById(R.id.description);
         tags = (TextView) rootView.findViewById(R.id.tags);
         miniPlayerSwipe = (SwipeLayout) rootView.findViewById(R.id.mini_player_swipe);
+        info = (ImageView) rootView.findViewById(R.id.info);
+        infoLayout = (RelativeLayout) rootView.findViewById(R.id.info_layout);
     }
 
     private void setupUI() {
@@ -224,6 +231,31 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
 
         refreshPlayButtons();
+    }
+
+    private void showInfo() {
+        infoLayout.setVisibility(View.VISIBLE);
+        YoYo.with(Techniques.SlideInDown).duration(300).playOn(infoLayout);
+    }
+
+    private void hideInfo() {
+        YoYo.with(Techniques.SlideOutUp).duration(300).playOn(infoLayout);
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                infoLayout.setVisibility(View.GONE);
+            }
+        }, 300);
+    }
+
+
+    private void toggleInfo() {
+        if (infoLayout.getVisibility() == View.VISIBLE) {
+            hideInfo();
+        } else {
+            showInfo();
+        }
     }
 
     private SwipeLayout.OnSwipeListener createSwipeListener() {
@@ -292,6 +324,9 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                             break;
                     }
                 }
+                break;
+            case R.id.info:
+                toggleInfo();
                 break;
         }
     }

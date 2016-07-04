@@ -93,6 +93,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private Timer timer;
     private SwipeLayout miniPlayerSwipe;
     private MainActivity mainActivity;
+    private ImageView info;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -244,6 +245,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         infoLayout = (RelativeLayout) rootView.findViewById(R.id.info_layout);
         playerBgWrapper = (RelativeLayout) rootView.findViewById(R.id.player_bg_wrapper);
         miniPlayerSwipe = (SwipeLayout) rootView.findViewById(R.id.mini_player_swipe);
+        info = (ImageView) rootView.findViewById(R.id.info);
     }
 
     private void setupUI() {
@@ -259,19 +261,42 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         playerBgWrapper.setOnClickListener(this);
         miniPlayer.setOnClickListener(this);
         playerToolbar.setOnClickListener(this);
+        info.setOnClickListener(this);
 
         miniPlayerSwipe.setOnSwipeListener(createSwipeListener());
 
-        int bottomMargin = (int) DimensUtils.pxFromDp(getActivity(),
-                getResources().getInteger(R.integer.video_player_wrapper_bottom_margin));
-
         videoWrapperParamsNormal = (RelativeLayout.LayoutParams) videoWrapper.getLayoutParams();
-        videoWrapperParamsNormal.setMargins(16, 16, 16, bottomMargin);  // left, top, right, bottom
+        videoWrapperParamsNormal.setMargins(16, 16, 16,
+                (int) getResources().getDimension(R.dimen.video_player_wrapper_bottom_margin));  // left, top, right, bottom
         videoWrapper.setLayoutParams(videoWrapperParamsNormal);
 
         videoWrapperParamsFullscreen = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         videoWrapperParamsFullscreen.setMargins(0, 0, 0, 0);  // left, top, right, bottom
+    }
+
+    private void showInfo() {
+        infoLayout.setVisibility(View.VISIBLE);
+        YoYo.with(Techniques.SlideInDown).duration(300).playOn(infoLayout);
+    }
+
+    private void hideInfo() {
+        YoYo.with(Techniques.SlideOutUp).duration(300).playOn(infoLayout);
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                infoLayout.setVisibility(View.GONE);
+            }
+        }, 300);
+    }
+
+    private void toggleInfo() {
+        if (infoLayout.getVisibility() == View.VISIBLE) {
+            hideInfo();
+        } else {
+            showInfo();
+        }
     }
 
     private SwipeLayout.OnSwipeListener createSwipeListener() {
@@ -323,6 +348,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.fullscreen:
                 requestFullscreenPlayer();
+                hideInfo();
                 break;
             case R.id.back:
                 ((MainActivity) getActivity()).collapsePanel();
@@ -349,6 +375,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                             break;
                     }
                 }
+                break;
+            case R.id.info:
+                toggleInfo();
                 break;
         }
     }
