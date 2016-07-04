@@ -233,25 +233,6 @@
                 android:gravity="center_vertical">
 
                 <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/download_on_wifi_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="12dp" />
-
-                <TextView
-                    android:text="@string/download_only_on_wifi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:gravity="center_vertical">
-
-                <android.support.v7.widget.SwitchCompat
                     android:id="@+id/stream_on_wifi_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

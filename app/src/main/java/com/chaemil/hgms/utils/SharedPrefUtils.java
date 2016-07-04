@@ -30,15 +30,6 @@ public class SharedPrefUtils {
         editor = sharedPreferences.edit();
     }
 
-    public void saveDownloadOnlyOnWifi(boolean value) {
-        editor.putBoolean(PREFERENCES_DOWNLOAD_ON_WIFI, value);
-        editor.commit();
-    }
-
-    public boolean loadDownloadOnlyOnWifi() {
-        return sharedPreferences.getBoolean(PREFERENCES_DOWNLOAD_ON_WIFI, true);
-    }
-
     public void saveStreamOnWifi(boolean value) {
         editor.putBoolean(PREFERENCES_STREAM_ON_WIFI, value);
         editor.commit();

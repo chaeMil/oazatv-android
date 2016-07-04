@@ -80,7 +80,6 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private FloatingActionButton settingsFab;
     private SharedPrefUtils sharedPreferences;
     private CardView settingsCard;
-    private SwitchCompat downloadOnWifiSwitch;
     private RelativeLayout settingsCardBg;
     private SwitchCompat streamOnWifiSwitch;
     private SwitchCompat streamOnlyAudioSwitch;
@@ -161,7 +160,6 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         settingsFab = (FloatingActionButton) rootView.findViewById(R.id.settings_fab);
         settingsCard = (CardView) rootView.findViewById(R.id.settings_card);
         settingsCardBg = (RelativeLayout) rootView.findViewById(R.id.settings_card_bg);
-        downloadOnWifiSwitch = (SwitchCompat) rootView.findViewById(R.id.download_on_wifi_switch);
         streamOnWifiSwitch = (SwitchCompat) rootView.findViewById(R.id.stream_on_wifi_switch);
         streamOnlyAudioSwitch = (SwitchCompat) rootView.findViewById(R.id.stream_only_audio_switch);
         share = (ImageView) rootView.findViewById(R.id.share);
@@ -187,19 +185,9 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
             pager.setOffscreenPageLimit(3);
             settingsFab.hide(false);
-            downloadOnWifiSwitch.setChecked(sharedPreferences.loadDownloadOnlyOnWifi());
             streamOnlyAudioSwitch.setChecked(sharedPreferences.loadStreamAudio());
             streamOnWifiSwitch.setChecked(sharedPreferences.loadStreamOnWifi());
         }
-
-        downloadOnWifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (sharedPreferences != null) {
-                    sharedPreferences.saveDownloadOnlyOnWifi(isChecked);
-                }
-            }
-        });
 
         streamOnWifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
