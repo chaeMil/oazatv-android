@@ -70,7 +70,8 @@
                 android:padding="6dp"
                 android:background="@drawable/transparent_ripple"
                 android:visibility="visible"
-                android:layout_alignParentTop="true" />
+                android:layout_alignParentTop="true"
+                android:clickable="true" />
 
         </RelativeLayout>
 
@@ -202,7 +203,8 @@
                     android:background="@drawable/transparent_ripple"
                     android:visibility="visible"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="6dp" />
 
             </RelativeLayout>
 
