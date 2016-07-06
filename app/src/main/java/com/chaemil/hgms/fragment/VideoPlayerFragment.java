@@ -386,7 +386,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             case R.id.fullscreen:
                 if (isInFullscreenMode) {
                     cancelFullscreenPlayer();
-                    hideInfo();
                 } else {
                     requestFullscreenPlayer();
                     hideInfo();
