@@ -305,7 +305,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         if (isInQualityMode) {
             if (currentVideo.getVideoFileLowRes() != null) {
-                setHighQuality();
+                setLowQuality();
             } else {
                 SuperToast.create(getActivity(),
                         getString(R.string.quality_mode_not_available),
@@ -313,7 +313,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             }
         } else {
             if (currentVideo.getVideoFile() != null) {
-                setLowQuality();
+                setHighQuality();
             } else {
                 SuperToast.create(getActivity(),
                         getString(R.string.low_quality_mode_not_available),
@@ -327,7 +327,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         videoView.seekTo(currentVideo.getCurrentTime());
         qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_white));
         isInQualityMode = true;
-        bufferBar.setVisibility(View.VISIBLE);
     }
 
     private void setLowQuality() {
@@ -335,7 +334,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         videoView.seekTo(currentVideo.getCurrentTime());
         qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_alpha));
         isInQualityMode = false;
-        bufferBar.setVisibility(View.VISIBLE);
     }
 
     private SwipeLayout.OnSwipeListener createSwipeListener() {
