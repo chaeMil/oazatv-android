@@ -323,18 +323,18 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void setHighQuality() {
-        videoView.setVideoPath(currentVideo.getVideoFileLowRes());
-        videoView.seekTo(currentVideo.getCurrentTime());
-        qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_alpha));
-        isInQualityMode = false;
-        bufferBar.setVisibility(View.VISIBLE);
-    }
-
-    private void setLowQuality() {
         videoView.setVideoPath(currentVideo.getVideoFile());
         videoView.seekTo(currentVideo.getCurrentTime());
         qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_white));
         isInQualityMode = true;
+        bufferBar.setVisibility(View.VISIBLE);
+    }
+
+    private void setLowQuality() {
+        videoView.setVideoPath(currentVideo.getVideoFileLowRes());
+        videoView.seekTo(currentVideo.getCurrentTime());
+        qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_alpha));
+        isInQualityMode = false;
         bufferBar.setVisibility(View.VISIBLE);
     }
 
@@ -692,7 +692,11 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 videoView.stopPlayback();
 
                 if (NetworkUtils.isConnectedWithWifi(getActivity())) {
-                    setHighQuality();
+                    if (currentVideo.getVideoFile() != null) {
+                        setHighQuality();
+                    } else {
+                        setLowQuality();
+                    }
                 }
 
                 if (NetworkUtils.isConnected(getActivity()) && !NetworkUtils.isConnectedWithWifi(getActivity())) {
@@ -700,13 +704,11 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                         setLowQuality();
                     } else {
                         setHighQuality();
-                        SuperToast.create(getActivity(),
-                                getString(R.string.playing_in_high_quality),
-                                Toast.LENGTH_LONG).show();
                     }
                 }
 
                 videoView.start();
+                videoView.seekTo(currentVideo.getCurrentTime());
 
             }
         }, 750);
