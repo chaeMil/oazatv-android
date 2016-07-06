@@ -19,15 +19,19 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.AudioPlaybackService;
+import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -61,7 +65,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private AppCompatSeekBar seekBar;
     private CircleButton miniPlayerPause;
     private ProgressBar bufferBar;
-    private int bufferFail;
     private ViewGroup rootView;
     private ImageView audioThumb;
     private MainActivity mainActivity;
@@ -69,15 +72,11 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private ImageView share;
     private TextView description;
     private TextView tags;
-    private TimerTask timerTask;
-    private Timer timer;
-    private Intent playIntent;
     private boolean isReconnecting = false;
     private int audioDuration;
-    private AudioPlaybackReceiver audioPlaybackReceiver;
     private SwipeLayout miniPlayerSwipe;
-    private ImageView info;
     private RelativeLayout infoLayout;
+    private ImageView info;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,31 +99,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         }
 
         activateUI(true);
-
-        /*int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
-                AudioManager.AUDIOFOCUS_GAIN);
-
-        if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            SuperToast.create(getActivity(),
-                    getString(R.string.audio_focus_not_granted),
-                    SuperToast.Duration.SHORT).show();
-        }
-
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT);
-        setupTimer();*/
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        stopTimer();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        //saveCurrentAudioTime();
     }
 
     public void init(boolean isReconnecting) {
@@ -149,40 +124,18 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         return rootView;
     }
 
-    private void setupTimer() {
-        stopTimer();
-        timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        postGA();
-                    }
-                });
-            }
-        };
-        resetTimer();
-    }
-
-    private void resetTimer() {
-        timer = new Timer();
-        timer.scheduleAtFixedRate(timerTask, 5000, 5000);
-    }
-
-    private void stopTimer() {
-        if (timer != null) {
-            timer.cancel();
-        }
-    }
 
     private void postGA() {
-        /*if (audioPlayer != null && audioPlayer.isPlaying()) {
-            GAUtils.sendGAScreen(
-                    ((OazaApp) getActivity().getApplication()),
-                    "AudioPlayer",
-                    currentAudio.getNameCS());
-        }*/
+        GAUtils.sendGAScreen(
+                ((OazaApp) getActivity().getApplication()),
+                "AudioPlayer",
+                getService().getCurrentAudio().getName());
+    }
+
+    private void postVideoView() {
+        JsonObjectRequest postView = RequestFactory.postVideoView(this,
+                getService().getCurrentAudio().getHash());
+        RequestService.getRequestQueue().add(postView);
     }
 
     private void activateUI(boolean state) {
@@ -223,6 +176,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         share.setOnClickListener(this);
         miniPlayer.setOnClickListener(this);
         playerToolbar.setOnClickListener(this);
+        info.setOnClickListener(this);
 
         seekBar.setMax(getAudioDuration());
         seekBar.postDelayed(onEverySecond, 1000);
@@ -484,6 +438,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                 .setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: "
                         + getCurrentAudio().getHash());
         postGA();
+        postVideoView();
     }
 
     @Override
