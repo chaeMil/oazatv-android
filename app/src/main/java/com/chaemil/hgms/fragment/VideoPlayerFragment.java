@@ -1,6 +1,5 @@
 package com.chaemil.hgms.fragment;
 
-import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.android.volley.VolleyError;
@@ -29,7 +29,7 @@ import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
-import com.chaemil.hgms.utils.DimensUtils;
+import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SmartLog;
@@ -67,7 +67,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private int duration;
     private int currentTimeInt;
     private AppCompatSeekBar seekBar;
-    private Bitmap thumb;
     private Video currentVideo;
     private CircleButton miniPlayerPause;
     private ProgressBar bufferBar;
@@ -79,12 +78,12 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private RelativeLayout.LayoutParams videoWrapperParamsFullscreen;
     private RelativeLayout.LayoutParams videoWrapperParamsNormal;
     public boolean isInFullscreenMode = false;
+    public boolean isInQualityMode = false;
     private ImageView back;
     private ImageView share;
     private TextView description;
     private TextView tags;
     private RelativeLayout infoLayout;
-    private ImageView fullscreenExit;
     private Timer hideControlsTimer;
     private int controlsTimeHide = 0;
     private Handler uiHandler;
@@ -94,6 +93,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private SwipeLayout miniPlayerSwipe;
     private MainActivity mainActivity;
     private ImageView info;
+    private ImageView qualitySwitch;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -237,7 +237,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         controlsWrapper = (RelativeLayout) rootView.findViewById(R.id.controls_wrapper);
         videoWrapper = (RelativeLayout) rootView.findViewById(R.id.video_wrapper);
         fullscreen = (ImageView) rootView.findViewById(R.id.fullscreen);
-        fullscreenExit = (ImageView) rootView.findViewById(R.id.fullscreen_exit);
         back = (ImageView) rootView.findViewById(R.id.back);
         share = (ImageView) rootView.findViewById(R.id.share);
         description = (TextView) rootView.findViewById(R.id.description);
@@ -246,6 +245,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         playerBgWrapper = (RelativeLayout) rootView.findViewById(R.id.player_bg_wrapper);
         miniPlayerSwipe = (SwipeLayout) rootView.findViewById(R.id.mini_player_swipe);
         info = (ImageView) rootView.findViewById(R.id.info);
+        qualitySwitch = (ImageView) rootView.findViewById(R.id.quality_switch);
     }
 
     private void setupUI() {
@@ -257,11 +257,11 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         fullscreen.setOnClickListener(this);
         back.setOnClickListener(this);
         share.setOnClickListener(this);
-        fullscreenExit.setOnClickListener(this);
         playerBgWrapper.setOnClickListener(this);
         miniPlayer.setOnClickListener(this);
         playerToolbar.setOnClickListener(this);
         info.setOnClickListener(this);
+        qualitySwitch.setOnClickListener(this);
 
         miniPlayerSwipe.setOnSwipeListener(createSwipeListener());
 
@@ -296,6 +296,36 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             hideInfo();
         } else {
             showInfo();
+        }
+    }
+
+    private void toggleQuality() {
+        saveCurrentVideoTime();
+
+        if (isInQualityMode) {
+            if (currentVideo.getVideoFileLowRes() != null) {
+                videoView.setVideoPath(currentVideo.getVideoFileLowRes());
+                videoView.seekTo(currentVideo.getCurrentTime());
+                qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_alpha));
+                isInQualityMode = false;
+                bufferBar.setVisibility(View.VISIBLE);
+            } else {
+                SuperToast.create(getActivity(),
+                        getString(R.string.quality_mode_not_available),
+                        Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            if (currentVideo.getVideoFile() != null) {
+                videoView.setVideoPath(currentVideo.getVideoFile());
+                videoView.seekTo(currentVideo.getCurrentTime());
+                qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_white));
+                isInQualityMode = true;
+                bufferBar.setVisibility(View.VISIBLE);
+            } else {
+                SuperToast.create(getActivity(),
+                        getString(R.string.low_quality_mode_not_available),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -347,7 +377,13 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 playPauseVideo();
                 break;
             case R.id.fullscreen:
-                requestFullscreenPlayer();
+                if (isInFullscreenMode) {
+                    cancelFullscreenPlayer();
+                    toggleControls(true);
+                } else {
+                    requestFullscreenPlayer();
+                    toggleControls(false);
+                }
                 hideInfo();
                 break;
             case R.id.back:
@@ -355,9 +391,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.share:
                 ShareUtils.shareVideoLink(getActivity(), currentVideo);
-                break;
-            case R.id.fullscreen_exit:
-                cancelFullscreenPlayer();
                 break;
             case R.id.player_bg_wrapper:
                 toggleControls(true);
@@ -378,6 +411,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.info:
                 toggleInfo();
+                break;
+            case R.id.quality_switch:
+                toggleQuality();
                 break;
         }
     }
@@ -416,7 +452,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             toggleControls(false);
         } else {
             toggleControls(true);
-            fullscreenExit.setVisibility(View.VISIBLE);
         }
 
     }
@@ -443,18 +478,14 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             if (isInFullscreenMode) {
                 if (controlsWrapper.getVisibility() != View.VISIBLE) {
                     controlsWrapper.setVisibility(View.VISIBLE);
-                    fullscreenExit.setVisibility(View.VISIBLE);
                     YoYo.with(Techniques.FadeInUp).duration(400).playOn(controlsWrapper);
                 }
-            } else {
-                fullscreenExit.setVisibility(View.GONE);
             }
         } else {
             if (isInFullscreenMode && videoView.isPlaying()) {
                 if (controlsWrapper.getVisibility() != View.GONE) {
                     YoYo.with(Techniques.FadeOutDown).duration(400).playOn(controlsWrapper);
                     YoYo.with(Techniques.FadeIn).duration(400).playOn(seekBar);
-                    fullscreenExit.setVisibility(View.GONE);
 
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {

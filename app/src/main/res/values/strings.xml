@@ -72,4 +72,6 @@
     <string name="not_downloaded_yet">Not downloaded yed</string>
     <string name="used_by_app">used by Oaza.tv application</string>
     <string name="other_apps">Other apps</string>
+    <string name="quality_mode_not_available">High quality video is not available</string>
+    <string name="low_quality_mode_not_available">Low quality video is not available</string>
 </resources>

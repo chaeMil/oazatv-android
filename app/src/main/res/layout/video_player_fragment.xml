@@ -62,15 +62,15 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:id="@+id/fullscreen_exit"
+                android:id="@+id/fullscreen"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:src="@drawable/fullscreen"
                 android:padding="6dp"
                 android:background="@drawable/transparent_ripple"
-                android:layout_alignParentTop="true"
-                android:visibility="gone" />
+                android:visibility="visible"
+                android:layout_alignParentTop="true" />
 
         </RelativeLayout>
 
@@ -189,20 +189,20 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/fullscreen"
-                    android:layout_toStartOf="@+id/fullscreen"
+                    android:layout_toLeftOf="@+id/quality_switch"
+                    android:layout_toStartOf="@+id/quality_switch"
                     android:padding="8dp" />
 
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:id="@+id/fullscreen"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:src="@drawable/fullscreen"
+                    android:id="@+id/quality_switch"
+                    android:src="@drawable/ic_quality_alpha"
                     android:padding="6dp"
-                    android:background="@drawable/transparent_ripple" />
+                    android:background="@drawable/transparent_ripple"
+                    android:visibility="visible"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" />
 
             </RelativeLayout>
 
