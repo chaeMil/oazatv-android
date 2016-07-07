@@ -12,26 +12,34 @@ import java.text.DecimalFormat;
  * Created by chaemil on 8.2.16.
  */
 public class FileUtils {
-    public static final long SIZE_KB = 1024L;
-    public static final long SIZE_MB = SIZE_KB * SIZE_KB;
+    private static final String ERROR = "error";
 
     public static boolean externalMemoryAvailable() {
         return android.os.Environment.getExternalStorageState().equals(
                 android.os.Environment.MEDIA_MOUNTED);
     }
 
-    public static long getFreeSpace(){
-        long availableSpace = -1L;
-        if (isSDPresent()) {
-            StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
-            availableSpace = (long) stat.getFreeBlocks() * (long) stat.getBlockSize();
-            return availableSpace;
-        } else {
-            return 0;
-        }
+    public static String readableAvailableInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long availableBlocks = stat.getAvailableBlocks();
+        return formatSize(availableBlocks * blockSize);
     }
 
-    public static long getExternalStorageSize() {
+    public static String readableTotalInternalMemorySize() {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long totalBlocks = stat.getBlockCount();
+        return formatSize(totalBlocks * blockSize);
+    }
+
+    public static String readableAvailableExternalMemorySize() {
+        return formatSize(getAvailableExternalMemorySize());
+    }
+
+    public static long getAvailableExternalMemorySize() {
         if (externalMemoryAvailable()) {
             File path = Environment.getExternalStorageDirectory();
             StatFs stat = new StatFs(path.getPath());
@@ -43,20 +51,51 @@ public class FileUtils {
         }
     }
 
-    public static long getFolderSize(File f) {
-        long size = 0;
-        if (f.isDirectory()) {
-            for (File file : f.listFiles()) {
-                size += getFolderSize(file);
-            }
-        } else {
-            size=f.length();
-        }
-        return size;
+    public static String readableTotalExternalMemorySize() {
+        return formatSize(getTotalExternalMemorySize());
     }
 
-    public static boolean isSDPresent() {
-        return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+    public static long getTotalExternalMemorySize() {
+        if (externalMemoryAvailable()) {
+            File path = Environment.getExternalStorageDirectory();
+            StatFs stat = new StatFs(path.getPath());
+            long blockSize = stat.getBlockSize();
+            long totalBlocks = stat.getBlockCount();
+            return totalBlocks * blockSize;
+        } else {
+            return 0;
+        }
+    }
+
+    public static String formatSize(long size) {
+        if(size <= 0) return "0";
+        final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+        int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
+    public static long folderSize(File directory) {
+        long length = 0;
+        for (File file : directory.listFiles()) {
+            if (file.isFile())
+                length += file.length();
+            else
+                length += folderSize(file);
+        }
+        return length;
+    }
+
+    public static String readableFolderSize(File directory) {
+        long size = folderSize(directory);
+        return readableFileSize(size);
+    }
+
+    public static String readableAppSize(Context context) {
+        return formatSize(appSize(context));
+    }
+
+    public static long appSize(Context context) {
+        return folderSize(context.getExternalFilesDir(""));
     }
 
     public static String readableFileSize(long size) {

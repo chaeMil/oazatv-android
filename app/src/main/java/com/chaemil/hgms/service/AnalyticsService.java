@@ -5,7 +5,6 @@ import android.content.Context;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
-import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.RequestType;
@@ -15,7 +14,6 @@ import com.chaemil.hgms.utils.SmartLog;
 import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,7 +27,7 @@ public class AnalyticsService implements RequestFactoryListener {
 
     private static AnalyticsService analyticsService;
     private static final String TAG = "AnalyticsService";
-    private static final int HEARTBEAT = 30 * 1000;
+    private static final int HEARTBEAT = 60 * 1000;
 
     private Context context;
     private String page = "";
@@ -83,7 +81,7 @@ public class AnalyticsService implements RequestFactoryListener {
                 && AnalyticsUtils.isDisplayOn(context)
                 && (((OazaApp) context).appVisible)) {
             JsonObjectRequest keepAlive = RequestFactory.postAnalyticsAlive(this, context, ip, page);
-            MyRequestService.getRequestQueue().add(keepAlive);
+            RequestService.getRequestQueue().add(keepAlive);
         }
     }
 

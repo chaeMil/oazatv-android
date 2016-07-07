@@ -3,6 +3,7 @@
 
     <string name="exception_network_timeout">connection failed</string>
     <string name="something_went_wrong">something went wrong</string>
+    <string name="continue_text">Continue…</string>
     <string name="next">Next</string>
     <string name="back">Back</string>
     <string name="finish">Finish</string>
@@ -62,4 +63,15 @@
     <string name="tutorial_text_3">Browse through huge library of preachings, conferences, teachings and more...</string>
     <string name="tutorial_title_4">Listen on the way.</string>
     <string name="tutorial_text_4">Download audio to listen wen you are on the way or offline.</string>
+    <string name="are_you_shure">Are you shure?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="download_pending">pending...</string>
+    <string name="download_running">downloading</string>
+    <string name="download_paused">paused...</string>
+    <string name="not_downloaded_yet">Not downloaded yed</string>
+    <string name="used_by_app">used by Oaza.tv application</string>
+    <string name="other_apps">Other apps</string>
+    <string name="quality_mode_not_available">High quality video is not available</string>
+    <string name="low_quality_mode_not_available">Low quality video is not available</string>
 </resources>

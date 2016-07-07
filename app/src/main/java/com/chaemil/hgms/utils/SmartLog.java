@@ -2,9 +2,11 @@ package com.chaemil.hgms.utils;
 
 import android.util.Log;
 
+import com.chaemil.hgms.OazaApp;
+
 public class SmartLog {
 
-    public static boolean LOG = true;
+    public static boolean LOG = OazaApp.DEVELOPMENT;
     public static String SMART_LOG_TAG = "SmartLog[";
     public static String SMART_LOG_TAG_END = "]";
 

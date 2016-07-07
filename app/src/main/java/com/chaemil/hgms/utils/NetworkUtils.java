@@ -15,4 +15,11 @@ public class NetworkUtils {
 
         return netInfo != null && netInfo.isConnected();
     }
+
+    public static boolean isConnectedWithWifi(Context context) {
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        return wifi.isConnected();
+    }
 }

@@ -1,6 +1,7 @@
 package com.chaemil.hgms.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,7 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
                 final Video video = archiveItem.getVideo();
 
                 holder.name.setText(video.getName());
+                holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
                 Ion.with(context)
                         .load(video.getThumbFile())
                         .intoImageView(holder.thumb);

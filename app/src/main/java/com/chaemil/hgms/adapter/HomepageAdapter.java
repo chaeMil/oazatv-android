@@ -1,8 +1,7 @@
 package com.chaemil.hgms.adapter;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +10,14 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Homepage;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
+import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
-import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.ion.Ion;
 
 /**
@@ -87,16 +85,19 @@ public class HomepageAdapter extends ArrayAdapter<Object> {
                 }
             });
             holder.name.setText(video.getName());
-            holder.date.setText(video.getDate());
+            holder.date.setText(StringUtils.formatDate(video.getDate(), context));
             holder.views.setText(video.getViews() + " " + context.getString(R.string.views));
             holder.more.setVisibility(View.VISIBLE);
             holder.more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AdapterUtils.contextDialog(context, mainActivity, HomepageAdapter.this, video);
+                    AdapterUtils.contextDialog(context, mainActivity, video);
                 }
             });
-            Ion.with(context).load(video.getThumbFile()).intoImageView(holder.thumb);
+            holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
+            Ion.with(context)
+                    .load(video.getThumbFile())
+                    .intoImageView(holder.thumb);
         }
 
         if (item instanceof PhotoAlbum) {
@@ -109,10 +110,12 @@ public class HomepageAdapter extends ArrayAdapter<Object> {
                 }
             });
             holder.name.setText(photoAlbum.getName());
-            holder.date.setText(photoAlbum.getDate());
+            holder.date.setText(StringUtils.formatDate(photoAlbum.getDate(), context));
             holder.views.setText(context.getString(R.string.photo_album));
             holder.more.setVisibility(View.GONE);
-            Ion.with(context).load(photoAlbum.getThumbs().getThumb1024()).intoImageView(holder.thumb);
+            Ion.with(context)
+                    .load(photoAlbum.getThumbs().getThumb1024())
+                    .intoImageView(holder.thumb);
         }
 
         return convertView;
@@ -124,13 +127,24 @@ public class HomepageAdapter extends ArrayAdapter<Object> {
 
     @Override
     public int getCount() {
-        switch (display) {
-            case 0:
-                return homepage.newestVideos.size();
-            case 1:
-                return homepage.newestAlbums.size();
-            case 3:
-                return homepage.popularVideos.size();
+        if (homepage != null) {
+            switch (display) {
+                case 0:
+                    if (homepage.newestVideos != null) {
+                        return homepage.newestVideos.size();
+                    }
+                    break;
+                case 1:
+                    if (homepage.newestAlbums != null) {
+                        return homepage.newestAlbums.size();
+                    }
+                    break;
+                case 3:
+                    if (homepage.popularVideos != null) {
+                        return homepage.popularVideos.size();
+                    }
+                    break;
+            }
         }
         return 0;
     }

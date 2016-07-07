@@ -1,47 +1,72 @@
 package com.chaemil.hgms;
 
-import android.app.Application;
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.activity.SplashActivity;
-import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
-import com.chaemil.hgms.service.DownloadService;
-import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.service.AudioPlaybackService;
+import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.ServiceUtils;
 import com.crashlytics.android.Crashlytics;
+import com.github.pedrovgs.lynx.LynxShakeDetector;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.orm.SugarApp;
 
 import io.fabric.sdk.android.Fabric;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * Created by chaemil on 3.12.15.
  */
-public class OazaApp extends Application {
+public class OazaApp extends SugarApp {
 
-    private boolean downloadingNow = false;
-    private DownloadService downloadService;
+    public static final boolean DEVELOPMENT = false;
+
     private MainActivity mainActivity;
     public SplashActivity splashActivity;
     public boolean appVisible = false;
     private Tracker mTracker;
-    private ServiceConnection observerService;
-    private Intent observerIntent;
+    public AudioPlaybackService playbackService;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        if (DEVELOPMENT) {
+            LynxShakeDetector lynxShakeDetector = new LynxShakeDetector(this);
+            lynxShakeDetector.init();
+        }
+
         Fabric.with(this, new Crashlytics());
         AnalyticsService.init(this);
         MultiDex.install(this);
-        MyRequestService.init(this);
+        RequestService.init(this);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath(getString(R.string.default_font))
+                .setFontAttrId(R.attr.fontPath)
+                .build());
+
+        initAudioPlaybackService();
+
+        //startDownloadService();
+    }
+
+    /*public void startDownloadService() {
+        if (!ServiceUtils.isMyServiceRunning(this, DownloadService.class)) {
+            startService(new Intent(this, DownloadService.class));
+        }
+    }*/
+
+    private void initAudioPlaybackService() {
+        if (ServiceUtils.isMyServiceRunning(this, AudioPlaybackService.class)) {
+            if (AudioPlaybackService.getInstance() != null) {
+                playbackService = AudioPlaybackService.getInstance();
+            }
+        }
     }
 
     @Override
@@ -58,34 +83,6 @@ public class OazaApp extends Application {
         return mTracker;
     }
 
-    public boolean isDownloadingNow() {
-        return downloadingNow;
-    }
-
-    public void setDownloadingNow(boolean downloadingNow) {
-        this.downloadingNow = downloadingNow;
-    }
-
-    public void addToDownloadQueue(Video video) {
-        Video savedVideo = Video.findByServerId(video.getServerId());
-
-        if (savedVideo == null) {
-            savedVideo = video;
-        }
-
-        savedVideo.setInDownloadQueue(true);
-        savedVideo.setDownloaded(false);
-        savedVideo.save();
-    }
-
-    public void setDownloadService(DownloadService downloadService) {
-        this.downloadService = downloadService;
-    }
-
-    public DownloadService getDownloadService() {
-        return downloadService;
-    }
-
     public MainActivity getMainActivity() {
         return mainActivity;
     }
@@ -93,5 +90,4 @@ public class OazaApp extends Application {
     public void setMainActivity(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
-
 }

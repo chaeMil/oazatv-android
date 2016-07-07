@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/oaza_app_size"
+        fontPath="@string/default_font_bold"
+        tools:text="3.2 GB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="28dp"
+        android:textAllCaps="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/oaza_app_size_label"
+        android:text="@string/used_by_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="0dp"
+        android:layout_below="@+id/oaza_app_size"
+        android:textSize="12dp"
+        android:textColor="@color/md_blue_grey_300" />
+
+    <android.support.percent.PercentRelativeLayout
+        android:id="@+id/space_graph_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/md_blue_grey_300"
+        android:layout_below="@+id/oaza_app_size_label"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+
+        <View
+            android:id="@+id/other_apps_graph"
+            android:background="@color/black"
+            app:layout_widthPercent="10%"
+            android:layout_height="4dp" />
+
+        <View
+            android:id="@+id/oaza_space_graph"
+            app:layout_widthPercent="10%"
+            android:layout_height="4dp"
+            android:background="@color/colorPrimary" />
+
+    </android.support.percent.PercentRelativeLayout>
+
+    <View
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:id="@+id/other_apps_dot"
+        android:background="@drawable/black_circle"
+        android:layout_marginLeft="16dp"
+        android:layout_below="@+id/space_graph_wrapper"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:id="@+id/other_apps"
+        fontPath="@string/default_font_bold"
+        android:text="@string/other_apps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_below="@+id/space_graph_wrapper"
+        android:textAllCaps="true"
+        android:textSize="12dp"
+        android:layout_toRightOf="@+id/other_apps_dot" />
+
+    <View
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:id="@+id/app_name_dot"
+        android:background="@drawable/primary_color_circle"
+        android:layout_marginLeft="16dp"
+        android:layout_below="@+id/other_apps"
+        android:layout_marginTop="7dp" />
+
+    <TextView
+        android:id="@+id/app_name"
+        fontPath="@string/default_font_bold"
+        android:text="@string/app_name"
+        android:textAllCaps="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_below="@+id/other_apps"
+        android:textSize="12dp"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/colorPrimary"
+        android:layout_toRightOf="@+id/other_apps_dot" />
+
+    <View
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:id="@+id/free_space_dot"
+        android:background="@drawable/blue_gray_circle"
+        android:layout_marginLeft="16dp"
+        android:layout_below="@+id/app_name"
+        android:layout_marginTop="7dp" />
+
+
+    <TextView
+        android:id="@+id/free_space"
+        fontPath="@string/default_font_bold"
+        tools:text="8.5 GB FREE"
+        android:textAllCaps="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="2dp"
+        android:layout_below="@+id/app_name"
+        android:textColor="@color/md_blue_grey_300"
+        android:layout_marginBottom="16dp"
+        android:textSize="12dp"
+        android:layout_toRightOf="@+id/app_name_dot" />
+
+</RelativeLayout>

@@ -6,7 +6,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+    <uses-permission android:name="android.permission.READ_LOGS"/>
+    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 
 
     <application android:allowBackup="true" android:icon="@mipmap/ic_launcher"
@@ -30,6 +31,7 @@
 
         <activity android:name=".activity.MainActivity"
             android:configChanges="keyboardHidden|screenSize|orientation"
+            android:launchMode="singleTop"
             android:theme="@style/AppThemeNoActionBar">
 
             <intent-filter>
@@ -42,7 +44,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http"
                     android:host="oaza.tv"
-                    android:pathPrefix="/beta/video/watch/" />
+                    android:pathPrefix="/video/watch/" />
             </intent-filter>
 
             <intent-filter>
@@ -51,7 +53,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http"
                     android:host="oaza.tv"
-                    android:pathPrefix="/beta/album/view/" />
+                    android:pathPrefix="/album/view/" />
             </intent-filter>
 
         </activity>
@@ -61,9 +63,11 @@
 
         </activity>
 
-        <service android:name=".service.DownloadService">
+        <activity android:name="com.github.pedrovgs.lynx.LynxActivity"/>
 
-        </service>
+        <service android:name=".service.AudioPlaybackService"
+            android:stopWithTask="false"
+            android:enabled="true"/>
 
         <receiver android:name=".receiver.BootAndUpdateReceiver">
             <intent-filter>
@@ -82,9 +86,10 @@
             android:name="io.fabric.ApiKey"
             android:value="4a9f379c8de34396a9eecacff9b374cdf8cd8083" />
         <meta-data android:name="DATABASE" android:value="oazatv.db" />
-        <meta-data android:name="VERSION" android:value="3" />
+        <meta-data android:name="VERSION" android:value="6" />
         <meta-data android:name="QUERY_LOG" android:value="true" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.chaemil.hgms" />
+        <meta-data android:name="com.novoda.downloadmanager.MaxConcurrentDownloads" android:value="1" />
 
     </application>
 

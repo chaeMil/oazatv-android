@@ -16,8 +16,8 @@ import java.util.ArrayList;
 
 public class PhotosAdapter extends BaseAdapter {
     private final ArrayList<Photo> photos;
+    private final int thumbWidth;
     private Activity activity;
-    private int thumbWidth;
 
     public PhotosAdapter(Activity activity, int thumbWidth, ArrayList<Photo> photos) {
         this.activity = activity;

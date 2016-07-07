@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,9 +14,6 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Category;
 import com.chaemil.hgms.model.Video;
-import com.chaemil.hgms.utils.AdapterUtils;
-import com.chaemil.hgms.view.VideoThumbImageView;
-import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 

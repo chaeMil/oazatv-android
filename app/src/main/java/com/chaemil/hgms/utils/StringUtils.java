@@ -1,6 +1,12 @@
 package com.chaemil.hgms.utils;
 
+import android.content.Context;
+
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -36,6 +42,18 @@ public class StringUtils {
             text[i] = characters.charAt(rng.nextInt(characters.length()));
         }
         return new String(text);
+    }
+
+    public static String formatDate(String input, Context context) {
+        SimpleDateFormat sdf = new SimpleDateFormat(Constants.API_DATE_FORMAT, Locale.getDefault());
+        Date date = null;
+        try {
+            date = sdf.parse(input);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);
+        return dateFormat.format(date);
     }
 
 }

@@ -26,7 +26,7 @@ public class BaseFragment extends Fragment implements RequestFactoryListener {
 
     @Override
     public void onSuccessResponse(JSONObject response, RequestType requestType) {
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "response", String.valueOf(response));
+        //SmartLog.Log(SmartLog.LogLevel.DEBUG, "response", String.valueOf(response));
     }
 
     @Override

@@ -22,6 +22,84 @@
 
 
         <RelativeLayout
+            android:id="@+id/thumb_wrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_below="@+id/toolbars_wrapper"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="@dimen/video_player_wrapper_bottom_margin">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/audio_thumb"
+                android:scaleType="fitCenter"
+                android:layout_centerInParent="true" />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/buffer_bar"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxHeight="150dp"
+            android:id="@+id/info_layout"
+            android:background="@color/white"
+            android:layout_below="@+id/toolbars_wrapper"
+            android:visibility="gone">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:visibility="visible">
+
+                    <TextView
+                        tools:text="description text"
+                        android:id="@+id/description"
+                        android:textColor="@color/dark_gray"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp" />
+
+                    <TextView
+                        android:textSize="18sp"
+                        tools:text="#tag #god #grace #another #tag"
+                        android:id="@+id/tags"
+                        android:textColor="@color/dark_gray"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="false" />
+
+                </LinearLayout>
+
+            </ScrollView>
+
+            <ImageView
+                android:scaleType="fitXY"
+                android:src="@drawable/drop_shadow"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:alpha="0.3"
+                android:adjustViewBounds="false" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/toolbars_wrapper"
             android:layout_width="match_parent"
             android:layout_height="56dp">
@@ -55,7 +133,7 @@
 
                 <TextView
                     android:textColor="@color/white"
-                    android:textStyle="bold"
+                    fontPath="@string/default_font_bold"
                     android:id="@+id/player_title"
                     tools:text="Show player"
                     android:textSize="18sp"
@@ -63,8 +141,18 @@
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/share"
-                    android:layout_toRightOf="@+id/back_wrapper" />/
+                    android:layout_toLeftOf="@+id/info"
+                    android:layout_toRightOf="@+id/back_wrapper" />
+
+                <ImageView
+                    android:id="@+id/info"
+                    android:background="@drawable/transparent_ripple"
+                    android:src="@drawable/ic_info"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerVertical="true"
+                    android:padding="8dp"
+                    android:layout_toLeftOf="@+id/share" />
 
                 <ImageView
                     android:id="@+id/share"
@@ -79,102 +167,73 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:visibility="visible"
+
+            <ru.rambler.libs.swipe_layout.SwipeLayout
                 tools:visibility="gone"
-                android:id="@+id/mini_player"
-                android:background="@color/black"
+                android:id="@+id/mini_player_swipe"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:scaleType="centerCrop"
-                    android:id="@+id/mini_player_image"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp" />
+                <RelativeLayout
+                    android:visibility="visible"
+                    tools:visibility="visible"
+                    android:id="@+id/mini_player"
+                    android:background="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <at.markushi.ui.CircleButton
-                    android:id="@+id/mini_play_pause"
-                    android:layout_width="60dp"
+                    <ImageView
+                        android:scaleType="centerCrop"
+                        android:id="@+id/mini_player_image"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp" />
+
+                    <at.markushi.ui.CircleButton
+                        android:id="@+id/mini_play_pause"
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/pause"
+                        app:cb_color="@color/gray"
+                        app:cb_pressedRingWidth="3dip"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text="Show player"
+                        fontPath="@string/default_font_bold"
+                        android:textSize="18dp"
+                        android:textColor="@color/gray"
+                        android:textStyle="bold"
+                        android:id="@+id/mini_player_text"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/mini_play_pause"
+                        android:layout_toRightOf="@+id/mini_player_image"
+                        android:singleLine="true"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginLeft="8dp" />
+
+                </RelativeLayout>
+
+                <!--RIGHT-->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/pause"
-                    app:cb_color="@color/transparent_white"
-                    app:cb_pressedRingWidth="3dip"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true" />
+                    android:background="@color/white"
+                    app:gravity="right">
+                </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Show player"
-                    android:textSize="18dp"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:id="@+id/mini_player_text"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/mini_play_pause"
-                    android:layout_toRightOf="@+id/mini_player_image"
-                    android:singleLine="true"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginLeft="8dp" />
+                <!--LEFT-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    app:gravity="left">
+                </LinearLayout>
 
-            </RelativeLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/thumb_wrapper"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_below="@+id/toolbars_wrapper"
-            android:layout_marginTop="16dp"
-            android:layout_above="@+id/info_layout">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/audio_thumb"
-                android:scaleType="fitCenter"
-                android:layout_centerInParent="true" />
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/buffer_bar"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:visibility="gone" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/controls_wrapper"
-            android:padding="16dp"
-            android:id="@+id/info_layout">
-
-            <TextView
-                tools:text="description text"
-                android:id="@+id/description"
-                android:textColor="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp" />
-
-            <TextView
-                android:textSize="18dp"
-                tools:text="#tag #god #grace #another #tag"
-                android:id="@+id/tags"
-                android:textColor="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/description"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:textIsSelectable="false" />
+            </ru.rambler.libs.swipe_layout.SwipeLayout>
         </RelativeLayout>
 
         <RelativeLayout

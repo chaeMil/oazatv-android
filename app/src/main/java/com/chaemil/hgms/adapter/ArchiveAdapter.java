@@ -1,6 +1,8 @@
 package com.chaemil.hgms.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
+import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
 
@@ -27,13 +30,16 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
 
     private final Context context;
     private final MainActivity mainActivity;
+    private final int layout;
     private ArrayList<ArchiveItem> archive;
 
-    public ArchiveAdapter(Context context, MainActivity mainActivity, ArrayList<ArchiveItem> archive) {
+    public ArchiveAdapter(Context context, int layout, MainActivity mainActivity,
+                          ArrayList<ArchiveItem> archive) {
         super(context, 0);
         this.context = context;
         this.archive = archive;
         this.mainActivity = mainActivity;
+        this.layout = layout;
     }
 
 
@@ -43,7 +49,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
 
         if (convertView == null) {
             LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.archive_item, null);
+            convertView = vi.inflate(layout, null);
 
             holder = new ViewHolder();
             holder.mainView = (RelativeLayout) convertView.findViewById(R.id.main_view);
@@ -73,16 +79,20 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                     }
                 });
                 holder.name.setText(video.getName());
-                holder.date.setText(video.getDate());
+                holder.date.setText(StringUtils.formatDate(video.getDate(), context));
                 holder.views.setText(video.getViews() + " " + context.getString(R.string.views));
                 holder.more.setVisibility(View.VISIBLE);
                 holder.more.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AdapterUtils.contextDialog(context, mainActivity, ArchiveAdapter.this, video);
+                        AdapterUtils.contextDialog(context, mainActivity, video);
                     }
                 });
-                Ion.with(context).load(video.getThumbFile()).intoImageView(holder.thumb);
+                holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
+
+                Ion.with(context)
+                        .load(video.getThumbFile())
+                        .intoImageView(holder.thumb);
 
                 break;
 
@@ -97,10 +107,13 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                     }
                 });
                 holder.name.setText(photoAlbum.getName());
-                holder.date.setText(photoAlbum.getDate());
+                holder.date.setText(StringUtils.formatDate(photoAlbum.getDate(), context));
                 holder.views.setText(context.getString(R.string.photo_album));
                 holder.more.setVisibility(View.GONE);
-                Ion.with(context).load(photoAlbum.getThumbs().getThumb512()).intoImageView(holder.thumb);
+
+                Ion.with(context)
+                        .load(photoAlbum.getThumbs().getThumb512())
+                        .intoImageView(holder.thumb);
                 break;
         }
 

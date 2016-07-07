@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -26,7 +25,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.SearchAdapter;
@@ -37,16 +35,16 @@ import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
-import com.chaemil.hgms.service.AnalyticsService;
-import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.Constants;
-import com.chaemil.hgms.utils.DimensUtils;
+import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.clans.fab.FloatingActionButton;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import org.json.JSONObject;
@@ -82,7 +80,6 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private FloatingActionButton settingsFab;
     private SharedPrefUtils sharedPreferences;
     private CardView settingsCard;
-    private SwitchCompat downloadOnWifiSwitch;
     private RelativeLayout settingsCardBg;
     private SwitchCompat streamOnWifiSwitch;
     private SwitchCompat streamOnlyAudioSwitch;
@@ -90,6 +87,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private RelativeLayout splash;
     private CategoriesFragment categoriesFragment;
     private LinearLayout logoWrapper;
+    private TextView continueWithoutData;
+    private SpinKitView loadingView;
 
     @Override
     public void onAttach(Activity activity) {
@@ -129,16 +128,20 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     }
 
 
-    public void hideSplash() {
+    public void hideSplash(boolean animate) {
         if (splash != null) {
-            YoYo.with(Techniques.FadeOut).duration(350).playOn(splash);
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    splash.setVisibility(View.GONE);
-                }
-            }, 350);
+            if (animate) {
+                YoYo.with(Techniques.FadeOut).duration(350).playOn(splash);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        splash.setVisibility(View.GONE);
+                    }
+                }, 350);
+            } else {
+                splash.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -157,12 +160,13 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         settingsFab = (FloatingActionButton) rootView.findViewById(R.id.settings_fab);
         settingsCard = (CardView) rootView.findViewById(R.id.settings_card);
         settingsCardBg = (RelativeLayout) rootView.findViewById(R.id.settings_card_bg);
-        downloadOnWifiSwitch = (SwitchCompat) rootView.findViewById(R.id.download_on_wifi_switch);
         streamOnWifiSwitch = (SwitchCompat) rootView.findViewById(R.id.stream_on_wifi_switch);
         streamOnlyAudioSwitch = (SwitchCompat) rootView.findViewById(R.id.stream_only_audio_switch);
         share = (ImageView) rootView.findViewById(R.id.share);
         splash = (RelativeLayout) rootView.findViewById(R.id.splash);
         logoWrapper = (LinearLayout) rootView.findViewById(R.id.logo_wrapper);
+        continueWithoutData = (TextView) rootView.findViewById(R.id.continue_without_data);
+        loadingView = (SpinKitView) rootView.findViewById(R.id.loading_view);
     }
 
     private void setupUI(Bundle savedInstanceState) {
@@ -174,25 +178,16 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         settingsFab.setOnClickListener(this);
         settingsCardBg.setOnClickListener(this);
         share.setOnClickListener(this);
+        continueWithoutData.setOnClickListener(this);
 
         if (savedInstanceState == null) {
             pager.setAdapter(new MainFragmentsAdapter(context.getSupportFragmentManager()));
             pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
             pager.setOffscreenPageLimit(3);
             settingsFab.hide(false);
-            downloadOnWifiSwitch.setChecked(sharedPreferences.loadDownloadOnWifi());
             streamOnlyAudioSwitch.setChecked(sharedPreferences.loadStreamAudio());
             streamOnWifiSwitch.setChecked(sharedPreferences.loadStreamOnWifi());
         }
-
-        downloadOnWifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (sharedPreferences != null) {
-                    sharedPreferences.saveDownloadOnWifi(isChecked);
-                }
-            }
-        });
 
         streamOnWifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -308,7 +303,6 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             case 3:
                 tabLayout.getTabAt(3).setIcon(R.drawable.ic_downloaded_white);
                 settingsFab.show(true);
-                getDownloadedFragment().notifyDatasetChanged();
                 break;
         }
     }
@@ -415,6 +409,10 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                             album.getNameCS() + " | " + album.getNameEN(),
                             getString(R.string.share_album));
                 }
+                break;
+            case R.id.continue_without_data:
+                hideSplash(true);
+                break;
         }
     }
 
@@ -468,7 +466,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     @Override
     public boolean onQueryTextChange(String newText) {
         JsonObjectRequest search = RequestFactory.search(this, newText);
-        MyRequestService.getRequestQueue().add(search);
+        RequestService.getRequestQueue().add(search);
         return true;
     }
 
@@ -522,6 +520,18 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         }
     }
 
+    public void showContinue() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadingView.setVisibility(View.VISIBLE);
+                continueWithoutData.setVisibility(View.VISIBLE);
+                YoYo.with(Techniques.FadeIn).duration(500).playOn(continueWithoutData);
+                YoYo.with(Techniques.FadeIn).duration(500).playOn(loadingView);
+            }
+        }, 750);
+    }
 
 
     private class MainFragmentsAdapter extends FragmentPagerAdapter {

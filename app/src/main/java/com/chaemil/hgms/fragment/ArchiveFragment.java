@@ -3,8 +3,6 @@ package com.chaemil.hgms.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -25,8 +22,7 @@ import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.AnalyticsService;
-import com.chaemil.hgms.service.MyRequestService;
-import com.chaemil.hgms.utils.DimensUtils;
+import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.EndlessScrollListener;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.SmartLog;
@@ -85,11 +81,12 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
     private void getArchivePage(int pageNumber) {
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "getArchivePage", String.valueOf(pageNumber));
         JsonObjectRequest getArchivePage = RequestFactory.getArchive(this, pageNumber);
-        MyRequestService.getRequestQueue().add(getArchivePage);
+        RequestService.getRequestQueue().add(getArchivePage);
     }
 
     private void setupUI() {
         archiveAdapter = new ArchiveAdapter(getActivity(),
+                R.layout.archive_item,
                 (MainActivity) getActivity(),
                 archive);
 

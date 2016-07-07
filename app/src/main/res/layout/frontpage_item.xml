@@ -22,6 +22,7 @@
 
         <TextView
             tools:text="Video name sooooo long"
+            fontPath="@string/default_font_bold"
             android:id="@+id/name"
             android:textSize="16sp"
             android:textColor="@color/dark_gray"
@@ -31,10 +32,11 @@
             android:layout_below="@+id/thumb"
             android:layout_alignLeft="@+id/thumb"
             android:layout_alignStart="@+id/thumb"
-            android:layout_alignRight="@+id/thumb"
-            android:layout_alignEnd="@+id/thumb"
             android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:layout_toLeftOf="@+id/context_menu"
+            android:layout_toStartOf="@+id/context_menu"
+            android:layout_marginLeft="2dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -57,13 +59,14 @@
             android:layout_marginLeft="12dp" />
 
         <ImageButton
-            android:layout_width="25dp"
+            android:layout_width="40dp"
             android:layout_height="40dp"
             android:id="@+id/context_menu"
             android:background="@drawable/transparent_ripple"
             android:src="@drawable/ic_action_navigation_more_vert"
             android:layout_alignTop="@+id/name"
-            android:layout_alignRight="@+id/thumb" />
+            android:layout_alignRight="@+id/thumb"
+            android:layout_marginRight="-8dp" />
 
     </RelativeLayout>
 

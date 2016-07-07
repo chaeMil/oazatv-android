@@ -1,13 +1,9 @@
 package com.chaemil.hgms.fragment;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.android.volley.VolleyError;
@@ -31,12 +28,10 @@ import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
-import com.chaemil.hgms.service.MyRequestService;
-import com.chaemil.hgms.utils.BitmapUtils;
+import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.Constants;
-import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.GAUtils;
-import com.chaemil.hgms.utils.OnSwipeTouchListener;
+import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
@@ -50,6 +45,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import at.markushi.ui.CircleButton;
+import ru.rambler.libs.swipe_layout.SwipeLayout;
 
 /**
  * Created by chaemil on 2.12.15.
@@ -58,8 +54,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         MediaPlayer.OnPreparedListener, SeekBar.OnSeekBarChangeListener, RequestFactoryListener {
 
     public static final String TAG = "player_fragment";
-    private static final String IMAGES_ALREADY_BLURRED = "images_already_blurred";
-    private static final String BG_DRAWABLE = "bg_drawable";
     private static final String CURRENT_TIME = "current_time";
     private RelativeLayout miniPlayer;
     private ImageView miniPlayerImageView;
@@ -74,7 +68,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private int duration;
     private int currentTimeInt;
     private AppCompatSeekBar seekBar;
-    private Bitmap thumb;
     private Video currentVideo;
     private CircleButton miniPlayerPause;
     private ProgressBar bufferBar;
@@ -86,23 +79,29 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private RelativeLayout.LayoutParams videoWrapperParamsFullscreen;
     private RelativeLayout.LayoutParams videoWrapperParamsNormal;
     public boolean isInFullscreenMode = false;
+    public boolean isInQualityMode = false;
     private ImageView back;
     private ImageView share;
     private TextView description;
     private TextView tags;
     private RelativeLayout infoLayout;
-    private ImageView fullscreenExit;
     private Timer hideControlsTimer;
     private int controlsTimeHide = 0;
     private Handler uiHandler;
     private RelativeLayout playerBgWrapper;
     private TimerTask timerTask;
     private Timer timer;
+    private SwipeLayout miniPlayerSwipe;
+    private MainActivity mainActivity;
+    private ImageView info;
+    private ImageView qualitySwitch;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        mainActivity = (MainActivity) getActivity();
 
         setupUIHandler();
     }
@@ -204,7 +203,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     private void postVideoView() {
         JsonObjectRequest postView = RequestFactory.postVideoView(this, currentVideo.getHash());
-        MyRequestService.getRequestQueue().add(postView);
+        RequestService.getRequestQueue().add(postView);
     }
 
     private void activateUI(boolean state) {
@@ -239,13 +238,15 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         controlsWrapper = (RelativeLayout) rootView.findViewById(R.id.controls_wrapper);
         videoWrapper = (RelativeLayout) rootView.findViewById(R.id.video_wrapper);
         fullscreen = (ImageView) rootView.findViewById(R.id.fullscreen);
-        fullscreenExit = (ImageView) rootView.findViewById(R.id.fullscreen_exit);
         back = (ImageView) rootView.findViewById(R.id.back);
         share = (ImageView) rootView.findViewById(R.id.share);
         description = (TextView) rootView.findViewById(R.id.description);
         tags = (TextView) rootView.findViewById(R.id.tags);
         infoLayout = (RelativeLayout) rootView.findViewById(R.id.info_layout);
         playerBgWrapper = (RelativeLayout) rootView.findViewById(R.id.player_bg_wrapper);
+        miniPlayerSwipe = (SwipeLayout) rootView.findViewById(R.id.mini_player_swipe);
+        info = (ImageView) rootView.findViewById(R.id.info);
+        qualitySwitch = (ImageView) rootView.findViewById(R.id.quality_switch);
     }
 
     private void setupUI() {
@@ -257,52 +258,115 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         fullscreen.setOnClickListener(this);
         back.setOnClickListener(this);
         share.setOnClickListener(this);
-        fullscreenExit.setOnClickListener(this);
         playerBgWrapper.setOnClickListener(this);
+        miniPlayer.setOnClickListener(this);
+        playerToolbar.setOnClickListener(this);
+        info.setOnClickListener(this);
+        qualitySwitch.setOnClickListener(this);
 
-        int bottomMargin = (int) DimensUtils.pxFromDp(getActivity(),
-                getResources().getInteger(R.integer.video_player_wrapper_bottom_margin));
+        miniPlayerSwipe.setOnSwipeListener(createSwipeListener());
 
         videoWrapperParamsNormal = (RelativeLayout.LayoutParams) videoWrapper.getLayoutParams();
-        videoWrapperParamsNormal.setMargins(16, 16, 16, bottomMargin);  // left, top, right, bottom
+        videoWrapperParamsNormal.setMargins(16, 16, 16,
+                (int) getResources().getDimension(R.dimen.video_player_wrapper_bottom_margin));  // left, top, right, bottom
         videoWrapper.setLayoutParams(videoWrapperParamsNormal);
 
         videoWrapperParamsFullscreen = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         videoWrapperParamsFullscreen.setMargins(0, 0, 0, 0);  // left, top, right, bottom
-
-        miniPlayer.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
-            @Override
-            public void onSwipeRight() {
-                super.onSwipeRight();
-                swipeDismissPlayer(true);
-            }
-
-            @Override
-            public void onSwipeLeft() {
-                super.onSwipeLeft();
-                swipeDismissPlayer(false);
-            }
-        });
     }
 
-    private void swipeDismissPlayer(boolean right) {
-        saveCurrentVideoTime();
+    private void showInfo() {
+        infoLayout.setVisibility(View.VISIBLE);
+        YoYo.with(Techniques.SlideInDown).duration(300).playOn(infoLayout);
+    }
 
-        videoView.pause();
-        if (right) {
-            YoYo.with(Techniques.SlideOutRight).duration(300).playOn(miniPlayer);
-        } else {
-            YoYo.with(Techniques.SlideOutLeft).duration(300).playOn(miniPlayer);
-        }
-
+    private void hideInfo() {
+        YoYo.with(Techniques.SlideOutUp).duration(300).playOn(infoLayout);
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                ((MainActivity) getActivity()).hidePanel();
+                infoLayout.setVisibility(View.GONE);
             }
         }, 300);
+    }
+
+    private void toggleInfo() {
+        if (infoLayout.getVisibility() == View.VISIBLE) {
+            hideInfo();
+        } else {
+            showInfo();
+        }
+    }
+
+    private void toggleQuality() {
+        saveCurrentVideoTime();
+
+        if (isInQualityMode) {
+            if (currentVideo.getVideoFileLowRes() != null) {
+                setLowQuality();
+            } else {
+                SuperToast.create(getActivity(),
+                        getString(R.string.quality_mode_not_available),
+                        Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            if (currentVideo.getVideoFile() != null) {
+                setHighQuality();
+            } else {
+                SuperToast.create(getActivity(),
+                        getString(R.string.low_quality_mode_not_available),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void setHighQuality() {
+        videoView.setVideoPath(currentVideo.getVideoFile());
+        videoView.seekTo(currentVideo.getCurrentTime());
+        qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_white));
+        isInQualityMode = true;
+    }
+
+    private void setLowQuality() {
+        videoView.setVideoPath(currentVideo.getVideoFileLowRes());
+        videoView.seekTo(currentVideo.getCurrentTime());
+        qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_alpha));
+        isInQualityMode = false;
+    }
+
+    private SwipeLayout.OnSwipeListener createSwipeListener() {
+        return new SwipeLayout.OnSwipeListener() {
+            @Override
+            public void onBeginSwipe(SwipeLayout swipeLayout, boolean moveToRight) {
+
+            }
+
+            @Override
+            public void onSwipeClampReached(SwipeLayout swipeLayout, boolean moveToRight) {
+                swipeDismissPlayer();
+            }
+
+            @Override
+            public void onLeftStickyEdge(SwipeLayout swipeLayout, boolean moveToRight) {
+
+            }
+
+            @Override
+            public void onRightStickyEdge(SwipeLayout swipeLayout, boolean moveToRight) {
+
+            }
+        };
+    }
+
+    private void swipeDismissPlayer() {
+        saveCurrentVideoTime();
+        videoView.pause();
+
+        MainActivity mainActivity = ((MainActivity) getActivity());
+        mainActivity.hidePanel();
+        mainActivity.getSupportFragmentManager().beginTransaction().remove(this).commit();
     }
 
     @Override
@@ -320,7 +384,12 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 playPauseVideo();
                 break;
             case R.id.fullscreen:
-                requestFullscreenPlayer();
+                if (isInFullscreenMode) {
+                    cancelFullscreenPlayer();
+                } else {
+                    requestFullscreenPlayer();
+                    hideInfo();
+                }
                 break;
             case R.id.back:
                 ((MainActivity) getActivity()).collapsePanel();
@@ -328,12 +397,28 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             case R.id.share:
                 ShareUtils.shareVideoLink(getActivity(), currentVideo);
                 break;
-            case R.id.fullscreen_exit:
-                cancelFullscreenPlayer();
-                break;
             case R.id.player_bg_wrapper:
                 toggleControls(true);
                 resetHideControlsTimer();
+                break;
+            case R.id.mini_player:
+            case R.id.toolbar:
+                if (mainActivity != null && mainActivity.getPanelLayout() != null) {
+                    switch(mainActivity.getPanelLayout().getPanelState()) {
+                        case EXPANDED:
+                            mainActivity.collapsePanel();
+                            break;
+                        case COLLAPSED:
+                            mainActivity.expandPanel();
+                            break;
+                    }
+                }
+                break;
+            case R.id.info:
+                toggleInfo();
+                break;
+            case R.id.quality_switch:
+                toggleQuality();
                 break;
         }
     }
@@ -356,6 +441,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     public void requestFullscreenPlayer() {
         ((BaseActivity) getActivity()).setFullscreen(true);
+
         getActivity().getWindow().getDecorView()
                 .setBackgroundColor(getResources().getColor(R.color.black));
 
@@ -366,18 +452,17 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         videoWrapper.setLayoutParams(videoWrapperParamsFullscreen);
         ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(false);
 
-        isInFullscreenMode = true;
         if (videoView.isPlaying()) {
             toggleControls(false);
         } else {
             toggleControls(true);
-            fullscreenExit.setVisibility(View.VISIBLE);
         }
-
+        isInFullscreenMode = true;
     }
 
     public void cancelFullscreenPlayer() {
         ((BaseActivity) getActivity()).setFullscreen(false);
+
         getActivity().getWindow().getDecorView()
                 .setBackgroundColor(getResources().getColor(R.color.white));
 
@@ -388,8 +473,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         videoWrapper.setLayoutParams(videoWrapperParamsNormal);
         ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(true);
 
-        isInFullscreenMode = false;
         toggleControls(true);
+        isInFullscreenMode = false;
     }
 
     public void toggleControls(boolean visible) {
@@ -397,18 +482,14 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             if (isInFullscreenMode) {
                 if (controlsWrapper.getVisibility() != View.VISIBLE) {
                     controlsWrapper.setVisibility(View.VISIBLE);
-                    fullscreenExit.setVisibility(View.VISIBLE);
                     YoYo.with(Techniques.FadeInUp).duration(400).playOn(controlsWrapper);
                 }
-            } else {
-                fullscreenExit.setVisibility(View.GONE);
             }
         } else {
             if (isInFullscreenMode && videoView.isPlaying()) {
                 if (controlsWrapper.getVisibility() != View.GONE) {
                     YoYo.with(Techniques.FadeOutDown).duration(400).playOn(controlsWrapper);
                     YoYo.with(Techniques.FadeIn).duration(400).playOn(seekBar);
-                    fullscreenExit.setVisibility(View.GONE);
 
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
@@ -515,14 +596,24 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
 
 
-    public void switchMiniPlayer(boolean show) {
+    public void switchMiniPlayer(float alpha) {
         if (isAdded()) {
-            if (show) {
+
+            if (alpha == 0) {
                 playerToolbar.setVisibility(View.GONE);
+                miniPlayerSwipe.setVisibility(View.VISIBLE);
                 miniPlayer.setVisibility(View.VISIBLE);
-            } else {
+            } else if (alpha == 1) {
                 playerToolbar.setVisibility(View.VISIBLE);
+                miniPlayerSwipe.setVisibility(View.GONE);
                 miniPlayer.setVisibility(View.GONE);
+            } else {
+                miniPlayerSwipe.setVisibility(View.VISIBLE);
+                playerToolbar.setVisibility(View.VISIBLE);
+                miniPlayer.setVisibility(View.VISIBLE);
+
+                playerToolbar.setAlpha(alpha);
+                miniPlayer.setAlpha(1 - alpha);
             }
         }
     }
@@ -560,7 +651,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             this.currentVideo = video;
         }
 
-        Ion.with(getActivity()).load(currentVideo.getThumbFile()).intoImageView(miniPlayerImageView);
+        Ion.with(getActivity())
+                .load(currentVideo.getThumbFile())
+                .intoImageView(miniPlayerImageView);
 
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
@@ -579,7 +672,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         if (!currentVideo.getTags().equals("")) {
             String tagsString = "";
             for (String tag : currentVideo.getTags().split(",")) {
-                tagsString += "#" + tag + " ";
+                tagsString += "#" + tag.replace(" ","") + " ";
             }
             tags.setText(tagsString);
         } else {
@@ -594,12 +687,28 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             public void run() {
                 activateUI(true);
                 videoView.stopPlayback();
-                videoView.setVideoPath(video.getVideoFile());
+
+                if (NetworkUtils.isConnectedWithWifi(getActivity())) {
+                    if (currentVideo.getVideoFile() != null) {
+                        setHighQuality();
+                    } else {
+                        setLowQuality();
+                    }
+                }
+
+                if (NetworkUtils.isConnected(getActivity()) && !NetworkUtils.isConnectedWithWifi(getActivity())) {
+                    if (currentVideo.getVideoFileLowRes() != null) {
+                        setLowQuality();
+                    } else {
+                        setHighQuality();
+                    }
+                }
+
                 videoView.start();
                 videoView.seekTo(currentVideo.getCurrentTime());
 
             }
-        }, 500);
+        }, 750);
 
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT + "videoHash: " + currentVideo.getHash());
         postVideoView();

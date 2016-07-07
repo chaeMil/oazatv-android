@@ -20,11 +20,16 @@
 -dontwarn com.google.common.**
 -dontwarn com.viewpagerindicator.**
 -dontwarn it.sephiroth.**
--keep class com.chaemil.hgms.model.** { *; }
+-dontwarn okio.**
+-keep class com.chaemil.hgms.** { *; }
 -keepclasseswithmembernames class * {
     native <methods>;
 }
 -keep class android.support.v8.renderscript.** { *; }
+
+-keepclassmembers class com.novoda.downloadmanager.Authority {
+    static final java.lang.String AUTHORITY;
+}
 
 # fixes for Fabric to get crashes
 -keepattributes *Annotation*

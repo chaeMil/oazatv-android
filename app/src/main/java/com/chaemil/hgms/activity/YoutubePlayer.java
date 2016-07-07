@@ -1,7 +1,5 @@
 package com.chaemil.hgms.activity;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Html;
@@ -20,13 +18,12 @@ import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.LiveStream;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.AnalyticsService;
-import com.chaemil.hgms.service.MyRequestService;
+import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.LocalUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.ShareUtils;
-import com.crashlytics.android.Crashlytics;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -37,8 +34,6 @@ import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by chaemil on 16.4.16.
@@ -114,7 +109,7 @@ public class YoutubePlayer extends YouTubeBaseActivity implements YouTubePlayer.
 
     private void getLiveStream() {
         JsonObjectRequest request = RequestFactory.getLiveStream(this);
-        MyRequestService.getRequestQueue().add(request);
+        RequestService.getRequestQueue().add(request);
     }
 
     public void setupLiveRequestTimer() {

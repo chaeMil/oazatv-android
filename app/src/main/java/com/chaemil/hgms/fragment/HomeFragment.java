@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -24,17 +23,14 @@ import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.Homepage;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.AnalyticsService;
-import com.chaemil.hgms.service.MyRequestService;
-import com.chaemil.hgms.utils.AnalyticsUtils;
+import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.GAUtils;
+import com.chaemil.hgms.utils.NetworkUtils;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
 
 import org.json.JSONObject;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 import it.sephiroth.android.library.widget.HListView;
 
@@ -51,7 +47,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     private static final int NEW_AND_POPULAR = 1;
 
     private boolean init = false;
-    private int initRetry = 3;
+    private int initRetry = 2;
     private Homepage homepage;
     private HListView newestVideos;
     private HListView newestAlbums;
@@ -74,6 +70,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
         getData();
         getUI(rootView);
+        setupUI();
         return rootView;
 
     }
@@ -89,26 +86,42 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     }
 
     private void getData() {
-        JsonObjectRequest homepage = RequestFactory.getHomepage(this);
-        MyRequestService.getRequestQueue().add(homepage);
+        if (NetworkUtils.isConnected(getActivity())) {
+            JsonObjectRequest homepage = RequestFactory.getHomepage(this);
+            RequestService.getRequestQueue().add(homepage);
+        } else {
+            ((MainActivity) getActivity()).getMainFragment().hideSplash(true);
+        }
     }
 
     private void setupUI() {
         if (getActivity() != null) {
-            newestVideosAdapter = new HomepageAdapter(getActivity(), ((MainActivity) getActivity()), homepage, NEWEST_VIDEOS);
-            newestVideos.setAdapter(newestVideosAdapter);
-            newestAlbumsAdapter = new HomepageAdapter(getActivity(), ((MainActivity) getActivity()), homepage, NEWEST_ALBUMS);
-            newestAlbums.setAdapter(newestAlbumsAdapter);
-            popularVideosAdapter = new HomepageAdapter(getActivity(), ((MainActivity) getActivity()), homepage, POPULAR_VIDEOS);
-            popularVideos.setAdapter(popularVideosAdapter);
-            featuredAdapter = new ArchiveAdapter(getActivity(), (MainActivity) getActivity(), homepage.featured);
-            featuredGridView.setAdapter(featuredAdapter);
+            if (homepage != null) {
+                newestVideosAdapter = new HomepageAdapter(getActivity(),
+                        ((MainActivity) getActivity()), homepage, NEWEST_VIDEOS);
+                newestVideos.setAdapter(newestVideosAdapter);
+                newestAlbumsAdapter = new HomepageAdapter(getActivity(),
+                        ((MainActivity) getActivity()), homepage, NEWEST_ALBUMS);
+                newestAlbums.setAdapter(newestAlbumsAdapter);
+                popularVideosAdapter = new HomepageAdapter(getActivity(),
+                        ((MainActivity) getActivity()), homepage, POPULAR_VIDEOS);
+                popularVideos.setAdapter(popularVideosAdapter);
+                if (homepage.featured != null) {
+                    featuredAdapter = new ArchiveAdapter(getActivity(), R.layout.featured_item,
+                            (MainActivity) getActivity(), homepage.featured);
+                    featuredGridView.setAdapter(featuredAdapter);
+                }
+            } else {
+                if (((MainActivity) getActivity()).getMainFragment() != null) {
+                    ((MainActivity) getActivity()).getMainFragment().showContinue();
+                }
+            }
 
             setupSwitcher();
 
             MainFragment mainFragment = ((MainActivity) getActivity()).getMainFragment();
-            if (mainFragment != null) {
-                mainFragment.hideSplash();
+            if (mainFragment != null && init) {
+                mainFragment.hideSplash(true);
             }
 
             adjustLayout();
@@ -143,8 +156,10 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
                 switch (v.getId()) {
                     case R.id.featured_button:
                         if (activeView != FEATURED) {
-                            featuredButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.app_round_button_bg_active));
-                            newAndPopularButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.app_round_button_bg));
+                            featuredButton.setBackgroundDrawable(getResources()
+                                    .getDrawable(R.drawable.app_round_button_bg_active));
+                            newAndPopularButton.setBackgroundDrawable(getResources()
+                                    .getDrawable(R.drawable.app_round_button_bg));
                             featuredWrapper.setVisibility(View.VISIBLE);
                             YoYo.with(Techniques.SlideInLeft).duration(250).playOn(featuredWrapper);
                             YoYo.with(Techniques.SlideOutRight).duration(250).playOn(newAndPopularWrapper);
@@ -160,8 +175,10 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
                         break;
                     case R.id.new_and_popular_button:
                         if (activeView != NEW_AND_POPULAR) {
-                            newAndPopularButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.app_round_button_bg_active));
-                            featuredButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.app_round_button_bg));
+                            newAndPopularButton.setBackgroundDrawable(getResources()
+                                    .getDrawable(R.drawable.app_round_button_bg_active));
+                            featuredButton.setBackgroundDrawable(getResources()
+                                    .getDrawable(R.drawable.app_round_button_bg));
                             newAndPopularWrapper.setVisibility(View.VISIBLE);
                             YoYo.with(Techniques.SlideInRight).duration(250).playOn(newAndPopularWrapper);
                             YoYo.with(Techniques.SlideOutLeft).duration(250).playOn(featuredWrapper);
@@ -192,9 +209,9 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
             case GET_HOMEPAGE:
 
                 homepage = ResponseFactory.parseHomepage(response);
-                setupUI();
                 init = true;
-                initRetry = 3;
+                initRetry = 2;
+                setupUI();
 
                 break;
 
@@ -213,12 +230,12 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
                         && ((MainActivity) getActivity()).getMainFragment() != null) {
 
                     ((MainActivity) getActivity()).getMainFragment().goToDownloaded();
-                    ((MainActivity) getActivity()).getMainFragment().hideSplash();
+                    ((MainActivity) getActivity()).getMainFragment().hideSplash(true);
                     SuperToast.create(getActivity(), getString(R.string.connection_error), Toast.LENGTH_LONG).show();
                 }
             } else {
                 JsonObjectRequest request = RequestFactory.getHomepage(this);
-                MyRequestService.getRequestQueue().add(request);
+                RequestService.getRequestQueue().add(request);
             }
         }
     }
