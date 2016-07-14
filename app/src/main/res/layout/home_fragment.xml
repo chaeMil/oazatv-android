@@ -3,156 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/featured_wrapper"
-        android:orientation="vertical"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/home_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"
-        android:layout_alignParentBottom="true"
-        android:nestedScrollingEnabled="false"
-        android:layout_alignParentTop="true">
+        android:layout_height="match_parent">
 
-        <GridView
-            android:clipToPadding="false"
-            android:id="@+id/featured_grid_view"
-            android:scrollbars="vertical"
-            android:scrollbarSize="4dp"
-            android:scrollbarThumbVertical="@color/colorPrimaryWashed"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="75dp"
-            android:paddingTop="60dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp">
+    </android.support.v7.widget.RecyclerView>
 
-        </GridView>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/new_and_popular_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <RelativeLayout
+        android:id="@+id/progress"
         android:visibility="gone"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true">
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbarSize="4dp"
-            android:scrollbarThumbVertical="@color/colorPrimaryWashed"
-            android:id="@+id/scrollView">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="75dp"
-                android:paddingTop="70dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="22sp"
-                    fontPath="@string/default_font_bold"
-                    android:text="@string/newest_videos"
-                    android:padding="10dp" />
-
-                <it.sephiroth.android.library.widget.HListView
-                    android:id="@+id/newest_videos"
-                    android:layout_width="match_parent"
-                    android:layout_height="240dp">
-
-                </it.sephiroth.android.library.widget.HListView>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="22sp"
-                    fontPath="@string/default_font_bold"
-                    android:text="@string/newest_albums"
-                    android:padding="10dp"
-                    android:layout_marginTop="12dp" />
-
-                <it.sephiroth.android.library.widget.HListView
-                    android:id="@+id/newest_albums"
-                    android:layout_width="match_parent"
-                    android:layout_height="240dp">
-
-                </it.sephiroth.android.library.widget.HListView>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="22sp"
-                    fontPath="@string/default_font_bold"
-                    android:text="@string/popular_videos"
-                    android:padding="10dp"
-                    android:layout_marginTop="12dp" />
-
-                <it.sephiroth.android.library.widget.HListView
-                    android:id="@+id/popular_videos"
-                    android:layout_width="match_parent"
-                    android:layout_height="240dp">
-
-                </it.sephiroth.android.library.widget.HListView>
-
-
-
-            </LinearLayout>
-        </ScrollView>
-
-    </LinearLayout>
-
-    <LinearLayout
         android:clickable="true"
-        android:id="@+id/switcher_wrapper"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_alignParentTop="true"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:background="@color/home_switcher_bg">
+        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/featured_button"
-            android:stateListAnimator="@null"
-            android:text="@string/featured"
+        <ProgressBar
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:background="@drawable/app_round_button_bg_active"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            fontPath="@string/default_font_light"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
 
-        <Button
-            android:id="@+id/new_and_popular_button"
-            android:stateListAnimator="@null"
-            android:text="@string/new_and_popular"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:background="@drawable/app_round_button_bg"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            fontPath="@string/default_font_light"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp" />
-
-
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
