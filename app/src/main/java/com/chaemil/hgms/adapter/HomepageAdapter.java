@@ -170,6 +170,11 @@ public class HomepageAdapter extends SectionedRecyclerViewAdapter<RecyclerView.V
     }
 
     @Override
+    public int getItemViewType(int section, int relativePosition, int absolutePosition) {
+        return getLayout(section, relativePosition);
+    }
+
+    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         switch (viewType) {
