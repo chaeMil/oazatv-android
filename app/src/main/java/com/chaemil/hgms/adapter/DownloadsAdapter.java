@@ -205,7 +205,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             protected Void doInBackground( Void... voids ) {
 
                 otherAppsGraphPercent = (100.0f / (float) FileUtils.getTotalExternalMemorySize())
-                        * (float) FileUtils.getAvailableExternalMemorySize();
+                        * ((float) FileUtils.getTotalExternalMemorySize() - (float) FileUtils.getAvailableExternalMemorySize());
 
                 oazaSpaceGraphPercent = (100.0f / (float) FileUtils.getTotalExternalMemorySize())
                         * (float) FileUtils.appSize(context);
