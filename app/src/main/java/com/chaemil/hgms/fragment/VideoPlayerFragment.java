@@ -694,6 +694,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 videoView.start();
                 videoView.seekTo(currentVideo.getCurrentTime());
 
+                mainActivity.expandPanel();
             }
         }, 750);
 

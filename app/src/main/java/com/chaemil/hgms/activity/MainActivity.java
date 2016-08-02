@@ -22,6 +22,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -81,6 +82,8 @@ public class MainActivity extends BaseActivity implements
     private AudioPlaybackReceiver audioPlaybackReceiver;
     private BottomSheetBehavior mBottomSheetBehavior;
     private RelativeLayout mainFragmentWraper;
+    private ImageView bottomSheetShadow;
+    private RelativeLayout playerBgBlack;
 
     @Override
     protected void onResume() {
@@ -199,6 +202,8 @@ public class MainActivity extends BaseActivity implements
         statusMessageText = (TextView) findViewById(R.id.status_message_text);
         liveStreamMessageWatch = (TextView) findViewById(R.id.watch);
         mBottomSheetBehavior = BottomSheetBehavior.from(playerWrapper);
+        bottomSheetShadow = (ImageView) findViewById(R.id.bottom_sheet_shadow);
+        playerBgBlack = (RelativeLayout) findViewById(R.id.player_bg_black);
     }
 
     private void setupBottomSheet() {
@@ -240,21 +245,13 @@ public class MainActivity extends BaseActivity implements
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                if (slideOffset == 0) {
-                    if (videoPlayerFragment != null) {
-                        videoPlayerFragment.switchMiniPlayer(slideOffset);
-                    }
-                    if (audioPlayerFragment != null) {
-                        audioPlayerFragment.switchMiniPlayer(slideOffset);
-                    }
-                } else {
-                    if (videoPlayerFragment != null) {
-                        videoPlayerFragment.switchMiniPlayer(slideOffset);
-                    }
-                    if (audioPlayerFragment != null) {
-                        audioPlayerFragment.switchMiniPlayer(slideOffset);
-                    }
+                if (videoPlayerFragment != null) {
+                    videoPlayerFragment.switchMiniPlayer(slideOffset);
                 }
+                if (audioPlayerFragment != null) {
+                    audioPlayerFragment.switchMiniPlayer(slideOffset);
+                }
+                playerBgBlack.setAlpha(slideOffset);
             }
         });
     }
@@ -309,7 +306,6 @@ public class MainActivity extends BaseActivity implements
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.player_fragment, videoPlayerFragment, VideoPlayerFragment.TAG);
         transaction.commit();
-        expandPanel();
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -383,7 +379,7 @@ public class MainActivity extends BaseActivity implements
         startService(playAudioIntent);
     }
 
-    public void playNewAudio(final Video audio, boolean expandPanel) {
+    public void playNewAudio(final Video audio, final boolean expandPanel) {
 
         boolean downloaded = audio.isAudioDownloaded(this);
 
@@ -392,10 +388,6 @@ public class MainActivity extends BaseActivity implements
                     getString(R.string.cannot_play_without_wifi),
                     SuperToast.Duration.MEDIUM).show();
         } else {
-
-            if (expandPanel) {
-                expandPanel();
-            }
 
             if (((OazaApp) getApplication()).playbackService == null
                     || ((OazaApp) getApplication()).playbackService.getCurrentAudio() != audio) {
@@ -407,14 +399,13 @@ public class MainActivity extends BaseActivity implements
                 audioPlayerFragment = new AudioPlayerFragment();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.player_fragment, audioPlayerFragment, AudioPlayerFragment.TAG);
-
                 transaction.commit();
 
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getAudioPlayerFragment().playNewAudio(MainActivity.this);
+                        getAudioPlayerFragment().playNewAudio(MainActivity.this, expandPanel);
                     }
                 }, 600);
             }

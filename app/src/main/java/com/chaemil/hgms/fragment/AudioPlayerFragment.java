@@ -418,7 +418,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         totalTime.setText("???");
     }
 
-    public void playNewAudio(Context context) {
+    public void playNewAudio(Context context, boolean expandPanel) {
         reconnectToService(context);
         activateUI(true);
         AnalyticsService.getInstance()
@@ -426,6 +426,9 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                         + getCurrentAudio().getHash());
         postGA();
         postVideoView();
+        if (expandPanel) {
+            mainActivity.expandPanel();
+        }
     }
 
     @Override
