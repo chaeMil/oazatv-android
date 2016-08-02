@@ -82,6 +82,7 @@ dependencies {
     compile 'com.auron:permission-manage:1.0.9'
     compile 'com.afollestad.material-dialogs:core:0.8.6.1'
     compile 'com.android.support:percent:23.4.0'
+    compile 'com.wingjay:blurimageviewlib:1.1.0'
     compile('com.afollestad:sectioned-recyclerview:0.2.2') {
         transitive = true
     }
