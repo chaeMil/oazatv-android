@@ -1,24 +1,18 @@
 package com.chaemil.hgms.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.afollestad.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
-import com.chaemil.hgms.adapter.ArchiveAdapter;
 import com.chaemil.hgms.adapter.HomepageAdapter;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
@@ -29,13 +23,11 @@ import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
 
 import org.json.JSONObject;
 
-import it.sephiroth.android.library.widget.HListView;
+import java.util.List;
 
 /**
  * Created by chaemil on 2.12.15.
@@ -83,11 +75,11 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     private void setupUI() {
         if (getActivity() != null) {
             if (homepage != null) {
-                /*listAdapter = new HomepageAdapter(getActivity(), (MainActivity) getActivity(), homepage);
+                listAdapter = new HomepageAdapter(getActivity(), (MainActivity) getActivity(), homepage);
 
                 setupGridManager();
 
-                homepageList.setAdapter(listAdapter);*/
+                homepageList.setAdapter(listAdapter);
 
             } else {
                 if (((MainActivity) getActivity()).getMainFragment() != null) {
