@@ -14,9 +14,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,18 +40,16 @@ import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
-import com.chaemil.hgms.receiver.DownloadServiceReceiver;
-import com.chaemil.hgms.receiver.DownloadServiceReceiverListener;
 import com.chaemil.hgms.receiver.PlaybackReceiverListener;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONObject;
 
@@ -58,16 +60,13 @@ import java.util.TimerTask;
  * Created by chaemil on 2.12.15.
  */
 public class MainActivity extends BaseActivity implements
-        SlidingUpPanelLayout.PanelSlideListener,
         PlaybackReceiverListener{
 
     public static final String EXPAND_PANEL = "expand_panel";
-    private SlidingUpPanelLayout panelLayout;
     private VideoPlayerFragment videoPlayerFragment;
     private AudioPlayerFragment audioPlayerFragment;
     private MainFragment mainFragment;
     private RelativeLayout mainRelativeLayout;
-    private View decorView;
     private ConnectivityManager connManager;
     private NetworkInfo wifi;
     private SharedPrefUtils sharedPreferences;
@@ -80,6 +79,8 @@ public class MainActivity extends BaseActivity implements
     private boolean deepLink;
     public Intent playAudioIntent;
     private AudioPlaybackReceiver audioPlaybackReceiver;
+    private BottomSheetBehavior mBottomSheetBehavior;
+    private RelativeLayout mainFragmentWraper;
 
     @Override
     protected void onResume() {
@@ -191,16 +192,76 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void getUI() {
-        panelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_up_panel_layout);
         mainRelativeLayout = (RelativeLayout) findViewById(R.id.main_relative_layout);
-        decorView = getWindow().getDecorView().getRootView();
+        mainFragmentWraper = (RelativeLayout) findViewById(R.id.main_layout);
         playerWrapper = (RelativeLayout) findViewById(R.id.player_wrapper);
         statusMessageWrapper = (RelativeLayout) findViewById(R.id.status_message_wrapper);
         statusMessageText = (TextView) findViewById(R.id.status_message_text);
         liveStreamMessageWatch = (TextView) findViewById(R.id.watch);
+        mBottomSheetBehavior = BottomSheetBehavior.from(playerWrapper);
+    }
+
+    private void setupBottomSheet() {
+        mBottomSheetBehavior.setPeekHeight(DimensUtils.getActionBarHeight(this));
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+                CoordinatorLayout.LayoutParams layoutParams = new CoordinatorLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT);
+
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        adjustLayout();
+                        setFullscreen(false);
+                        if (getVideoPlayerFragment() != null) {
+                            getVideoPlayerFragment().cancelFullscreenPlayer();
+                        }
+
+                        layoutParams.bottomMargin = DimensUtils.getActionBarHeight(MainActivity.this);
+                        mainFragmentWraper.setLayoutParams(layoutParams);
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        adjustLayout();
+                        break;
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        layoutParams.bottomMargin = 0;
+                        mainFragmentWraper.setLayoutParams(layoutParams);
+                        break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        if (fullscreen) {
+                            expandPanel();
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                if (slideOffset == 0) {
+                    if (videoPlayerFragment != null) {
+                        videoPlayerFragment.switchMiniPlayer(slideOffset);
+                    }
+                    if (audioPlayerFragment != null) {
+                        audioPlayerFragment.switchMiniPlayer(slideOffset);
+                    }
+                } else {
+                    if (videoPlayerFragment != null) {
+                        videoPlayerFragment.switchMiniPlayer(slideOffset);
+                    }
+                    if (audioPlayerFragment != null) {
+                        audioPlayerFragment.switchMiniPlayer(slideOffset);
+                    }
+                }
+            }
+        });
     }
 
     private void setupUI(Bundle savedInstanceState) {
+
+        setupBottomSheet();
 
         if (savedInstanceState == null) {
             hidePanel();
@@ -220,8 +281,6 @@ public class MainActivity extends BaseActivity implements
         }
 
         changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
-
-        panelLayout.setPanelSlideListener(this);
 
         if (!NetworkUtils.isConnected(this)) {
             showStatusMessage(getString(R.string.offline_status_message),
@@ -284,8 +343,8 @@ public class MainActivity extends BaseActivity implements
     private void reconnectToPlaybackService() {
         AudioPlaybackService service = ((OazaApp) getApplication()).playbackService;
         if (service != null) {
-            if (getPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN) {
-                getPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            if (isPanelHidden()) {
+                collapsePanel();
                 getMainFragment().hideSplash(false);
             }
 
@@ -392,59 +451,19 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
-    @Override
-    public void onPanelSlide(View panel, float slideOffset) {
-        if (slideOffset == 0) {
-            if (videoPlayerFragment != null) {
-                videoPlayerFragment.switchMiniPlayer(slideOffset);
-            }
-            if (audioPlayerFragment != null) {
-                audioPlayerFragment.switchMiniPlayer(slideOffset);
-            }
-        } else {
-            if (videoPlayerFragment != null) {
-                videoPlayerFragment.switchMiniPlayer(slideOffset);
-            }
-            if (audioPlayerFragment != null) {
-                audioPlayerFragment.switchMiniPlayer(slideOffset);
-            }
-        }
-    }
-
-    @Override
-    public void onPanelCollapsed(View panel) {
-        adjustLayout();
-        setFullscreen(false);
-        if (getVideoPlayerFragment() != null) {
-            getVideoPlayerFragment().cancelFullscreenPlayer();
-        }
-    }
-
-    @Override
-    public void onPanelExpanded(View panel) {
-        adjustLayout();
-    }
-
-    @Override
-    public void onPanelAnchored(View panel) {
-
-    }
-
-    @Override
-    public void onPanelHidden(View panel) {
-
-    }
-
     public void expandPanel() {
-        panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+        mBottomSheetBehavior.setHideable(false);
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     public void collapsePanel() {
-        panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        mBottomSheetBehavior.setHideable(false);
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
     public void hidePanel() {
-        panelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        mBottomSheetBehavior.setHideable(true);
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
     @Override
@@ -456,7 +475,7 @@ public class MainActivity extends BaseActivity implements
 
             getMainFragment().getSearchView().closeSearch();
 
-        } else if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
+        } else if (isPanelExpanded()) {
 
             if (getVideoPlayerFragment() != null) {
                 if (getVideoPlayerFragment().isInFullscreenMode) {
@@ -511,17 +530,22 @@ public class MainActivity extends BaseActivity implements
         return audioPlayerFragment;
     }
 
-    public SlidingUpPanelLayout getPanelLayout() {
-        return panelLayout;
-    }
-
     public RelativeLayout getMainRelativeLayout() {
         return mainRelativeLayout;
     }
 
     public boolean isPanelExpanded() {
-        if (panelLayout != null) {
-            if (panelLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
+        if (mBottomSheetBehavior != null) {
+            if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isPanelHidden() {
+        if (mBottomSheetBehavior != null) {
+            if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
                 return true;
             }
         }

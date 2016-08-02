@@ -83,11 +83,11 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     private void setupUI() {
         if (getActivity() != null) {
             if (homepage != null) {
-                listAdapter = new HomepageAdapter(getActivity(), (MainActivity) getActivity(), homepage);
+                /*listAdapter = new HomepageAdapter(getActivity(), (MainActivity) getActivity(), homepage);
 
                 setupGridManager();
 
-                homepageList.setAdapter(listAdapter);
+                homepageList.setAdapter(listAdapter);*/
 
             } else {
                 if (((MainActivity) getActivity()).getMainFragment() != null) {

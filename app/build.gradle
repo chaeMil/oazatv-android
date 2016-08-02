@@ -25,7 +25,7 @@ android {
         applicationId "com.chaemil.hgms"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 2016071401
+        versionCode 2016080201
         versionName "2.2d"
 
         multiDexEnabled true
@@ -63,7 +63,6 @@ dependencies {
     compile 'com.github.johnpersano:supertoasts:1.3.4@aar'
     compile 'fr.baloomba:viewpagerindicator:2.4.2'
     compile 'com.android.support:design:23.4.0'
-    compile 'com.sothree.slidinguppanel:library:3.2.0'
     compile 'com.github.markushi:circlebutton:1.1'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.satyan:sugar:1.4'

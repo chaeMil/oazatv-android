@@ -401,19 +401,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 toggleControls(true);
                 resetHideControlsTimer();
                 break;
-            case R.id.mini_player:
-            case R.id.toolbar:
-                if (mainActivity != null && mainActivity.getPanelLayout() != null) {
-                    switch(mainActivity.getPanelLayout().getPanelState()) {
-                        case EXPANDED:
-                            mainActivity.collapsePanel();
-                            break;
-                        case COLLAPSED:
-                            mainActivity.expandPanel();
-                            break;
-                    }
-                }
-                break;
             case R.id.info:
                 toggleInfo();
                 break;
@@ -714,14 +701,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         postVideoView();
 
         postGA();
-    }
-
-    public RelativeLayout getPlayerToolbar() {
-        return playerToolbar;
-    }
-
-    public RelativeLayout getMiniPlayer() {
-        return miniPlayer;
     }
 
     @Override
