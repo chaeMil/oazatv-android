@@ -96,9 +96,12 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
 
                 holder.viewProgress.setVisibility(View.VISIBLE);
-                if (savedVideo != null) {
+                if (savedVideo != null && savedVideo.equals(video)) {
                     holder.viewProgress.setMax(video.getDuration());
                     holder.viewProgress.setProgress(savedVideo.getCurrentTime() / 1000);
+                } else {
+                    holder.viewProgress.setMax(100);
+                    holder.viewProgress.setProgress(0);
                 }
 
                 holder.time.setVisibility(View.VISIBLE);
