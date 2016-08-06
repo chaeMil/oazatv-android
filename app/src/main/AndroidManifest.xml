@@ -31,7 +31,7 @@
 
         <activity android:name=".activity.MainActivity"
             android:configChanges="keyboardHidden|screenSize|orientation"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:theme="@style/AppThemeNoActionBar">
 
             <intent-filter>
