@@ -3,6 +3,8 @@ package com.chaemil.hgms.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,7 @@ import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.EndlessRecyclerOnScrollListener;
 import com.chaemil.hgms.utils.EndlessScrollListener;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.SmartLog;
@@ -38,12 +41,13 @@ import java.util.ArrayList;
 public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private ArrayList<ArchiveItem> archive = new ArrayList<>();
-    private GridView archiveGridView;
+    private RecyclerView archiveGridView;
     private ProgressBar progress;
     private ArchiveAdapter archiveAdapter;
     private ProgressBar endlessProgress;
     private SwipeRefreshLayout swipeRefresh;
     private LinearLayout connectionErrorWrapper;
+    private GridLayoutManager gridLayoutManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,42 +95,33 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
                 archive);
 
         archiveGridView.setAdapter(archiveAdapter);
-        archiveGridView.setOnScrollListener(endlessScrollListener());
+        setupGridManager();
+        archiveGridView.setOnScrollListener(new EndlessRecyclerOnScrollListener(gridLayoutManager) {
+            @Override
+            public void onLoadMore(int current_page) {
+                endlessProgress.setVisibility(View.VISIBLE);
+                getArchivePage(current_page);
+            }
+        });
         swipeRefresh.setOnRefreshListener(this);
 
         adjustLayout();
     }
 
-    private EndlessScrollListener endlessScrollListener() {
-        return new EndlessScrollListener(0, 0) {
-            @Override
-            public void onLoadMore(final int page, int totalItemsCount) {
-
-                endlessProgress.setVisibility(View.VISIBLE);
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        getArchivePage(page);
-                    }
-                }, 500);
-
-            }
-        };
+    private void setupGridManager() {
+        final int columns = getResources().getInteger(R.integer.archive_columns);
+        gridLayoutManager = new GridLayoutManager(getActivity(), columns);
+        archiveGridView.setLayoutManager(gridLayoutManager);
     }
 
     public void adjustLayout() {
-
         if (isAdded()) {
-            int columns = getResources().getInteger(R.integer.archive_columns);
-            archiveGridView.setNumColumns(columns);
+            setupGridManager();
         }
-
     }
 
     private void getUI(ViewGroup rootView) {
-        archiveGridView = (GridView) rootView.findViewById(R.id.archive_grid_view);
+        archiveGridView = (RecyclerView) rootView.findViewById(R.id.archive_grid_view);
         progress = (ProgressBar) rootView.findViewById(R.id.progress);
         endlessProgress = (ProgressBar) rootView.findViewById(R.id.endless_progress);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
@@ -150,8 +145,8 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
                     endlessProgress.setVisibility(View.VISIBLE);
                     swipeRefresh.setRefreshing(false);
                     connectionErrorWrapper.setVisibility(View.GONE);
+                    archiveAdapter.notifyDataSetChanged();
                 }
-
 
                 break;
 

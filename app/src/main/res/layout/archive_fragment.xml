@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <GridView
+        <android.support.v7.widget.RecyclerView
             android:clipToPadding="false"
             android:id="@+id/archive_grid_view"
             android:scrollbarSize="4dp"
@@ -26,7 +26,7 @@
             android:layout_alignParentTop="true"
             android:paddingBottom="75dp">
 
-        </GridView>
+        </android.support.v7.widget.RecyclerView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

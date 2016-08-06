@@ -2,12 +2,14 @@ package com.chaemil.hgms.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -142,6 +144,9 @@ public class HomepageAdapter extends SectionedRecyclerViewAdapter<RecyclerView.V
                 }
             });
             ((ViewHolder) holder).thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
+
+            setupTime(((ViewHolder) holder), video);
+
             Ion.with(context)
                     .load(video.getThumbFile())
                     .intoImageView(((ViewHolder) holder).thumb);
@@ -162,6 +167,10 @@ public class HomepageAdapter extends SectionedRecyclerViewAdapter<RecyclerView.V
             ((ViewHolder) holder).date.setText(StringUtils.formatDate(photoAlbum.getDate(), context));
             ((ViewHolder) holder).views.setText(context.getString(R.string.photo_album));
             ((ViewHolder) holder).more.setVisibility(View.GONE);
+
+            ((ViewHolder) holder).viewProgress.setVisibility(View.GONE);
+            ((ViewHolder) holder).time.setVisibility(View.GONE);
+
             Ion.with(context)
                     .load(photoAlbum.getThumbs().getThumb1024())
                     .intoImageView(((ViewHolder) holder).thumb);
@@ -199,6 +208,37 @@ public class HomepageAdapter extends SectionedRecyclerViewAdapter<RecyclerView.V
         }
     }
 
+    private void setupTime(final ViewHolder holder, final Video video) {
+        holder.viewProgress.setVisibility(View.GONE);
+        holder.time.setVisibility(View.GONE);
+
+        new AsyncTask<Void, Void, Void>() {
+
+            public Video savedVideo;
+
+            @Override
+            protected Void doInBackground( Void... voids ) {
+                savedVideo = Video.findByServerId(video.getServerId());
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                holder.viewProgress.setVisibility(View.VISIBLE);
+                if (savedVideo != null && savedVideo.equals(video)) {
+                    holder.viewProgress.setMax(video.getDuration());
+                    holder.viewProgress.setProgress(savedVideo.getCurrentTime() / 1000);
+                } else {
+                    holder.viewProgress.setMax(100);
+                    holder.viewProgress.setProgress(0);
+                }
+
+                holder.time.setVisibility(View.VISIBLE);
+                holder.time.setText(StringUtils.getDurationString(video.getDuration()));
+            }
+        }.execute();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         public final RelativeLayout mainView;
         public final VideoThumbImageView thumb;
@@ -206,6 +246,8 @@ public class HomepageAdapter extends SectionedRecyclerViewAdapter<RecyclerView.V
         public final TextView date;
         public final TextView views;
         public final ImageButton more;
+        public final ProgressBar viewProgress;
+        public final TextView time;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -215,6 +257,8 @@ public class HomepageAdapter extends SectionedRecyclerViewAdapter<RecyclerView.V
             this.date = (TextView) itemView.findViewById(R.id.date);
             this.views = (TextView) itemView.findViewById(R.id.views);
             this.more = (ImageButton) itemView.findViewById(R.id.context_menu);
+            this.viewProgress = (ProgressBar) itemView.findViewById(R.id.view_progress);
+            this.time = (TextView) itemView.findViewById(R.id.video_time);
         }
     }
 }

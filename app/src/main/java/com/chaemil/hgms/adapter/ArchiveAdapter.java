@@ -3,6 +3,8 @@ package com.chaemil.hgms.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +26,12 @@ import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by chaemil on 20.12.15.
  */
-public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
+public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHolder> {
 
     private final Context context;
     private final MainActivity mainActivity;
@@ -37,37 +40,22 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
 
     public ArchiveAdapter(Context context, int layout, MainActivity mainActivity,
                           ArrayList<ArchiveItem> archive) {
-        super(context, 0);
         this.context = context;
         this.archive = archive;
         this.mainActivity = mainActivity;
         this.layout = layout;
     }
 
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
+
+        ArchiveAdapter.ViewHolder holder = new ViewHolder(v);
+        return holder;
+    }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-
-        if (convertView == null) {
-            LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(layout, null);
-
-            holder = new ViewHolder();
-            holder.mainView = (RelativeLayout) convertView.findViewById(R.id.main_view);
-            holder.thumb = (VideoThumbImageView) convertView.findViewById(R.id.thumb);
-            holder.name = (TextView) convertView.findViewById(R.id.name);
-            holder.date = (TextView) convertView.findViewById(R.id.date);
-            holder.views = (TextView) convertView.findViewById(R.id.views);
-            holder.more = (ImageButton) convertView.findViewById(R.id.context_menu);
-            holder.viewProgress = (ProgressBar) convertView.findViewById(R.id.view_progress);
-            holder.time = (TextView) convertView.findViewById(R.id.video_time);
-
-            convertView.setTag(holder);
-        }
-        else {
-            holder = (ViewHolder) convertView.getTag();
-        }
+    public void onBindViewHolder(ViewHolder holder, int position) {
 
         ArchiveItem archiveItem = archive.get(position);
 
@@ -75,7 +63,6 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
             case ArchiveItem.Type.VIDEO:
 
                 final Video video = archiveItem.getVideo();
-                Video savedVideo = Video.findByServerId(video.getServerId());
 
                 holder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -95,17 +82,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 });
                 holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
 
-                holder.viewProgress.setVisibility(View.VISIBLE);
-                if (savedVideo != null && savedVideo.equals(video)) {
-                    holder.viewProgress.setMax(video.getDuration());
-                    holder.viewProgress.setProgress(savedVideo.getCurrentTime() / 1000);
-                } else {
-                    holder.viewProgress.setMax(100);
-                    holder.viewProgress.setProgress(0);
-                }
-
-                holder.time.setVisibility(View.VISIBLE);
-                holder.time.setText(StringUtils.getDurationString(video.getDuration()));
+                setupTime(holder, video);
 
                 Ion.with(context)
                         .load(video.getThumbFile())
@@ -136,7 +113,37 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 break;
         }
 
-        return convertView;
+    }
+
+    private void setupTime(final ViewHolder holder, final Video video) {
+        holder.viewProgress.setVisibility(View.GONE);
+        holder.time.setVisibility(View.GONE);
+
+        new AsyncTask<Void, Void, Void>() {
+
+            public Video savedVideo;
+
+            @Override
+            protected Void doInBackground( Void... voids ) {
+                savedVideo = Video.findByServerId(video.getServerId());
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                holder.viewProgress.setVisibility(View.VISIBLE);
+                if (savedVideo != null && savedVideo.equals(video)) {
+                    holder.viewProgress.setMax(video.getDuration());
+                    holder.viewProgress.setProgress(savedVideo.getCurrentTime() / 1000);
+                } else {
+                    holder.viewProgress.setMax(100);
+                    holder.viewProgress.setProgress(0);
+                }
+
+                holder.time.setVisibility(View.VISIBLE);
+                holder.time.setText(StringUtils.getDurationString(video.getDuration()));
+            }
+        }.execute();
     }
 
     private void openAlbum(PhotoAlbum album) {
@@ -144,11 +151,11 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return archive.size();
     }
 
-    public class ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder{
 
         private RelativeLayout mainView;
         public VideoThumbImageView thumb;
@@ -158,6 +165,18 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
         public ImageButton more;
         public ProgressBar viewProgress;
         public TextView time;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            this.mainView = (RelativeLayout) itemView.findViewById(R.id.main_view);
+            this.thumb = (VideoThumbImageView) itemView.findViewById(R.id.thumb);
+            this.name = (TextView) itemView.findViewById(R.id.name);
+            this.date = (TextView) itemView.findViewById(R.id.date);
+            this.views = (TextView) itemView.findViewById(R.id.views);
+            this.more = (ImageButton) itemView.findViewById(R.id.context_menu);
+            this.viewProgress = (ProgressBar) itemView.findViewById(R.id.view_progress);
+            this.time = (TextView) itemView.findViewById(R.id.video_time);
+        }
     }
 
 
