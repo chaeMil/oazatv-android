@@ -9,6 +9,7 @@ import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.Constants;
+import com.chaemil.hgms.utils.SmartLog;
 
 import org.json.JSONArray;
 import org.json.JSONException;

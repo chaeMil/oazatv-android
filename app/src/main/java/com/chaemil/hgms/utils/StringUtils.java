@@ -56,4 +56,29 @@ public class StringUtils {
         return dateFormat.format(date);
     }
 
+    public static String getDurationString(int seconds) {
+        int hours = seconds / 3600;
+        int minutes = (seconds % 3600) / 60;
+        seconds = seconds % 60;
+
+        String output = twoDigitString(hours) + ":" + twoDigitString(minutes) + ":" + twoDigitString(seconds);
+        if (output.startsWith("00:")) {
+            output = output.replace("00:", "");
+        }
+
+        return output;
+    }
+
+    public static String twoDigitString(int number) {
+        if (number == 0) {
+            return "00";
+        }
+
+        if (number / 10 == 0) {
+            return "0" + number;
+        }
+
+        return String.valueOf(number);
+    }
+
 }

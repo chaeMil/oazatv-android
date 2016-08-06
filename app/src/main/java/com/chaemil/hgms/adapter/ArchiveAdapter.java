@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
+import com.chaemil.hgms.utils.SmartLog;
 import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
@@ -58,6 +60,8 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
             holder.date = (TextView) convertView.findViewById(R.id.date);
             holder.views = (TextView) convertView.findViewById(R.id.views);
             holder.more = (ImageButton) convertView.findViewById(R.id.context_menu);
+            holder.viewProgress = (ProgressBar) convertView.findViewById(R.id.view_progress);
+            holder.time = (TextView) convertView.findViewById(R.id.video_time);
 
             convertView.setTag(holder);
         }
@@ -71,6 +75,7 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
             case ArchiveItem.Type.VIDEO:
 
                 final Video video = archiveItem.getVideo();
+                Video savedVideo = Video.findByServerId(video.getServerId());
 
                 holder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -89,6 +94,15 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                     }
                 });
                 holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
+
+                holder.viewProgress.setVisibility(View.VISIBLE);
+                if (savedVideo != null) {
+                    holder.viewProgress.setMax(video.getDuration());
+                    holder.viewProgress.setProgress(savedVideo.getCurrentTime() / 1000);
+                }
+
+                holder.time.setVisibility(View.VISIBLE);
+                holder.time.setText(StringUtils.getDurationString(video.getDuration()));
 
                 Ion.with(context)
                         .load(video.getThumbFile())
@@ -110,6 +124,8 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.date.setText(StringUtils.formatDate(photoAlbum.getDate(), context));
                 holder.views.setText(context.getString(R.string.photo_album));
                 holder.more.setVisibility(View.GONE);
+                holder.viewProgress.setVisibility(View.GONE);
+                holder.time.setVisibility(View.GONE);
 
                 Ion.with(context)
                         .load(photoAlbum.getThumbs().getThumb512())
@@ -137,7 +153,8 @@ public class ArchiveAdapter extends ArrayAdapter<ArchiveItem> {
         public TextView date;
         public TextView views;
         public ImageButton more;
-
+        public ProgressBar viewProgress;
+        public TextView time;
     }
 
 

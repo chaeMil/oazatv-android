@@ -7,16 +7,48 @@
     android:layout_width="match_parent"
     android:layout_height="105dp">
 
-    <com.chaemil.hgms.view.VideoThumbImageView
-        android:scaleType="centerCrop"
-        android:id="@+id/thumb"
-        android:background="@color/dark_gray"
-        android:layout_width="170dp"
-        android:layout_height="match_parent"
+    <RelativeLayout
+        android:id="@+id/thumb_wrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="2dp" />
+        android:layout_marginBottom="2dp">
+
+        <com.chaemil.hgms.view.VideoThumbImageView
+            android:scaleType="centerCrop"
+            android:id="@+id/thumb"
+            android:background="@color/dark_gray"
+            android:layout_width="170dp"
+            android:layout_height="match_parent" />
+
+        <ProgressBar
+            android:id="@+id/view_progress"
+            android:indeterminate="false"
+            android:background="@color/transparent_black"
+            style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:visibility="visible"
+            android:layout_alignLeft="@+id/thumb"
+            android:layout_alignRight="@+id/thumb"
+            android:layout_alignParentBottom="true" />
+
+        <TextView
+            android:id="@+id/video_time"
+            android:textColor="@color/white"
+            android:background="@color/transparent_black"
+            android:padding="2dp"
+            tools:text="12:30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:layout_alignRight="@+id/thumb"
+            android:layout_alignBottom="@+id/thumb"
+            android:layout_marginBottom="4dp" />
+
+    </RelativeLayout>
 
     <TextView
         tools:text="Video name sooooo long"
@@ -42,8 +74,8 @@
         android:id="@+id/date"
         android:textColor="@color/md_grey_700"
         android:layout_below="@+id/name"
-        android:layout_toRightOf="@+id/thumb"
-        android:layout_toEndOf="@+id/thumb"
+        android:layout_toRightOf="@+id/thumb_wrapper"
+        android:layout_toEndOf="@+id/thumb_wrapper"
         android:layout_marginTop="2dp" />
 
     <TextView
@@ -54,8 +86,8 @@
         android:textColor="@color/md_grey_700"
         android:gravity="right"
         android:layout_below="@+id/date"
-        android:layout_toRightOf="@+id/thumb"
-        android:layout_toEndOf="@+id/thumb"
+        android:layout_toRightOf="@+id/thumb_wrapper"
+        android:layout_toEndOf="@+id/thumb_wrapper"
         android:layout_marginTop="2dp" />
 
     <ImageButton
