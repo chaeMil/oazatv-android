@@ -69,13 +69,15 @@ public class ResponseFactory {
             String thumbFile = response.getString(Constants.THUMB_FILE);
             String thumbFileLowRes = response.getString(Constants.THUMB_FILE_LOW_RES);
             String thumbColor = response.getString(Constants.THUMB_COLOR);
+            int duration = response.getInt(Constants.METADATA_DURATION);
             int views = response.getInt(Constants.JSON_VIEWS);
             String categories = response.getString(Constants.JSON_CATEGORIES);
             String descriptionCS = response.getString(Constants.JSON_DESCRIPTION_CS);
             String descriptionEN = response.getString(Constants.JSON_DESCRIPTION_EN);
 
-            return new Video(serverId, hash, date, nameCS, nameEN, tags, videoFileLowRes, videoFile, audioFile,
-                    thumbFile, thumbFileLowRes, thumbColor, views, categories, descriptionCS, descriptionEN);
+            return new Video(serverId, hash, date, nameCS, nameEN, tags, videoFileLowRes,
+                    videoFile, audioFile, thumbFile, thumbFileLowRes, thumbColor, duration,
+                    views, categories, descriptionCS, descriptionEN);
 
         } catch (JSONException e) {
             e.printStackTrace();

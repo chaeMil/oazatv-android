@@ -97,4 +97,6 @@ public class Constants {
     public static final String JSON_BOTTOM_TEXT_EN = "bottom_text_en";
     public static final String JSON_COLOR = "color";
     public static final String API_DATE_FORMAT = "yyyy-MM-dd";
+    public static final String METADATA_DURATION = "metadata_duration_in_seconds";
+
 }
