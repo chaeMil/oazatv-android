@@ -33,6 +33,7 @@ public class Video extends SugarRecord implements Parcelable {
     private String thumbFile;
     private String thumbFileLowRes;
     private String thumbColor;
+    private int duration;
     private int views;
     private String categories;
     private String descriptionCS;
@@ -44,7 +45,8 @@ public class Video extends SugarRecord implements Parcelable {
 
     public Video(int serverId, String hash, String date, String nameCS,
                  String nameEN, String tags, String videoFileLowRes, String videoFile, String audioFile,
-                 String thumbFile, String thumbFileLowRes, String thumbColor, int views, String categories,
+                 String thumbFile, String thumbFileLowRes, String thumbColor, int duration,
+                 int views, String categories,
                  String descriptionCS, String descriptionEN) {
         this.serverId = serverId;
         this.hash = hash;
@@ -58,6 +60,7 @@ public class Video extends SugarRecord implements Parcelable {
         this.thumbFile = thumbFile;
         this.thumbFileLowRes = thumbFileLowRes;
         this.thumbColor = thumbColor;
+        this.duration = duration;
         this.views = views;
         this.categories = categories;
         this.descriptionCS = descriptionCS;
@@ -234,6 +237,14 @@ public class Video extends SugarRecord implements Parcelable {
         this.thumbFileLowRes = thumbFileLowRes;
     }
 
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
     protected Video(Parcel in) {
         id = in.readByte() == 0x00 ? null : in.readLong();
         serverId = in.readInt();
@@ -248,6 +259,7 @@ public class Video extends SugarRecord implements Parcelable {
         thumbFile = in.readString();
         thumbFileLowRes = in.readString();
         thumbColor = in.readString();
+        duration = in.readInt();
         views = in.readInt();
         categories = in.readString();
         descriptionCS = in.readString();
@@ -280,6 +292,7 @@ public class Video extends SugarRecord implements Parcelable {
         dest.writeString(thumbFile);
         dest.writeString(thumbFileLowRes);
         dest.writeString(thumbColor);
+        dest.writeInt(duration);
         dest.writeInt(views);
         dest.writeString(categories);
         dest.writeString(descriptionCS);
