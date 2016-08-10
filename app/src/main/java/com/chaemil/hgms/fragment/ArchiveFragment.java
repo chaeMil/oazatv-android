@@ -9,7 +9,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -25,7 +25,6 @@ import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
-import com.chaemil.hgms.utils.EndlessRecyclerOnScrollListener;
 import com.chaemil.hgms.utils.EndlessScrollListener;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.SmartLog;
@@ -82,35 +81,51 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
 
     }
 
-    private void getArchivePage(int pageNumber) {
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "getArchivePage", String.valueOf(pageNumber));
-        JsonObjectRequest getArchivePage = RequestFactory.getArchive(this, pageNumber);
-        RequestService.getRequestQueue().add(getArchivePage);
+    private void getArchivePage(final int pageNumber) {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SmartLog.Log(SmartLog.LogLevel.DEBUG, "getArchivePage", String.valueOf(pageNumber));
+                JsonObjectRequest getArchivePage = RequestFactory.getArchive(ArchiveFragment.this, pageNumber);
+                RequestService.getRequestQueue().add(getArchivePage);
+            }
+        }, 750);
     }
 
     private void setupUI() {
-        archiveAdapter = new ArchiveAdapter(getActivity(),
-                R.layout.archive_item,
-                (MainActivity) getActivity(),
-                archive);
-
-        archiveGridView.setAdapter(archiveAdapter);
-        setupGridManager();
-        archiveGridView.setOnScrollListener(new EndlessRecyclerOnScrollListener(gridLayoutManager) {
-            @Override
-            public void onLoadMore(int current_page) {
-                endlessProgress.setVisibility(View.VISIBLE);
-                getArchivePage(current_page);
-            }
-        });
-        swipeRefresh.setOnRefreshListener(this);
-
+        setupAdapter();
         adjustLayout();
+    }
+
+    private void setupAdapter() {
+        if (archiveAdapter == null) {
+            archiveAdapter = new ArchiveAdapter(getActivity(),
+                    R.layout.archive_item,
+                    (MainActivity) getActivity(),
+                    archive);
+
+            archiveGridView.setAdapter(archiveAdapter);
+            setupGridManager();
+            archiveGridView.addOnScrollListener(new EndlessScrollListener(gridLayoutManager) {
+                @Override
+                public void onLoadMore(int page, int totalItemsCount) {
+                    getArchivePage(page);
+                }
+            });
+            swipeRefresh.setOnRefreshListener(this);
+        }
+
+        archiveAdapter.notifyDataSetChanged();
     }
 
     private void setupGridManager() {
         final int columns = getResources().getInteger(R.integer.archive_columns);
-        gridLayoutManager = new GridLayoutManager(getActivity(), columns);
+        if (gridLayoutManager == null) {
+            gridLayoutManager = new GridLayoutManager(getActivity(), columns);
+        } else {
+            gridLayoutManager.setSpanCount(columns);
+        }
         archiveGridView.setLayoutManager(gridLayoutManager);
     }
 
@@ -145,7 +160,6 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
                     endlessProgress.setVisibility(View.VISIBLE);
                     swipeRefresh.setRefreshing(false);
                     connectionErrorWrapper.setVisibility(View.GONE);
-                    archiveAdapter.notifyDataSetChanged();
                 }
 
                 break;
@@ -165,6 +179,7 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
     @Override
     public void onRefresh() {
         archive.clear();
+        archiveAdapter.notifyDataSetChanged();
         getArchivePage(1);
     }
 }
