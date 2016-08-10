@@ -110,7 +110,7 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
             archiveGridView.addOnScrollListener(new EndlessScrollListener(gridLayoutManager) {
                 @Override
                 public void onLoadMore(int page, int totalItemsCount) {
-                    getArchivePage(page);
+                    getArchivePage(page + 1);
                 }
             });
             swipeRefresh.setOnRefreshListener(this);
