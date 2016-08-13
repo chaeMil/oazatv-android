@@ -102,4 +102,5 @@ public class Constants {
     public static final String JSON_THUMB_256 = "thumb_256";
     public static final String JSON_THUMB_512 = "thumb_512";
     public static final String JSON_THUMB_1024 = "thumb_1024";
+    public static final String JSON_THUMB_2048 = "thumb_2048";
 }
