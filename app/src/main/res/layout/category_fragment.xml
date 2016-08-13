@@ -1,20 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:id="@+id/category_toolbar"
+        tools:background="@color/md_red_400"
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+
+        <TextView
+            android:id="@+id/category_name"
+            tools:text="Category name"
+            android:padding="16dp"
+            android:textColor="@color/white"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
+
+
+    <ProgressBar
+        android:id="@+id/endless_progress"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="12dp" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/category_toolbar">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/categories_list"
-            android:paddingBottom="75dp"
             android:clipToPadding="false"
+            android:id="@+id/archive_grid_view"
             android:scrollbarSize="4dp"
             android:scrollbarThumbVertical="@color/colorPrimaryWashed"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:paddingBottom="75dp">
 
         </android.support.v7.widget.RecyclerView>
 
@@ -43,6 +78,7 @@
             android:gravity="center_horizontal" />
     </LinearLayout>
 
+
     <ProgressBar
         android:id="@+id/progress"
         android:layout_width="42dp"
@@ -50,10 +86,5 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
-    <FrameLayout
-        android:id="@+id/category_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
 
 </RelativeLayout>

@@ -460,52 +460,58 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onBackPressed() {
 
-        if (getMainFragment() != null
-                && getMainFragment().getSearchView() != null
-                && getMainFragment().getSearchView().isSearchOpen()) {
+        int fragmentsCount = getSupportFragmentManager().getBackStackEntryCount();
 
-            getMainFragment().getSearchView().closeSearch();
+        if (getMainFragment().getPager().getCurrentItem() == 1 && fragmentsCount != 0) { //categories view
+            getSupportFragmentManager().popBackStack();
+        } else {
+            if (getMainFragment() != null
+                    && getMainFragment().getSearchView() != null
+                    && getMainFragment().getSearchView().isSearchOpen()) {
 
-        } else if (isPanelExpanded()) {
+                getMainFragment().getSearchView().closeSearch();
 
-            if (getVideoPlayerFragment() != null) {
-                if (getVideoPlayerFragment().isInFullscreenMode) {
-                    getVideoPlayerFragment().cancelFullscreenPlayer();
+            } else if (isPanelExpanded()) {
+
+                if (getVideoPlayerFragment() != null) {
+                    if (getVideoPlayerFragment().isInFullscreenMode) {
+                        getVideoPlayerFragment().cancelFullscreenPlayer();
+                    } else {
+                        collapsePanel();
+                    }
                 } else {
                     collapsePanel();
                 }
-            } else {
-                collapsePanel();
-            }
 
-        } else if (getMainFragment() != null
+            } else if (getMainFragment() != null
                     && getMainFragment().getPhotoAlbumFragment() != null
                     && getMainFragment().getPhotoalbumWrapper().getVisibility() == View.VISIBLE) {
 
-            ViewPager photosViewPager = getMainFragment().getPhotoAlbumFragment().getPhotosViewPager();
-            GridView grid = getMainFragment().getPhotoAlbumFragment().getGrid();
+                ViewPager photosViewPager = getMainFragment().getPhotoAlbumFragment().getPhotosViewPager();
+                GridView grid = getMainFragment().getPhotoAlbumFragment().getGrid();
 
-            if (photosViewPager.getVisibility() == View.VISIBLE) {
-                int currentPhoto = photosViewPager.getCurrentItem();
-                grid.smoothScrollToPosition(currentPhoto);
+                if (photosViewPager.getVisibility() == View.VISIBLE) {
+                    int currentPhoto = photosViewPager.getCurrentItem();
+                    grid.smoothScrollToPosition(currentPhoto);
 
-                if (grid.getChildAt(currentPhoto) != null) {
-                    YoYo.with(Techniques.Pulse).duration(500).playOn(grid.getChildAt(currentPhoto));
+                    if (grid.getChildAt(currentPhoto) != null) {
+                        YoYo.with(Techniques.Pulse).duration(500).playOn(grid.getChildAt(currentPhoto));
+                    }
+
+                    getMainFragment().getPhotoAlbumFragment().hidePhotos();
+                } else {
+                    getMainFragment().closeAlbum();
                 }
 
-                getMainFragment().getPhotoAlbumFragment().hidePhotos();
+            } else if (getMainFragment() != null
+                    && getMainFragment().getSettingsCard() != null
+                    && getMainFragment().getSettingsCard().getVisibility() == View.VISIBLE) {
+
+                getMainFragment().hideSettings();
+
             } else {
-                getMainFragment().closeAlbum();
+                finish();
             }
-
-        } else if (getMainFragment() != null
-                && getMainFragment().getSettingsCard() != null
-                && getMainFragment().getSettingsCard().getVisibility() == View.VISIBLE) {
-
-            getMainFragment().hideSettings();
-
-        } else {
-            finish();
         }
     }
 

@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
@@ -27,6 +25,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.adapter.MainFragmentsAdapter;
 import com.chaemil.hgms.adapter.SearchAdapter;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
@@ -37,7 +36,6 @@ import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.Constants;
-import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
@@ -90,6 +88,10 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private TextView continueWithoutData;
     private SpinKitView loadingView;
 
+    private MainFragmentsAdapter mainFragmentsAdapter;
+    private TabLayout.TabLayoutOnPageChangeListener tabLayoutChangeListener;
+    private boolean init;
+
     @Override
     public void onAttach(Activity activity) {
         context = (FragmentActivity) activity;
@@ -122,7 +124,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                 R.layout.main_fragment, container, false);
 
         getUI(rootView);
-        setupUI(savedInstanceState);
+        setupUI();
 
         return rootView;
     }
@@ -142,6 +144,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             } else {
                 splash.setVisibility(View.GONE);
             }
+            init = true;
         }
     }
 
@@ -169,7 +172,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         loadingView = (SpinKitView) rootView.findViewById(R.id.loading_view);
     }
 
-    private void setupUI(Bundle savedInstanceState) {
+    private void setupUI() {
         setupTabLayout();
         setupSearch();
 
@@ -180,14 +183,18 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         share.setOnClickListener(this);
         continueWithoutData.setOnClickListener(this);
 
-        if (savedInstanceState == null) {
-            pager.setAdapter(new MainFragmentsAdapter(context.getSupportFragmentManager()));
-            pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-            pager.setOffscreenPageLimit(3);
-            settingsFab.hide(false);
-            streamOnlyAudioSwitch.setChecked(sharedPreferences.loadStreamAudio());
-            streamOnWifiSwitch.setChecked(sharedPreferences.loadStreamOnWifi());
+        if (mainFragmentsAdapter == null) {
+            mainFragmentsAdapter = new MainFragmentsAdapter(this, context.getSupportFragmentManager());
         }
+        if (tabLayoutChangeListener == null) {
+            tabLayoutChangeListener = new TabLayout.TabLayoutOnPageChangeListener(tabLayout);
+        }
+        pager.setAdapter(mainFragmentsAdapter);
+        pager.addOnPageChangeListener(tabLayoutChangeListener);
+        pager.setOffscreenPageLimit(3);
+        settingsFab.hide(false);
+        streamOnlyAudioSwitch.setChecked(sharedPreferences.loadStreamAudio());
+        streamOnWifiSwitch.setChecked(sharedPreferences.loadStreamOnWifi());
 
         streamOnWifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -206,6 +213,10 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                 }
             }
         });
+
+        if (init) {
+            hideSplash(false);
+        }
     }
 
     private void setupSearch() {
@@ -275,6 +286,10 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
 
     public ViewPager getPager() {
         return pager;
+    }
+
+    public MainFragmentsAdapter getMainFragmentsAdapter() {
+        return mainFragmentsAdapter;
     }
 
     @Override
@@ -534,29 +549,4 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     }
 
 
-    private class MainFragmentsAdapter extends FragmentPagerAdapter {
-        public MainFragmentsAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public android.support.v4.app.Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return getHomeFragment();
-                case 1:
-                    return getCategoriesFragment();
-                case 2:
-                    return getArchiveFragment();
-                case 3:
-                    return getDownloadedFragment();
-            }
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            return 4;
-        }
-    }
 }

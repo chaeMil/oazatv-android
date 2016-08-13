@@ -9,7 +9,7 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="14dp"
+        android:layout_height="match_parent"
         android:layout_below="@+id/app_bar"
         android:layout_alignParentBottom="true">
 
@@ -296,7 +296,7 @@
     <RelativeLayout
         android:background="@color/colorPrimary"
         android:id="@+id/splash"
-        tools:visibility="visible"
+        tools:visibility="gone"
         android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

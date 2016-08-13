@@ -2,6 +2,10 @@ package com.chaemil.hgms.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +16,7 @@ import android.widget.TextView;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.fragment.CategoryFragment;
 import com.chaemil.hgms.model.Category;
 import com.chaemil.hgms.model.Video;
 
@@ -22,7 +27,7 @@ import it.sephiroth.android.library.widget.HListView;
 /**
  * Created by chaemil on 20.4.16.
  */
-public class CategoriesAdapter extends BaseExpandableListAdapter {
+public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Holder> {
 
     private Context context;
     private ArrayList<Category> categories;
@@ -35,95 +40,46 @@ public class CategoriesAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public int getGroupCount() {
+    public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.categories_group, parent, false);
+        return new Holder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(Holder holder, int position) {
+        final Category category = categories.get(position);
+        holder.background.setBackgroundColor(Color.parseColor(category.getColor()));
+        holder.background.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CategoryFragment categoryFragment = new CategoryFragment();
+                Bundle args = new Bundle();
+                args.putParcelable(CategoryFragment.CATEGORY, category);
+                categoryFragment.setArguments(args);
+
+                FragmentTransaction transaction = mainActivity.getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.category_fragment, categoryFragment);
+                transaction.addToBackStack(CategoryFragment.TAG);
+                transaction.commit();
+            }
+        });
+        holder.name.setText(category.getName());
+    }
+
+    @Override
+    public int getItemCount() {
         return categories.size();
     }
 
-    @Override
-    public int getChildrenCount(int groupPosition) {
-        return 1;
-    }
+    public class Holder extends RecyclerView.ViewHolder {
 
-    @Override
-    public Category getGroup(int groupPosition) {
-        return categories.get(groupPosition);
-    }
+        private final TextView name;
+        private final RelativeLayout background;
 
-    @Override
-    public Video getChild(int groupPosition, int childPosition) {
-        return categories.get(groupPosition).getVideos().get(childPosition);
-    }
-
-    @Override
-    public long getGroupId(int groupPosition) {
-        return 0;
-    }
-
-    @Override
-    public long getChildId(int groupPosition, int childPosition) {
-        return 0;
-    }
-
-    @Override
-    public boolean hasStableIds() {
-        return false;
-    }
-
-    @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        Category category = getGroup(groupPosition);
-        if (convertView == null) {
-            LayoutInflater infalInflater = (LayoutInflater) this.context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.categories_group, null);
+        public Holder(View itemView) {
+            super(itemView);
+            this.background = (RelativeLayout) itemView.findViewById(R.id.background);
+            this.name = (TextView) itemView.findViewById(R.id.category_name);
         }
-
-        RelativeLayout background = (RelativeLayout) convertView.findViewById(R.id.background);
-        TextView categoryNameView = (TextView) convertView.findViewById(R.id.category_name);
-        ImageView indicator = (ImageView) convertView.findViewById(R.id.indicator);
-
-        background.setBackgroundColor(Color.parseColor(category.getColor()));
-        categoryNameView.setText(category.getName() + " (" + category.getVideos().size() + ")");
-        if (isExpanded) {
-            indicator.setImageDrawable(context.getResources().getDrawable(R.drawable.up_arrow));
-        } else {
-            indicator.setImageDrawable(context.getResources().getDrawable(R.drawable.down_arrow));
-        }
-
-        return convertView;
-    }
-
-    @Override
-    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        ChildViewHolder holder;
-
-        if (convertView == null) {
-            LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.category_horizontal_list, null);
-            holder = new ChildViewHolder();
-            convertView.setTag(holder);
-        } else {
-            holder = (ChildViewHolder) convertView.getTag();
-        }
-
-        holder.categoryList = (HListView) convertView.findViewById(R.id.category_horizontal_list);
-        holder.categoryAdapter = new CategoryHorizontalAdapter(
-                context,
-                mainActivity,
-                getGroup(groupPosition).getVideos());
-
-        holder.categoryList.setAdapter(holder.categoryAdapter);
-
-        return convertView;
-    }
-
-    @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return false;
-    }
-
-    public class ChildViewHolder {
-        public HListView categoryList;
-        public CategoryHorizontalAdapter categoryAdapter;
     }
 }

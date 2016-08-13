@@ -120,8 +120,25 @@ public class RequestFactory {
                 createMyReqErrorListener(listener, RequestType.POST_VIDEO_VIEW));
     }
 
-    public static JsonObjectRequest getCategories(RequestFactoryListener listener) {
+    public static JsonObjectRequest getCategories(RequestFactoryListener listener, boolean videos,
+                                                  int categoryId, int page, int perPage) {
+
+        int videosInt;
+        if (videos) {
+            videosInt = 1;
+        } else {
+            videosInt = 0;
+        }
+
         String url = Constants.API_GET_CATEGORIES;
+
+        if (categoryId != 0) {
+            url += "?categoryId=" + categoryId +
+                    "&page=" + page +
+                    "&perPage=" + perPage;
+        } else {
+            url += "?videos=" + videosInt;
+        }
 
         JSONObject jsonObject = new JSONObject();
 

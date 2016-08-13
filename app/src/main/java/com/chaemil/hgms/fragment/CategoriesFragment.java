@@ -2,6 +2,8 @@ package com.chaemil.hgms.fragment;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,11 +34,12 @@ import java.util.ArrayList;
 public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private ArrayList<Category> categories = new ArrayList<>();
-    private ExpandableListView categoriesList;
+    private RecyclerView categoriesList;
     private CategoriesAdapter categoriesAdapter;
     private ProgressBar progress;
     private SwipeRefreshLayout swipeRefresh;
     private LinearLayout connectionErrorWrapper;
+    private GridLayoutManager gridLayoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,12 +64,12 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     private void getData() {
-        JsonObjectRequest request = RequestFactory.getCategories(this);
+        JsonObjectRequest request = RequestFactory.getCategories(this, false, 0, 0, 0);
         RequestService.getRequestQueue().add(request);
     }
 
     private void getUI(ViewGroup rootView) {
-        categoriesList = (ExpandableListView) rootView.findViewById(R.id.categories_list);
+        categoriesList = (RecyclerView) rootView.findViewById(R.id.categories_list);
         progress = (ProgressBar) rootView.findViewById(R.id.progress);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
         connectionErrorWrapper = (LinearLayout) rootView.findViewById(R.id.connection_error_wrapper);
@@ -74,18 +77,29 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void setupUI() {
         if (isAdded()) {
-            categoriesAdapter = new CategoriesAdapter(getContext(), categories,
+            categoriesAdapter = new CategoriesAdapter(getContext(),
+                    categories,
                     ((MainActivity) getActivity()));
 
+            setupGridManager();
             categoriesList.setAdapter(categoriesAdapter);
-            categoriesList.setDividerHeight(0);
             swipeRefresh.setOnRefreshListener(this);
+        }
+    }
+
+    private void setupGridManager() {
+        final int columns = getResources().getInteger(R.integer.archive_columns);
+        if (gridLayoutManager == null) {
+            gridLayoutManager = new GridLayoutManager(getActivity(), columns);
+            categoriesList.setLayoutManager(gridLayoutManager);
+        } else {
+            gridLayoutManager.setSpanCount(columns);
         }
     }
 
     public void adjustLayout() {
         if (isAdded()) {
-            categoriesList.setAdapter(categoriesAdapter);
+            setupGridManager();
         }
     }
 

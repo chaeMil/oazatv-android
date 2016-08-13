@@ -245,25 +245,13 @@ public class ResponseFactory {
     }
 
     public static Category parseCategory(JSONObject response) {
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
-        try {
-            int id = response.getInt(Constants.JSON_ID);
-            String nameCS = response.getString(Constants.JSON_NAME_CS);
-            String nameEN = response.getString(Constants.JSON_NAME_EN);
-            String color = response.getString(Constants.JSON_COLOR);
-            JSONArray jsonVideos = response.getJSONArray(Constants.JSON_VIDEOS);
-            ArrayList<Video> videos = new ArrayList<>();
-            for(int i = 0; i < jsonVideos.length(); i++) {
-                Video video = parseVideo(jsonVideos.getJSONObject(i));
-                videos.add(video);
-            }
-
-            return new Category(id, nameCS, nameEN, color, videos);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (response != null) {
+            return gson.fromJson(response.toString(), Category.class);
+        } else {
+            return null;
         }
-
-        return null;
     }
 
 }
