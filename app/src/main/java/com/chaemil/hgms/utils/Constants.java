@@ -98,5 +98,8 @@ public class Constants {
     public static final String JSON_COLOR = "color";
     public static final String API_DATE_FORMAT = "yyyy-MM-dd";
     public static final String METADATA_DURATION = "metadata_duration_in_seconds";
-
+    public static final String JSON_THUMB_128 = "thumb_128";
+    public static final String JSON_THUMB_256 = "thumb_256";
+    public static final String JSON_THUMB_512 = "thumb_512";
+    public static final String JSON_THUMB_1024 = "thumb_1024";
 }

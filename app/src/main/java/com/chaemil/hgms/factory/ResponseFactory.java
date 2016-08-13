@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ResponseFactory {
 
@@ -63,73 +64,52 @@ public class ResponseFactory {
     }
 
     public static PhotoAlbum parseAlbum(JSONObject response) {
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
-        try  {
-            if (response.has(Constants.JSON_TYPE_ALBUM)) {
-                response = response.getJSONObject(Constants.JSON_TYPE_ALBUM);
+        if (response != null) {
+            PhotoAlbum album = gson.fromJson(response.toString(), PhotoAlbum.class);
+            ArrayList<Photo> photos = parsePhotos(response);
+            album.setPhotos(photos);
+            return album;
+        } else {
+            return null;
+        }
+
+    }
+
+    public static ArrayList<Photo> parsePhotos(JSONObject response) {
+
+        ArrayList<Photo> photos = null;
+
+        try {
+            JSONArray jsonPhotos = response
+                    .getJSONObject(Constants.JSON_TYPE_ALBUM)
+                    .getJSONArray(Constants.JSON_PHOTOS);
+
+            photos = new ArrayList<>();
+
+            for (int i = 0; i < jsonPhotos.length(); i++) {
+
+                photos.add(parsePhoto(jsonPhotos.getJSONObject(i)));
+
             }
-
-            int serverId = response.getInt(Constants.JSON_ID);
-            String hash = response.getString(Constants.JSON_HASH);
-            String date = response.getString(Constants.JSON_DATE);
-            String nameCS = response.getString(Constants.JSON_NAME_CS);
-            String nameEN = response.getString(Constants.JSON_NAME_EN);
-            String tags = response.getString(Constants.JSON_TAGS);
-            String descriptionCS = response.getString(Constants.JSON_DESCRIPTION_CS);
-            String descriptionEN = response.getString(Constants.JSON_DESCRIPTION_EN);
-            Photo thumb = parsePhoto(response.getJSONObject(Constants.JSON_THUMBS));
-            JSONArray jsonPhotos = new JSONArray();
-            if (response.has(Constants.JSON_PHOTOS)) {
-                jsonPhotos = response.getJSONArray(Constants.JSON_PHOTOS);
-            }
-
-            ArrayList<Photo> photos = new ArrayList<>();
-
-            for(int c = 0; c < jsonPhotos.length(); c++) {
-
-                Photo photo = parsePhoto(jsonPhotos.getJSONObject(c));
-                photos.add(photo);
-
-            }
-
-            return new PhotoAlbum(serverId, hash, date, nameCS, nameEN, tags, descriptionCS,
-                    descriptionEN, thumb, photos);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return photos;
 
     }
 
     public static Photo parsePhoto(JSONObject response) {
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
-        try {
-
-            String descriptionCS = "";
-            if (response.has(Constants.JSON_DESCRIPTION_CS)) {
-                descriptionCS = response.getString(Constants.JSON_DESCRIPTION_CS);
-            }
-            String descriptionEN = "";
-            if (response.has(Constants.JSON_DESCRIPTION_EN)) {
-                descriptionEN = response.getString(Constants.JSON_DESCRIPTION_EN);
-            }
-            String originalFile = response.getString(Constants.JSON_ORIGINAL_FILE);
-            String thumb128 = response.getString(Constants.JSON_THUMB + "_128");
-            String thumb256 = response.getString(Constants.JSON_THUMB + "_256");
-            String thumb512 = response.getString(Constants.JSON_THUMB + "_512");
-            String thumb1024 = response.getString(Constants.JSON_THUMB + "_1024");
-            String thumb2048 = response.getString(Constants.JSON_THUMB + "_2048");
-
-            return new Photo(originalFile, thumb128, thumb256, thumb512, thumb1024, thumb2048,
-                    descriptionCS, descriptionEN);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (response != null) {
+            return gson.fromJson(response.toString(), Photo.class);
+        } else {
+            return null;
         }
-
-        return null;
     }
 
     private static ArchiveItem parseArchiveItem(JSONObject response) {

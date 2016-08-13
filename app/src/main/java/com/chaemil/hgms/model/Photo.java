@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.chaemil.hgms.utils.Constants;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Locale;
 
@@ -13,13 +15,29 @@ import java.util.Locale;
 public class Photo implements Parcelable {
 
     public static final String PHOTO = "photo";
+    @Expose
+    @SerializedName(Constants.JSON_ORIGINAL_FILE)
     private String originalFile;
+    @Expose
+    @SerializedName(Constants.JSON_THUMB_128)
     private String thumb128;
+    @Expose
+    @SerializedName(Constants.JSON_THUMB_256)
     private String thumb256;
+    @Expose
+    @SerializedName(Constants.JSON_THUMB_512)
     private String thumb512;
+    @Expose
+    @SerializedName(Constants.JSON_THUMB_1024)
     private String thumb1024;
+    @Expose
+    @SerializedName(Constants.JSON_THUMB_2048)
     private String thumb2048;
+    @Expose
+    @SerializedName(Constants.JSON_DESCRIPTION_CS)
     private String descriptionCS;
+    @Expose
+    @SerializedName(Constants.JSON_DESCRIPTION_EN)
     private String descriptionEN;
 
     public Photo(String originalFile, String thumb128, String thumb256, String thumb512, String thumb1024, String thumb2048, String descriptionCS, String descriptionEN) {

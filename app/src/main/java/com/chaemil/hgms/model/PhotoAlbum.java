@@ -1,6 +1,8 @@
 package com.chaemil.hgms.model;
 
 import com.chaemil.hgms.utils.Constants;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -10,15 +12,30 @@ import java.util.Locale;
  */
 public class PhotoAlbum {
 
+    @Expose
+    @SerializedName(Constants.JSON_ID)
     private int serverId;
+    @Expose
     private String hash;
+    @Expose
     private String date;
+    @Expose
+    @SerializedName(Constants.JSON_NAME_CS)
     private String nameCS;
+    @Expose
+    @SerializedName(Constants.JSON_NAME_EN)
     private String nameEN;
+    @Expose
     private String tags;
+    @Expose
+    @SerializedName(Constants.JSON_DESCRIPTION_CS)
     private String descriptionCS;
+    @Expose
+    @SerializedName(Constants.JSON_DESCRIPTION_EN)
     private String descriptionEN;
+    @Expose
     private ArrayList<Photo> photos;
+    @Expose
     private Photo thumbs;
 
     public PhotoAlbum() {
