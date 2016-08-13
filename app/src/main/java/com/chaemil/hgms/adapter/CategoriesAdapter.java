@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,11 +75,11 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ho
     public class Holder extends RecyclerView.ViewHolder {
 
         private final TextView name;
-        private final RelativeLayout background;
+        private final CardView background;
 
         public Holder(View itemView) {
             super(itemView);
-            this.background = (RelativeLayout) itemView.findViewById(R.id.background);
+            this.background = (CardView) itemView.findViewById(R.id.background);
             this.name = (TextView) itemView.findViewById(R.id.category_name);
         }
     }

@@ -3,7 +3,6 @@ package com.chaemil.hgms.fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -148,7 +147,8 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
     private void setupGridManager() {
         final int columns = getResources().getInteger(R.integer.archive_columns);
         if (gridLayoutManager == null) {
-            gridLayoutManager = new GridLayoutManager(getActivity(), columns);
+            gridLayoutManager = new GridLayoutManager(getActivity(),
+                    columns);
         } else {
             gridLayoutManager.setSpanCount(columns);
         }

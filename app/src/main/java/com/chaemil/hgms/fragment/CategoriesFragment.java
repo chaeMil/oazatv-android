@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -17,6 +16,7 @@ import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.CategoriesAdapter;
+import com.chaemil.hgms.adapter.utils.SpacesItemDecoration;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.Category;
