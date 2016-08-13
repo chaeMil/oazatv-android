@@ -7,6 +7,10 @@ import android.os.Parcelable;
 
 import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.SmartLog;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.novoda.downloadmanager.DownloadManagerBuilder;
 import com.novoda.downloadmanager.lib.DownloadManager;
 import com.novoda.downloadmanager.lib.Query;
@@ -22,34 +26,63 @@ import java.util.Locale;
 public class Video extends SugarRecord implements Parcelable {
 
     private Long id;
+    @Expose
+    @SerializedName(Constants.JSON_ID)
     private int serverId;
+    @Expose
     private String hash;
+    @Expose
     private String date;
+    @Expose
+    @SerializedName(Constants.JSON_NAME_CS)
     private String nameCS;
+    @Expose
+    @SerializedName(Constants.JSON_NAME_EN)
     private String nameEN;
+    @Expose
     private String tags;
+    @Expose
+    @SerializedName(Constants.JSON_MP4_FILE_LOWRES)
     private String videoFileLowRes;
+    @Expose
+    @SerializedName(Constants.JSON_MP4_FILE)
     private String videoFile;
+    @Expose
+    @SerializedName(Constants.JSON_MP3_FILE)
     private String audioFile;
+    @Expose
+    @SerializedName(Constants.THUMB_FILE)
     private String thumbFile;
+    @Expose
+    @SerializedName(Constants.THUMB_FILE_LOW_RES)
     private String thumbFileLowRes;
+    @Expose
+    @SerializedName(Constants.THUMB_COLOR)
     private String thumbColor;
+    @Expose
+    @SerializedName(Constants.METADATA_DURATION)
     private int duration;
+    @Expose
     private int views;
+    @Expose
     private String categories;
+    @Expose
+    @SerializedName(Constants.JSON_DESCRIPTION_CS)
     private String descriptionCS;
+    @Expose
+    @SerializedName(Constants.JSON_DESCRIPTION_EN)
     private String descriptionEN;
     private int currentTime;
 
     public Video() {
     }
 
-    public Video(int serverId, String hash, String date, String nameCS,
+    public Video(int id, String hash, String date, String nameCS,
                  String nameEN, String tags, String videoFileLowRes, String videoFile, String audioFile,
                  String thumbFile, String thumbFileLowRes, String thumbColor, int duration,
                  int views, String categories,
                  String descriptionCS, String descriptionEN) {
-        this.serverId = serverId;
+        this.serverId = id;
         this.hash = hash;
         this.date = date;
         this.nameCS = nameCS;

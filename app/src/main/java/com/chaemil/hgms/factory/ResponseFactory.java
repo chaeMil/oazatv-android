@@ -10,6 +10,8 @@ import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.SmartLog;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,41 +53,13 @@ public class ResponseFactory {
     }
 
     public static Video parseVideo(JSONObject response) {
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
-        try {
-
-            if (response.has(Constants.JSON_TYPE_VIDEO)) {
-                response = response.getJSONObject(Constants.JSON_TYPE_VIDEO);
-            }
-
-            int serverId = response.getInt(Constants.JSON_ID);
-            String hash = response.getString(Constants.JSON_HASH);
-            String date = response.getString(Constants.JSON_DATE);
-            String nameCS = response.getString(Constants.JSON_NAME_CS);
-            String nameEN = response.getString(Constants.JSON_NAME_EN);
-            String tags = response.getString(Constants.JSON_TAGS);
-            String videoFileLowRes = response.getString(Constants.JSON_MP4_FILE_LOWRES);
-            String videoFile = response.getString(Constants.JSON_MP4_FILE);
-            String audioFile = response.getString(Constants.JSON_MP3_FILE);
-            String thumbFile = response.getString(Constants.THUMB_FILE);
-            String thumbFileLowRes = response.getString(Constants.THUMB_FILE_LOW_RES);
-            String thumbColor = response.getString(Constants.THUMB_COLOR);
-            int duration = response.getInt(Constants.METADATA_DURATION);
-            int views = response.getInt(Constants.JSON_VIEWS);
-            String categories = response.getString(Constants.JSON_CATEGORIES);
-            String descriptionCS = response.getString(Constants.JSON_DESCRIPTION_CS);
-            String descriptionEN = response.getString(Constants.JSON_DESCRIPTION_EN);
-
-            return new Video(serverId, hash, date, nameCS, nameEN, tags, videoFileLowRes,
-                    videoFile, audioFile, thumbFile, thumbFileLowRes, thumbColor, duration,
-                    views, categories, descriptionCS, descriptionEN);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (response != null) {
+            return gson.fromJson(response.toString(), Video.class);
+        } else {
+            return null;
         }
-
-        return null;
-
     }
 
     public static PhotoAlbum parseAlbum(JSONObject response) {
