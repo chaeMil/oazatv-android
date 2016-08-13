@@ -124,7 +124,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                 R.layout.main_fragment, container, false);
 
         getUI(rootView);
-        setupUI();
+        setupUI(savedInstanceState);
 
         return rootView;
     }
@@ -172,7 +172,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         loadingView = (SpinKitView) rootView.findViewById(R.id.loading_view);
     }
 
-    private void setupUI() {
+    private void setupUI(Bundle savedInstanceState) {
         setupTabLayout();
         setupSearch();
 
@@ -183,18 +183,20 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         share.setOnClickListener(this);
         continueWithoutData.setOnClickListener(this);
 
-        if (mainFragmentsAdapter == null) {
-            mainFragmentsAdapter = new MainFragmentsAdapter(this, context.getSupportFragmentManager());
+        if (savedInstanceState == null) {
+            if (mainFragmentsAdapter == null) {
+                mainFragmentsAdapter = new MainFragmentsAdapter(this, context.getSupportFragmentManager());
+            }
+            if (tabLayoutChangeListener == null) {
+                tabLayoutChangeListener = new TabLayout.TabLayoutOnPageChangeListener(tabLayout);
+            }
+            pager.setAdapter(mainFragmentsAdapter);
+            pager.addOnPageChangeListener(tabLayoutChangeListener);
+            pager.setOffscreenPageLimit(3);
+            settingsFab.hide(false);
+            streamOnlyAudioSwitch.setChecked(sharedPreferences.loadStreamAudio());
+            streamOnWifiSwitch.setChecked(sharedPreferences.loadStreamOnWifi());
         }
-        if (tabLayoutChangeListener == null) {
-            tabLayoutChangeListener = new TabLayout.TabLayoutOnPageChangeListener(tabLayout);
-        }
-        pager.setAdapter(mainFragmentsAdapter);
-        pager.addOnPageChangeListener(tabLayoutChangeListener);
-        pager.setOffscreenPageLimit(3);
-        settingsFab.hide(false);
-        streamOnlyAudioSwitch.setChecked(sharedPreferences.loadStreamAudio());
-        streamOnWifiSwitch.setChecked(sharedPreferences.loadStreamOnWifi());
 
         streamOnWifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

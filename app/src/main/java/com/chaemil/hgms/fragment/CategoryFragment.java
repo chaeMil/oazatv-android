@@ -11,6 +11,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -41,7 +42,7 @@ import java.util.ArrayList;
 /**
  * Created by chaemil on 2.12.15.
  */
-public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     public static final String CATEGORY = "category";
     public static final String TAG = "CategoryFragment";
@@ -57,6 +58,7 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
     private Category category;
     private RelativeLayout categoryToolbar;
     private TextView categoryName;
+    private ImageView back;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,6 +121,7 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
 
         categoryToolbar.setBackgroundColor(Color.parseColor(category.getColor()));
         categoryName.setText(category.getName());
+        back.setOnClickListener(this);
     }
 
     private void setupAdapter() {
@@ -166,6 +169,7 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
         connectionErrorWrapper = (LinearLayout) rootView.findViewById(R.id.connection_error_wrapper);
         categoryToolbar = (RelativeLayout) rootView.findViewById(R.id.category_toolbar);
         categoryName = (TextView) rootView.findViewById(R.id.category_name);
+        back = (ImageView) rootView.findViewById(R.id.back);
     }
 
     @Override
@@ -206,5 +210,14 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
         archive.clear();
         archiveAdapter.notifyDataSetChanged();
         getArchivePage(1);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back:
+                goBack();
+                break;
+        }
     }
 }
