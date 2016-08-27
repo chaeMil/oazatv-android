@@ -210,7 +210,7 @@
 
             <ru.rambler.libs.swipe_layout.SwipeLayout
                 android:id="@+id/mini_player_swipe"
-                tools:visibility="gone"
+                tools:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -228,13 +228,11 @@
                         android:layout_width="56dp"
                         android:layout_height="56dp" />
 
-                    <at.markushi.ui.CircleButton
+                    <ImageView
                         android:id="@+id/mini_play_pause"
                         android:layout_width="60dp"
                         android:layout_height="match_parent"
-                        android:src="@drawable/pause"
-                        app:cb_color="@color/gray"
-                        app:cb_pressedRingWidth="3dip"
+                        android:src="@drawable/pause_dark"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true" />
@@ -245,7 +243,7 @@
                         tools:text="Show player"
                         fontPath="@string/default_font_bold"
                         android:textSize="18dp"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/colorAccentDarker"
                         android:id="@+id/mini_player_text"
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/mini_play_pause"

@@ -405,7 +405,7 @@ public class MainActivity extends BaseActivity implements
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getAudioPlayerFragment().playNewAudio(MainActivity.this, expandPanel);
+                        getAudioPlayerFragment().playNewAudio(MainActivity.this, expandPanel, audio);
                     }
                 }, 600);
             }

@@ -1,6 +1,7 @@
 package com.chaemil.hgms.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -35,6 +36,11 @@ public class BaseFragment extends Fragment implements RequestFactoryListener {
     @Override
     public void onSuccessResponse(JSONObject response, RequestType requestType) {
         //SmartLog.Log(SmartLog.LogLevel.DEBUG, "response", String.valueOf(response));
+    }
+
+    public void delay(Runnable runnable, int time) {
+        final Handler handler = new Handler();
+        handler.postDelayed(runnable, time);
     }
 
     @Override

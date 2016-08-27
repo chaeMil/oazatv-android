@@ -63,7 +63,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private TextView totalTime;
     private int currentTimeInt;
     private AppCompatSeekBar seekBar;
-    private CircleButton miniPlayerPause;
+    private ImageView miniPlayerPause;
     private ProgressBar bufferBar;
     private ViewGroup rootView;
     private ImageView audioThumb;
@@ -157,7 +157,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         totalTime = (TextView) rootView.findViewById(R.id.total_time);
         seekBar = (AppCompatSeekBar) rootView.findViewById(R.id.seek_bar);
         seekBar.setOnSeekBarChangeListener(this);
-        miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
+        miniPlayerPause = (ImageView) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
         back = (ImageView) rootView.findViewById(R.id.back);
         share = (ImageView) rootView.findViewById(R.id.share);
@@ -183,6 +183,12 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
         miniPlayerSwipe.setOnSwipeListener(createSwipeListener());
 
+        delay(new Runnable() {
+            @Override
+            public void run() {
+                switchMiniPlayer(1);
+            }
+        }, 750);
 
         refreshPlayButtons();
     }
@@ -276,10 +282,10 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         if (isAdded()) {
             if (isServicePlayingAudio()) {
                 playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-                miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+                miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause_dark));
             } else {
                 playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
-                miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+                miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
             }
         }
     }
@@ -418,14 +424,14 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         totalTime.setText("???");
     }
 
-    public void playNewAudio(Context context, boolean expandPanel) {
+    public void playNewAudio(Context context, boolean expandPanel, Video audio) {
         reconnectToService(context);
+        postGA();
+        postVideoView();
         activateUI(true);
         AnalyticsService.getInstance()
                 .setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: "
                         + getCurrentAudio().getHash());
-        postGA();
-        postVideoView();
         if (expandPanel) {
             mainActivity.expandPanel();
         }

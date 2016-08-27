@@ -69,7 +69,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private int currentTimeInt;
     private AppCompatSeekBar seekBar;
     private Video currentVideo;
-    private CircleButton miniPlayerPause;
+    private ImageView miniPlayerPause;
     private ProgressBar bufferBar;
     private int bufferFail;
     private RelativeLayout controlsWrapper;
@@ -233,7 +233,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         totalTime = (TextView) rootView.findViewById(R.id.total_time);
         seekBar = (AppCompatSeekBar) rootView.findViewById(R.id.seek_bar);
         seekBar.setOnSeekBarChangeListener(this);
-        miniPlayerPause = (CircleButton) rootView.findViewById(R.id.mini_play_pause);
+        miniPlayerPause = (ImageView) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
         controlsWrapper = (RelativeLayout) rootView.findViewById(R.id.controls_wrapper);
         videoWrapper = (RelativeLayout) rootView.findViewById(R.id.video_wrapper);
@@ -274,6 +274,13 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         videoWrapperParamsFullscreen = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         videoWrapperParamsFullscreen.setMargins(0, 0, 0, 0);  // left, top, right, bottom
+
+        delay(new Runnable() {
+            @Override
+            public void run() {
+                switchMiniPlayer(1);
+            }
+        }, 750);
     }
 
     private void showInfo() {
@@ -569,12 +576,12 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         if (videoView.isPlaying()) {
             videoView.pause();
             playPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
-            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play));
+            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
         } else {
             videoView.start();
             resetHideControlsTimer();
             playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause_dark));
             if (seekBar != null) {
                 seekBar.postDelayed(onEverySecond, 1000);
             }

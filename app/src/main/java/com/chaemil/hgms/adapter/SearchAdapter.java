@@ -15,7 +15,11 @@ import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.utils.AdapterUtils;
+import com.chaemil.hgms.utils.StringUtils;
 import com.koushikdutta.ion.Ion;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -47,6 +51,9 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
             holder = new ViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.thumb = (ImageView) convertView.findViewById(R.id.thumb);
+            holder.date = (TextView) convertView.findViewById(R.id.date);
+            holder.info = (TextView) convertView.findViewById(R.id.info);
+            holder.contextMenu = (ImageView) convertView.findViewById(R.id.context_menu);
 
             convertView.setTag(holder);
         }
@@ -63,6 +70,15 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
 
                 holder.name.setText(video.getName());
                 holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
+                holder.date.setText(StringUtils.formatDate(video.getDate(), context));
+                holder.info.setText(video.getViews() + " " + context.getString(R.string.views));
+                holder.contextMenu.setVisibility(View.VISIBLE);
+                holder.contextMenu.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AdapterUtils.contextDialog(context, mainActivity, video);
+                    }
+                });
                 Ion.with(context)
                         .load(video.getThumbFile())
                         .intoImageView(holder.thumb);
@@ -73,6 +89,9 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
                 final PhotoAlbum photoAlbum = archiveItem.getAlbum();
 
                 holder.name.setText(photoAlbum.getName());
+                holder.date.setText(StringUtils.formatDate(photoAlbum.getDate(), context));
+                holder.info.setText(context.getString(R.string.photo_album));
+                holder.contextMenu.setVisibility(View.GONE);
                 Ion.with(context)
                         .load(photoAlbum.getThumbs().getThumb256())
                         .intoImageView(holder.thumb);
@@ -95,9 +114,9 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
         public TextView name;
         public TextView date;
         public TextView views;
-        public ImageView playAudio;
         public ImageView download;
-
+        public TextView info;
+        public ImageView contextMenu;
     }
 
 
