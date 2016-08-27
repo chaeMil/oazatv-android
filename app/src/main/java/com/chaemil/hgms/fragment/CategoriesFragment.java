@@ -1,5 +1,7 @@
 package com.chaemil.hgms.fragment;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,13 +18,15 @@ import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.CategoriesAdapter;
-import com.chaemil.hgms.adapter.utils.SpacesItemDecoration;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.Category;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.GAUtils;
+import com.chaemil.hgms.utils.SmartLog;
+import com.cunoraz.tagview.Tag;
+import com.cunoraz.tagview.TagView;
 
 import org.json.JSONObject;
 
@@ -34,12 +38,13 @@ import java.util.ArrayList;
 public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private ArrayList<Category> categories = new ArrayList<>();
-    private RecyclerView categoriesList;
+    private TagView categoriesList;
     private CategoriesAdapter categoriesAdapter;
     private ProgressBar progress;
     private SwipeRefreshLayout swipeRefresh;
     private LinearLayout connectionErrorWrapper;
     private GridLayoutManager gridLayoutManager;
+    private ArrayList<Tag> categoryTags = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,7 +74,7 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     private void getUI(ViewGroup rootView) {
-        categoriesList = (RecyclerView) rootView.findViewById(R.id.categories_list);
+        categoriesList = (TagView) rootView.findViewById(R.id.categories_list);
         progress = (ProgressBar) rootView.findViewById(R.id.progress);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
         connectionErrorWrapper = (LinearLayout) rootView.findViewById(R.id.connection_error_wrapper);
@@ -77,29 +82,20 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void setupUI() {
         if (isAdded()) {
-            categoriesAdapter = new CategoriesAdapter(getContext(),
-                    categories,
-                    ((MainActivity) getActivity()));
-
-            setupGridManager();
-            categoriesList.setAdapter(categoriesAdapter);
             swipeRefresh.setOnRefreshListener(this);
-        }
-    }
 
-    private void setupGridManager() {
-        final int columns = getResources().getInteger(R.integer.archive_columns);
-        if (gridLayoutManager == null) {
-            gridLayoutManager = new GridLayoutManager(getActivity(), columns);
-            categoriesList.setLayoutManager(gridLayoutManager);
-        } else {
-            gridLayoutManager.setSpanCount(columns);
-        }
-    }
+            categoriesList.settextPaddingBottom(10f);
+            categoriesList.setTextPaddingLeft(10f);
+            categoriesList.setTextPaddingRight(10f);
+            categoriesList.setTextPaddingTop(10f);
+            categoriesList.addTags(categoryTags);
+            categoriesList.setOnTagClickListener(new TagView.OnTagClickListener() {
+                @Override
+                public void onTagClick(Tag tag, int i) {
+                    SmartLog.Log(SmartLog.LogLevel.DEBUG, "category", categories.get(i).getName());
+                }
+            });
 
-    public void adjustLayout() {
-        if (isAdded()) {
-            setupGridManager();
         }
     }
 
@@ -111,6 +107,18 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
             case GET_CATEGORIES:
                 if (response != null) {
                     categories = ResponseFactory.parseCategories(response);
+                    if (categories != null) {
+                        categoryTags.clear();
+
+                        for (Category category : categories) {
+                            Tag categoryTag = new Tag(category.getName());
+                            categoryTag.tagTextColor = getResources().getColor(R.color.white);
+                            categoryTag.layoutColor = Color.parseColor(category.getColor());
+                            categoryTag.tagTextSize = 18f;
+                            categoryTag.radius = 4f;
+                            categoryTags.add(categoryTag);
+                        }
+                    }
                     progress.setVisibility(View.GONE);
                     swipeRefresh.setRefreshing(false);
                     connectionErrorWrapper.setVisibility(View.GONE);

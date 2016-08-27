@@ -2,7 +2,6 @@ package com.chaemil.hgms.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
@@ -10,20 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.fragment.CategoryFragment;
 import com.chaemil.hgms.model.Category;
-import com.chaemil.hgms.model.Video;
 
 import java.util.ArrayList;
-
-import it.sephiroth.android.library.widget.HListView;
 
 /**
  * Created by chaemil on 20.4.16.
@@ -47,7 +40,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ho
     }
 
     @Override
-    public void onBindViewHolder(Holder holder, int position) {
+    public void onBindViewHolder(final Holder holder, int position) {
         final Category category = categories.get(position);
         holder.background.setBackgroundColor(Color.parseColor(category.getColor()));
         holder.background.setOnClickListener(new View.OnClickListener() {

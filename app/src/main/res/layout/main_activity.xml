@@ -43,7 +43,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/status_message_wrapper">
 
         <RelativeLayout
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
