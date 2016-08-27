@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chaemil.hgms.R;
@@ -42,6 +43,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ho
     @Override
     public void onBindViewHolder(final Holder holder, int position) {
         final Category category = categories.get(position);
+
         holder.background.setBackgroundColor(Color.parseColor(category.getColor()));
         holder.background.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +59,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ho
                 transaction.commit();
             }
         });
+        holder.name.setTextColor(Color.parseColor(category.getColor()));
         holder.name.setText(category.getName());
     }
 
@@ -68,11 +71,11 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ho
     public class Holder extends RecyclerView.ViewHolder {
 
         private final TextView name;
-        private final CardView background;
+        private final RelativeLayout background;
 
         public Holder(View itemView) {
             super(itemView);
-            this.background = (CardView) itemView.findViewById(R.id.background);
+            this.background = (RelativeLayout) itemView.findViewById(R.id.background);
             this.name = (TextView) itemView.findViewById(R.id.category_name);
         }
     }

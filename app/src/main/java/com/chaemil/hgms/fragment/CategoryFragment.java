@@ -1,6 +1,7 @@
 package com.chaemil.hgms.fragment;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -93,7 +94,6 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.category_fragment, container, false);
 
-
         getUI(rootView);
         setupUI();
 
@@ -167,9 +167,13 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
         endlessProgress = (ProgressBar) rootView.findViewById(R.id.endless_progress);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
         connectionErrorWrapper = (LinearLayout) rootView.findViewById(R.id.connection_error_wrapper);
-        categoryToolbar = (RelativeLayout) rootView.findViewById(R.id.category_toolbar);
         categoryName = (TextView) rootView.findViewById(R.id.category_name);
         back = (ImageView) rootView.findViewById(R.id.back);
+
+        categoryToolbar = (RelativeLayout) rootView.findViewById(R.id.category_toolbar);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            categoryToolbar.setTransitionName("transition");
+        }
     }
 
     @Override

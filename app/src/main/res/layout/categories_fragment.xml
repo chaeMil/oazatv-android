@@ -7,17 +7,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.cunoraz.tagview.TagView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/categories_list"
             android:paddingBottom="75dp"
             android:clipToPadding="false"
             android:scrollbarSize="4dp"
-            android:padding="8dp"
             android:scrollbarThumbVertical="@color/colorPrimaryWashed"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingRight="12dp">
 
-        </com.cunoraz.tagview.TagView>
+        </android.support.v7.widget.RecyclerView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

@@ -83,7 +83,6 @@ dependencies {
     compile 'com.afollestad.material-dialogs:core:0.8.6.1'
     compile 'com.android.support:percent:24.2.0'
     compile 'com.google.code.gson:gson:2.4'
-    compile 'com.github.Cutta:TagView:1.2'
     compile('com.afollestad:sectioned-recyclerview:0.2.2') {
         transitive = true
     }
