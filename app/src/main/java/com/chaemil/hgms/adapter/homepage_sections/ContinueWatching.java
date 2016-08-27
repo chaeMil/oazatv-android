@@ -11,7 +11,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
@@ -26,11 +28,13 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 public class ContinueWatching extends StatelessSection {
 
     private final Context context;
+    private final MainActivity mainActivity;
     ArrayList<Video> videosToWatch = new ArrayList<>();
 
-    public ContinueWatching(Context context, ArrayList<Video> videosToWatch) {
+    public ContinueWatching(Context context, MainActivity mainActivity, ArrayList<Video> videosToWatch) {
         super(R.layout.homepage_section_header, R.layout.archive_item);
         this.context = context;
+        this.mainActivity = mainActivity;
         this.videosToWatch = videosToWatch;
     }
 
@@ -47,7 +51,7 @@ public class ContinueWatching extends StatelessSection {
     @Override
     public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
         VideoViewHolder videoViewHolder = (VideoViewHolder) holder;
-        Video video = videosToWatch.get(position);
+        final Video video = videosToWatch.get(position);
 
         videoViewHolder.name.setText(video.getName());
         videoViewHolder.date.setText(StringUtils.formatDate(video.getDate(), context));
@@ -57,6 +61,13 @@ public class ContinueWatching extends StatelessSection {
         Ion.with(context).load(video.getThumbFile()).intoImageView(videoViewHolder.thumb);
 
         setupTime(videoViewHolder, video);
+
+        videoViewHolder.more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AdapterUtils.contextDialog(context, mainActivity, video);
+            }
+        });
     }
 
     @Override

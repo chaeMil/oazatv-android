@@ -46,11 +46,14 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     private GridLayoutManager gridLayoutManager;
     private ArrayList<Video> videosToContinueWatching = new ArrayList<>();
     private SectionedRecyclerViewAdapter adapter;
+    private MainActivity mainActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.home_fragment, container, false);
+
+        mainActivity = (MainActivity) getActivity();
 
         getData();
         getUI(rootView);
@@ -88,7 +91,8 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
             if (homepage != null) {
                 adapter = new SectionedRecyclerViewAdapter();
-                adapter.addSection(new ContinueWatching(getContext(), videosToContinueWatching));
+                adapter.addSection(new ContinueWatching(getContext(), mainActivity,
+                        videosToContinueWatching));
                 homepageList.setLayoutManager(new LinearLayoutManager(getContext()));
                 homepageList.setAdapter(adapter);
 
