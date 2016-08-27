@@ -17,6 +17,7 @@ import com.novoda.downloadmanager.lib.Query;
 import com.orm.SugarRecord;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -177,6 +178,10 @@ public class Video extends SugarRecord implements Parcelable {
             default:
                 return getNameEN();
         }
+    }
+
+    public static List<Video> getNotFullyWatchedVideos() {
+        return Video.find(Video.class, "current_time != 0");
     }
 
     public void setAudioFile(String audioFile) {

@@ -19,14 +19,17 @@ import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.Homepage;
 import com.chaemil.hgms.model.RequestType;
+import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
+import com.chaemil.hgms.utils.SmartLog;
 import com.github.johnpersano.supertoasts.SuperToast;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,6 +67,9 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     }
 
     private void getData() {
+        List<Video> notFullyWatchedVideos = Video.getNotFullyWatchedVideos();
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "notFullyWatchedVideos", notFullyWatchedVideos.toString());
+
         if (NetworkUtils.isConnected(getActivity())) {
             JsonObjectRequest homepage = RequestFactory.getHomepage(this);
             RequestService.getRequestQueue().add(homepage);

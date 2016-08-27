@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -188,6 +189,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         contextDialog(video);
                     }
                 });
+
+                setupTime(downloadItemHolder, video);
             }
         }
 
@@ -269,6 +272,37 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         Log.d("appSize", FileUtils.readableFolderSize(context.getExternalFilesDir("")));
     }
 
+    private void setupTime(final DownloadItemHolder holder, final Video video) {
+        holder.viewProgress.setVisibility(View.GONE);
+        holder.time.setVisibility(View.GONE);
+
+        new AsyncTask<Void, Void, Void>() {
+
+            public Video savedVideo;
+
+            @Override
+            protected Void doInBackground( Void... voids ) {
+                savedVideo = Video.findByServerId(video.getServerId());
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                holder.viewProgress.setVisibility(View.VISIBLE);
+                if (savedVideo != null && savedVideo.equals(video)) {
+                    holder.viewProgress.setMax(video.getDuration());
+                    holder.viewProgress.setProgress(savedVideo.getCurrentTime() / 1000);
+                } else {
+                    holder.viewProgress.setMax(100);
+                    holder.viewProgress.setProgress(0);
+                }
+
+                holder.time.setVisibility(View.VISIBLE);
+                holder.time.setText(StringUtils.getDurationString(video.getDuration()));
+            }
+        }.execute();
+    }
+
     class DownloadItemHolder extends RecyclerView.ViewHolder {
 
         private final View root;
@@ -279,6 +313,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final ImageView pauseButton;
         private final ImageView contextButton;
         private final ImageView cancelButton;
+        public final ProgressBar viewProgress;
+        public final TextView time;
 
         public DownloadItemHolder(View itemView) {
             super(itemView);
@@ -290,6 +326,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             pauseButton = (ImageView) itemView.findViewById(R.id.pause);
             contextButton = (ImageView) itemView.findViewById(R.id.context_menu);
             cancelButton = (ImageView) itemView.findViewById(R.id.cancel_download);
+            viewProgress = (ProgressBar) itemView.findViewById(R.id.view_progress);
+            time = (TextView) itemView.findViewById(R.id.video_time);
         }
     }
 
