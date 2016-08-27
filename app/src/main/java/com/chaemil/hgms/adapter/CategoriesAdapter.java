@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.fragment.CategoriesFragment;
 import com.chaemil.hgms.fragment.CategoryFragment;
 import com.chaemil.hgms.model.Category;
 
@@ -24,12 +25,15 @@ import java.util.ArrayList;
  */
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Holder> {
 
+    private final CategoriesFragment categoriesFragment;
     private Context context;
     private ArrayList<Category> categories;
     private MainActivity mainActivity;
 
-    public CategoriesAdapter(Context context, ArrayList<Category> categories, MainActivity mainActivity) {
+    public CategoriesAdapter(Context context, CategoriesFragment categoriesFragment,
+                             ArrayList<Category> categories, MainActivity mainActivity) {
         this.context = context;
+        this.categoriesFragment = categoriesFragment;
         this.categories = categories;
         this.mainActivity = mainActivity;
     }
@@ -44,7 +48,10 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ho
     public void onBindViewHolder(final Holder holder, int position) {
         final Category category = categories.get(position);
 
+        holder.name.setTextColor(Color.parseColor(category.getColor()));
+        holder.name.setText(category.getName());
         holder.background.setBackgroundColor(Color.parseColor(category.getColor()));
+
         holder.background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,14 +60,15 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ho
                 args.putParcelable(CategoryFragment.CATEGORY, category);
                 categoryFragment.setArguments(args);
 
+                categoriesFragment.setCategoryFragment(categoryFragment);
+
                 FragmentTransaction transaction = mainActivity.getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.category_fragment, categoryFragment);
                 transaction.addToBackStack(CategoryFragment.TAG);
                 transaction.commit();
             }
         });
-        holder.name.setTextColor(Color.parseColor(category.getColor()));
-        holder.name.setText(category.getName());
+
     }
 
     @Override

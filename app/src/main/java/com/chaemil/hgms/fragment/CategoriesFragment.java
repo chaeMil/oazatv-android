@@ -40,6 +40,7 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
     private SwipeRefreshLayout swipeRefresh;
     private LinearLayout connectionErrorWrapper;
     private GridLayoutManager gridLayoutManager;
+    private CategoryFragment categoryFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,6 +79,7 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
     public void setupUI() {
         if (isAdded()) {
             categoriesAdapter = new CategoriesAdapter(getContext(),
+                    this,
                     categories,
                     ((MainActivity) getActivity()));
 
@@ -100,6 +102,9 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
     public void adjustLayout() {
         if (isAdded()) {
             setupGridManager();
+            if (categoryFragment != null) {
+                categoryFragment.adjustLayout();
+            }
         }
     }
 
@@ -134,5 +139,9 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
     @Override
     public void onRefresh() {
         getData();
+    }
+
+    public void setCategoryFragment(CategoryFragment categoryFragment) {
+        this.categoryFragment = categoryFragment;
     }
 }

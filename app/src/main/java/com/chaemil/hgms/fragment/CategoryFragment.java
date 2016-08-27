@@ -78,8 +78,6 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
             goBack();
         }
 
-        getCategoryPage(1);
-
         TypedValue tv = new TypedValue();
         getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
     }
@@ -104,11 +102,21 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
         getUI(rootView);
         setupUI();
 
+        getCategoryPage(1);
+
         return rootView;
 
     }
 
     private void getCategoryPage(final int pageNumber) {
+        if (pageNumber == 1) {
+            endlessProgress.setVisibility(View.GONE);
+            progress.setVisibility(View.VISIBLE);
+        } else {
+            progress.setVisibility(View.GONE);
+            endlessProgress.setVisibility(View.VISIBLE);
+        }
+
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -194,12 +202,14 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
                 }
 
                 if (category != null) {
-                    archive.addAll(category.getVideos());
+                    if (category.getVideos() != null) {
+                        archive.addAll(category.getVideos());
+                    }
 
                     setupAdapter();
 
+                    endlessProgress.setVisibility(View.GONE);
                     progress.setVisibility(View.GONE);
-                    endlessProgress.setVisibility(View.VISIBLE);
                     swipeRefresh.setRefreshing(false);
                     connectionErrorWrapper.setVisibility(View.GONE);
                 }
