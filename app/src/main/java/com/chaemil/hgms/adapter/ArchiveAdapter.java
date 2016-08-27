@@ -36,6 +36,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
     private final Context context;
     private final MainActivity mainActivity;
     private final int layout;
+    private final ArrayList<Video> videos;
     private ArrayList<ArchiveItem> archive;
 
     public ArchiveAdapter(Context context, int layout, MainActivity mainActivity,
@@ -44,6 +45,16 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
         this.archive = archive;
         this.mainActivity = mainActivity;
         this.layout = layout;
+        this.videos = null;
+    }
+
+    public ArchiveAdapter(Context context, MainActivity mainActivity, int layout,
+                          ArrayList<Video> archive) {
+        this.archive = null;
+        this.videos = archive;
+        this.layout = layout;
+        this.mainActivity = mainActivity;
+        this.context = context;
     }
 
     @Override
@@ -57,60 +68,70 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        ArchiveItem archiveItem = archive.get(position);
+        ArchiveItem archiveItem = null;
+        if (archive != null) {
+            archiveItem = archive.get(position);
+        }
 
-        switch (archiveItem.getType()) {
-            case ArchiveItem.Type.VIDEO:
+        if (videos != null) {
+            archiveItem = new ArchiveItem();
+            archiveItem.setVideo(videos.get(position));
+        }
 
-                final Video video = archiveItem.getVideo();
+        if (archiveItem != null) {
+            switch (archiveItem.getType()) {
+                case ArchiveItem.Type.VIDEO:
 
-                holder.mainView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mainActivity.playNewVideo(video);
-                    }
-                });
-                holder.name.setText(video.getName());
-                holder.date.setText(StringUtils.formatDate(video.getDate(), context));
-                holder.views.setText(video.getViews() + " " + context.getString(R.string.views));
-                holder.more.setVisibility(View.VISIBLE);
-                holder.more.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AdapterUtils.contextDialog(context, mainActivity, video);
-                    }
-                });
-                holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
+                    final Video video = archiveItem.getVideo();
 
-                setupTime(holder, video);
+                    holder.mainView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mainActivity.playNewVideo(video);
+                        }
+                    });
+                    holder.name.setText(video.getName());
+                    holder.date.setText(StringUtils.formatDate(video.getDate(), context));
+                    holder.views.setText(video.getViews() + " " + context.getString(R.string.views));
+                    holder.more.setVisibility(View.VISIBLE);
+                    holder.more.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            AdapterUtils.contextDialog(context, mainActivity, video);
+                        }
+                    });
+                    holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
 
-                Ion.with(context)
-                        .load(video.getThumbFile())
-                        .intoImageView(holder.thumb);
+                    setupTime(holder, video);
 
-                break;
+                    Ion.with(context)
+                            .load(video.getThumbFile())
+                            .intoImageView(holder.thumb);
 
-            case ArchiveItem.Type.ALBUM:
+                    break;
 
-                final PhotoAlbum photoAlbum = archiveItem.getAlbum();
+                case ArchiveItem.Type.ALBUM:
 
-                holder.mainView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openAlbum(photoAlbum);
-                    }
-                });
-                holder.name.setText(photoAlbum.getName());
-                holder.date.setText(StringUtils.formatDate(photoAlbum.getDate(), context));
-                holder.views.setText(context.getString(R.string.photo_album));
-                holder.more.setVisibility(View.GONE);
-                holder.viewProgress.setVisibility(View.GONE);
-                holder.time.setVisibility(View.GONE);
+                    final PhotoAlbum photoAlbum = archiveItem.getAlbum();
 
-                Ion.with(context)
-                        .load(photoAlbum.getThumbs().getThumb512())
-                        .intoImageView(holder.thumb);
-                break;
+                    holder.mainView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            openAlbum(photoAlbum);
+                        }
+                    });
+                    holder.name.setText(photoAlbum.getName());
+                    holder.date.setText(StringUtils.formatDate(photoAlbum.getDate(), context));
+                    holder.views.setText(context.getString(R.string.photo_album));
+                    holder.more.setVisibility(View.GONE);
+                    holder.viewProgress.setVisibility(View.GONE);
+                    holder.time.setVisibility(View.GONE);
+
+                    Ion.with(context)
+                            .load(photoAlbum.getThumbs().getThumb512())
+                            .intoImageView(holder.thumb);
+                    break;
+            }
         }
 
     }
@@ -152,7 +173,13 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return archive.size();
+        if (archive != null) {
+            return archive.size();
+        }
+        if (videos != null) {
+            return videos.size();
+        }
+        return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

@@ -28,12 +28,16 @@ import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.Category;
 import com.chaemil.hgms.model.RequestType;
+import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.EndlessScrollListener;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.SmartLog;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -47,7 +51,7 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
     public static final String CATEGORY = "category";
     public static final String TAG = "CategoryFragment";
     private static final int PER_PAGE = 10;
-    private ArrayList<ArchiveItem> archive = new ArrayList<>();
+    private ArrayList<Video> archive = new ArrayList<>();
     private RecyclerView archiveGridView;
     private ProgressBar progress;
     private ArchiveAdapter archiveAdapter;
@@ -59,11 +63,14 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
     private RelativeLayout categoryToolbar;
     private TextView categoryName;
     private ImageView back;
+    private MainActivity mainActivty;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        mainActivty = (MainActivity) getActivity();
 
         Bundle bundle = getArguments();
         category = bundle.getParcelable(CATEGORY);
@@ -71,7 +78,7 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
             goBack();
         }
 
-        getArchivePage(1);
+        getCategoryPage(1);
 
         TypedValue tv = new TypedValue();
         getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
@@ -101,15 +108,15 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
 
     }
 
-    private void getArchivePage(final int pageNumber) {
+    private void getCategoryPage(final int pageNumber) {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 SmartLog.Log(SmartLog.LogLevel.DEBUG, "getCategoryPage", String.valueOf(pageNumber));
-                JsonObjectRequest getArchivePage = RequestFactory.getCategories(CategoryFragment.this,
+                JsonObjectRequest getCategoryPage = RequestFactory.getCategories(CategoryFragment.this,
                         true, category.getId(), pageNumber, PER_PAGE);
-                RequestService.getRequestQueue().add(getArchivePage);
+                RequestService.getRequestQueue().add(getCategoryPage);
             }
         }, 750);
     }
@@ -125,9 +132,9 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
 
     private void setupAdapter() {
         if (archiveAdapter == null) {
-            archiveAdapter = new ArchiveAdapter(getActivity(),
+            archiveAdapter = new ArchiveAdapter(getContext(),
+                    mainActivty,
                     R.layout.archive_item,
-                    (MainActivity) getActivity(),
                     archive);
 
             archiveGridView.setAdapter(archiveAdapter);
@@ -135,7 +142,7 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
             archiveGridView.addOnScrollListener(new EndlessScrollListener(gridLayoutManager) {
                 @Override
                 public void onLoadMore(int page, int totalItemsCount) {
-                    getArchivePage(page + 1);
+                    getCategoryPage(page + 1);
                 }
             });
             swipeRefresh.setOnRefreshListener(this);
@@ -169,11 +176,7 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
         connectionErrorWrapper = (LinearLayout) rootView.findViewById(R.id.connection_error_wrapper);
         categoryName = (TextView) rootView.findViewById(R.id.category_name);
         back = (ImageView) rootView.findViewById(R.id.back);
-
         categoryToolbar = (RelativeLayout) rootView.findViewById(R.id.category_toolbar);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            categoryToolbar.setTransitionName("transition");
-        }
     }
 
     @Override
@@ -181,14 +184,20 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
         super.onSuccessResponse(response, requestType);
 
         switch (requestType) {
-            case GET_ARCHIVE:
+            case GET_CATEGORIES:
 
-                ArrayList<ArchiveItem> newItems;
-                newItems = ResponseFactory.parseArchive(response);
+                Category category = null;
+                try {
+                    category = ResponseFactory.parseCategory(response.getJSONObject(Constants.JSON_CATEGORIES));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                if (newItems != null) {
-                    archive.addAll(newItems);
-                    archiveAdapter.notifyDataSetChanged();
+                if (category != null) {
+                    archive.addAll(category.getVideos());
+
+                    setupAdapter();
+
                     progress.setVisibility(View.GONE);
                     endlessProgress.setVisibility(View.VISIBLE);
                     swipeRefresh.setRefreshing(false);
@@ -213,7 +222,7 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
     public void onRefresh() {
         archive.clear();
         archiveAdapter.notifyDataSetChanged();
-        getArchivePage(1);
+        getCategoryPage(1);
     }
 
     @Override
