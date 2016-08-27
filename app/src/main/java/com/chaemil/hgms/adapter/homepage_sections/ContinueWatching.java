@@ -1,6 +1,7 @@
 package com.chaemil.hgms.adapter.homepage_sections;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,11 +51,12 @@ public class ContinueWatching extends StatelessSection {
 
         videoViewHolder.name.setText(video.getName());
         videoViewHolder.date.setText(StringUtils.formatDate(video.getDate(), context));
-        videoViewHolder.time.setText(video.getDuration());
         videoViewHolder.views.setText(video.getViews() + " " + context.getString(R.string.views));
         videoViewHolder.viewProgress.setMax(video.getDuration());
         videoViewHolder.viewProgress.setProgress(video.getCurrentTime());
         Ion.with(context).load(video.getThumbFile()).intoImageView(videoViewHolder.thumb);
+
+        setupTime(videoViewHolder, video);
     }
 
     @Override
@@ -67,6 +69,37 @@ public class ContinueWatching extends StatelessSection {
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
         headerHolder.sectionName.setText(context.getString(R.string.continue_watching));
+    }
+
+    private void setupTime(final VideoViewHolder holder, final Video video) {
+        holder.viewProgress.setVisibility(View.GONE);
+        holder.time.setVisibility(View.GONE);
+
+        new AsyncTask<Void, Void, Void>() {
+
+            public Video savedVideo;
+
+            @Override
+            protected Void doInBackground( Void... voids ) {
+                savedVideo = Video.findByServerId(video.getServerId());
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                holder.viewProgress.setVisibility(View.VISIBLE);
+                if (savedVideo != null && savedVideo.equals(video)) {
+                    holder.viewProgress.setMax(video.getDuration());
+                    holder.viewProgress.setProgress(savedVideo.getCurrentTime() / 1000);
+                } else {
+                    holder.viewProgress.setMax(100);
+                    holder.viewProgress.setProgress(0);
+                }
+
+                holder.time.setVisibility(View.VISIBLE);
+                holder.time.setText(StringUtils.getDurationString(video.getDuration()));
+            }
+        }.execute();
     }
 
     public class VideoViewHolder extends RecyclerView.ViewHolder{
