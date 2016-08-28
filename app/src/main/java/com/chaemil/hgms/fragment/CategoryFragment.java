@@ -232,7 +232,7 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
     public void onRefresh() {
         archive.clear();
         archiveAdapter.notifyDataSetChanged();
-        getCategoryPage(1);
+        getCategoryPage(0);
     }
 
     @Override
