@@ -28,13 +28,13 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 /**
  * Created by chaemil on 27.8.16.
  */
-public class SectionPopularVideos extends StatelessSection {
+public class SectionFeatured extends StatelessSection {
 
     private final Context context;
     private final MainActivity mainActivity;
-    ArrayList<Video> archive = new ArrayList<>();
+    ArrayList<ArchiveItem> archive = new ArrayList<>();
 
-    public SectionPopularVideos(Context context, MainActivity mainActivity, ArrayList<Video> archive) {
+    public SectionFeatured(Context context, MainActivity mainActivity, ArrayList<ArchiveItem> archive) {
         super(R.layout.homepage_section_header, R.layout.homepage_section_footer, R.layout.featured_item);
         this.context = context;
         this.mainActivity = mainActivity;
@@ -55,31 +55,61 @@ public class SectionPopularVideos extends StatelessSection {
     public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
         VideoViewHolder videoViewHolder = (VideoViewHolder) holder;
 
-        final Video video = archive.get(position);
+        ArchiveItem archiveItem = archive.get(position);
 
-        videoViewHolder.mainView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mainActivity.playNewVideo(video);
-            }
-        });
-        videoViewHolder.name.setText(video.getName());
-        videoViewHolder.date.setText(StringUtils.formatDate(video.getDate(), context));
-        videoViewHolder.views.setText(video.getViews() + " " + context.getString(R.string.views));
-        videoViewHolder.more.setVisibility(View.VISIBLE);
-        videoViewHolder.more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AdapterUtils.contextDialog(context, mainActivity, video);
-            }
-        });
-        videoViewHolder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
+        switch (archiveItem.getType()) {
+            case ArchiveItem.Type.VIDEO:
 
-        setupTime(videoViewHolder, video);
+                final Video video = archiveItem.getVideo();
 
-        Ion.with(context)
-                .load(video.getThumbFile())
-                .intoImageView(videoViewHolder.thumb);
+                videoViewHolder.mainView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mainActivity.playNewVideo(video);
+                    }
+                });
+                videoViewHolder.name.setText(video.getName());
+                videoViewHolder.date.setText(StringUtils.formatDate(video.getDate(), context));
+                videoViewHolder.views.setText(video.getViews() + " " + context.getString(R.string.views));
+                videoViewHolder.more.setVisibility(View.VISIBLE);
+                videoViewHolder.more.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AdapterUtils.contextDialog(context, mainActivity, video);
+                    }
+                });
+                videoViewHolder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
+
+                setupTime(videoViewHolder, video);
+
+                Ion.with(context)
+                        .load(video.getThumbFile())
+                        .intoImageView(videoViewHolder.thumb);
+
+                break;
+
+            case ArchiveItem.Type.ALBUM:
+
+                final PhotoAlbum photoAlbum = archiveItem.getAlbum();
+
+                videoViewHolder.mainView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openAlbum(photoAlbum);
+                    }
+                });
+                videoViewHolder.name.setText(photoAlbum.getName());
+                videoViewHolder.date.setText(StringUtils.formatDate(photoAlbum.getDate(), context));
+                videoViewHolder.views.setText(context.getString(R.string.photo_album));
+                videoViewHolder.more.setVisibility(View.GONE);
+                videoViewHolder.viewProgress.setVisibility(View.GONE);
+                videoViewHolder.time.setVisibility(View.GONE);
+
+                Ion.with(context)
+                        .load(photoAlbum.getThumbs().getThumb512())
+                        .intoImageView(videoViewHolder.thumb);
+                break;
+        }
     }
 
     @Override
@@ -90,9 +120,9 @@ public class SectionPopularVideos extends StatelessSection {
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
-        headerHolder.sectionName.setText(context.getString(R.string.popular_videos));
+        headerHolder.sectionName.setText(context.getString(R.string.featured));
         headerHolder.sectionIcon.setImageDrawable(context.getResources()
-                .getDrawable(R.drawable.popular_videos));
+                .getDrawable(R.drawable.featured));
     }
 
     private void setupTime(final VideoViewHolder holder, final Video video) {

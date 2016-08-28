@@ -181,7 +181,11 @@ public class Video extends SugarRecord implements Parcelable {
     }
 
     public static List<Video> getNotFullyWatchedVideos() {
-        return Video.find(Video.class, "current_time != 0");
+        return Video.find(Video.class, "current_time != 0 LIMIT 5");
+    }
+
+    public static List<Video> getNotFullyWatchedVideos(boolean randomize) {
+        return Video.find(Video.class, "current_time != 0 ORDER BY RANDOM() LIMIT 5");
     }
 
     public void setAudioFile(String audioFile) {

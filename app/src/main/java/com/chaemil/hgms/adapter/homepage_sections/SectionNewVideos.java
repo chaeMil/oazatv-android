@@ -28,14 +28,14 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 /**
  * Created by chaemil on 27.8.16.
  */
-public class SectionPopularVideos extends StatelessSection {
+public class SectionNewVideos extends StatelessSection {
 
     private final Context context;
     private final MainActivity mainActivity;
     ArrayList<Video> archive = new ArrayList<>();
 
-    public SectionPopularVideos(Context context, MainActivity mainActivity, ArrayList<Video> archive) {
-        super(R.layout.homepage_section_header, R.layout.homepage_section_footer, R.layout.featured_item);
+    public SectionNewVideos(Context context, MainActivity mainActivity, ArrayList<Video> archive) {
+        super(R.layout.homepage_section_header, R.layout.homepage_section_footer, R.layout.archive_item);
         this.context = context;
         this.mainActivity = mainActivity;
         this.archive = archive;
@@ -80,6 +80,8 @@ public class SectionPopularVideos extends StatelessSection {
         Ion.with(context)
                 .load(video.getThumbFile())
                 .intoImageView(videoViewHolder.thumb);
+
+
     }
 
     @Override
@@ -90,9 +92,9 @@ public class SectionPopularVideos extends StatelessSection {
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
-        headerHolder.sectionName.setText(context.getString(R.string.popular_videos));
+        headerHolder.sectionName.setText(context.getString(R.string.newest_videos));
         headerHolder.sectionIcon.setImageDrawable(context.getResources()
-                .getDrawable(R.drawable.popular_videos));
+                .getDrawable(R.drawable.newest_videos));
     }
 
     private void setupTime(final VideoViewHolder holder, final Video video) {
@@ -124,10 +126,6 @@ public class SectionPopularVideos extends StatelessSection {
                 holder.time.setText(StringUtils.getDurationString(video.getDuration()));
             }
         }.execute();
-    }
-
-    private void openAlbum(PhotoAlbum album) {
-        mainActivity.getMainFragment().openAlbum(album);
     }
 
     public class VideoViewHolder extends RecyclerView.ViewHolder{

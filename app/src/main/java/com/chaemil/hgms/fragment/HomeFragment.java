@@ -14,10 +14,13 @@ import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.homepage_sections.SectionContinueWatching;
+import com.chaemil.hgms.adapter.homepage_sections.SectionFeatured;
+import com.chaemil.hgms.adapter.homepage_sections.SectionNewVideos;
 import com.chaemil.hgms.adapter.homepage_sections.SectionPopularVideos;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.factory.ResponseFactory;
+import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.Homepage;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
@@ -73,7 +76,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     }
 
     private void getData() {
-        List<Video> notFullyWatchedVideos = Video.getNotFullyWatchedVideos();
+        List<Video> notFullyWatchedVideos = Video.getNotFullyWatchedVideos(true);
         for (Video video : notFullyWatchedVideos) {
             if (video.getCurrentTime() / 1000 > 30 ) { //more than 30 seconds watched
                 videosToContinueWatching.add(video);
@@ -89,16 +92,49 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     }
 
     private void setupSections() {
+
+        int sectionCount = 0;
+
         if (videosToContinueWatching.size() != 0) {
             adapter.addSection(new SectionContinueWatching(getContext(), mainActivity,
                     videosToContinueWatching));
+
+            sectionCount += 1;
         }
 
         if (homepage != null) {
+
             if (homepage.featured.size() != 0) {
-                adapter.addSection(new SectionPopularVideos(getContext(), mainActivity,
-                        homepage.featured));
+                ArrayList<ArchiveItem> videos = new ArrayList<>();
+                for (int i = 0; i < 5; i++) {
+                    videos.add(homepage.featured.get(i));
+                }
+                adapter.addSection(new SectionFeatured(getContext(), mainActivity, videos));
+
+                sectionCount += 1;
             }
+
+            if (homepage.newestVideos.size() != 0) {
+                ArrayList<Video> videos = new ArrayList<>();
+                for (int i = 0; i < 10; i++) {
+                    videos.add(homepage.newestVideos.get(i));
+                }
+                adapter.addSection(new SectionNewVideos(getContext(), mainActivity, videos));
+
+                sectionCount += 1;
+            }
+
+            if (homepage.popularVideos.size() != 0) {
+                ArrayList<Video> videos = new ArrayList<>();
+                for (int i = 0; i < 5; i++) {
+                    videos.add(homepage.popularVideos.get(i));
+                }
+                adapter.addSection(new SectionPopularVideos(getContext(), mainActivity, videos));
+
+                sectionCount += 1;
+            }
+
+
         }
     }
 
