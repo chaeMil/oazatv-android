@@ -311,6 +311,7 @@ public class MainActivity extends BaseActivity implements
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                expandPanel();
                 getVideoPlayerFragment().playNewVideo(video);
             }
         }, 600);

@@ -673,8 +673,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             tags.setVisibility(View.GONE);
         }
 
-        ((MainActivity) getActivity()).expandPanel();
-
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
