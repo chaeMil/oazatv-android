@@ -638,9 +638,11 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         if (savedVideo != null) {
             this.currentVideo = savedVideo;
 
-            SuperToast.create(getActivity(),
-                    getString(R.string.resuming_from_saved_time),
-                    SuperToast.Duration.SHORT).show();
+            if (this.currentVideo.getCurrentTime() != 0) {
+                SuperToast.create(getActivity(),
+                        getString(R.string.resuming_from_saved_time),
+                        SuperToast.Duration.SHORT).show();
+            }
         } else {
             this.currentVideo = video;
         }
