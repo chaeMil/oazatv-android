@@ -49,9 +49,9 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
     }
 
     public ArchiveAdapter(Context context, MainActivity mainActivity, int layout,
-                          ArrayList<Video> archive) {
+                          ArrayList<Video> videos) {
         this.archive = null;
-        this.videos = archive;
+        this.videos = videos;
         this.layout = layout;
         this.mainActivity = mainActivity;
         this.context = context;

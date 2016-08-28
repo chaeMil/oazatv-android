@@ -102,14 +102,14 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
         getUI(rootView);
         setupUI();
 
-        getCategoryPage(1);
+        getCategoryPage(0);
 
         return rootView;
 
     }
 
     private void getCategoryPage(final int pageNumber) {
-        if (pageNumber == 1) {
+        if (pageNumber == 0) {
             endlessProgress.setVisibility(View.GONE);
             progress.setVisibility(View.VISIBLE);
         } else {
