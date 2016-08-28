@@ -18,7 +18,7 @@
         tools:text="@string/continue_watching"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        fontPath="@string/default_font_bold"
+        fontPath="@string/slab_font_bold"
         android:textSize="20sp"
         android:textColor="@color/colorPrimary"
         android:layout_marginLeft="16dp"

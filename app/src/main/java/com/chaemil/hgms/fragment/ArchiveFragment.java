@@ -111,6 +111,7 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
                 @Override
                 public void onLoadMore(int page, int totalItemsCount) {
                     getArchivePage(page + 1);
+                    endlessProgress.setVisibility(View.VISIBLE);
                 }
             });
             swipeRefresh.setOnRefreshListener(this);
@@ -157,7 +158,7 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
                     archive.addAll(newItems);
                     archiveAdapter.notifyDataSetChanged();
                     progress.setVisibility(View.GONE);
-                    endlessProgress.setVisibility(View.VISIBLE);
+                    endlessProgress.setVisibility(View.GONE);
                     swipeRefresh.setRefreshing(false);
                     connectionErrorWrapper.setVisibility(View.GONE);
                 }
