@@ -77,8 +77,12 @@ public class SectionNewVideos extends StatelessSection {
 
         setupTime(videoViewHolder, video);
 
+        int thumbWidth = videoViewHolder.thumb.getWidth();
+
         Ion.with(context)
                 .load(video.getThumbFile())
+                .withBitmap()
+                .resize(thumbWidth, (int) (thumbWidth * 0.5625))
                 .intoImageView(videoViewHolder.thumb);
 
 

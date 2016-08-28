@@ -15,6 +15,7 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
+import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
@@ -59,7 +60,14 @@ public class SectionContinueWatching extends StatelessSection {
         videoViewHolder.views.setText(video.getViews() + " " + context.getString(R.string.views));
         videoViewHolder.viewProgress.setMax(video.getDuration());
         videoViewHolder.viewProgress.setProgress(video.getCurrentTime());
-        Ion.with(context).load(video.getThumbFile()).intoImageView(videoViewHolder.thumb);
+
+        int thumbWidth = videoViewHolder.thumb.getWidth();
+
+        Ion.with(context)
+                .load(video.getThumbFile())
+                .withBitmap()
+                .resize(thumbWidth, (int) (thumbWidth * 0.5625))
+                .intoImageView(videoViewHolder.thumb);
 
         setupTime(videoViewHolder, video);
 

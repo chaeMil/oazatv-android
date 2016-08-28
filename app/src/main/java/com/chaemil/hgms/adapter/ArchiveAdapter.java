@@ -104,8 +104,12 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
 
                     setupTime(holder, video);
 
+                    int thumbWidth = holder.thumb.getWidth();
+
                     Ion.with(context)
                             .load(video.getThumbFile())
+                            .withBitmap()
+                            .resize(thumbWidth, (int) (thumbWidth * 0.5625))
                             .intoImageView(holder.thumb);
 
                     break;
@@ -127,8 +131,12 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                     holder.viewProgress.setVisibility(View.GONE);
                     holder.time.setVisibility(View.GONE);
 
+                    int thumbWidthAlbum = holder.thumb.getWidth();
+
                     Ion.with(context)
                             .load(photoAlbum.getThumbs().getThumb512())
+                            .withBitmap()
+                            .resize(thumbWidthAlbum, (int) (thumbWidthAlbum * 0.5625))
                             .intoImageView(holder.thumb);
                     break;
             }

@@ -17,6 +17,7 @@ import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
+import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
@@ -32,6 +33,7 @@ public class SectionFeatured extends StatelessSection {
 
     private final Context context;
     private final MainActivity mainActivity;
+    private final int displayWidth;
     ArrayList<ArchiveItem> archive = new ArrayList<>();
 
     public SectionFeatured(Context context, MainActivity mainActivity, ArrayList<ArchiveItem> archive) {
@@ -39,6 +41,7 @@ public class SectionFeatured extends StatelessSection {
         this.context = context;
         this.mainActivity = mainActivity;
         this.archive = archive;
+        this.displayWidth = DimensUtils.getDisplayHeight(mainActivity);
     }
 
     @Override
@@ -84,6 +87,8 @@ public class SectionFeatured extends StatelessSection {
 
                 Ion.with(context)
                         .load(video.getThumbFile())
+                        .withBitmap()
+                        .resize(displayWidth, (int) (displayWidth * 0.5625))
                         .intoImageView(videoViewHolder.thumb);
 
                 break;
@@ -106,7 +111,9 @@ public class SectionFeatured extends StatelessSection {
                 videoViewHolder.time.setVisibility(View.GONE);
 
                 Ion.with(context)
-                        .load(photoAlbum.getThumbs().getThumb512())
+                        .load(photoAlbum.getThumbs().getThumb1024())
+                        .withBitmap()
+                        .resize(displayWidth, (int) (displayWidth * 0.5625))
                         .intoImageView(videoViewHolder.thumb);
                 break;
         }

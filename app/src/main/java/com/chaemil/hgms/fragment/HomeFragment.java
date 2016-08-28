@@ -1,6 +1,8 @@
 package com.chaemil.hgms.fragment;
 
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -50,6 +52,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     private ArrayList<Video> videosToContinueWatching = new ArrayList<>();
     private SectionedRecyclerViewAdapter adapter;
     private MainActivity mainActivity;
+    private int firstVisiblePosition = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,6 +71,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     @Override
     public void onResume() {
         super.onResume();
+
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.HOME_FRAGMENT);
 
         GAUtils.sendGAScreen(
@@ -170,6 +174,8 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
             public int getSpanSize(int position) {
                 switch(adapter.getSectionItemViewType(position)){
                     case SectionedRecyclerViewAdapter.VIEW_TYPE_HEADER:
+                        return columns;
+                    case SectionedRecyclerViewAdapter.VIEW_TYPE_FOOTER:
                         return columns;
                     default:
                         return 1;
