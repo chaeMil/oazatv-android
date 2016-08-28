@@ -31,6 +31,7 @@ import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.daimajia.androidanimations.library.Techniques;
@@ -387,8 +388,12 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         Video audio = getService().getCurrentAudio();
         boolean downloaded = getService().getIsPlayingDownloaded();
 
+        int displayWidth = DimensUtils.getDisplayWidth(getActivity());
+
         Ion.with(context)
                 .load(getCurrentAudio().getThumbFile())
+                .withBitmap()
+                .resize(displayWidth, (int) (displayWidth * 0.5625))
                 .intoImageView(audioThumb);
 
         Ion.with(context)
@@ -396,7 +401,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                 .intoImageView(miniPlayerImageView);
 
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause_dark));
 
         String downloadedString = "";
         if (downloaded) {

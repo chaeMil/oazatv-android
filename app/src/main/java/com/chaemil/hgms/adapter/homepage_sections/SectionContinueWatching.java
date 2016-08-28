@@ -55,6 +55,12 @@ public class SectionContinueWatching extends StatelessSection {
         VideoViewHolder videoViewHolder = (VideoViewHolder) holder;
         final Video video = videosToWatch.get(position);
 
+        videoViewHolder.mainView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.playNewVideo(video);
+            }
+        });
         videoViewHolder.name.setText(video.getName());
         videoViewHolder.date.setText(StringUtils.formatDate(video.getDate(), context));
         videoViewHolder.views.setText(video.getViews() + " " + context.getString(R.string.views));

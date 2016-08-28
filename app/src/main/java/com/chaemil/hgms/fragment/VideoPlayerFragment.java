@@ -652,7 +652,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 .intoImageView(miniPlayerImageView);
 
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause_dark));
 
         miniPlayerText.setText(video.getName());
         playerTitle.setText(video.getName());
