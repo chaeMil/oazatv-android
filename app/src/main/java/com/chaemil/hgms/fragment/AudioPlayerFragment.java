@@ -178,6 +178,8 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         miniPlayer.setOnClickListener(this);
         playerToolbar.setOnClickListener(this);
         info.setOnClickListener(this);
+        miniPlayerImageView.setOnClickListener(this);
+        miniPlayerText.setOnClickListener(this);
 
         seekBar.setMax(getAudioDuration());
         seekBar.postDelayed(onEverySecond, 1000);
@@ -275,6 +277,10 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.info:
                 toggleInfo();
+                break;
+            case R.id.mini_player_image:
+            case R.id.mini_player_text:
+                mainActivity.expandPanel();
                 break;
         }
     }

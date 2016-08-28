@@ -263,6 +263,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         playerToolbar.setOnClickListener(this);
         info.setOnClickListener(this);
         qualitySwitch.setOnClickListener(this);
+        miniPlayerImageView.setOnClickListener(this);
+        miniPlayerText.setOnClickListener(this);
 
         miniPlayerSwipe.setOnSwipeListener(createSwipeListener());
 
@@ -413,6 +415,10 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.quality_switch:
                 toggleQuality();
+                break;
+            case R.id.mini_player_image:
+            case R.id.mini_player_text:
+                mainActivity.expandPanel();
                 break;
         }
     }
