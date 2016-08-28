@@ -5,15 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorPrimaryAlpha"
-/>
+    <ImageView
+        android:id="@+id/section_icon"
+        tools:src="@drawable/continue_watching"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="22dp" />
 
     <TextView
         android:id="@+id/section_name"
-        tools:text="Popular videos"
+        tools:text="@string/continue_watching"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         fontPath="@string/default_font_bold"
@@ -21,7 +23,8 @@
         android:textColor="@color/colorPrimary"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_horizontal" />
 
 </LinearLayout>

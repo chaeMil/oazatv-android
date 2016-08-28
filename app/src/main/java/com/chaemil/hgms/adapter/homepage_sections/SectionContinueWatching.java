@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,13 +26,13 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 /**
  * Created by chaemil on 27.8.16.
  */
-public class ContinueWatching extends StatelessSection {
+public class SectionContinueWatching extends StatelessSection {
 
     private final Context context;
     private final MainActivity mainActivity;
     ArrayList<Video> videosToWatch = new ArrayList<>();
 
-    public ContinueWatching(Context context, MainActivity mainActivity, ArrayList<Video> videosToWatch) {
+    public SectionContinueWatching(Context context, MainActivity mainActivity, ArrayList<Video> videosToWatch) {
         super(R.layout.homepage_section_header, R.layout.archive_item);
         this.context = context;
         this.mainActivity = mainActivity;
@@ -75,11 +76,12 @@ public class ContinueWatching extends StatelessSection {
         return new HeaderViewHolder(view);
     }
 
-
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
         headerHolder.sectionName.setText(context.getString(R.string.continue_watching));
+        headerHolder.sectionIcon.setImageDrawable(context.getResources()
+                .getDrawable(R.drawable.continue_watching));
     }
 
     private void setupTime(final VideoViewHolder holder, final Video video) {
@@ -140,10 +142,12 @@ public class ContinueWatching extends StatelessSection {
     private class HeaderViewHolder extends RecyclerView.ViewHolder{
 
         public final TextView sectionName;
+        public final ImageView sectionIcon;
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
             this.sectionName = (TextView) itemView.findViewById(R.id.section_name);
+            this.sectionIcon = (ImageView) itemView.findViewById(R.id.section_icon);
         }
     }
 }

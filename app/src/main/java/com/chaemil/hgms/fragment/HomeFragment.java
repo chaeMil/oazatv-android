@@ -2,7 +2,6 @@ package com.chaemil.hgms.fragment;
 
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
-import com.chaemil.hgms.adapter.homepage_sections.ContinueWatching;
+import com.chaemil.hgms.adapter.homepage_sections.SectionContinueWatching;
+import com.chaemil.hgms.adapter.homepage_sections.SectionPopularVideos;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.factory.ResponseFactory;
@@ -75,7 +75,9 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     private void getData() {
         List<Video> notFullyWatchedVideos = Video.getNotFullyWatchedVideos();
         for (Video video : notFullyWatchedVideos) {
-            videosToContinueWatching.add(video);
+            if (video.getCurrentTime() / 1000 > 30 ) { //more than 30 seconds watched
+                videosToContinueWatching.add(video);
+            }
         }
 
         if (NetworkUtils.isConnected(getActivity())) {
@@ -86,14 +88,27 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
         }
     }
 
+    private void setupSections() {
+        if (videosToContinueWatching.size() != 0) {
+            adapter.addSection(new SectionContinueWatching(getContext(), mainActivity,
+                    videosToContinueWatching));
+        }
+
+        if (homepage != null) {
+            if (homepage.featured.size() != 0) {
+                adapter.addSection(new SectionPopularVideos(getContext(), mainActivity,
+                        homepage.featured));
+            }
+        }
+    }
+
     private void setupUI() {
         if (getActivity() != null) {
 
             if (homepage != null) {
                 adapter = new SectionedRecyclerViewAdapter();
-                adapter.addSection(new ContinueWatching(getContext(), mainActivity,
-                        videosToContinueWatching));
-                homepageList.setLayoutManager(new LinearLayoutManager(getContext()));
+                setupSections();
+                setupGridManager();
                 homepageList.setAdapter(adapter);
 
             } else {
@@ -117,13 +132,11 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                switch(adapter.getItemViewType(position)){
-                    case -2: //HEADER
+                switch(adapter.getSectionItemViewType(position)){
+                    case SectionedRecyclerViewAdapter.VIEW_TYPE_HEADER:
                         return columns;
-                    case -1: //ITEM
-                        return 1;
                     default:
-                        return -1;
+                        return 1;
                 }
             }
         });
@@ -136,11 +149,9 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     }
 
     public void adjustLayout() {
-
         if (isAdded()) {
-            //setupGridManager();
+            setupGridManager();
         }
-
     }
 
     @Override
