@@ -84,4 +84,5 @@ dependencies {
     compile 'com.android.support:percent:24.2.0'
     compile 'com.google.code.gson:gson:2.4'
     compile 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:1.0.4'
+    compile 'com.github.hotchemi:android-rate:1.0.1'
 }
