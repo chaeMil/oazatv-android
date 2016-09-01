@@ -88,9 +88,9 @@ public class SectionNewAlbums extends StatelessSection {
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
-        headerHolder.sectionName.setText(context.getString(R.string.newest_videos));
+        headerHolder.sectionName.setText(context.getString(R.string.newest_albums));
         headerHolder.sectionIcon.setImageDrawable(context.getResources()
-                .getDrawable(R.drawable.newest_videos));
+                .getDrawable(R.drawable.newest_albums));
     }
 
     public class VideoViewHolder extends RecyclerView.ViewHolder{
