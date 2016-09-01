@@ -41,7 +41,7 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
 
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
 
         if (convertView == null) {
@@ -68,6 +68,12 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
 
                 final Video video = archiveItem.getVideo();
 
+                holder.mainView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mainActivity.playNewVideo(video);
+                    }
+                });
                 holder.name.setText(video.getName());
                 holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
                 holder.date.setText(StringUtils.formatDate(video.getDate(), context));
@@ -88,6 +94,12 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
 
                 final PhotoAlbum photoAlbum = archiveItem.getAlbum();
 
+                holder.mainView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mainActivity.getMainFragment().openAlbum(photoAlbum);
+                    }
+                });
                 holder.name.setText(photoAlbum.getName());
                 holder.date.setText(StringUtils.formatDate(photoAlbum.getDate(), context));
                 holder.info.setText(context.getString(R.string.photo_album));
