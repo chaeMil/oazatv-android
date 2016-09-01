@@ -63,6 +63,21 @@ public class ResponseFactory {
         }
     }
 
+    public static Video parseVideoOnly(JSONObject response) {
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+
+        if (response != null) {
+            try {
+                return gson.fromJson(response.getJSONObject(Constants.JSON_VIDEO).toString(), Video.class);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+
+    }
+
     public static PhotoAlbum parseAlbum(JSONObject response) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 

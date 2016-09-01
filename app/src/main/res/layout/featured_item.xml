@@ -109,8 +109,8 @@
                 android:src="@drawable/ic_action_navigation_more_vert"
                 android:layout_alignParentEnd="false"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="6dp"
-                android:layout_marginRight="0dp" />
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="6dp" />
 
         </RelativeLayout>
 

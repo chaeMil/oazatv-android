@@ -1,7 +1,6 @@
 package com.chaemil.hgms.fragment;
 
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,6 +10,8 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -23,9 +24,9 @@ import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.ArchiveAdapter;
+import com.chaemil.hgms.adapter.utils.HidingScrollListener;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.ResponseFactory;
-import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.Category;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
@@ -36,7 +37,6 @@ import com.chaemil.hgms.utils.EndlessScrollListener;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.SmartLog;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -63,14 +63,14 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
     private RelativeLayout categoryToolbar;
     private TextView categoryName;
     private ImageView back;
-    private MainActivity mainActivty;
+    private MainActivity mainActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        mainActivty = (MainActivity) getActivity();
+        mainActivity = (MainActivity) getActivity();
 
         Bundle bundle = getArguments();
         category = bundle.getParcelable(CATEGORY);
@@ -141,9 +141,25 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
     private void setupAdapter() {
         if (archiveAdapter == null) {
             archiveAdapter = new ArchiveAdapter(getContext(),
-                    mainActivty,
+                    mainActivity,
                     R.layout.archive_item,
                     archive);
+
+            archiveGridView.setOnScrollListener(new HidingScrollListener() {
+                @Override
+                public void onHide() {
+                    categoryToolbar.animate()
+                            .translationY(-categoryToolbar.getHeight())
+                            .setInterpolator(new AccelerateInterpolator(2));
+                }
+
+                @Override
+                public void onShow() {
+                    categoryToolbar.animate()
+                            .translationY(0)
+                            .setInterpolator(new DecelerateInterpolator(2));
+                }
+            });
 
             archiveGridView.setAdapter(archiveAdapter);
             setupGridManager();

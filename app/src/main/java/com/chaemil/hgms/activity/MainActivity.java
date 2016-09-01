@@ -584,9 +584,9 @@ public class MainActivity extends BaseActivity implements
                 break;
 
             case GET_VIDEO:
-                Video video = ResponseFactory.parseVideo(response);
-                if (video != null) {
-                    if (deepLink) {
+                if (deepLink) {
+                    Video video = ResponseFactory.parseVideoOnly(response);
+                    if (video != null) {
                         playNewVideo(video);
                         deepLink = false;
                     }
