@@ -57,7 +57,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private Video currentVideo;
     private ImageView miniPlayerPause;
     private ViewGroup rootView;
-    private ImageView fullscreen;
     public boolean isInFullscreenMode = false;
     public boolean isInQualityMode = false;
     private ImageView back;
@@ -176,7 +175,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         playerToolbar = (RelativeLayout) rootView.findViewById(R.id.toolbar);
         playerTitle = (TextView) rootView.findViewById(R.id.player_title);
         miniPlayerPause = (ImageView) rootView.findViewById(R.id.mini_play_pause);
-        fullscreen = (ImageView) rootView.findViewById(R.id.fullscreen);
         back = (ImageView) rootView.findViewById(R.id.back);
         share = (ImageView) rootView.findViewById(R.id.share);
         description = (TextView) rootView.findViewById(R.id.description);
@@ -191,7 +189,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     private void setupUI() {
         miniPlayerPause.setOnClickListener(this);
-        fullscreen.setOnClickListener(this);
         back.setOnClickListener(this);
         share.setOnClickListener(this);
         playerBgWrapper.setOnClickListener(this);
@@ -315,14 +312,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             case R.id.mini_play_pause:
                 playPauseVideo();
                 break;
-            case R.id.fullscreen:
-                if (isInFullscreenMode) {
-                    cancelFullscreenPlayer();
-                } else {
-                    requestFullscreenPlayer();
-                    hideInfo();
-                }
-                break;
             case R.id.back:
                 ((MainActivity) getActivity()).collapsePanel();
                 break;
@@ -348,6 +337,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         getActivity().getWindow().getDecorView()
                 .setBackgroundColor(getResources().getColor(R.color.black));
 
+        miniPlayer.setVisibility(View.GONE);
         playerToolbar.setVisibility(View.GONE);
         infoLayout.setVisibility(View.GONE);
 
@@ -362,6 +352,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         getActivity().getWindow().getDecorView()
                 .setBackgroundColor(getResources().getColor(R.color.white));
 
+        miniPlayer.setVisibility(View.VISIBLE);
         playerToolbar.setVisibility(View.VISIBLE);
         infoLayout.setVisibility(View.VISIBLE);
 
@@ -419,6 +410,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         player.setCallback(this);
         player.setThemeColorRes(R.color.colorPrimary);
         player.setHideControlsOnPlay(true);
+        player.setLeftAction(EasyVideoPlayer.LEFT_ACTION_NONE);
+        player.setRightAction(EasyVideoPlayer.RIGHT_ACTION_SUBMIT);
+        player.setSubmitText(getString(R.string.fullscreen).toUpperCase());
 
         if (savedVideo != null) {
             player.setInitialPosition(savedVideo.getCurrentTime());
@@ -566,6 +560,10 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onSubmit(EasyVideoPlayer player, Uri source) {
-
+        if (isInFullscreenMode) {
+            cancelFullscreenPlayer();
+        } else {
+            requestFullscreenPlayer();
+        }
     }
 }
