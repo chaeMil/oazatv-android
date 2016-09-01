@@ -93,6 +93,8 @@ public class MainActivity extends BaseActivity implements
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 
         reconnectToPlaybackService();
+
+        parseDeepLink();
     }
 
     @Override
@@ -114,8 +116,6 @@ public class MainActivity extends BaseActivity implements
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();
         }
-
-        parseDeepLink();
     }
 
     private void parseDeepLink() {
