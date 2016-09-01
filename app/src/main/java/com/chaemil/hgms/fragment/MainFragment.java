@@ -49,6 +49,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import hotchemi.android.rate.AppRate;
+
 /**
  * Created by chaemil on 4.12.15.
  */
@@ -115,6 +117,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             sharedPreferences = SharedPrefUtils.getInstance(getContext());
         }
 
+        setupAppRate();
+
     }
 
     @Override
@@ -129,13 +133,21 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         return rootView;
     }
 
+    private void setupAppRate() {
+        AppRate.with(getContext())
+                .setInstallDays(3)
+                .setLaunchTimes(6)
+                .setRemindInterval(1)
+                .setShowLaterButton(true)
+                .monitor();
+    }
+
 
     public void hideSplash(boolean animate) {
         if (splash != null) {
             if (animate) {
                 YoYo.with(Techniques.FadeOut).duration(350).playOn(splash);
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
+                delay(new Runnable() {
                     @Override
                     public void run() {
                         splash.setVisibility(View.GONE);
@@ -146,6 +158,14 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             }
             init = true;
         }
+
+        delay(new Runnable() {
+            @Override
+            public void run() {
+                AppRate.showRateDialogIfMeetsConditions(getActivity());
+            }
+        }, 750);
+
     }
 
     private void getUI(ViewGroup rootView) {

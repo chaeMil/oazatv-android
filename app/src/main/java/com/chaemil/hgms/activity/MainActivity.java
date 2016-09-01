@@ -57,6 +57,9 @@ import org.json.JSONObject;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import hotchemi.android.rate.AppRate;
+import hotchemi.android.rate.OnClickButtonListener;
+
 /**
  * Created by chaemil on 2.12.15.
  */

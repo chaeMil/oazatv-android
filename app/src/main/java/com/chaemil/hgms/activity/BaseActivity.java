@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.Window;
@@ -229,5 +230,10 @@ public class BaseActivity extends ActivityManagePermission implements RequestFac
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(color);
         }
+    }
+
+    public void delay(Runnable runnable, int time) {
+        final Handler handler = new Handler();
+        handler.postDelayed(runnable, time);
     }
 }
