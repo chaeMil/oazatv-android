@@ -30,34 +30,12 @@
             android:gravity="center"
             android:layout_alignParentBottom="true">
 
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
-
-            <LinearLayout
+            <com.afollestad.easyvideoplayer.EasyVideoPlayer
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/player"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:foregroundGravity="center_vertical|center_horizontal"
-                android:gravity="center">
-
-                <VideoView
-                    android:alpha="0"
-                    android:id="@+id/video_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center" />
-
-            </LinearLayout>
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/buffer_bar"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:visibility="gone" />
+                android:layout_height="match_parent" />
 
             <ImageView
                 android:layout_width="50dp"
@@ -274,82 +252,6 @@
                 </LinearLayout>
 
             </ru.rambler.libs.swipe_layout.SwipeLayout>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:background="@color/transparent_black"
-            android:layout_width="match_parent"
-            android:layout_height="68dp"
-            android:id="@+id/controls_wrapper"
-            android:layout_alignParentBottom="true"
-            android:padding="4dp">
-
-            <TextView
-                android:textColor="@color/white"
-                android:shadowColor="@color/black"
-                android:shadowRadius="5"
-                tools:text="0:57:32"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/total_time"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:gravity="center_vertical"
-                android:layout_marginRight="16dp"
-                android:layout_alignTop="@+id/current_time"
-                android:layout_marginBottom="4dp" />
-
-            <android.support.v7.widget.AppCompatSeekBar
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:id="@+id/seek_bar"
-                tools:progress="14"
-                android:progressTint="@color/transparent_white"
-                android:thumbTint="@color/white"
-                android:layout_alignParentBottom="true"
-                android:layout_toRightOf="@+id/play_pause"
-                android:layout_toEndOf="@+id/play_pause"
-                android:layout_alignTop="@+id/play_pause"
-                android:layout_marginBottom="20dp" />
-
-            <at.markushi.ui.CircleButton
-                android:id="@+id/play_pause"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/pause"
-                app:cb_color="@color/colorPrimaryDark"
-                app:cb_pressedRingWidth="3dip"
-                android:layout_alignParentTop="false"
-                android:layout_alignParentBottom="false"
-                android:layout_toRightOf="@+id/rew"
-                android:layout_alignBottom="@+id/rew" />
-
-            <at.markushi.ui.CircleButton
-                android:id="@+id/rew"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/rew"
-                app:cb_color="@color/colorPrimaryDark"
-                app:cb_pressedRingWidth="3dip"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <TextView
-                android:textColor="@color/white"
-                android:shadowColor="@color/black"
-                android:shadowRadius="5"
-                tools:text="0:14:15"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/current_time"
-                android:layout_alignBottom="@+id/play_pause"
-                android:layout_alignLeft="@+id/seek_bar"
-                android:layout_marginLeft="16dp"
-                android:layout_marginBottom="4dp" />
 
         </RelativeLayout>
 
