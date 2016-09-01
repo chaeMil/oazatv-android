@@ -60,6 +60,7 @@ public class Constants {
     public static final String JSON_IMAGE = "image";
     public static final String JSON_URL = "url";
     public static final String JSON_VIDEO = "video";
+    public static final String JSON_ALBUM = "album";
     public static final String JSON_HASH = "hash";
     public static final String JSON_DATE = "date";
     public static final String JSON_NAME_CS = "name_cs";

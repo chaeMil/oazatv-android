@@ -593,9 +593,9 @@ public class MainActivity extends BaseActivity implements
                 }
                 break;
             case GET_PHOTO_ALBUM:
-                PhotoAlbum photoAlbum = ResponseFactory.parseAlbum(response);
-                if (photoAlbum != null) {
-                    if (deepLink) {
+                if (deepLink) {
+                    PhotoAlbum photoAlbum = ResponseFactory.parseAlbumOnly(response);
+                    if (photoAlbum != null) {
                         getMainFragment().openAlbum(photoAlbum);
                         deepLink = false;
                     }

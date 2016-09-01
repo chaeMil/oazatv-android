@@ -92,6 +92,26 @@ public class ResponseFactory {
 
     }
 
+    public static PhotoAlbum parseAlbumOnly(JSONObject response) {
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+
+        if (response != null) {
+            PhotoAlbum album = null;
+            try {
+                album = gson.fromJson(response.getJSONObject(Constants.JSON_ALBUM).toString(), PhotoAlbum.class);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (album != null) {
+                ArrayList<Photo> photos = parsePhotos(response);
+                album.setPhotos(photos);
+                return album;
+            }
+        }
+
+        return null;
+    }
+
     public static ArrayList<Photo> parsePhotos(JSONObject response) {
 
         ArrayList<Photo> photos = null;
