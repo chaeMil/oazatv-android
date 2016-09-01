@@ -49,6 +49,7 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
             convertView = vi.inflate(R.layout.search_item, null);
 
             holder = new ViewHolder();
+            holder.mainView = (RelativeLayout) convertView.findViewById(R.id.main_view);
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.thumb = (ImageView) convertView.findViewById(R.id.thumb);
             holder.date = (TextView) convertView.findViewById(R.id.date);
@@ -121,7 +122,7 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
 
     public class ViewHolder {
 
-        private RelativeLayout mainView;
+        public RelativeLayout mainView;
         public ImageView thumb;
         public TextView name;
         public TextView date;
