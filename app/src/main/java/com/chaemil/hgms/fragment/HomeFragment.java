@@ -17,6 +17,7 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.homepage_sections.SectionContinueWatching;
 import com.chaemil.hgms.adapter.homepage_sections.SectionFeatured;
+import com.chaemil.hgms.adapter.homepage_sections.SectionNewAlbums;
 import com.chaemil.hgms.adapter.homepage_sections.SectionNewVideos;
 import com.chaemil.hgms.adapter.homepage_sections.SectionPopularVideos;
 import com.chaemil.hgms.factory.RequestFactory;
@@ -24,6 +25,7 @@ import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.Homepage;
+import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
@@ -110,7 +112,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
             if (homepage.featured.size() != 0) {
                 ArrayList<ArchiveItem> videos = new ArrayList<>();
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 6; i++) {
                     videos.add(homepage.featured.get(i));
                 }
                 adapter.addSection(new SectionFeatured(getContext(), mainActivity, videos));
@@ -128,9 +130,19 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
                 sectionCount += 1;
             }
 
+            if (homepage.newestAlbums.size() != 0) {
+                ArrayList<PhotoAlbum> albums = new ArrayList<>();
+                for (int i = 0; i < 8; i++) {
+                    albums.add(homepage.newestAlbums.get(i));
+                }
+                adapter.addSection(new SectionNewAlbums(getContext(), mainActivity, albums));
+
+                sectionCount += 1;
+            }
+
             if (homepage.popularVideos.size() != 0) {
                 ArrayList<Video> videos = new ArrayList<>();
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 6; i++) {
                     videos.add(homepage.popularVideos.get(i));
                 }
                 adapter.addSection(new SectionPopularVideos(getContext(), mainActivity, videos));
