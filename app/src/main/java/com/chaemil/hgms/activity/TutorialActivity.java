@@ -19,6 +19,8 @@ public class TutorialActivity extends IntroActivity {
         setSkipEnabled(false);
         setFinishEnabled(true);
 
+        SharedPrefUtils.getInstance(this).createUserId();
+
         addSlide(new SimpleSlide.Builder()
                 .title(R.string.app_name)
                 .description(R.string.tutorial_text_1)
