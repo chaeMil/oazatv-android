@@ -44,6 +44,7 @@ import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.receiver.PlaybackReceiverListener;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.service.TrackerService;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
@@ -59,6 +60,8 @@ import java.util.TimerTask;
 
 import hotchemi.android.rate.AppRate;
 import hotchemi.android.rate.OnClickButtonListener;
+import permission.auron.com.marshmallowpermissionhelper.PermissionResult;
+import permission.auron.com.marshmallowpermissionhelper.PermissionUtils;
 
 /**
  * Created by chaemil on 2.12.15.
@@ -116,8 +119,29 @@ public class MainActivity extends BaseActivity implements
         setupPlaybackReceiver();
         setupLiveRequestTimer();
 
+        askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
+            @Override
+            public void permissionGranted() {
+                initTracker();
+            }
+
+            @Override
+            public void permissionDenied() {
+
+            }
+        });
+
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();
+        }
+    }
+
+    private void initTracker() {
+        boolean isGranted = isPermissionGranted(this,
+                PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE);
+
+        if (isGranted) {
+            startService(new Intent(this, TrackerService.class));
         }
     }
 

@@ -6,10 +6,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.Element;
 import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.ScriptIntrinsicBlur;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -103,17 +105,40 @@ public class BitmapUtils {
 
     // Scale and keep aspect ratio
     public static Bitmap scaleToFill(Bitmap b, int width, int height) {
-        float factorH = height / (float) b.getWidth();
-        float factorW = width / (float) b.getWidth();
-        float factorToUse = (factorH > factorW) ? factorW : factorH;
-        return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factorToUse),
-                (int) (b.getHeight() * factorToUse), false);
+        if (b != null) {
+            float factorH = height / (float) b.getWidth();
+            float factorW = width / (float) b.getWidth();
+            float factorToUse = (factorH > factorW) ? factorW : factorH;
+            return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factorToUse),
+                    (int) (b.getHeight() * factorToUse), false);
+        }
+        return null;
     }
 
     public static File saveToFile(Context context, Bitmap bitmap, String filename, int quality) {
         OutputStream outStream = null;
 
         File file = new File(context.getExternalCacheDir() + "/" + filename);
+
+        if (file.exists()) {
+            return null;
+        }
+
+        try {
+            outStream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outStream);
+            outStream.flush();
+            outStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
+    public static File saveToFile(Context context, Bitmap bitmap, String filename, String folder, int quality) {
+        OutputStream outStream = null;
+
+        File file = new File(context.getExternalCacheDir() + "/" + folder + "/" + filename);
 
         if (file.exists()) {
             return null;

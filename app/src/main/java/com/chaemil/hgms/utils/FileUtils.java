@@ -6,7 +6,11 @@ import android.os.StatFs;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by chaemil on 8.2.16.
@@ -132,5 +136,31 @@ public class FileUtils {
         }
     }
         return dir.delete();
+    }
+
+    public static List<String> getListOfFiles(String path, final ArrayList<String> exts) {
+
+        File files = new File(path);
+
+        FileFilter filter = new FileFilter() {
+
+            @Override
+            public boolean accept(File pathname) {
+                String ext;
+                String path = pathname.getPath();
+                ext = path.substring(path.lastIndexOf(".") + 1);
+                return exts.contains(ext);
+            }
+        };
+
+        final File [] filesFound = files.listFiles(filter);
+        List<String> list = new ArrayList<String>();
+        if (filesFound != null && filesFound.length > 0) {
+            for (File file : filesFound) {
+                list.add(file.getName());
+            }
+        }
+
+        return list;
     }
 }
