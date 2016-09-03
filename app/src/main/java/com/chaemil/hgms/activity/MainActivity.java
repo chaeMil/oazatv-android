@@ -119,17 +119,7 @@ public class MainActivity extends BaseActivity implements
         setupPlaybackReceiver();
         setupLiveRequestTimer();
 
-        askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
-            @Override
-            public void permissionGranted() {
-                initTracker();
-            }
-
-            @Override
-            public void permissionDenied() {
-
-            }
-        });
+        initTracker();
 
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();
@@ -137,12 +127,17 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void initTracker() {
-        boolean isGranted = isPermissionGranted(this,
-                PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE);
+        askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
+            @Override
+            public void permissionGranted() {
+                startService(new Intent(MainActivity.this, TrackerService.class));
+            }
 
-        if (isGranted) {
-            startService(new Intent(this, TrackerService.class));
-        }
+            @Override
+            public void permissionDenied() {
+
+            }
+        });
     }
 
     private void parseDeepLink() {
