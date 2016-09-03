@@ -70,7 +70,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignLeft="@+id/date"
             android:layout_alignStart="@+id/date"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="5dp"
             android:layout_toLeftOf="@+id/context_menu"
             android:layout_toStartOf="@+id/context_menu"
             tools:ignore="MissingPrefix" />
@@ -84,7 +84,7 @@
             android:layout_below="@+id/name"
             android:layout_toRightOf="@+id/thumb_wrapper"
             android:layout_toEndOf="@+id/thumb_wrapper"
-            android:layout_marginTop="12dp" />
+            android:layout_marginTop="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -93,10 +93,8 @@
             android:id="@+id/views"
             android:textColor="@color/md_grey_700"
             android:gravity="right"
-            android:layout_alignTop="@+id/date"
-            android:layout_toRightOf="@+id/date"
-            android:layout_toEndOf="@+id/date"
-            android:layout_marginLeft="16dp" />
+            android:layout_below="@+id/date"
+            android:layout_alignLeft="@+id/date" />
 
         <ImageButton
             android:layout_width="40dp"
