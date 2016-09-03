@@ -32,6 +32,7 @@ import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
@@ -49,6 +50,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     public static final String TAG = "player_fragment";
     private static final String CURRENT_TIME = "current_time";
+    private static final int PERIODICAL_SAVE_TIME = 5000;
     private RelativeLayout miniPlayer;
     private ImageView miniPlayerImageView;
     private RelativeLayout playerToolbar;
@@ -73,6 +75,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private ImageView qualitySwitch;
     private EasyVideoPlayer player;
     private Video savedVideo;
+    private boolean dismiss;
+    private SpinKitView buffering;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,10 +90,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onPause() {
         super.onPause();
-
         player.pause();
 
-        saveCurrentVideoTime();
         stopTimer();
     }
 
@@ -185,6 +187,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         info = (ImageView) rootView.findViewById(R.id.info);
         qualitySwitch = (ImageView) rootView.findViewById(R.id.quality_switch);
         player = (EasyVideoPlayer) rootView.findViewById(R.id.player);
+        buffering = (SpinKitView) rootView.findViewById(R.id.buffering);
     }
 
     private void setupUI() {
@@ -207,6 +210,23 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 switchMiniPlayer(1);
             }
         }, 750);
+    }
+
+    private void showBuffering() {
+        buffering.setVisibility(View.VISIBLE);
+        if (buffering.getVisibility() != View.VISIBLE) {
+            YoYo.with(Techniques.FadeIn).duration(150).playOn(buffering);
+        }
+    }
+
+    private void hideBuffering() {
+        YoYo.with(Techniques.FadeOut).duration(150).playOn(buffering);
+        delay(new Runnable() {
+            @Override
+            public void run() {
+                buffering.setVisibility(View.GONE);
+            }
+        }, 150);
     }
 
     private void showInfo() {
@@ -294,8 +314,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void swipeDismissPlayer() {
-        saveCurrentVideoTime();
-        player.pause();
+        dismiss = true;
         player.release();
 
         MainActivity mainActivity = ((MainActivity) getActivity());
@@ -341,6 +360,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         playerToolbar.setVisibility(View.GONE);
         infoLayout.setVisibility(View.GONE);
 
+        player.hideControls();
+
         ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(false);
 
         isInFullscreenMode = true;
@@ -354,7 +375,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         miniPlayer.setVisibility(View.VISIBLE);
         playerToolbar.setVisibility(View.VISIBLE);
-        infoLayout.setVisibility(View.VISIBLE);
+        infoLayout.setVisibility(View.GONE);
 
         ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(true);
 
@@ -396,18 +417,21 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     public void saveCurrentVideoTime() {
-        if (player != null && currentVideo != null) {
-            try {
-                currentVideo.setCurrentTime(player.getCurrentPosition());
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (isAdded() && !dismiss) {
+            if (player != null && currentVideo != null) {
+                try {
+                    currentVideo.setCurrentTime(player.getCurrentPosition());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                currentVideo.save();
             }
-            currentVideo.save();
         }
     }
 
     private void setupPlayer() {
         player.setCallback(this);
+        player.setAutoPlay(true);
         player.setThemeColorRes(R.color.colorPrimary);
         player.setHideControlsOnPlay(true);
         player.setLeftAction(EasyVideoPlayer.LEFT_ACTION_NONE);
@@ -419,10 +443,17 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
+    private void periodicalSaveTime() {
+        delay(new Runnable() {
+            @Override
+            public void run() {
+                saveCurrentVideoTime();
+                periodicalSaveTime();
+            }
+        }, PERIODICAL_SAVE_TIME);
+    }
 
     public void playNewVideo(final Video video) {
-
-        //saveCurrentVideoTime();
 
         savedVideo = null;
 
@@ -486,7 +517,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
 
         setupPlayer();
-
         player.start();
 
         mainActivity.expandPanel();
@@ -515,51 +545,63 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onStarted(EasyVideoPlayer player) {
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onStarted");
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause_dark));
     }
 
     @Override
     public void onPaused(EasyVideoPlayer player) {
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onPaused");
         saveCurrentVideoTime();
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
     }
 
     @Override
     public void onPreparing(EasyVideoPlayer player) {
-
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onPreparing");
     }
 
     @Override
     public void onPrepared(EasyVideoPlayer player) {
-        if (savedVideo != null) {
-            player.seekTo(savedVideo.getCurrentTime());
-        }
-        player.start();
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onPrepared");
+        delay(new Runnable() {
+            @Override
+            public void run() {
+                saveCurrentVideoTime();
+                periodicalSaveTime();
+            }
+        }, PERIODICAL_SAVE_TIME);
     }
 
     @Override
     public void onBuffering(int percent) {
-
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onBuffering");
+        if (player.isPlaying()) {
+            hideBuffering();
+        } else {
+            showBuffering();
+        }
     }
 
     @Override
     public void onError(EasyVideoPlayer player, Exception e) {
-
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onError");
     }
 
     @Override
     public void onCompletion(EasyVideoPlayer player) {
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onCompletion");
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
-        saveCurrentVideoTime();
     }
 
     @Override
     public void onRetry(EasyVideoPlayer player, Uri source) {
-
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onRetry");
     }
 
     @Override
     public void onSubmit(EasyVideoPlayer player, Uri source) {
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onSubmit");
         if (isInFullscreenMode) {
             cancelFullscreenPlayer();
         } else {

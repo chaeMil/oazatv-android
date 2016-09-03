@@ -138,29 +138,18 @@ public class FileUtils {
         return dir.delete();
     }
 
-    public static List<String> getListOfFiles(String path, final ArrayList<String> exts) {
-
-        File files = new File(path);
-
-        FileFilter filter = new FileFilter() {
-
-            @Override
-            public boolean accept(File pathname) {
-                String ext;
-                String path = pathname.getPath();
-                ext = path.substring(path.lastIndexOf(".") + 1);
-                return exts.contains(ext);
-            }
-        };
-
-        final File [] filesFound = files.listFiles(filter);
-        List<String> list = new ArrayList<String>();
-        if (filesFound != null && filesFound.length > 0) {
-            for (File file : filesFound) {
-                list.add(file.getName());
+    public static List<File> getListFiles(File parentDir, String ext) {
+        ArrayList<File> inFiles = new ArrayList<File>();
+        File[] files = parentDir.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                inFiles.addAll(getListFiles(file, ext));
+            } else {
+                if(file.getName().endsWith(ext)){
+                    inFiles.add(file);
+                }
             }
         }
-
-        return list;
+        return inFiles;
     }
 }
