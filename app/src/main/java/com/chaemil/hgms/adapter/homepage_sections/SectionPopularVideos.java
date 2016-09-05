@@ -158,16 +158,4 @@ public class SectionPopularVideos extends StatelessSection {
             this.time = (TextView) itemView.findViewById(R.id.video_time);
         }
     }
-
-    private class HeaderViewHolder extends RecyclerView.ViewHolder{
-
-        public final TextView sectionName;
-        public final ImageView sectionIcon;
-
-        public HeaderViewHolder(View itemView) {
-            super(itemView);
-            this.sectionName = (TextView) itemView.findViewById(R.id.section_name);
-            this.sectionIcon = (ImageView) itemView.findViewById(R.id.section_icon);
-        }
-    }
 }

@@ -20,6 +20,7 @@ import com.chaemil.hgms.adapter.homepage_sections.SectionFeatured;
 import com.chaemil.hgms.adapter.homepage_sections.SectionNewAlbums;
 import com.chaemil.hgms.adapter.homepage_sections.SectionNewVideos;
 import com.chaemil.hgms.adapter.homepage_sections.SectionPopularVideos;
+import com.chaemil.hgms.adapter.homepage_sections.SectionWebView;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.factory.ResponseFactory;
@@ -107,6 +108,9 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
             sectionCount += 1;
         }
+
+        adapter.addSection(new SectionWebView(getContext(), mainActivity, "http://google.com/"));
+        sectionCount += 1;
 
         if (homepage != null) {
 
