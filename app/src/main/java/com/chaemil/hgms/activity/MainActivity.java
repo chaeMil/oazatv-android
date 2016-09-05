@@ -44,6 +44,7 @@ import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.receiver.PlaybackReceiverListener;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.service.TrackerService;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
@@ -115,10 +116,25 @@ public class MainActivity extends BaseActivity implements
         setupUI(savedInstanceState);
         setupPlaybackReceiver();
         setupLiveRequestTimer();
+        initTracker();
 
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();
         }
+    }
+
+    private void initTracker() {
+        askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
+            @Override
+            public void permissionGranted() {
+                startService(new Intent(MainActivity.this, TrackerService.class));
+            }
+
+            @Override
+            public void permissionDenied() {
+
+            }
+        });
     }
 
     private void parseDeepLink() {
