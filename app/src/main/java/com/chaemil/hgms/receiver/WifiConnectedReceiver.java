@@ -29,8 +29,5 @@ public class WifiConnectedReceiver extends BroadcastReceiver {
                 mainActivity.noConnectionMessage();
             }
         }
-
-        context.startService(new Intent(context, TrackerService.class));
-
     }
 }
