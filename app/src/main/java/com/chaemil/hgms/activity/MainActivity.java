@@ -482,7 +482,7 @@ public class MainActivity extends BaseActivity implements
 
         int fragmentsCount = getSupportFragmentManager().getBackStackEntryCount();
 
-        if (getMainFragment().getPager().getCurrentItem() == 1 && fragmentsCount != 0) { //categories view
+        if (getMainFragment().getPager() != null && getMainFragment().getPager().getCurrentItem() == 1 && fragmentsCount != 0) { //categories view
             getSupportFragmentManager().popBackStack();
         } else {
             if (getMainFragment() != null
