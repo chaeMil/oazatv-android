@@ -71,4 +71,6 @@
     <string name="used_by_app">používáno aplikací Oáza.tv</string>
     <string name="low_quality_mode_not_available">Video v nízké kvalitě není dostupné</string>
     <string name="quality_mode_not_available">Video ve vysoké kvalitě není dostupné</string>
+    <string name="continue_watching">Pokračovat ve sledování...</string>
+    <string name="fullscreen">Celá obrazovka</string>
 </resources>
