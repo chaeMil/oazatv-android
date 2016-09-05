@@ -71,7 +71,6 @@
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 tools:ignore="MissingPrefix"
-                android:layout_below="@+id/thumb_wrapper"
                 android:layout_marginTop="6dp"
                 android:layout_toLeftOf="@+id/context_menu"
                 android:layout_toStartOf="@+id/context_menu"
