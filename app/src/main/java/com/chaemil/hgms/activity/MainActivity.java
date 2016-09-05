@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity implements
         setupUI(savedInstanceState);
         setupPlaybackReceiver();
         setupLiveRequestTimer();
-        initTracker();
+        //initTracker();
 
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();
