@@ -37,9 +37,11 @@ import com.chaemil.hgms.utils.EndlessScrollListener;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.SmartLog;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
@@ -210,25 +212,38 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
         switch (requestType) {
             case GET_CATEGORIES:
 
-                Category category = null;
+                JSONArray videosJsonArray = null;
                 try {
-                    category = ResponseFactory.parseCategory(response.getJSONObject(Constants.JSON_CATEGORIES));
+                    videosJsonArray = response
+                            .getJSONObject(Constants.JSON_CATEGORIES)
+                            .getJSONArray(Constants.JSON_VIDEOS);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                if (category != null) {
-                    if (category.getVideos() != null) {
-                        archive.addAll(category.getVideos());
+                if (videosJsonArray != null) {
+                    for (int i = 0; i < videosJsonArray.length(); i++) {
+                        try {
+                            Video video = ResponseFactory.parseVideo(videosJsonArray.getJSONObject(i));
+                            if (video != null) {
+                                archive.add(video);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-
-                    setupAdapter();
-
-                    endlessProgress.setVisibility(View.GONE);
-                    progress.setVisibility(View.GONE);
-                    swipeRefresh.setRefreshing(false);
-                    connectionErrorWrapper.setVisibility(View.GONE);
                 }
+
+                if (category.getVideos() != null) {
+                    archive.addAll(category.getVideos());
+                }
+
+                setupAdapter();
+
+                endlessProgress.setVisibility(View.GONE);
+                progress.setVisibility(View.GONE);
+                swipeRefresh.setRefreshing(false);
+                connectionErrorWrapper.setVisibility(View.GONE);
 
                 break;
 
