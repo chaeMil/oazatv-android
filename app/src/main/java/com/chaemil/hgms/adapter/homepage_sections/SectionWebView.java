@@ -1,8 +1,11 @@
 package com.chaemil.hgms.adapter.homepage_sections;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -56,7 +59,18 @@ public class SectionWebView extends StatelessSection {
     @Override
     public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
         WebView webView = ((WebViewHolder) holder).webview;
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                if (view.getUrl().contains("openInBrowser")) {
+                    view.getContext().startActivity(
+                            new Intent(Intent.ACTION_VIEW, Uri.parse(view.getUrl())));
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
         webView.loadUrl(url);
     }
 
