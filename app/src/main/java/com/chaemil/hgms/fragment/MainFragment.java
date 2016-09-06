@@ -366,6 +366,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     public void openAlbum(PhotoAlbum album) {
         backWrapper.setVisibility(View.VISIBLE);
         searchFab.hide(true);
+        searchView.closeSearch();
         toolbarSecondaryTitle.setText(album.getName());
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.photoalbum_wrapper, photoAlbumFragment, PhotoAlbumFragment.TAG);
