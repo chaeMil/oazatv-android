@@ -46,7 +46,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  */
 public class BaseActivity extends ActivityManagePermission implements RequestFactoryListener {
 
-    private Photo photoToDownload;
     private DownloadManager.Request request;
     private DownloadManager manager;
     public boolean fullscreen = false;
@@ -208,10 +207,7 @@ public class BaseActivity extends ActivityManagePermission implements RequestFac
         askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
             @Override
             public void permissionGranted() {
-                if (photoToDownload != null) {
-                    manager.enqueue(request);
-                    photoToDownload = null;
-                }
+                manager.enqueue(request);
             }
 
             @Override

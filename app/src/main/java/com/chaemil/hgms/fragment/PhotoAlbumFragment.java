@@ -45,16 +45,19 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     private ViewPager photosViewPager;
     private PhotosViewPagerAdapter photosAdapter;
     private ImageButton back;
-    private ImageView download;
+    private ImageButton download;
     private ProgressBar progress;
     private ImageView retry;
     private TextView description;
+    private MainActivity mainActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "PhotoAlbumFragment", "onCreate");
         setRetainInstance(true);
+
+        mainActivity = ((MainActivity) getActivity());
     }
 
     @Override
@@ -102,7 +105,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
         grid = (GridView) rootView.findViewById(R.id.gridView);
         photosViewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
         back = (ImageButton) rootView.findViewById(R.id.back);
-        download = (ImageView) rootView.findViewById(R.id.download);
+        download = (ImageButton) rootView.findViewById(R.id.download);
         progress = (ProgressBar) rootView.findViewById(R.id.progress);
         retry = (ImageView) rootView.findViewById(R.id.retry);
         description = (TextView) rootView.findViewById(R.id.description);
@@ -220,7 +223,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
                 break;
             case R.id.download:
                 Photo photo = album.getPhotos().get(photosViewPager.getCurrentItem());
-                ((BaseActivity) getActivity()).downloadPhoto(photo);
+                mainActivity.downloadPhoto(photo);
                 break;
             case R.id.retry:
                 retry.setVisibility(View.GONE);
