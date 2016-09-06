@@ -31,7 +31,7 @@ public class WifiConnectedReceiver extends BroadcastReceiver {
         }
 
         if (OazaApp.TRACKER) {
-            if (netInfo != null && netInfo.isConnected()) {
+            if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI) {
                 context.stopService(new Intent(context, TrackerService.class));
                 context.startActivity(new Intent(context, TrackerService.class));
             }
