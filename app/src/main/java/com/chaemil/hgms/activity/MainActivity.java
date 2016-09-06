@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity implements
         setupUI(savedInstanceState);
         setupPlaybackReceiver();
         setupLiveRequestTimer();
-        //initTracker();
+        initTracker();
 
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();
@@ -124,17 +124,19 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void initTracker() {
-        askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
-            @Override
-            public void permissionGranted() {
-                startService(new Intent(MainActivity.this, TrackerService.class));
-            }
+        if (OazaApp.TRACKER) {
+            askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
+                @Override
+                public void permissionGranted() {
+                    startService(new Intent(MainActivity.this, TrackerService.class));
+                }
 
-            @Override
-            public void permissionDenied() {
+                @Override
+                public void permissionDenied() {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     private void parseDeepLink() {

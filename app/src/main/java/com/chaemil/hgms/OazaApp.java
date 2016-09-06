@@ -24,6 +24,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 public class OazaApp extends SugarApp {
 
     public static final boolean DEVELOPMENT = true;
+    public static final boolean TRACKER = true;
 
     private MainActivity mainActivity;
     public SplashActivity splashActivity;
@@ -51,15 +52,7 @@ public class OazaApp extends SugarApp {
                 .build());
 
         initAudioPlaybackService();
-
-        //startDownloadService();
     }
-
-    /*public void startDownloadService() {
-        if (!ServiceUtils.isMyServiceRunning(this, DownloadService.class)) {
-            startService(new Intent(this, DownloadService.class));
-        }
-    }*/
 
     private void initAudioPlaybackService() {
         if (ServiceUtils.isMyServiceRunning(this, AudioPlaybackService.class)) {

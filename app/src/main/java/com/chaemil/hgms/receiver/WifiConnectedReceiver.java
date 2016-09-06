@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.service.TrackerService;
 
 /**
  * Created by chaemil on 8.2.16.
@@ -26,6 +27,13 @@ public class WifiConnectedReceiver extends BroadcastReceiver {
             }
             if (netInfo != null && !netInfo.isConnected()) {
                 mainActivity.noConnectionMessage();
+            }
+        }
+
+        if (OazaApp.TRACKER) {
+            if (netInfo != null && netInfo.isConnected()) {
+                context.stopService(new Intent(context, TrackerService.class));
+                context.startActivity(new Intent(context, TrackerService.class));
             }
         }
     }
