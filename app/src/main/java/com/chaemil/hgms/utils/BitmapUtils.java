@@ -112,6 +112,7 @@ public class BitmapUtils {
             return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factorToUse),
                     (int) (b.getHeight() * factorToUse), false);
         }
+        System.gc();
         return null;
     }
 
