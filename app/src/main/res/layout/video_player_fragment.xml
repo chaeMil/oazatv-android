@@ -20,11 +20,35 @@
 
         </RelativeLayout>
 
-        <FrameLayout
-            android:id="@+id/video_player"
+
+        <RelativeLayout
+            android:fitsSystemWindows="false"
+            android:id="@+id/video_wrapper"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/toolbars_wrapper" />
+            android:layout_below="@+id/toolbars_wrapper"
+            android:gravity="center"
+            android:layout_alignParentBottom="true">
+
+            <com.afollestad.easyvideoplayer.EasyVideoPlayer
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/player"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/buffering"
+                style="@style/SpinKitView.Large.ThreeBounce"
+                android:layout_width="120dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                app:SpinKit_Color="@color/white"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"

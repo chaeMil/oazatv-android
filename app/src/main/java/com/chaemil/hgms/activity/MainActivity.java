@@ -242,9 +242,8 @@ public class MainActivity extends BaseActivity implements
                     case BottomSheetBehavior.STATE_COLLAPSED:
                         adjustLayout();
                         setFullscreen(false);
-                        if (getVideoPlayerFragment() != null
-                                && getVideoPlayerFragment().getPlayerFragment() != null) {
-                            getVideoPlayerFragment().getPlayerFragment().exitFullscreen(MainActivity.this);
+                        if (getVideoPlayerFragment() != null) {
+                            getVideoPlayerFragment().cancelFullscreenPlayer();
                         }
 
                         layoutParams.bottomMargin = DimensUtils.getActionBarHeight(MainActivity.this);
@@ -496,10 +495,9 @@ public class MainActivity extends BaseActivity implements
 
             } else if (isPanelExpanded()) {
 
-                if (getVideoPlayerFragment() != null
-                        && getVideoPlayerFragment().getPlayerFragment() != null) {
+                if (getVideoPlayerFragment() != null) {
                     if (getVideoPlayerFragment().isInFullscreenMode) {
-                        getVideoPlayerFragment().getPlayerFragment().exitFullscreen(MainActivity.this);
+                        getVideoPlayerFragment().cancelFullscreenPlayer();
                     } else {
                         collapsePanel();
                     }
