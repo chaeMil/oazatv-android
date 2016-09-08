@@ -77,6 +77,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private Video savedVideo;
     private boolean dismiss;
     private SpinKitView buffering;
+    private RelativeLayout toolbarsWrapper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -188,6 +189,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         qualitySwitch = (ImageView) rootView.findViewById(R.id.quality_switch);
         player = (EasyVideoPlayer) rootView.findViewById(R.id.player);
         buffering = (SpinKitView) rootView.findViewById(R.id.buffering);
+        toolbarsWrapper = (RelativeLayout) rootView.findViewById(R.id.toolbars_wrapper);
     }
 
     private void setupUI() {
@@ -359,6 +361,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         miniPlayer.setVisibility(View.GONE);
         playerToolbar.setVisibility(View.GONE);
         infoLayout.setVisibility(View.GONE);
+        toolbarsWrapper.setVisibility(View.GONE);
 
         player.hideControls();
 
@@ -376,6 +379,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         miniPlayer.setVisibility(View.VISIBLE);
         playerToolbar.setVisibility(View.VISIBLE);
         infoLayout.setVisibility(View.GONE);
+        toolbarsWrapper.setVisibility(View.VISIBLE);
 
         ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(true);
 
