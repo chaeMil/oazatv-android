@@ -389,12 +389,12 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onStarted(EasyVideoPlayer player) {
-
+        getMiniPlayerPause().setImageDrawable(getResources().getDrawable(R.drawable.pause_dark));
     }
 
     @Override
     public void onPaused(EasyVideoPlayer player) {
-
+        getMiniPlayerPause().setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
     }
 
     @Override
@@ -419,7 +419,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onCompletion(EasyVideoPlayer player) {
-
+        getMiniPlayerPause().setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
     }
 
     @Override
