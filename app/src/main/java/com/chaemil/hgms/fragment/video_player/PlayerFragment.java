@@ -189,13 +189,16 @@ public class PlayerFragment extends FullscreenFragment implements EasyVideoCallb
     @Override
     public void onStarted(EasyVideoPlayer player) {
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onStarted");
-
+        videoPlayerFragment.getMiniPlayerPause()
+                .setImageDrawable(getResources().getDrawable(R.drawable.pause_dark));
     }
 
     @Override
     public void onPaused(EasyVideoPlayer player) {
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onPaused");
         saveCurrentVideoTime();
+        videoPlayerFragment.getMiniPlayerPause()
+                .setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
     }
 
     @Override
@@ -233,6 +236,8 @@ public class PlayerFragment extends FullscreenFragment implements EasyVideoCallb
     @Override
     public void onCompletion(EasyVideoPlayer player) {
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onCompletion");
+        videoPlayerFragment.getMiniPlayerPause()
+                .setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
     }
 
     @Override
@@ -249,19 +254,9 @@ public class PlayerFragment extends FullscreenFragment implements EasyVideoCallb
             videoPlayerFragment.showToolbar();
         } else {
             isInFullscreenMode = true;
-            setFullscreen(mainActivity);
+            setFullscreen();
             videoPlayerFragment.hideToolbar();
         }
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-    }
-
-    @Override
-    public void onKeyDown(int keyCode) {
-        super.onKeyDown(keyCode);
     }
 
     public boolean isPlaying() {
