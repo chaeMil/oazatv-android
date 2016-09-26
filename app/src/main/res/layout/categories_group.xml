@@ -30,7 +30,8 @@
 
                 <TextView
                     android:background="@color/white"
-                    android:padding="18dp"
+                    android:padding="14dp"
+                    fontPath="@string/slab_font_bold"
                     android:id="@+id/category_name"
                     tools:textColor="@color/md_red_400"
                     android:textAllCaps="true"
@@ -38,7 +39,8 @@
                     tools:text="category name (5)"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical" />
+                    android:gravity="center_vertical"
+                    android:textSize="16sp" />
 
             </android.support.v7.widget.CardView>
 
