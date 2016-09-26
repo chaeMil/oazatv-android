@@ -32,10 +32,15 @@ public class SplashActivity extends BaseActivity {
     }
 
     public void startMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
-        overridePendingTransition(0, 0);
+        delay(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                overridePendingTransition(0, 0);
+            }
+        }, 750);
     }
 
     public void startTutorial() {
@@ -45,5 +50,8 @@ public class SplashActivity extends BaseActivity {
         overridePendingTransition(R.anim.fadeout, R.anim.fadeout);
     }
 
-
+    @Override
+    public void onBackPressed() {
+        //Do nothing
+    }
 }
