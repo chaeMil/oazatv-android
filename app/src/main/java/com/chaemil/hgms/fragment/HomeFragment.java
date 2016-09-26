@@ -107,10 +107,10 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
             sectionCount += 1;
         }
 
-        adapter.addSection(new SectionWebView(getContext(),
+        /*adapter.addSection(new SectionWebView(getContext(),
                 mainActivity,
                 "http://oaza.tv/app-webviews/majesty.html"));
-        sectionCount += 1;
+        sectionCount += 1;*/
 
         if (homepage != null) {
 

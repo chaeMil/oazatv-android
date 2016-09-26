@@ -1,6 +1,7 @@
 package com.chaemil.hgms.activity;
 
 import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -94,6 +95,7 @@ public class MainActivity extends BaseActivity implements
     private ArchiveFragment archiveFragment;
     private DownloadedFragment downloadedFragment;
     private PhotoAlbumFragment photoAlbumFragment;
+    private BroadcastReceiver networkStateReceiver;
 
     @Override
     protected void onResume() {
@@ -123,10 +125,36 @@ public class MainActivity extends BaseActivity implements
         setupPlaybackReceiver();
         setupLiveRequestTimer();
         createFragments();
+        setupNetworkStateReceiver();
 
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();
         }
+    }
+
+    private void setupNetworkStateReceiver() {
+        final IntentFilter filters = new IntentFilter();
+        filters.addAction("android.net.wifi.WIFI_STATE_CHANGED");
+        filters.addAction("android.net.wifi.STATE_CHANGE");
+        networkStateReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                NetworkInfo mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+                boolean isConnected = wifi != null && wifi.isConnectedOrConnecting() ||
+                        mobile != null && mobile.isConnectedOrConnecting();
+
+                if (isConnected) {
+                    hideStatusMessage();
+                    setupLiveRequestTimer();
+                } else {
+                    noConnectionMessage();
+                }
+            }
+        };
+        registerReceiver(networkStateReceiver, filters);
     }
 
     private void createFragments() {
@@ -225,6 +253,7 @@ public class MainActivity extends BaseActivity implements
         super.onDestroy();
         ((OazaApp) getApplication()).setMainActivity(null);
         unregisterReceiver(audioPlaybackReceiver);
+        unregisterReceiver(networkStateReceiver);
     }
 
     public void bringToFront() {
