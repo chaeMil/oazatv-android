@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.adapter.holder.VideoViewHolder;
 import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
@@ -28,7 +29,7 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 /**
  * Created by chaemil on 27.8.16.
  */
-public class SectionNewAlbums extends StatelessSection {
+public class SectionNewAlbums extends BaseSection {
 
     private final Context context;
     private final MainActivity mainActivity;
@@ -91,29 +92,5 @@ public class SectionNewAlbums extends StatelessSection {
         headerHolder.sectionName.setText(context.getString(R.string.newest_albums));
         headerHolder.sectionIcon.setImageDrawable(context.getResources()
                 .getDrawable(R.drawable.newest_albums));
-    }
-
-    public class VideoViewHolder extends RecyclerView.ViewHolder{
-
-        private RelativeLayout mainView;
-        public VideoThumbImageView thumb;
-        public TextView name;
-        public TextView date;
-        public TextView views;
-        public ImageButton more;
-        public ProgressBar viewProgress;
-        public TextView time;
-
-        public VideoViewHolder(View itemView) {
-            super(itemView);
-            this.mainView = (RelativeLayout) itemView.findViewById(R.id.main_view);
-            this.thumb = (VideoThumbImageView) itemView.findViewById(R.id.thumb);
-            this.name = (TextView) itemView.findViewById(R.id.name);
-            this.date = (TextView) itemView.findViewById(R.id.date);
-            this.views = (TextView) itemView.findViewById(R.id.views);
-            this.more = (ImageButton) itemView.findViewById(R.id.context_menu);
-            this.viewProgress = (ProgressBar) itemView.findViewById(R.id.view_progress);
-            this.time = (TextView) itemView.findViewById(R.id.video_time);
-        }
     }
 }

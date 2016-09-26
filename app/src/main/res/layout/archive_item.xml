@@ -104,7 +104,20 @@
             android:src="@drawable/ic_action_navigation_more_vert"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="false" />
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/downloaded"
+            android:background="@drawable/transparent_ripple"
+            android:src="@drawable/ic_downloaded_gray"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@+id/thumb_wrapper"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

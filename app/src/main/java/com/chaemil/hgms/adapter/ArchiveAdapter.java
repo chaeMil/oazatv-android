@@ -102,6 +102,17 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                     });
                     holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
                     holder.time.setText(StringUtils.getDurationString(video.getDuration()));
+                    if (video.isAudioDownloaded(context)) {
+                        holder.downloaded.setVisibility(View.VISIBLE);
+                        holder.downloaded.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mainActivity.playNewAudio(video, true);
+                            }
+                        });
+                    } else {
+                        holder.downloaded.setVisibility(View.GONE);
+                    }
 
                     setupTime(holder, video);
 
@@ -131,6 +142,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                     holder.more.setVisibility(View.GONE);
                     holder.viewProgress.setVisibility(View.GONE);
                     holder.time.setVisibility(View.GONE);
+                    holder.downloaded.setVisibility(View.GONE);
 
                     int thumbWidthAlbum = holder.thumb.getWidth();
 
@@ -192,7 +204,8 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        private RelativeLayout mainView;
+        public RelativeLayout mainView;
+        public ImageButton downloaded;
         public VideoThumbImageView thumb;
         public TextView name;
         public TextView date;
@@ -211,6 +224,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
             this.more = (ImageButton) itemView.findViewById(R.id.context_menu);
             this.viewProgress = (ProgressBar) itemView.findViewById(R.id.view_progress);
             this.time = (TextView) itemView.findViewById(R.id.video_time);
+            this.downloaded = (ImageButton) itemView.findViewById(R.id.downloaded);
         }
     }
 

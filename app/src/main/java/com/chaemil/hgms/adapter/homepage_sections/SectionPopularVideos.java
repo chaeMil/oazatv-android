@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.adapter.holder.VideoViewHolder;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
@@ -29,7 +30,7 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 /**
  * Created by chaemil on 27.8.16.
  */
-public class SectionPopularVideos extends StatelessSection {
+public class SectionPopularVideos extends BaseSection {
 
     private final Context context;
     private final MainActivity mainActivity;
@@ -78,6 +79,17 @@ public class SectionPopularVideos extends StatelessSection {
         });
         videoViewHolder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
         videoViewHolder.time.setText(StringUtils.getDurationString(video.getDuration()));
+        if (video.isAudioDownloaded(context)) {
+            videoViewHolder.downloaded.setVisibility(View.VISIBLE);
+            videoViewHolder.downloaded.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mainActivity.playNewAudio(video, true);
+                }
+            });
+        } else {
+            videoViewHolder.downloaded.setVisibility(View.GONE);
+        }
 
         setupTime(videoViewHolder, video);
 
@@ -99,63 +111,5 @@ public class SectionPopularVideos extends StatelessSection {
         headerHolder.sectionName.setText(context.getString(R.string.popular_videos));
         headerHolder.sectionIcon.setImageDrawable(context.getResources()
                 .getDrawable(R.drawable.popular_videos));
-    }
-
-    private void setupTime(final VideoViewHolder holder, final Video video) {
-        holder.viewProgress.setVisibility(View.GONE);
-        holder.time.setVisibility(View.GONE);
-
-        new AsyncTask<Void, Void, Void>() {
-
-            public Video savedVideo;
-
-            @Override
-            protected Void doInBackground( Void... voids ) {
-                savedVideo = Video.findByServerId(video.getServerId());
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                holder.viewProgress.setVisibility(View.VISIBLE);
-                if (savedVideo != null && savedVideo.equals(video)) {
-                    holder.viewProgress.setMax(video.getDuration());
-                    holder.viewProgress.setProgress(savedVideo.getCurrentTime() / 1000);
-                } else {
-                    holder.viewProgress.setMax(100);
-                    holder.viewProgress.setProgress(0);
-                }
-
-                holder.time.setVisibility(View.VISIBLE);
-            }
-        }.execute();
-    }
-
-    private void openAlbum(PhotoAlbum album) {
-        mainActivity.getMainFragment().openAlbum(album);
-    }
-
-    public class VideoViewHolder extends RecyclerView.ViewHolder{
-
-        private RelativeLayout mainView;
-        public VideoThumbImageView thumb;
-        public TextView name;
-        public TextView date;
-        public TextView views;
-        public ImageButton more;
-        public ProgressBar viewProgress;
-        public TextView time;
-
-        public VideoViewHolder(View itemView) {
-            super(itemView);
-            this.mainView = (RelativeLayout) itemView.findViewById(R.id.main_view);
-            this.thumb = (VideoThumbImageView) itemView.findViewById(R.id.thumb);
-            this.name = (TextView) itemView.findViewById(R.id.name);
-            this.date = (TextView) itemView.findViewById(R.id.date);
-            this.views = (TextView) itemView.findViewById(R.id.views);
-            this.more = (ImageButton) itemView.findViewById(R.id.context_menu);
-            this.viewProgress = (ProgressBar) itemView.findViewById(R.id.view_progress);
-            this.time = (TextView) itemView.findViewById(R.id.video_time);
-        }
     }
 }

@@ -111,6 +111,18 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginLeft="6dp" />
 
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/downloaded"
+                android:background="@drawable/transparent_ripple"
+                android:src="@drawable/ic_downloaded_gray"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentRight="false"
+                android:layout_alignParentEnd="false"
+                android:layout_toLeftOf="@+id/context_menu"
+                android:visibility="gone" />
+
         </RelativeLayout>
 
     </RelativeLayout>
