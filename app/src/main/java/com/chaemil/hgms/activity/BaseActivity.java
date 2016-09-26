@@ -2,6 +2,7 @@ package com.chaemil.hgms.activity;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -82,10 +83,14 @@ public class BaseActivity extends ActivityManagePermission implements RequestFac
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
             decorView.setSystemUiVisibility(uiOptions);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         } else {
             fullscreen = false;
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
         }
     }
 

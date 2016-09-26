@@ -181,12 +181,11 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
     private void setupGridManager() {
         final int columns = getResources().getInteger(R.integer.archive_columns);
         if (gridLayoutManager == null) {
-            gridLayoutManager = new GridLayoutManager(getActivity(),
-                    columns);
+            gridLayoutManager = new GridLayoutManager(getActivity(), columns);
+            archiveGridView.setLayoutManager(gridLayoutManager);
         } else {
             gridLayoutManager.setSpanCount(columns);
         }
-        archiveGridView.setLayoutManager(gridLayoutManager);
     }
 
     public void adjustLayout() {

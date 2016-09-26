@@ -100,12 +100,11 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+
         adjustLayout();
-
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-
         reconnectToPlaybackService();
-
         parseDeepLink();
     }
 

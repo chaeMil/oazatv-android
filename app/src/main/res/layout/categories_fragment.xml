@@ -9,7 +9,6 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/categories_list"
-            android:scrollbars="vertical"
             android:paddingBottom="75dp"
             android:clipToPadding="false"
             android:scrollbarSize="4dp"
