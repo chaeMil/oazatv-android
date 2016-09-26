@@ -52,7 +52,7 @@
         <TextView
             android:id="@+id/category_name"
             tools:text="Category name"
-
+            fontPath="@string/slab_font_bold"
             android:padding="16dp"
             android:textColor="@color/white"
             android:textAllCaps="true"

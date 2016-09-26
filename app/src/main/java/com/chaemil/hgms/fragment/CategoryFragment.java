@@ -48,7 +48,8 @@ import java.util.ArrayList;
 /**
  * Created by chaemil on 2.12.15.
  */
-public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener,
+        View.OnClickListener {
 
     public static final String CATEGORY = "category";
     public static final String TAG = "CategoryFragment";
