@@ -102,7 +102,7 @@
         <RelativeLayout
             android:id="@+id/toolbars_wrapper"
             android:layout_width="match_parent"
-            android:layout_height="56dp">
+            android:layout_height="?android:attr/actionBarSize">
 
             <RelativeLayout
                 android:visibility="gone"

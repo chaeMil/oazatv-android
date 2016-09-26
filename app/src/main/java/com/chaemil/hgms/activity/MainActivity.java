@@ -274,7 +274,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void setupBottomSheet() {
-        mBottomSheetBehavior.setPeekHeight(Math.round(DimensUtils.pxFromDp(this, 56)));
+        mBottomSheetBehavior.setPeekHeight(DimensUtils.getActionBarHeight(this));
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {

@@ -33,6 +33,25 @@ public class DimensUtils {
         return size.y;
     }
 
+    public static int getStatusBarHeight(Context context) {
+        int result = 0;
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    public static int getActionBarHeight(Context context) {
+        int actionBarHeight = 0;
+        TypedValue tv = new TypedValue();
+        if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+        {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
+        }
+        return actionBarHeight;
+    }
+
     public static int getTextViewHeight(TextView textView) {
         WindowManager wm =
                 (WindowManager) textView.getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -52,16 +71,5 @@ public class DimensUtils {
         int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         textView.measure(widthMeasureSpec, heightMeasureSpec);
         return textView.getMeasuredHeight();
-    }
-
-    public static int getActionBarHeight(Context context) {
-        TypedValue tv = new TypedValue();
-        int actionBarHeight = 0;
-        if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,
-                    context.getResources().getDisplayMetrics());
-        }
-
-        return actionBarHeight;
     }
 }
