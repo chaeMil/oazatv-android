@@ -285,9 +285,8 @@ public class AudioPlaybackService extends Service implements
                     .addAction(R.drawable.rew, "", intents.get(3))
                     .addAction(R.drawable.pause, "", intents.get(1))
                     .addAction(R.drawable.ff, "", intents.get(2))
-                    .addAction(R.drawable.ic_close, "", intents.get(4))
                     .setStyle(new NotificationCompat.MediaStyle()
-                            .setShowActionsInCompactView(0, 1, 2, 3)
+                            .setShowActionsInCompactView(0, 1, 2)
                     );
 
             int sdk = android.os.Build.VERSION.SDK_INT;
