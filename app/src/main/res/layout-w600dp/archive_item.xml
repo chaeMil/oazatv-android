@@ -72,8 +72,8 @@
                 android:maxLines="2"
                 tools:ignore="MissingPrefix"
                 android:layout_marginTop="6dp"
-                android:layout_toLeftOf="@+id/context_menu"
-                android:layout_toStartOf="@+id/context_menu"
+                android:layout_toLeftOf="@+id/downloaded"
+                android:layout_toStartOf="@+id/downloaded"
                 android:layout_marginLeft="2dp" />
 
             <TextView

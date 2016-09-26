@@ -84,6 +84,17 @@ public class SectionFeatured extends BaseSection {
                 });
                 videoViewHolder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
                 videoViewHolder.time.setText(StringUtils.getDurationString(video.getDuration()));
+                if (video.isAudioDownloaded(context)) {
+                    videoViewHolder.downloaded.setVisibility(View.VISIBLE);
+                    videoViewHolder.downloaded.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mainActivity.playNewAudio(video, true);
+                        }
+                    });
+                } else {
+                    videoViewHolder.downloaded.setVisibility(View.GONE);
+                }
 
                 setupTime(videoViewHolder, video);
 
