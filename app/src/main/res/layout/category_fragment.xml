@@ -20,6 +20,7 @@
 
         <android.support.v7.widget.RecyclerView
             android:clipToPadding="false"
+            android:scrollbars="vertical"
             android:id="@+id/archive_grid_view"
             android:scrollbarSize="4dp"
             android:scrollbarThumbVertical="@color/colorPrimaryWashed"
