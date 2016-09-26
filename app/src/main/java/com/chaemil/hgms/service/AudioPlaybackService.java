@@ -296,7 +296,6 @@ public class AudioPlaybackService extends Service implements
             }
 
             notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-            startForeground(NOTIFICATION_ID, notificationBuilder.build());
 
             Ion.with(getApplication())
                     .load(currentAudio.getThumbFile())

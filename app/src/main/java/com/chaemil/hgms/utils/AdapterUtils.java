@@ -3,7 +3,6 @@ package com.chaemil.hgms.utils;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.view.View;
 
@@ -44,7 +43,6 @@ public class AdapterUtils {
 
             builder.title(video.getName())
                     .theme(Theme.LIGHT)
-                    .backgroundColor(context.getResources().getColor(R.color.transparent_black))
                     .items(menu)
                     .itemsCallback(new MaterialDialog.ListCallback() {
                         @Override
@@ -73,7 +71,6 @@ public class AdapterUtils {
 
             builder.title(video.getName())
                     .theme(Theme.LIGHT)
-                    .backgroundColor(context.getResources().getColor(R.color.transparent_black))
                     .items(menu)
                     .itemsCallback(new MaterialDialog.ListCallback() {
                         @Override
