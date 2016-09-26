@@ -88,7 +88,6 @@ public class MainActivity extends BaseActivity implements
     private AudioPlaybackReceiver audioPlaybackReceiver;
     private BottomSheetBehavior mBottomSheetBehavior;
     private RelativeLayout mainFragmentWraper;
-    private ImageView bottomSheetShadow;
     private RelativeLayout playerBgBlack;
     private HomeFragment homeFragment;
     private CategoriesFragment categoriesFragment;
@@ -124,7 +123,6 @@ public class MainActivity extends BaseActivity implements
         setupPlaybackReceiver();
         setupLiveRequestTimer();
         createFragments();
-        //initTracker();
 
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();
@@ -158,22 +156,6 @@ public class MainActivity extends BaseActivity implements
     public PhotoAlbumFragment getPhotoAlbumFragment() {
         return photoAlbumFragment;
     }
-
-    /*private void initTracker() {
-        if (OazaApp.TRACKER) {
-            askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
-                @Override
-                public void permissionGranted() {
-                    startService(new Intent(MainActivity.this, TrackerService.class));
-                }
-
-                @Override
-                public void permissionDenied() {
-
-                }
-            });
-        }
-    }*/
 
     private void parseDeepLink() {
         Intent intent = getIntent();
@@ -259,13 +241,11 @@ public class MainActivity extends BaseActivity implements
         statusMessageText = (TextView) findViewById(R.id.status_message_text);
         liveStreamMessageWatch = (TextView) findViewById(R.id.watch);
         mBottomSheetBehavior = BottomSheetBehavior.from(playerWrapper);
-        bottomSheetShadow = (ImageView) findViewById(R.id.bottom_sheet_shadow);
         playerBgBlack = (RelativeLayout) findViewById(R.id.player_bg_black);
     }
 
     private void setupBottomSheet() {
-        mBottomSheetBehavior.setPeekHeight(DimensUtils.getActionBarHeight(this));
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        mBottomSheetBehavior.setPeekHeight(Math.round(DimensUtils.pxFromDp(this, 56)));
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -315,9 +295,9 @@ public class MainActivity extends BaseActivity implements
 
     private void setupUI(Bundle savedInstanceState) {
 
-        setupBottomSheet();
-
         if (savedInstanceState == null) {
+            setupBottomSheet();
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             hidePanel();
 
             mainFragment = new MainFragment();
@@ -399,7 +379,6 @@ public class MainActivity extends BaseActivity implements
         if (service != null) {
             if (isPanelHidden()) {
                 collapsePanel();
-                //getMainFragment().hideSplash(false);
             }
 
             if (getAudioPlayerFragment() == null) {
@@ -408,7 +387,7 @@ public class MainActivity extends BaseActivity implements
             }
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.player_fragment, audioPlayerFragment, AudioPlayerFragment.TAG);
+            transaction.replace(R.id.player_fragment, getAudioPlayerFragment(), AudioPlayerFragment.TAG);
             transaction.commit();
         }
     }
@@ -463,7 +442,8 @@ public class MainActivity extends BaseActivity implements
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getAudioPlayerFragment().playNewAudio(MainActivity.this, expandPanel, audio);
+                        getAudioPlayerFragment().playNewAudio(MainActivity.this, expandPanel);
+                        getAudioPlayerFragment().refreshToolbars();
                     }
                 }, 600);
             }
@@ -480,6 +460,11 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void adjustLayout() {
+
+        if (mBottomSheetBehavior != null) {
+            setupBottomSheet();
+        }
+
         if (getMainFragment() != null) {
             getMainFragment().getArchiveFragment().adjustLayout();
             getMainFragment().getDownloadedFragment().adjustLayout();
@@ -492,6 +477,7 @@ public class MainActivity extends BaseActivity implements
         }
 
         if (getAudioPlayerFragment() != null) {
+            getAudioPlayerFragment().reconnectToService(this);
             if (isPanelExpanded()) {
                 getAudioPlayerFragment().switchMiniPlayer(1);
             } else {

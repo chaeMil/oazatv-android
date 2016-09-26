@@ -91,13 +91,8 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     public void onResume() {
         super.onResume();
 
+        refreshToolbars();
         refreshPlayButtons();
-
-        if (mainActivity.isPanelExpanded()) {
-            switchMiniPlayer(1);
-        } else {
-            switchMiniPlayer(0);
-        }
 
         activateUI(true);
         AnalyticsService.getInstance().setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT);
@@ -186,14 +181,8 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
         miniPlayerSwipe.setOnSwipeListener(createSwipeListener());
 
-        delay(new Runnable() {
-            @Override
-            public void run() {
-                switchMiniPlayer(1);
-            }
-        }, 750);
-
         refreshPlayButtons();
+
     }
 
     private void showInfo() {
@@ -297,6 +286,14 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
+    public void refreshToolbars() {
+        if (mainActivity.isPanelExpanded()) {
+            switchMiniPlayer(1);
+        } else {
+            switchMiniPlayer(0);
+        }
+    }
+
     private boolean isServicePlayingAudio() {
         AudioPlaybackService service = getService();
         if (service != null) {
@@ -391,6 +388,10 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     public void reconnectToService(Context context) {
+        if (getService() == null || getService().getCurrentAudio() == null) {
+            return;
+        }
+
         Video audio = getService().getCurrentAudio();
         boolean downloaded = getService().getIsPlayingDownloaded();
 
@@ -435,7 +436,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         totalTime.setText("???");
     }
 
-    public void playNewAudio(Context context, boolean expandPanel, Video audio) {
+    public void playNewAudio(Context context, boolean expandPanel) {
         reconnectToService(context);
         postGA();
         postVideoView();
