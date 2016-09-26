@@ -1,10 +1,8 @@
 package com.chaemil.hgms.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
@@ -42,7 +40,6 @@ import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.clans.fab.FloatingActionButton;
-import com.github.ybq.android.spinkit.SpinKitView;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import org.json.JSONObject;
@@ -61,14 +58,10 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     public static final String TAG = "main_fragment";
     private TabLayout tabLayout;
     private ViewPager pager;
-    private FragmentActivity context;
-    private HomeFragment homeFragment;
-    private ArchiveFragment archiveFragment;
-    private DownloadedFragment downloadedFragment;
+    private MainActivity context;
     private Toolbar toolbar;
     private RelativeLayout appBar;
     private FrameLayout photoalbumWrapper;
-    private PhotoAlbumFragment photoAlbumFragment;
     private MaterialSearchView searchView;
     private FloatingActionButton searchFab;
     private TextView toolbarSecondaryTitle;
@@ -84,37 +77,21 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     private SwitchCompat streamOnWifiSwitch;
     private SwitchCompat streamOnlyAudioSwitch;
     private ImageView share;
-    private RelativeLayout splash;
-    private CategoriesFragment categoriesFragment;
     private LinearLayout logoWrapper;
-    private TextView continueWithoutData;
-    private SpinKitView loadingView;
 
     private MainFragmentsAdapter mainFragmentsAdapter;
     private TabLayout.TabLayoutOnPageChangeListener tabLayoutChangeListener;
-    private boolean init;
-
-    @Override
-    public void onAttach(Activity activity) {
-        context = (FragmentActivity) activity;
-        super.onAttach(activity);
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        context = (MainActivity) getActivity();
+
         if (savedInstanceState == null) {
             SmartLog.Log(SmartLog.LogLevel.DEBUG, TAG + " savedInstanceState", "null");
-            homeFragment = new HomeFragment();
-            categoriesFragment = new CategoriesFragment();
-            archiveFragment = new ArchiveFragment();
-            downloadedFragment = new DownloadedFragment();
-            photoAlbumFragment = new PhotoAlbumFragment();
             searchAdapter = new SearchAdapter(getActivity(), R.layout.search_item,
                     ((MainActivity) getActivity()), searchResult);
-            sharedPreferences = SharedPrefUtils.getInstance(getContext());
         }
 
         setupAppRate();
@@ -128,7 +105,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                 R.layout.main_fragment, container, false);
 
         getUI(rootView);
-        setupUI(savedInstanceState);
+        setupUI();
 
         return rootView;
     }
@@ -140,32 +117,6 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                 .setRemindInterval(1)
                 .setShowLaterButton(true)
                 .monitor();
-    }
-
-
-    public void hideSplash(boolean animate) {
-        if (splash != null) {
-            if (animate) {
-                YoYo.with(Techniques.FadeOut).duration(350).playOn(splash);
-                delay(new Runnable() {
-                    @Override
-                    public void run() {
-                        splash.setVisibility(View.GONE);
-                    }
-                }, 350);
-            } else {
-                splash.setVisibility(View.GONE);
-            }
-            init = true;
-        }
-
-        delay(new Runnable() {
-            @Override
-            public void run() {
-                AppRate.showRateDialogIfMeetsConditions(getActivity());
-            }
-        }, 750);
-
     }
 
     private void getUI(ViewGroup rootView) {
@@ -186,37 +137,32 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         streamOnWifiSwitch = (SwitchCompat) rootView.findViewById(R.id.stream_on_wifi_switch);
         streamOnlyAudioSwitch = (SwitchCompat) rootView.findViewById(R.id.stream_only_audio_switch);
         share = (ImageView) rootView.findViewById(R.id.share);
-        splash = (RelativeLayout) rootView.findViewById(R.id.splash);
         logoWrapper = (LinearLayout) rootView.findViewById(R.id.logo_wrapper);
-        continueWithoutData = (TextView) rootView.findViewById(R.id.continue_without_data);
-        loadingView = (SpinKitView) rootView.findViewById(R.id.loading_view);
     }
 
-    private void setupUI(Bundle savedInstanceState) {
+    private void setupUI() {
         setupTabLayout();
         setupSearch();
 
-        splash.setPadding(0, ((MainActivity) getActivity()).getStatusBarHeight(), 0, 0);
         back.setOnClickListener(this);
         settingsFab.setOnClickListener(this);
         settingsCardBg.setOnClickListener(this);
         share.setOnClickListener(this);
-        continueWithoutData.setOnClickListener(this);
 
-        if (savedInstanceState == null) {
-            if (mainFragmentsAdapter == null) {
-                mainFragmentsAdapter = new MainFragmentsAdapter(this, context.getSupportFragmentManager());
-            }
-            if (tabLayoutChangeListener == null) {
-                tabLayoutChangeListener = new TabLayout.TabLayoutOnPageChangeListener(tabLayout);
-            }
-            pager.setAdapter(mainFragmentsAdapter);
-            pager.addOnPageChangeListener(tabLayoutChangeListener);
-            pager.setOffscreenPageLimit(3);
-            settingsFab.hide(false);
-            streamOnlyAudioSwitch.setChecked(sharedPreferences.loadStreamAudio());
-            streamOnWifiSwitch.setChecked(sharedPreferences.loadStreamOnWifi());
+        sharedPreferences = SharedPrefUtils.getInstance(getContext());
+
+        if (mainFragmentsAdapter == null) {
+            mainFragmentsAdapter = new MainFragmentsAdapter(this, context.getSupportFragmentManager());
         }
+        if (tabLayoutChangeListener == null) {
+            tabLayoutChangeListener = new TabLayout.TabLayoutOnPageChangeListener(tabLayout);
+        }
+        pager.setAdapter(mainFragmentsAdapter);
+        pager.addOnPageChangeListener(tabLayoutChangeListener);
+        pager.setOffscreenPageLimit(3);
+        settingsFab.hide(false);
+        streamOnlyAudioSwitch.setChecked(sharedPreferences.loadStreamAudio());
+        streamOnWifiSwitch.setChecked(sharedPreferences.loadStreamOnWifi());
 
         streamOnWifiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -235,10 +181,6 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                 }
             }
         });
-
-        if (init) {
-            hideSplash(false);
-        }
     }
 
     private void setupSearch() {
@@ -263,23 +205,23 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     }
 
     public HomeFragment getHomeFragment() {
-        return homeFragment;
+        return context.getHomeFragment();
     }
 
     public CategoriesFragment getCategoriesFragment() {
-        return categoriesFragment;
+        return context.getCategoriesFragment();
     }
 
     public ArchiveFragment getArchiveFragment() {
-        return archiveFragment;
+        return context.getArchiveFragment();
     }
 
     public DownloadedFragment getDownloadedFragment() {
-        return downloadedFragment;
+        return context.getDownloadedFragment();
     }
 
     public PhotoAlbumFragment getPhotoAlbumFragment() {
-        return photoAlbumFragment;
+        return context.getPhotoAlbumFragment();
     }
 
     public TabLayout getTabLayout() {
@@ -308,10 +250,6 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
 
     public ViewPager getPager() {
         return pager;
-    }
-
-    public MainFragmentsAdapter getMainFragmentsAdapter() {
-        return mainFragmentsAdapter;
     }
 
     @Override
@@ -369,9 +307,9 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         searchView.closeSearch();
         toolbarSecondaryTitle.setText(album.getName());
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.photoalbum_wrapper, photoAlbumFragment, PhotoAlbumFragment.TAG);
+        transaction.replace(R.id.photoalbum_wrapper, getPhotoAlbumFragment(), PhotoAlbumFragment.TAG);
         transaction.commit();
-        photoAlbumFragment.setAlbum(album);
+        getPhotoAlbumFragment().setAlbum(album);
 
         photoalbumWrapper.setVisibility(View.VISIBLE);
         YoYo.with(Techniques.SlideInUp).duration(300).playOn(photoalbumWrapper);
@@ -447,9 +385,6 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                             album.getNameCS() + " | " + album.getNameEN(),
                             getString(R.string.share_album));
                 }
-                break;
-            case R.id.continue_without_data:
-                hideSplash(true);
                 break;
         }
     }
@@ -557,19 +492,4 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                 }
         }
     }
-
-    public void showContinue() {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadingView.setVisibility(View.VISIBLE);
-                continueWithoutData.setVisibility(View.VISIBLE);
-                YoYo.with(Techniques.FadeIn).duration(500).playOn(continueWithoutData);
-                YoYo.with(Techniques.FadeIn).duration(500).playOn(loadingView);
-            }
-        }, 750);
-    }
-
-
 }

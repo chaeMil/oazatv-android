@@ -232,4 +232,8 @@ public class BaseActivity extends ActivityManagePermission implements RequestFac
         final Handler handler = new Handler();
         handler.postDelayed(runnable, time);
     }
+
+    public boolean isRunningNugat() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
+    }
 }

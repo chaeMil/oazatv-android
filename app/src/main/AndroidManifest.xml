@@ -16,7 +16,6 @@
         android:name=".OazaApp">
 
         <activity android:name=".activity.SplashActivity"
-            android:resizeableActivity="false"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +29,6 @@
         </activity>
 
         <activity android:name=".activity.MainActivity"
-            android:resizeableActivity="false"
             android:configChanges="keyboardHidden|screenSize|orientation"
             android:launchMode="singleTask"
             android:theme="@style/AppThemeNoActionBar">
@@ -70,9 +68,9 @@
             android:stopWithTask="false"
             android:enabled="true"/>
 
-        <service android:name=".service.TrackerService">
+        <!--<service android:name=".service.TrackerService">
 
-        </service>
+        </service>-->
 
         <receiver android:name=".receiver.BootAndUpdateReceiver">
             <intent-filter>

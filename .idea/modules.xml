@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/$(json2viewPath)/json2view/json2view/json2view.iml" filepath="$PROJECT_DIR$/$(json2viewPath)/json2view/json2view/json2view.iml" />
       <module fileurl="file://$PROJECT_DIR$/oazatv-android.iml" filepath="$PROJECT_DIR$/oazatv-android.iml" />
     </modules>
   </component>

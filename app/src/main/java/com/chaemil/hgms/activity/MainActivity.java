@@ -31,10 +31,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.adapter.SearchAdapter;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.ResponseFactory;
+import com.chaemil.hgms.fragment.ArchiveFragment;
 import com.chaemil.hgms.fragment.AudioPlayerFragment;
+import com.chaemil.hgms.fragment.CategoriesFragment;
+import com.chaemil.hgms.fragment.DownloadedFragment;
+import com.chaemil.hgms.fragment.HomeFragment;
 import com.chaemil.hgms.fragment.MainFragment;
+import com.chaemil.hgms.fragment.PhotoAlbumFragment;
 import com.chaemil.hgms.fragment.VideoPlayerFragment;
 import com.chaemil.hgms.model.LiveStream;
 import com.chaemil.hgms.model.PhotoAlbum;
@@ -44,7 +50,6 @@ import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.receiver.PlaybackReceiverListener;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.RequestService;
-import com.chaemil.hgms.service.TrackerService;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
@@ -57,9 +62,6 @@ import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import permission.auron.com.marshmallowpermissionhelper.PermissionResult;
-import permission.auron.com.marshmallowpermissionhelper.PermissionUtils;
 
 /**
  * Created by chaemil on 2.12.15.
@@ -88,6 +90,11 @@ public class MainActivity extends BaseActivity implements
     private RelativeLayout mainFragmentWraper;
     private ImageView bottomSheetShadow;
     private RelativeLayout playerBgBlack;
+    private HomeFragment homeFragment;
+    private CategoriesFragment categoriesFragment;
+    private ArchiveFragment archiveFragment;
+    private DownloadedFragment downloadedFragment;
+    private PhotoAlbumFragment photoAlbumFragment;
 
     @Override
     protected void onResume() {
@@ -116,14 +123,43 @@ public class MainActivity extends BaseActivity implements
         setupUI(savedInstanceState);
         setupPlaybackReceiver();
         setupLiveRequestTimer();
-        initTracker();
+        createFragments();
+        //initTracker();
 
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();
         }
     }
 
-    private void initTracker() {
+    private void createFragments() {
+        homeFragment = new HomeFragment();
+        categoriesFragment = new CategoriesFragment();
+        archiveFragment = new ArchiveFragment();
+        downloadedFragment = new DownloadedFragment();
+        photoAlbumFragment = new PhotoAlbumFragment();
+    }
+
+    public HomeFragment getHomeFragment() {
+        return homeFragment;
+    }
+
+    public CategoriesFragment getCategoriesFragment() {
+        return categoriesFragment;
+    }
+
+    public ArchiveFragment getArchiveFragment() {
+        return archiveFragment;
+    }
+
+    public DownloadedFragment getDownloadedFragment() {
+        return downloadedFragment;
+    }
+
+    public PhotoAlbumFragment getPhotoAlbumFragment() {
+        return photoAlbumFragment;
+    }
+
+    /*private void initTracker() {
         if (OazaApp.TRACKER) {
             askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
                 @Override
@@ -137,7 +173,7 @@ public class MainActivity extends BaseActivity implements
                 }
             });
         }
-    }
+    }*/
 
     private void parseDeepLink() {
         Intent intent = getIntent();
@@ -363,7 +399,7 @@ public class MainActivity extends BaseActivity implements
         if (service != null) {
             if (isPanelHidden()) {
                 collapsePanel();
-                getMainFragment().hideSplash(false);
+                //getMainFragment().hideSplash(false);
             }
 
             if (getAudioPlayerFragment() == null) {
@@ -538,14 +574,25 @@ public class MainActivity extends BaseActivity implements
     }
 
     public MainFragment getMainFragment() {
+        if (mainFragment == null) {
+            return (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_fragment);
+        }
         return mainFragment;
     }
 
     public VideoPlayerFragment getVideoPlayerFragment() {
+        if (videoPlayerFragment == null) {
+            return (VideoPlayerFragment) getSupportFragmentManager()
+                    .findFragmentByTag(VideoPlayerFragment.TAG);
+        }
         return videoPlayerFragment;
     }
 
     public AudioPlayerFragment getAudioPlayerFragment() {
+        if (audioPlayerFragment == null) {
+            return (AudioPlayerFragment) getSupportFragmentManager()
+                    .findFragmentByTag(AudioPlayerFragment.TAG);
+        }
         return audioPlayerFragment;
     }
 

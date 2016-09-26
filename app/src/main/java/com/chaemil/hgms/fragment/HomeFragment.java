@@ -93,8 +93,6 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
         if (NetworkUtils.isConnected(getActivity())) {
             JsonObjectRequest homepage = RequestFactory.getHomepage(this);
             RequestService.getRequestQueue().add(homepage);
-        } else {
-            ((MainActivity) getActivity()).getMainFragment().hideSplash(true);
         }
     }
 
@@ -169,15 +167,6 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
                 setupGridManager();
                 homepageList.setAdapter(adapter);
 
-            } else {
-                if (((MainActivity) getActivity()).getMainFragment() != null) {
-                    ((MainActivity) getActivity()).getMainFragment().showContinue();
-                }
-            }
-
-            MainFragment mainFragment = ((MainActivity) getActivity()).getMainFragment();
-            if (mainFragment != null && init) {
-                mainFragment.hideSplash(true);
             }
 
             adjustLayout();
@@ -243,7 +232,6 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
                         && ((MainActivity) getActivity()).getMainFragment() != null) {
 
                     ((MainActivity) getActivity()).getMainFragment().goToDownloaded();
-                    ((MainActivity) getActivity()).getMainFragment().hideSplash(true);
                     SuperToast.create(getActivity(), getString(R.string.connection_error), Toast.LENGTH_LONG).show();
                 }
             } else {
