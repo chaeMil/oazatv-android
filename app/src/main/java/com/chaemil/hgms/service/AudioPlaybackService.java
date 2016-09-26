@@ -30,6 +30,7 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.receiver.PlaybackReceiverListener;
 import com.chaemil.hgms.utils.SmartLog;
+import com.chaemil.hgms.utils.StringUtils;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -279,7 +280,7 @@ public class AudioPlaybackService extends Service implements
 
             notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplication())
                     .setContentTitle(currentAudio.getName())
-                    .setContentText(currentAudio.getDate())
+                    .setContentText(StringUtils.formatDate(currentAudio.getDate(), this))
                     .setSmallIcon(R.drawable.white_logo)
                     .setContentIntent(intents.get(0))
                     .setDeleteIntent(intents.get(4))

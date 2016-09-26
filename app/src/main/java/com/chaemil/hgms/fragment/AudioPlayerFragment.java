@@ -433,7 +433,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         }
 
         currentTime.setText("00:00:00");
-        totalTime.setText("???");
+        //totalTime.setText("???");
     }
 
     public void playNewAudio(Context context, boolean expandPanel) {
