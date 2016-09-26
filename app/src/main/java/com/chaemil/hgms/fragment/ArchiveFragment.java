@@ -73,7 +73,6 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.archive_fragment, container, false);
 
-
         getUI(rootView);
         setupUI();
 
@@ -94,17 +93,24 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
     }
 
     private void setupUI() {
-        setupAdapter();
-        adjustLayout();
+        if (isAdded()) {
+            createAdapter();
+            setupAdapter();
+            adjustLayout();
+        }
     }
 
-    private void setupAdapter() {
+    private void createAdapter() {
         if (archiveAdapter == null) {
             archiveAdapter = new ArchiveAdapter(getActivity(),
                     R.layout.archive_item,
                     (MainActivity) getActivity(),
                     archive);
+        }
+    }
 
+    private void setupAdapter() {
+        if (archiveAdapter != null) {
             archiveGridView.setAdapter(archiveAdapter);
             setupGridManager();
             archiveGridView.addOnScrollListener(new EndlessScrollListener(gridLayoutManager) {
@@ -115,9 +121,8 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
                 }
             });
             swipeRefresh.setOnRefreshListener(this);
+            archiveAdapter.notifyDataSetChanged();
         }
-
-        archiveAdapter.notifyDataSetChanged();
     }
 
     private void setupGridManager() {
