@@ -101,6 +101,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                         }
                     });
                     holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
+                    holder.time.setText(StringUtils.getDurationString(video.getDuration()));
 
                     setupTime(holder, video);
 
@@ -170,7 +171,6 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                 }
 
                 holder.time.setVisibility(View.VISIBLE);
-                holder.time.setText(StringUtils.getDurationString(video.getDuration()));
             }
         }.execute();
     }

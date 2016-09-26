@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -83,6 +84,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     }
 
     private void getData() {
+        showProgress();
         List<Video> notFullyWatchedVideos = Video.getNotFullyWatchedVideos(true);
         for (Video video : notFullyWatchedVideos) {
             if (video.getCurrentTime() / 1000 > 30 ) { //more than 30 seconds watched
@@ -195,6 +197,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
     private void getUI(ViewGroup rootView) {
         homepageList = (RecyclerView) rootView.findViewById(R.id.home_list);
+        progress = (RelativeLayout) rootView.findViewById(R.id.progress);
     }
 
     public void adjustLayout() {
@@ -210,6 +213,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
         switch (requestType) {
             case GET_HOMEPAGE:
 
+                hideProgress(500);
                 homepage = ResponseFactory.parseHomepage(response);
                 init = true;
                 initRetry = 2;
@@ -223,6 +227,8 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     @Override
     public void onErrorResponse(VolleyError exception, RequestType requestType) {
         super.onErrorResponse(exception, requestType);
+
+        hideProgress(500);
 
         if (!init) {
             initRetry -= 1;

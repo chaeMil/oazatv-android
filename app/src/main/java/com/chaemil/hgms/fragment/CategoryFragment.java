@@ -264,6 +264,7 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
     public void onRefresh() {
         archive.clear();
         archiveAdapter.notifyDataSetChanged();
+        swipeRefresh.setRefreshing(false);
         getCategoryPage(0);
     }
 

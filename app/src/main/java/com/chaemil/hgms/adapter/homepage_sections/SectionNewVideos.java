@@ -74,6 +74,7 @@ public class SectionNewVideos extends StatelessSection {
             }
         });
         videoViewHolder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
+        videoViewHolder.time.setText(StringUtils.getDurationString(video.getDuration()));
 
         setupTime(videoViewHolder, video);
 
@@ -127,7 +128,6 @@ public class SectionNewVideos extends StatelessSection {
                 }
 
                 holder.time.setVisibility(View.VISIBLE);
-                holder.time.setText(StringUtils.getDurationString(video.getDuration()));
             }
         }.execute();
     }

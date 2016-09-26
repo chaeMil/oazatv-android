@@ -66,6 +66,7 @@ public class SectionContinueWatching extends StatelessSection {
         videoViewHolder.views.setText(video.getViews() + " " + context.getString(R.string.views));
         videoViewHolder.viewProgress.setMax(video.getDuration());
         videoViewHolder.viewProgress.setProgress(video.getCurrentTime());
+        videoViewHolder.time.setText(StringUtils.getDurationString(video.getDuration()));
 
         int thumbWidth = videoViewHolder.thumb.getWidth();
 
@@ -124,7 +125,6 @@ public class SectionContinueWatching extends StatelessSection {
                 }
 
                 holder.time.setVisibility(View.VISIBLE);
-                holder.time.setText(StringUtils.getDurationString(video.getDuration()));
             }
         }.execute();
     }
