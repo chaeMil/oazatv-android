@@ -31,7 +31,7 @@
                 <TextView
                     android:background="@color/white"
                     android:padding="14dp"
-                    fontPath="@string/slab_font_bold"
+                    fontPath="@string/slab_font"
                     android:id="@+id/category_name"
                     tools:textColor="@color/md_red_400"
                     android:textAllCaps="true"

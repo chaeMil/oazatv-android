@@ -85,4 +85,5 @@ dependencies {
     compile 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:1.0.4'
     compile 'com.github.hotchemi:android-rate:1.0.1'
     compile 'com.afollestad:easyvideoplayer:0.2.12'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha1'
 }
