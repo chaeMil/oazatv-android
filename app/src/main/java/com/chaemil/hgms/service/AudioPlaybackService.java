@@ -209,8 +209,10 @@ public class AudioPlaybackService extends Service implements
             }
 
             notificationBuilder.mActions.get(1).icon = R.drawable.play;
+            notificationBuilder.setOngoing(false);
             notificationManager.notify(NOTIFICATION_ID,
                     notificationBuilder.build());
+            stopForeground(false);
         }
     }
 
@@ -218,8 +220,8 @@ public class AudioPlaybackService extends Service implements
         player.start();
 
         notificationBuilder.mActions.get(1).icon = R.drawable.pause;
-        notificationManager.notify(NOTIFICATION_ID,
-                notificationBuilder.build());
+        notificationBuilder.setOngoing(true);
+        startForeground(NOTIFICATION_ID, notificationBuilder.build());
 
         wifiLock.acquire();
     }
@@ -294,7 +296,7 @@ public class AudioPlaybackService extends Service implements
                 notificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
             }
 
-            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+            startForeground(NOTIFICATION_ID, notificationBuilder.build());
 
             Ion.with(getApplication())
                     .load(currentAudio.getThumbFile())
