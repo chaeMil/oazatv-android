@@ -10,7 +10,6 @@ import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.ServiceUtils;
 import com.crashlytics.android.Crashlytics;
-import com.github.pedrovgs.lynx.LynxShakeDetector;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.orm.SugarApp;
@@ -34,11 +33,6 @@ public class OazaApp extends SugarApp {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        if (DEVELOPMENT) {
-            LynxShakeDetector lynxShakeDetector = new LynxShakeDetector(this);
-            lynxShakeDetector.init();
-        }
 
         Fabric.with(this, new Crashlytics());
         AnalyticsService.init(this);
