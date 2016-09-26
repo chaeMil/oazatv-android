@@ -426,8 +426,13 @@ public class MainActivity extends BaseActivity implements
                     SuperToast.Duration.MEDIUM).show();
         } else {
 
-            if (((OazaApp) getApplication()).playbackService == null
-                    || ((OazaApp) getApplication()).playbackService.getCurrentAudio() != audio) {
+            AudioPlaybackService playbackService = ((OazaApp) getApplication()).playbackService;
+            Video currentAudio = null;
+            if (playbackService != null) {
+                currentAudio = playbackService.getCurrentAudio();
+            }
+
+            if (playbackService == null || currentAudio.getServerId() != audio.getServerId()) {
 
                 stopService(new Intent(this, AudioPlaybackService.class));
                 startAudioPlaybackService(audio, downloaded);
@@ -446,6 +451,8 @@ public class MainActivity extends BaseActivity implements
                         getAudioPlayerFragment().refreshToolbars();
                     }
                 }, 600);
+            }  else {
+                expandPanel();
             }
         }
 

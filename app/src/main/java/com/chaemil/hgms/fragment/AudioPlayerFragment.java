@@ -122,16 +122,20 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
 
     private void postGA() {
-        GAUtils.sendGAScreen(
-                ((OazaApp) getActivity().getApplication()),
-                "AudioPlayer",
-                getService().getCurrentAudio().getName());
+        if (getService() != null) {
+            GAUtils.sendGAScreen(
+                    ((OazaApp) getActivity().getApplication()),
+                    "AudioPlayer",
+                    getService().getCurrentAudio().getName());
+        }
     }
 
     private void postVideoView() {
-        JsonObjectRequest postView = RequestFactory.postVideoView(this,
-                getService().getCurrentAudio().getHash());
-        RequestService.getRequestQueue().add(postView);
+        if (getService() != null) {
+            JsonObjectRequest postView = RequestFactory.postVideoView(this,
+                    getService().getCurrentAudio().getHash());
+            RequestService.getRequestQueue().add(postView);
+        }
     }
 
     private void activateUI(boolean state) {
