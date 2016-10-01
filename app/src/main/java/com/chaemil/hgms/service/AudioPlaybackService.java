@@ -120,7 +120,9 @@ public class AudioPlaybackService extends Service implements
         ((OazaApp) getApplication()).playbackService = this;
 
         if (app != null && app.getMainActivity() != null) {
-            if (OSUtils.isRunningMarshmallow() && !readPhoneState) {
+            if (OSUtils.isRunningMarshmallow()
+                    && OSUtils.hasPhoneFeature(app)
+                    && !readPhoneState) {
                 new MaterialDialog.Builder(app.getMainActivity())
                         .content(R.string.audioplayer_phonestate_permission)
                         .cancelable(false)

@@ -72,7 +72,7 @@ dependencies {
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
     compile 'com.mikhaellopez:circularprogressbar:1.1.1'
     compile 'it.sephiroth.android.library.horizontallistview:hlistview:1.2.2'
-    compile 'com.heinrichreimersoftware:material-intro:1.6'
+    compile 'com.heinrichreimersoftware:material-intro:1.4'
     compile 'ru.rambler.android:swipe-layout:1.0.10'
     compile 'com.google.android.gms:play-services-analytics:8.3.0'
     compile 'com.github.ybq:Android-SpinKit:1.1.0'
