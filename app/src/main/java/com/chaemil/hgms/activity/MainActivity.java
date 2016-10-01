@@ -20,6 +20,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -43,6 +44,7 @@ import com.chaemil.hgms.fragment.HomeFragment;
 import com.chaemil.hgms.fragment.MainFragment;
 import com.chaemil.hgms.fragment.PhotoAlbumFragment;
 import com.chaemil.hgms.fragment.VideoPlayerFragment;
+import com.chaemil.hgms.model.KeyboardHandler;
 import com.chaemil.hgms.model.LiveStream;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
@@ -96,6 +98,7 @@ public class MainActivity extends BaseActivity
     private DownloadedFragment downloadedFragment;
     private PhotoAlbumFragment photoAlbumFragment;
     private BroadcastReceiver networkStateReceiver;
+    private KeyboardHandler keyboardHandler;
 
     @Override
     protected void onResume() {
@@ -116,6 +119,7 @@ public class MainActivity extends BaseActivity
         connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         sharedPreferences = SharedPrefUtils.getInstance(this);
+        keyboardHandler = new KeyboardHandler(this);
 
         ((OazaApp) getApplication()).setMainActivity(this);
 
@@ -129,6 +133,12 @@ public class MainActivity extends BaseActivity
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        keyboardHandler.event(keyCode, event);
+        return true;
     }
 
     private void setupNetworkStateReceiver() {
@@ -724,5 +734,17 @@ public class MainActivity extends BaseActivity
 
     public void setAudioPlayerFragment(AudioPlayerFragment audioPlayerFragment) {
         this.audioPlayerFragment = audioPlayerFragment;
+    }
+
+    public void nextTab() {
+        ViewPager pager = getMainFragment().getPager();
+        int currentItem = pager.getCurrentItem();
+        pager.setCurrentItem(currentItem + 1);
+    }
+
+    public void prevTab() {
+        ViewPager pager = getMainFragment().getPager();
+        int currentItem = pager.getCurrentItem();
+        pager.setCurrentItem(currentItem - 1);
     }
 }
