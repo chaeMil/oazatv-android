@@ -437,11 +437,16 @@ public class AudioPlaybackService extends Service implements
     public void onPrepared(MediaPlayer mp) {
         createNotification();
 
-        player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        if (player == null) {
+            player = mp;
+        }
+        if (player != null) {
+            player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-        player.start();
-        player.seekTo(currentAudio.getCurrentTime());
+            player.start();
+            player.seekTo(currentAudio.getCurrentTime());
+        }
     }
 
     @Override
