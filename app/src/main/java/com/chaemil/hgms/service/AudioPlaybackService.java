@@ -15,9 +15,12 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
@@ -28,7 +31,9 @@ import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
+import com.chaemil.hgms.receiver.PhoneCallReceiver;
 import com.chaemil.hgms.receiver.PlaybackReceiverListener;
+import com.chaemil.hgms.utils.OSUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.chaemil.hgms.utils.StringUtils;
 import com.github.johnpersano.supertoasts.SuperToast;
@@ -39,6 +44,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import permission.auron.com.marshmallowpermissionhelper.PermissionResult;
+import permission.auron.com.marshmallowpermissionhelper.PermissionUtils;
 
 /**
  * Created by chaemil on 28.5.16.
@@ -67,6 +75,9 @@ public class AudioPlaybackService extends Service implements
     private static AudioPlaybackService instance = null;
     private IntentFilter noisyAudioIntent = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
     private NoisyAudioStreamReceiver noisyAudioReceiver;
+    private OazaApp app;
+    private boolean readPhoneState;
+    private PhoneCallReceiver phoneCallReceiver;
 
     public static AudioPlaybackService getInstance() {
         return instance;
@@ -90,26 +101,73 @@ public class AudioPlaybackService extends Service implements
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if (intent != null) {
-            if (intent.getParcelableExtra(AUDIO) != null) {
-                currentAudio = intent.getParcelableExtra(AUDIO);
-                downloaded = intent.getBooleanExtra(DOWNLOADED, false);
-            }
+        if (intent != null && intent.getParcelableExtra(AUDIO) != null) {
+            currentAudio = intent.getParcelableExtra(AUDIO);
+            downloaded = intent.getBooleanExtra(DOWNLOADED, false);
+            app = (OazaApp) getApplication();
+            readPhoneState = app.getMainActivity()
+                    .isPermissionGranted(app, PermissionUtils.Manifest_READ_PHONE_STATE);
+            init();
+        } else {
+            stopSelf();
         }
-
-        init(currentAudio);
 
         return START_STICKY;
     }
 
-    private void init(Video currentAudio) {
+    private void init() {
         instance = this;
         ((OazaApp) getApplication()).playbackService = this;
 
-        initMusicPlayer();
-        setupReceiver();
-        playNewAudio(currentAudio);
+        if (app != null && app.getMainActivity() != null) {
+            if (OSUtils.isRunningMarshmallow() && !readPhoneState) {
+                new MaterialDialog.Builder(app.getMainActivity())
+                        .content(R.string.audioplayer_phonestate_permission)
+                        .cancelable(false)
+                        .positiveText(R.string.ok)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog,
+                                                @NonNull DialogAction which) {
+                                askPhoneStatePermissions();
+                            }
+                        })
+                        .show();
+            } else {
+                phoneStatePermissionGranted();
+            }
+        }
+    }
 
+    private void askPhoneStatePermissions() {
+        app.getMainActivity().askCompactPermission(PermissionUtils.Manifest_READ_PHONE_STATE,
+                new PermissionResult() {
+                    @Override
+                    public void permissionGranted() {
+                        phoneStatePermissionGranted();
+                    }
+
+                    @Override
+                    public void permissionDenied() {
+                        phoneStatePermissionDenied();
+                    }
+                });
+    }
+
+    private void phoneStatePermissionGranted() {
+        readPhoneState = true;
+        initMusicPlayer();
+        setupPlaybackReceiver();
+        playNewAudio(currentAudio);
+    }
+
+    private void phoneStatePermissionDenied() {
+        readPhoneState = false;
+        playbackStop();
+        app.getMainActivity().hidePanel();
+        SuperToast.create(app,
+                getString(R.string.permission_revoked),
+                SuperToast.Duration.MEDIUM).show();
     }
 
     public void initMusicPlayer(){
@@ -124,7 +182,7 @@ public class AudioPlaybackService extends Service implements
                 .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
     }
 
-    private void setupReceiver() {
+    private void setupPlaybackReceiver() {
         unregisterPlaybackReceiver();
 
         IntentFilter filter = new IntentFilter();
@@ -133,6 +191,7 @@ public class AudioPlaybackService extends Service implements
         filter.addAction(AudioPlaybackReceiver.NOTIFY_FF);
         filter.addAction(AudioPlaybackReceiver.NOTIFY_REW);
         filter.addAction(AudioPlaybackReceiver.NOTIFY_DELETE);
+        filter.addAction(PhoneCallReceiver.INCOMING_CALL);
 
         audioPlaybackReceiver = new AudioPlaybackReceiver(this, ((OazaApp) getApplication()));
         registerReceiver(audioPlaybackReceiver, filter);
@@ -205,6 +264,14 @@ public class AudioPlaybackService extends Service implements
         if (player != null) {
             player.pause();
 
+            if (app != null
+                    && app.getMainActivity() != null
+                    && app.getMainActivity().getAudioPlayerFragment() != null) {
+                app.getMainActivity().getAudioPlayerFragment().playPause();
+            }
+
+            saveCurrentAudioTime();
+
             if (wifiLock.isHeld()) {
                 wifiLock.release();
             }
@@ -218,19 +285,31 @@ public class AudioPlaybackService extends Service implements
     }
 
     public void playAudio() {
-        player.start();
+        if (player != null) {
+            player.start();
 
-        notificationBuilder.mActions.get(1).icon = R.drawable.pause;
-        notificationBuilder.setOngoing(true);
-        startForeground(NOTIFICATION_ID, notificationBuilder.build());
+            if (app != null
+                    && app.getMainActivity() != null
+                    && app.getMainActivity().getAudioPlayerFragment() != null) {
+                app.getMainActivity().getAudioPlayerFragment().playPause();
+            }
 
-        wifiLock.acquire();
+            notificationBuilder.mActions.get(1).icon = R.drawable.pause;
+            notificationBuilder.setOngoing(true);
+            startForeground(NOTIFICATION_ID, notificationBuilder.build());
+
+            if (!currentAudio.isAudioDownloaded(app)) {
+                wifiLock.acquire();
+            }
+        }
     }
 
     public void playNewAudio(Video audio) {
 
         createNotification();
-        wifiLock.acquire();
+        if (!currentAudio.isAudioDownloaded(app)) {
+            wifiLock.acquire();
+        }
 
         Video savedAudio = null;
 
@@ -252,7 +331,8 @@ public class AudioPlaybackService extends Service implements
             if (player != null) {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 if (downloaded) {
-                    player.setDataSource(getApplication().getExternalFilesDir(null) + "/" + currentAudio.getHash() + ".mp3");
+                    player.setDataSource(getApplication()
+                            .getExternalFilesDir(null) + "/" + currentAudio.getHash() + ".mp3");
                 } else {
                     player.setDataSource(currentAudio.getAudioFile());
                 }
@@ -275,10 +355,12 @@ public class AudioPlaybackService extends Service implements
 
             ArrayList<PendingIntent> intents = AudioPlaybackPendingIntents.generate(getApplication());
 
-            notificationManager = (NotificationManager) getApplication().getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager = (NotificationManager) getApplication()
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(NOTIFICATION_ID);
 
-            notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplication())
+            notificationBuilder = (NotificationCompat.Builder) new NotificationCompat
+                    .Builder(getApplication())
                     .setContentTitle(currentAudio.getName())
                     .setContentText(StringUtils.formatDate(currentAudio.getDate(), this))
                     .setSmallIcon(R.drawable.white_logo)
@@ -322,16 +404,15 @@ public class AudioPlaybackService extends Service implements
             player = null;
         }
 
-        if (audioPlaybackReceiver != null) {
-            try {
-                unregisterReceiver(audioPlaybackReceiver);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        unregisterPlaybackReceiver();
 
         stopForeground(true);
         stopSelf();
+    }
+
+    @Override
+    public void playbackPauseAudio() {
+        pauseAudio();
     }
 
     public void playbackSeekFF() {

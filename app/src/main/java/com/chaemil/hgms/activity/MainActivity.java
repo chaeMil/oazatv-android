@@ -67,8 +67,8 @@ import java.util.TimerTask;
 /**
  * Created by chaemil on 2.12.15.
  */
-public class MainActivity extends BaseActivity implements
-        PlaybackReceiverListener{
+public class MainActivity extends BaseActivity
+{
 
     public static final String EXPAND_PANEL = "expand_panel";
     private VideoPlayerFragment videoPlayerFragment;
@@ -215,9 +215,6 @@ public class MainActivity extends BaseActivity implements
         filter.addAction(AudioPlaybackReceiver.NOTIFY_FF);
         filter.addAction(AudioPlaybackReceiver.NOTIFY_REW);
         filter.addAction(AudioPlaybackReceiver.NOTIFY_DELETE);
-
-        audioPlaybackReceiver = new AudioPlaybackReceiver(this, ((OazaApp) getApplication()));
-        registerReceiver(audioPlaybackReceiver, filter);
     }
 
     public void setupLiveRequestTimer() {
@@ -251,7 +248,6 @@ public class MainActivity extends BaseActivity implements
     protected void onDestroy() {
         super.onDestroy();
         ((OazaApp) getApplication()).setMainActivity(null);
-        unregisterReceiver(audioPlaybackReceiver);
         unregisterReceiver(networkStateReceiver);
     }
 
@@ -702,27 +698,5 @@ public class MainActivity extends BaseActivity implements
             default:
                 super.onErrorResponse(exception, requestType);
         }
-    }
-
-    @Override
-    public void playbackPlayPauseAudio() {
-        if (getAudioPlayerFragment() != null) {
-            getAudioPlayerFragment().playPause();
-        }
-    }
-
-    @Override
-    public void playbackSeekFF() {
-
-    }
-
-    @Override
-    public void playbackSeekREW() {
-
-    }
-
-    @Override
-    public void playbackStop() {
-
     }
 }

@@ -11,4 +11,6 @@ public interface PlaybackReceiverListener {
     void playbackSeekREW();
 
     void playbackStop();
+
+    void playbackPauseAudio();
 }

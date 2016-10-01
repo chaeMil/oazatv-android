@@ -76,4 +76,6 @@
     <string name="low_quality_mode_not_available">Low quality video is not available</string>
     <string name="continue_watching">Continue watching...</string>
     <string name="fullscreen">Fullscreen</string>
+    <string name="audioplayer_phonestate_permission">Allow Oáza.tv app to read phone state to be able to pause audio when there\'s an incoming call.</string>
+    <string name="ok">OK</string>
 </resources>

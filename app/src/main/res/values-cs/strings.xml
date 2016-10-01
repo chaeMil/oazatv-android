@@ -73,4 +73,6 @@
     <string name="quality_mode_not_available">Video ve vysoké kvalitě není dostupné</string>
     <string name="continue_watching">Pokračovat ve sledování...</string>
     <string name="fullscreen">Celá obrazovka</string>
+    <string name="audioplayer_phonestate_permission">Povolit aplikaci Oáza.tv číst stav telefonu, pro možnost zjištění příchozího hovoru a pozastavení přehrávání audia.</string>
+    <string name="ok">OK</string>
 </resources>

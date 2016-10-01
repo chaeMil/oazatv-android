@@ -90,6 +90,11 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
                     app.getMainActivity().getAudioPlayerFragment().bufferingEnd();
                 }
                 break;
+            case PhoneCallReceiver.INCOMING_CALL:
+                if (listener != null) {
+                    listener.playbackPauseAudio();
+                }
+                break;
         }
     }
 }

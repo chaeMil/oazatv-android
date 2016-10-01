@@ -12,4 +12,7 @@ public class OSUtils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
     }
 
+    public static boolean isRunningMarshmallow() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
 }

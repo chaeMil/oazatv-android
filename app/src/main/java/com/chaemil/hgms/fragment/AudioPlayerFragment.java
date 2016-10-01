@@ -300,7 +300,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
     private boolean isServicePlayingAudio() {
         AudioPlaybackService service = getService();
-        if (service != null) {
+        if (service != null && service.getAudioPlayer() != null) {
             return service.getAudioPlayer().isPlaying();
         } else {
             return false;
