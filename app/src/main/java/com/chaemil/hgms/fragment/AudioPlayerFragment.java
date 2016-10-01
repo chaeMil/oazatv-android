@@ -40,9 +40,6 @@ import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import at.markushi.ui.CircleButton;
 import ru.rambler.libs.swipe_layout.SwipeLayout;
 

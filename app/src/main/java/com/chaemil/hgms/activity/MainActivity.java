@@ -717,4 +717,12 @@ public class MainActivity extends BaseActivity
                 super.onErrorResponse(exception, requestType);
         }
     }
+
+    public void setVideoPlayerFragment(VideoPlayerFragment videoPlayerFragment) {
+        this.videoPlayerFragment = videoPlayerFragment;
+    }
+
+    public void setAudioPlayerFragment(AudioPlayerFragment audioPlayerFragment) {
+        this.audioPlayerFragment = audioPlayerFragment;
+    }
 }

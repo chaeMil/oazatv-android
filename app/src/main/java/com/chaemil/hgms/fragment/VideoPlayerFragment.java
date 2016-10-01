@@ -46,8 +46,8 @@ import ru.rambler.libs.swipe_layout.SwipeLayout;
 /**
  * Created by chaemil on 2.12.15.
  */
-public class VideoPlayerFragment extends BaseFragment implements View.OnClickListener, RequestFactoryListener, EasyVideoCallback
-{
+public class VideoPlayerFragment extends BaseFragment implements View.OnClickListener,
+        RequestFactoryListener, EasyVideoCallback {
 
     public static final String TAG = "player_fragment";
     private static final String CURRENT_TIME = "current_time";
@@ -341,6 +341,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         MainActivity mainActivity = ((MainActivity) getActivity());
         mainActivity.hidePanel();
         mainActivity.getSupportFragmentManager().beginTransaction().remove(this).commit();
+        mainActivity.setVideoPlayerFragment(null);
     }
 
     @Override
@@ -390,17 +391,19 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     public void cancelFullscreenPlayer() {
-        ((BaseActivity) getActivity()).setFullscreen(false);
+        if (getActivity() != null) {
+            ((BaseActivity) getActivity()).setFullscreen(false);
 
-        getActivity().getWindow().getDecorView()
-                .setBackgroundColor(getResources().getColor(R.color.white));
+            getActivity().getWindow().getDecorView()
+                    .setBackgroundColor(getResources().getColor(R.color.white));
+
+            ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(true);
+        }
 
         miniPlayer.setVisibility(View.VISIBLE);
         playerToolbar.setVisibility(View.VISIBLE);
         infoLayout.setVisibility(View.GONE);
         toolbarsWrapper.setVisibility(View.VISIBLE);
-
-        ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(true);
 
         isInFullscreenMode = false;
     }
