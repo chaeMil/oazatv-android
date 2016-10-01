@@ -397,7 +397,7 @@ public class MainActivity extends BaseActivity
                         getString(R.string.cannot_play_without_wifi),
                         SuperToast.Duration.MEDIUM).show();
             } else if (sharedPreferences.loadStreamAudio()) {
-                playNewAudio(video, true);
+                playNewAudio(video);
             } else {
                 playVideo(video);
             }
@@ -447,7 +447,7 @@ public class MainActivity extends BaseActivity
         startService(playAudioIntent);
     }
 
-    public void playNewAudio(final Video audio, final boolean expandPanel) {
+    public void playNewAudio(final Video audio) {
 
         boolean downloaded = audio.isAudioDownloaded(this);
 
@@ -478,8 +478,8 @@ public class MainActivity extends BaseActivity
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getAudioPlayerFragment().playNewAudio(MainActivity.this, expandPanel);
-                        getAudioPlayerFragment().refreshToolbars();
+                        expandPanel();
+                        getAudioPlayerFragment().playNewAudio(MainActivity.this);
                     }
                 }, 600);
             }  else {

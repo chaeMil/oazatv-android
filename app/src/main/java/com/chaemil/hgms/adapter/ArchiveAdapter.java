@@ -106,7 +106,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                         holder.downloaded.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                mainActivity.playNewAudio(video, true);
+                                mainActivity.playNewAudio(video);
                             }
                         });
                     } else {

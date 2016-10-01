@@ -186,6 +186,12 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         miniPlayerSwipe.setOnSwipeListener(createSwipeListener());
 
         refreshPlayButtons();
+        delay(new Runnable() {
+            @Override
+            public void run() {
+                refreshToolbars();
+            }
+        }, 750);
     }
 
     private void showInfo() {
@@ -439,7 +445,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         //totalTime.setText("???");
     }
 
-    public void playNewAudio(Context context, boolean expandPanel) {
+    public void playNewAudio(Context context) {
         reconnectToService(context);
         postGA();
         postVideoView();
@@ -447,9 +453,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         AnalyticsService.getInstance()
                 .setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: "
                         + getCurrentAudio().getHash());
-        if (expandPanel) {
-            mainActivity.expandPanel();
-        }
     }
 
     @Override

@@ -61,7 +61,7 @@ public class AdapterUtils {
                                     dialog.dismiss();
                                     break;
                                 case 1:
-                                    mainActivity.playNewAudio(video, true);
+                                    mainActivity.playNewAudio(video);
                                     dialog.dismiss();
                                     break;
                                 case 2:
@@ -85,7 +85,7 @@ public class AdapterUtils {
                         public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                             switch(which) {
                                 case 0:
-                                    mainActivity.playNewAudio(video, true);
+                                    mainActivity.playNewAudio(video);
                                     dialog.dismiss();
                                     break;
                                 case 1:

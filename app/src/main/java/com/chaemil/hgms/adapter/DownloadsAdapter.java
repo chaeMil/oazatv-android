@@ -167,7 +167,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     @Override
                     public void onClick(View v) {
                         if (download.getDownloadStatusText() == DownloadManager.STATUS_SUCCESSFUL) {
-                            mainActivity.playNewAudio(video, true);
+                            mainActivity.playNewAudio(video);
                         } else {
                             SuperToast.create(context,
                                     context.getString(R.string.not_downloaded_yet),
