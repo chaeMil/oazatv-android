@@ -135,12 +135,16 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         timerTask = new TimerTask() {
             @Override
             public void run() {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        postGA();
-                    }
-                });
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            postGA();
+                        }
+                    });
+                } else {
+                    stopTimer();
+                }
             }
         };
         resetTimer();
