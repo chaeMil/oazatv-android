@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.utils.AnalyticsUtils;
 import com.chaemil.hgms.utils.Constants;
@@ -108,6 +109,9 @@ public class RequestFactory {
     }
 
     public static JsonObjectRequest postVideoView(RequestFactoryListener listener, String hash) {
+        if (OazaApp.DEVELOPMENT) {
+            hash = "";
+        }
         String url = Constants.API_POST_VIEW_PREFIX + hash + Constants.API_POST_VIEW_SUFFIX;
 
         JSONObject jsonObject = new JSONObject();

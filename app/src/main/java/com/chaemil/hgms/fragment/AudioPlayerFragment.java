@@ -187,6 +187,13 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
         refreshPlayButtons();
 
+        delay(new Runnable() {
+            @Override
+            public void run() {
+                switchMiniPlayer(1);
+            }
+        }, 750);
+
     }
 
     private void showInfo() {
