@@ -363,6 +363,13 @@ public class MainActivity extends BaseActivity
 
     private void playVideo(final Video video) {
         audioPlayerFragment = null;
+        if (getVideoPlayerFragment() != null
+                && getVideoPlayerFragment().getCurrentVideo() != null) {
+            if (getVideoPlayerFragment().getCurrentVideo().getServerId() == video.getServerId()) {
+                expandPanel();
+                return;
+            }
+        }
         videoPlayerFragment = new VideoPlayerFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.player_fragment, videoPlayerFragment, VideoPlayerFragment.TAG);
@@ -698,6 +705,7 @@ public class MainActivity extends BaseActivity
                 break;
         }
     }
+
 
     @Override
     public void onErrorResponse(VolleyError exception, RequestType requestType) {

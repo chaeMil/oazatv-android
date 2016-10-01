@@ -105,7 +105,7 @@
             android:layout_height="?android:attr/actionBarSize">
 
             <RelativeLayout
-                android:visibility="gone"
+                android:visibility="visible"
                 tools:visibility="visible"
                 android:id="@+id/toolbar"
                 android:background="@color/colorPrimary"
@@ -169,7 +169,6 @@
 
 
             <ru.rambler.libs.swipe_layout.SwipeLayout
-                tools:visibility="visible"
                 android:id="@+id/mini_player_swipe"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">

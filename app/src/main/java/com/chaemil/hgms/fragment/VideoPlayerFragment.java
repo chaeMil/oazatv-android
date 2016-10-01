@@ -229,6 +229,10 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         }, 750);
     }
 
+    public Video getCurrentVideo() {
+        return currentVideo;
+    }
+
     private void showBuffering() {
         buffering.setVisibility(View.VISIBLE);
         if (buffering.getVisibility() != View.VISIBLE) {
