@@ -221,6 +221,13 @@ public class BaseActivity extends ActivityManagePermission implements RequestFac
                         getString(R.string.permission_revoked),
                         SuperToast.Duration.MEDIUM).show();
             }
+
+            @Override
+            public void permissionForeverDenied() {
+                SuperToast.create(BaseActivity.this,
+                        getString(R.string.permission_revoked_download_photos_and_audio),
+                        SuperToast.Duration.LONG).show();
+            }
         });
     }
 

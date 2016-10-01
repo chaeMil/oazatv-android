@@ -130,6 +130,13 @@ public class AdapterUtils {
                         SuperToast.create(context, context.getString(R.string.permission_revoked),
                                 SuperToast.Duration.MEDIUM).show();
                     }
+
+                    @Override
+                    public void permissionForeverDenied() {
+                        SuperToast.create(context,
+                                context.getString(R.string.permission_revoked_download_photos_and_audio),
+                                SuperToast.Duration.LONG).show();
+                    }
                 });
     }
 

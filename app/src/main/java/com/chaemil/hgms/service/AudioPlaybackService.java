@@ -151,6 +151,13 @@ public class AudioPlaybackService extends Service implements
                     public void permissionDenied() {
                         phoneStatePermissionDenied();
                     }
+
+                    @Override
+                    public void permissionForeverDenied() {
+                        SuperToast.create(app,
+                                getString(R.string.permission_revoked_phone_state),
+                                SuperToast.Duration.LONG).show();
+                    }
                 });
     }
 
