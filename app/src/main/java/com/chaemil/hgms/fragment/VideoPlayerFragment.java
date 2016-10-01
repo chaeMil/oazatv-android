@@ -96,6 +96,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         if (OSUtils.isRunningNougat() && mainActivity.isInMultiWindowMode()) {
             return;
         } else {
+            cancelFullscreenPlayer();
             player.pause();
             stopTimer();
         }
@@ -111,6 +112,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             if (currentVideo != null) {
                 player.seekTo(currentVideo.getCurrentTime());
             }
+
+            player.showControls();
 
             miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
             AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT);
