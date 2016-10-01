@@ -51,7 +51,7 @@ public class PhotoFragment extends BaseFragment implements FutureCallback<Bitmap
                 .asBitmap()
                 .setCallback(this);
 
-        if (!photo.getDescription().trim().equals("")) {
+        if (photo.getDescription() != null && !photo.getDescription().trim().equals("")) {
             label.setText(photo.getDescription());
         } else {
             label.setVisibility(View.GONE);
