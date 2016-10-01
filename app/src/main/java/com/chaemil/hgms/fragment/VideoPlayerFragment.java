@@ -400,6 +400,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(true);
         }
 
+        player.showControls();
         miniPlayer.setVisibility(View.VISIBLE);
         playerToolbar.setVisibility(View.VISIBLE);
         infoLayout.setVisibility(View.GONE);
