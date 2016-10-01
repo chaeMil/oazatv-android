@@ -537,7 +537,17 @@ public class MainActivity extends BaseActivity
 
         int fragmentsCount = getSupportFragmentManager().getBackStackEntryCount();
 
-        if (getMainFragment().getPager() != null && getMainFragment().getPager().getCurrentItem() == 1 && fragmentsCount != 0) { //categories view
+        if (fullscreen) {
+            setFullscreen(false);
+            if (getVideoPlayerFragment() != null) {
+                getVideoPlayerFragment().cancelFullscreenPlayer();
+            }
+            return;
+        }
+
+        if (getMainFragment().getPager() != null
+                && getMainFragment().getPager().getCurrentItem() == 1
+                && fragmentsCount != 0) { //categories view
             getSupportFragmentManager().popBackStack();
         } else {
             if (getMainFragment() != null
