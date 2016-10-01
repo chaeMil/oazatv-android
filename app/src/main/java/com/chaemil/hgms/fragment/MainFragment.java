@@ -302,7 +302,6 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     }
 
     public void openAlbum(PhotoAlbum album) {
-        backWrapper.setVisibility(View.VISIBLE);
         searchFab.hide(true);
         searchView.closeSearch();
         toolbarSecondaryTitle.setText(album.getName());
@@ -311,7 +310,12 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         transaction.commit();
         getPhotoAlbumFragment().setAlbum(album);
 
+        backWrapper.setVisibility(View.VISIBLE);
+        share.setVisibility(View.VISIBLE);
         photoalbumWrapper.setVisibility(View.VISIBLE);
+
+        YoYo.with(Techniques.FadeIn).duration(300).playOn(backWrapper);
+        YoYo.with(Techniques.FadeIn).duration(300).playOn(share);
         YoYo.with(Techniques.SlideInUp).duration(300).playOn(photoalbumWrapper);
         YoYo.with(Techniques.FadeOut).duration(300).playOn(tabLayout);
         YoYo.with(Techniques.FadeOut).duration(300).playOn(logoWrapper);
@@ -328,7 +332,6 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     }
 
     public void closeAlbum() {
-        backWrapper.setVisibility(View.GONE);
         searchFab.show(true);
         final FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.remove(getFragmentManager().findFragmentByTag(PhotoAlbumFragment.TAG));
@@ -337,6 +340,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         pager.setVisibility(View.VISIBLE);
         logoWrapper.setVisibility(View.VISIBLE);
 
+        YoYo.with(Techniques.FadeOut).duration(300).playOn(backWrapper);
+        YoYo.with(Techniques.FadeOut).duration(300).playOn(share);
         YoYo.with(Techniques.FadeIn).duration(300).playOn(tabLayout);
         YoYo.with(Techniques.SlideOutDown).duration(300).playOn(photoalbumWrapper);
         YoYo.with(Techniques.FadeIn).duration(300).playOn(logoWrapper);
@@ -345,6 +350,9 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                backWrapper.setVisibility(View.GONE);
+                share.setVisibility(View.GONE);
+
                 photoalbumWrapper.setVisibility(View.GONE);
                 transaction.commit();
             }

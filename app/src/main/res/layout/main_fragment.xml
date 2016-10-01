@@ -40,7 +40,7 @@
     <RelativeLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="?android:attr/actionBarSize"
         android:background="@color/colorPrimary">
 
         <RelativeLayout
@@ -108,6 +108,7 @@
                 android:layout_marginRight="8dp" />
 
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/share"
                 android:background="@drawable/transparent_ripple"
                 android:src="@drawable/ic_share"
@@ -122,41 +123,47 @@
 
         </RelativeLayout>
 
-        <android.support.design.widget.TabLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/tab_layout"
-            app:tabMaxWidth="0dp"
-            app:tabGravity="fill"
-            app:tabMode="fixed"
-            android:background="@color/colorPrimary"
-            android:layout_alignParentTop="true">
+        <RelativeLayout
+            android:layout_width="@dimen/appbar_tabs_width"
+            android:layout_height="wrap_content">
 
-        </android.support.design.widget.TabLayout>
-
-        <LinearLayout
-            android:id="@+id/logo_wrapper"
-            tools:background="@color/colorPrimary"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/icon"
-                android:src="@drawable/ic_home_white"
+            <android.support.design.widget.TabLayout
                 android:layout_width="match_parent"
-                android:layout_weight="0.75"
-                android:layout_height="40dp"
-                android:layout_gravity="center_vertical" />
+                android:layout_height="match_parent"
+                android:id="@+id/tab_layout"
+                app:tabMaxWidth="0dp"
+                app:tabGravity="fill"
+                app:tabMode="fixed"
+                android:background="@color/colorPrimary"
+                android:layout_alignParentTop="true">
 
-            <View
-                android:layout_weight="0.25"
+            </android.support.design.widget.TabLayout>
+
+            <LinearLayout
+                android:id="@+id/logo_wrapper"
+                tools:background="@color/colorPrimary"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            </View>
+                <ImageView
+                    android:id="@+id/icon"
+                    android:src="@drawable/ic_home_white"
+                    android:layout_width="match_parent"
+                    android:layout_weight="0.75"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical" />
 
-        </LinearLayout>
+                <View
+                    android:layout_weight="0.25"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </View>
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
