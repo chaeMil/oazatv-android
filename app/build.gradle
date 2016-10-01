@@ -25,14 +25,15 @@ android {
         applicationId "com.chaemil.hgms"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 2016092624
-        versionName "2.4.6d"
+        versionCode 2016100101
+        versionName "2.4.7d"
 
         multiDexEnabled true
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
         manifestPlaceholders = [downloadAuthority: "com.chaemil.hgms"]
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
@@ -40,8 +41,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
         }
     }
 }
@@ -85,5 +85,4 @@ dependencies {
     compile 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:1.0.4'
     compile 'com.github.hotchemi:android-rate:1.0.1'
     compile 'com.afollestad:easyvideoplayer:0.2.12'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
 }
