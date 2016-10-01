@@ -27,6 +27,7 @@ import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
+import com.chaemil.hgms.utils.OSUtils;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
@@ -91,24 +92,31 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onPause() {
         super.onPause();
-        player.pause();
 
-        stopTimer();
+        if (OSUtils.isRunningNougat() && mainActivity.isInMultiWindowMode()) {
+            return;
+        } else {
+            player.pause();
+            stopTimer();
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        if (currentVideo != null) {
-            player.seekTo(currentVideo.getCurrentTime());
+        if (OSUtils.isRunningNougat() && mainActivity.isInMultiWindowMode()) {
+            return;
+        } else {
+            if (currentVideo != null) {
+                player.seekTo(currentVideo.getCurrentTime());
+            }
+
+            miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
+            AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT);
+
+            setupTimer();
         }
-
-        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
-
-        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT);
-
-        setupTimer();
     }
 
     @Override
