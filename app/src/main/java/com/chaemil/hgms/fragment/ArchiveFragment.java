@@ -25,6 +25,7 @@ import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.EndlessScrollListener;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.SmartLog;
@@ -103,7 +104,7 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
     private void createAdapter() {
         if (archiveAdapter == null) {
             archiveAdapter = new ArchiveAdapter(getActivity(),
-                    R.layout.archive_item,
+                    AdapterUtils.getArchiveLayout(getContext()),
                     (MainActivity) getActivity(),
                     archive);
         }

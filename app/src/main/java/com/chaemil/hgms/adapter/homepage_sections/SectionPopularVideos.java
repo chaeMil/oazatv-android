@@ -38,7 +38,9 @@ public class SectionPopularVideos extends BaseSection {
     ArrayList<Video> archive = new ArrayList<>();
 
     public SectionPopularVideos(Context context, MainActivity mainActivity, ArrayList<Video> archive) {
-        super(R.layout.homepage_section_header, R.layout.homepage_section_footer, R.layout.featured_item);
+        super(R.layout.homepage_section_header,
+                R.layout.homepage_section_footer,
+                AdapterUtils.getArchiveLayout(context));
         this.context = context;
         this.mainActivity = mainActivity;
         this.archive = archive;

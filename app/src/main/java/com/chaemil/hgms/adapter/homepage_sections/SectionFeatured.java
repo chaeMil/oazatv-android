@@ -38,7 +38,9 @@ public class SectionFeatured extends BaseSection {
     ArrayList<ArchiveItem> archive = new ArrayList<>();
 
     public SectionFeatured(Context context, MainActivity mainActivity, ArrayList<ArchiveItem> archive) {
-        super(R.layout.homepage_section_header, R.layout.homepage_section_footer, R.layout.featured_item);
+        super(R.layout.homepage_section_header,
+                R.layout.homepage_section_footer,
+                R.layout.featured_item);
         this.context = context;
         this.mainActivity = mainActivity;
         this.archive = archive;

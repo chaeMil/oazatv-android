@@ -26,7 +26,9 @@ public class SectionWebView extends StatelessSection {
     private final String url;
 
     public SectionWebView(Context context, MainActivity mainActivity, String url) {
-        super(R.layout.homepage_section_header, R.layout.homepage_section_footer, R.layout.section_webview);
+        super(R.layout.homepage_section_header,
+                R.layout.homepage_section_footer,
+                R.layout.section_webview);
         this.context = context;
         this.mainActivity = mainActivity;
         this.displayWidth = DimensUtils.getDisplayHeight(mainActivity);

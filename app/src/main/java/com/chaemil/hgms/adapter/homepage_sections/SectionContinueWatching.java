@@ -35,7 +35,9 @@ public class SectionContinueWatching extends BaseSection {
     ArrayList<Video> videosToWatch = new ArrayList<>();
 
     public SectionContinueWatching(Context context, MainActivity mainActivity, ArrayList<Video> videosToWatch) {
-        super(R.layout.homepage_section_header, R.layout.homepage_section_footer, R.layout.archive_item);
+        super(R.layout.homepage_section_header,
+                R.layout.homepage_section_footer,
+                AdapterUtils.getArchiveLayout(context));
         this.context = context;
         this.mainActivity = mainActivity;
         this.videosToWatch = videosToWatch;

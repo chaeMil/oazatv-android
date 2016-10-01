@@ -26,6 +26,14 @@ import permission.auron.com.marshmallowpermissionhelper.PermissionUtils;
  */
 public class AdapterUtils {
 
+    public static int getArchiveLayout(Context context) {
+        if (context.getResources().getBoolean(R.bool.isTablet)) {
+            return R.layout.archive_item_big;
+        } else {
+            return R.layout.archive_item;
+        }
+    }
+
     public static void contextDialog(final Context context, final MainActivity mainActivity,
                                      final Video video) {
 

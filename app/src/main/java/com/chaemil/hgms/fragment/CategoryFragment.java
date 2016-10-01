@@ -32,6 +32,7 @@ import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.EndlessScrollListener;
 import com.chaemil.hgms.utils.GAUtils;
@@ -145,7 +146,7 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
         if (archiveAdapter == null) {
             archiveAdapter = new ArchiveAdapter(getContext(),
                     mainActivity,
-                    R.layout.archive_item,
+                    AdapterUtils.getArchiveLayout(getContext()),
                     archive);
 
             archiveGridView.setOnScrollListener(new HidingScrollListener() {

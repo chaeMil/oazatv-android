@@ -36,7 +36,9 @@ public class SectionNewAlbums extends BaseSection {
     ArrayList<PhotoAlbum> archive = new ArrayList<>();
 
     public SectionNewAlbums(Context context, MainActivity mainActivity, ArrayList<PhotoAlbum> archive) {
-        super(R.layout.homepage_section_header, R.layout.homepage_section_footer, R.layout.archive_item);
+        super(R.layout.homepage_section_header,
+                R.layout.homepage_section_footer,
+                AdapterUtils.getArchiveLayout(context));
         this.context = context;
         this.mainActivity = mainActivity;
         this.archive = archive;
