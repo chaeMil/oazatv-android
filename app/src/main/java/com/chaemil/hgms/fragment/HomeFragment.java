@@ -111,7 +111,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
         sectionCount += 1;*/
 
         if (homepage != null) {
-            if (homepage.latestAndroidAppVersion > 1) {
+            if (homepage.latestAndroidAppVersion > BuildConfig.VERSION_CODE) {
                 adapter.addSection(new SectionAppVersion(getContext(), mainActivity));
 
                 sectionCount += 1;
