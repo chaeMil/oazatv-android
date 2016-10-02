@@ -79,4 +79,5 @@
     <string name="app_is_outdated_text">Prosím zvažte aktualizaci aplikace. Staré verze aplikace nejsou podporovány a nemusí ani správně fungovat!</string>
     <string name="permission_revoked_download_photos_and_audio">Nebude již možno stahovat fotografie nebo audio záznamy</string>
     <string name="permission_revoked_phone_state">Aplikace již nebude mít možnost pozastavit přehrávaní při příchozím hovoru</string>
+    <string name="update_app">Aktualizovat aplikaci</string>
 </resources>
