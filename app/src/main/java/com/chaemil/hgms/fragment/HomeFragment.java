@@ -1,5 +1,6 @@
 package com.chaemil.hgms.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
