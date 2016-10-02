@@ -80,4 +80,7 @@
     <string name="ok">OK</string>
     <string name="permission_revoked_download_photos_and_audio">You will not be available to download photos and audio files anymore</string>
     <string name="permission_revoked_phone_state">App will no longer be able to pause playback on incoming calls!</string>
+    <string name="app_is_outdated">Your app is outdated!</string>
+    <string name="update_app">Update App</string>
+    <string name="app_is_outdated_text">Please consider updating the app. Old versions are not supported and may even not work!</string>
 </resources>

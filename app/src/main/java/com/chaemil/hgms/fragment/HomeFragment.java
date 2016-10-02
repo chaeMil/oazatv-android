@@ -13,9 +13,11 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.BuildConfig;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.adapter.homepage_sections.SectionAppVersion;
 import com.chaemil.hgms.adapter.homepage_sections.SectionContinueWatching;
 import com.chaemil.hgms.adapter.homepage_sections.SectionFeatured;
 import com.chaemil.hgms.adapter.homepage_sections.SectionNewAlbums;
@@ -102,6 +104,19 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
         int sectionCount = 0;
 
+        /*adapter.addSection(new SectionWebView(getContext(),
+                mainActivity,
+                "http://oaza.tv/app-webviews/majesty.html"));
+        sectionCount += 1;*/
+
+        if (homepage != null) {
+            if (homepage.latestAndroidAppVersion > 1) {
+                adapter.addSection(new SectionAppVersion(getContext(), mainActivity));
+
+                sectionCount += 1;
+            }
+        }
+
         if (videosToContinueWatching.size() != 0) {
             adapter.addSection(new SectionContinueWatching(getContext(), mainActivity,
                     videosToContinueWatching));
@@ -109,49 +124,36 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
             sectionCount += 1;
         }
 
-        /*adapter.addSection(new SectionWebView(getContext(),
-                mainActivity,
-                "http://oaza.tv/app-webviews/majesty.html"));
-        sectionCount += 1;*/
-
         if (homepage != null) {
 
             if (homepage.featured.size() != 0) {
-                ArrayList<ArchiveItem> videos = new ArrayList<>();
-                for (int i = 0; i < 6; i++) {
-                    videos.add(homepage.featured.get(i));
-                }
-                adapter.addSection(new SectionFeatured(getContext(), mainActivity, videos));
+                adapter.addSection(new SectionFeatured(getContext(),
+                        mainActivity,
+                        homepage.featured));
 
                 sectionCount += 1;
             }
 
             if (homepage.newestVideos.size() != 0) {
-                ArrayList<Video> videos = new ArrayList<>();
-                for (int i = 0; i < 10; i++) {
-                    videos.add(homepage.newestVideos.get(i));
-                }
-                adapter.addSection(new SectionNewVideos(getContext(), mainActivity, videos));
+                adapter.addSection(new SectionNewVideos(getContext(),
+                        mainActivity,
+                        homepage.newestVideos));
 
                 sectionCount += 1;
             }
 
             if (homepage.newestAlbums.size() != 0) {
-                ArrayList<PhotoAlbum> albums = new ArrayList<>();
-                for (int i = 0; i < 8; i++) {
-                    albums.add(homepage.newestAlbums.get(i));
-                }
-                adapter.addSection(new SectionNewAlbums(getContext(), mainActivity, albums));
+                adapter.addSection(new SectionNewAlbums(getContext(),
+                        mainActivity,
+                        homepage.newestAlbums));
 
                 sectionCount += 1;
             }
 
             if (homepage.popularVideos.size() != 0) {
-                ArrayList<Video> videos = new ArrayList<>();
-                for (int i = 0; i < 6; i++) {
-                    videos.add(homepage.popularVideos.get(i));
-                }
-                adapter.addSection(new SectionPopularVideos(getContext(), mainActivity, videos));
+                adapter.addSection(new SectionPopularVideos(getContext(),
+                        mainActivity,
+                        homepage.popularVideos));
 
                 sectionCount += 1;
             }

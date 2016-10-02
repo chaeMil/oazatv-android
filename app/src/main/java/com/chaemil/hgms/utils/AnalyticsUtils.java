@@ -38,6 +38,10 @@ public class AnalyticsUtils {
         return "oazatv-android v:" + versionName + " build: " + versionCode;
     }
 
+    public static int getAppVersionCode() {
+        return BuildConfig.VERSION_CODE;
+    }
+
     public static boolean isDisplayOn(Context context) {
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         return powerManager.isScreenOn();

@@ -61,6 +61,8 @@ public class RequestFactory {
 
     public static JsonObjectRequest getHomepage(RequestFactoryListener listener) {
         String url = Constants.API_GET_HOMEPAGE;
+        int appVersionCode = AnalyticsUtils.getAppVersionCode();
+        url += "?appVersionCode=" + appVersionCode;
 
         JSONObject jsonObject = new JSONObject();
 

@@ -201,6 +201,10 @@ public class ResponseFactory {
     public static Homepage parseHomepage(JSONObject response) {
         try {
 
+            int apiVersion = response.getInt(Constants.API_VERSION);
+            String serverVersion = response.getString(Constants.SERVER_VERSION);
+            int latestAndroidAppVersion = response.getInt(Constants.LATEST_ANDROID_APP_VERSION);
+
             ArrayList<Video> newestVideos = new ArrayList<>();
             ArrayList<Video> popularVideos = new ArrayList<>();
             ArrayList<PhotoAlbum> newestAlbums = new ArrayList<>();
@@ -238,7 +242,8 @@ public class ResponseFactory {
                 }
             }
 
-            return new Homepage(newestVideos, newestAlbums, popularVideos, featured);
+            return new Homepage(apiVersion, serverVersion, latestAndroidAppVersion,
+                    newestVideos, newestAlbums, popularVideos, featured);
 
         } catch (JSONException e) {
             e.printStackTrace();

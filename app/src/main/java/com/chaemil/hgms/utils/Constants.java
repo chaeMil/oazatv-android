@@ -104,4 +104,7 @@ public class Constants {
     public static final String JSON_THUMB_512 = "thumb_512";
     public static final String JSON_THUMB_1024 = "thumb_1024";
     public static final String JSON_THUMB_2048 = "thumb_2048";
+    public static final String API_VERSION = "apiVersion";
+    public static final String SERVER_VERSION = "serverVersion";
+    public static final String LATEST_ANDROID_APP_VERSION = "latestAndroidAppVersion";
 }
