@@ -135,12 +135,6 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        keyboardHandler.event(keyCode, event);
-        return true;
-    }
-
     private void setupNetworkStateReceiver() {
         final IntentFilter filters = new IntentFilter();
         filters.addAction("android.net.wifi.WIFI_STATE_CHANGED");
