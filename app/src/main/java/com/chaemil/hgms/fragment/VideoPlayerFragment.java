@@ -3,6 +3,7 @@ package com.chaemil.hgms.fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +52,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     public static final String TAG = "player_fragment";
     private static final String CURRENT_TIME = "current_time";
-    private static final int PERIODICAL_SAVE_TIME = 5000;
+    private static final int PERIODICAL_SAVE_TIME = 1000;
+    private static final String HIGH_QUALITY = "high_quality";
     private RelativeLayout miniPlayer;
     private ImageView miniPlayerImageView;
     private RelativeLayout playerToolbar;
@@ -279,7 +281,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         if (isInQualityMode) {
             if (currentVideo.getVideoFileLowRes() != null) {
-                setLowQuality();
+                mainActivity.playVideo(currentVideo, false);
             } else {
                 SuperToast.create(getActivity(),
                         getString(R.string.quality_mode_not_available),
@@ -287,7 +289,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             }
         } else {
             if (currentVideo.getVideoFile() != null) {
-                setHighQuality();
+                mainActivity.playVideo(currentVideo, true);
             } else {
                 SuperToast.create(getActivity(),
                         getString(R.string.low_quality_mode_not_available),
@@ -480,8 +482,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         }, PERIODICAL_SAVE_TIME);
     }
 
-    public void playNewVideo(final Video video) {
+    public void playNewVideo(final Video video, boolean quality) {
 
+        isInQualityMode = quality;
         savedVideo = null;
 
         try {
@@ -526,7 +529,13 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             tags.setVisibility(View.GONE);
         }
 
-        if (NetworkUtils.isConnectedWithWifi(getActivity())) {
+        if (isInQualityMode) {
+            setHighQuality();
+        } else {
+            setLowQuality();
+        }
+
+        /*if (NetworkUtils.isConnectedWithWifi(getActivity())) {
             if (currentVideo.getVideoFile() != null) {
                 setHighQuality();
             } else {
@@ -540,7 +549,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             } else {
                 setHighQuality();
             }
-        }
+        }*/
 
 
         setupPlayer();

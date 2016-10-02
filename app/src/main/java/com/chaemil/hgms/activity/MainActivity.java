@@ -365,15 +365,21 @@ public class MainActivity extends BaseActivity
         };
     }
 
-    private void playVideo(final Video video) {
+    public void playVideo(final Video video, final boolean quality) {
         audioPlayerFragment = null;
-        if (getVideoPlayerFragment() != null
-                && getVideoPlayerFragment().getCurrentVideo() != null) {
-            if (getVideoPlayerFragment().getCurrentVideo().getServerId() == video.getServerId()) {
+
+        videoPlayerFragment = getVideoPlayerFragment();
+        if (videoPlayerFragment != null) {
+            boolean currentQuality = videoPlayerFragment.isInQualityMode;
+            Video currentVideo = videoPlayerFragment.getCurrentVideo();
+
+            if (currentVideo.getServerId() == video.getServerId()
+                    && currentQuality == quality) {
                 expandPanel();
                 return;
             }
         }
+        videoPlayerFragment = null;
         videoPlayerFragment = new VideoPlayerFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.player_fragment, videoPlayerFragment, VideoPlayerFragment.TAG);
@@ -384,7 +390,7 @@ public class MainActivity extends BaseActivity
             @Override
             public void run() {
                 expandPanel();
-                getVideoPlayerFragment().playNewVideo(video);
+                getVideoPlayerFragment().playNewVideo(video, quality);
             }
         }, 600);
     }
@@ -394,7 +400,7 @@ public class MainActivity extends BaseActivity
         stopAudioPlaybackService();
 
         if (wifi.isConnected()) {
-            playVideo(video);
+            playVideo(video, false);
         } else {
             if (sharedPreferences.loadStreamOnWifi()) {
                 SuperToast.create(this,
@@ -403,7 +409,7 @@ public class MainActivity extends BaseActivity
             } else if (sharedPreferences.loadStreamAudio()) {
                 playNewAudio(video);
             } else {
-                playVideo(video);
+                playVideo(video, false);
             }
         }
 
