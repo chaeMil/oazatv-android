@@ -25,7 +25,7 @@ import java.net.HttpURLConnection;
  */
 public class BitmapUtils {
 
-    private static final int IMAGE_QUALITY = 80;
+    private static final int IMAGE_QUALITY = 60;
 
     public static Bitmap blur(Context context, Bitmap image, int blurRadius) {
         if (null == image) return null;
