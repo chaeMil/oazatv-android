@@ -1,1 +1,0 @@
-alter table VIDEO add THUMB_COLOR TEXT;

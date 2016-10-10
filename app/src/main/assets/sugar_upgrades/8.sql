@@ -1,1 +1,0 @@
-alter table VIDEO add VIDEO_FILE_LOW_RES TEXT;

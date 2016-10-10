@@ -1,1 +1,0 @@
-alter table VIDEO add DURATION INTEGER DEFAULT 0;
