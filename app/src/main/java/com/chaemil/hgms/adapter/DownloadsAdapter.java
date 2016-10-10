@@ -117,7 +117,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     + context.getString(R.string.space_free));
             headerItemHolder.usedHeader.setText(FileUtils.readableAppSize(context));
 
-            setupGraphs((HeaderViewHolder) holder);
+            //setupGraphs((HeaderViewHolder) holder);
 
         }
 
@@ -234,7 +234,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 holder.oazaSpaceGraph.requestLayout();
 
             }
-        }.execute();
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public interface Listener {
