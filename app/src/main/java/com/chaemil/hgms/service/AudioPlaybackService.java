@@ -23,6 +23,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.BuildConfig;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.BaseActivity;
@@ -386,6 +387,10 @@ public class AudioPlaybackService extends Service implements
             int sdk = android.os.Build.VERSION.SDK_INT;
             if (sdk >= Build.VERSION_CODES.LOLLIPOP) {
                 notificationBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
+            }
+
+            if (sdk >= Build.VERSION_CODES.JELLY_BEAN) {
+                notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
             }
 
             startForeground(NOTIFICATION_ID, notificationBuilder.build());
