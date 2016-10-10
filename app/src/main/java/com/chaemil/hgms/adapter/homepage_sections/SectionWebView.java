@@ -50,7 +50,7 @@ public class SectionWebView extends BaseSection {
         super.onBindHeaderViewHolder(holder);
 
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
-        headerHolder.sectionName.setText("WebView test");
+        headerHolder.sectionName.setText(context.getString(R.string.app_name));
         headerHolder.sectionIcon.setImageDrawable(context.getResources()
                 .getDrawable(R.mipmap.ic_launcher));
     }

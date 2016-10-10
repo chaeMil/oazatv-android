@@ -36,6 +36,7 @@ import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.github.johnpersano.supertoasts.SuperToast;
@@ -106,10 +107,6 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
         int sectionCount = 0;
 
-        adapter.addSection(new SectionWebView(getContext(),
-                mainActivity,
-                "http://oaza.tv/app-webviews/majesty.html"));
-        sectionCount += 1;
 
         if (homepage != null) {
             if (homepage.latestAndroidAppVersion > BuildConfig.VERSION_CODE) {
@@ -125,6 +122,10 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
             sectionCount += 1;
         }
+
+        /*adapter.addSection(new SectionWebView(getContext(),
+                mainActivity, Constants.HTTP + Constants.DOMAIN + "app_webviews/android.html"));
+        sectionCount += 1;*/
 
         if (homepage != null) {
 
@@ -183,20 +184,6 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
         final int columns = getResources().getInteger(R.integer.archive_columns);
         gridLayoutManager = new StaggeredGridLayoutManager(columns,
                 StaggeredGridLayoutManager.VERTICAL);
-        /*gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                switch(adapter.getSectionItemViewType(position)){
-                    case SectionedRecyclerViewAdapter.VIEW_TYPE_HEADER:
-                        return columns;
-                    case SectionedRecyclerViewAdapter.VIEW_TYPE_FOOTER:
-                        return columns;
-                    default:
-                        return 1;
-                }
-            }
-        });*/
-
         homepageList.setLayoutManager(gridLayoutManager);
     }
 
