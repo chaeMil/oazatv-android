@@ -107,6 +107,8 @@ public class SectionContinueWatching extends BaseSection {
 
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
+        super.onBindHeaderViewHolder(holder);
+
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
         headerHolder.sectionName.setText(context.getString(R.string.continue_watching));
         headerHolder.sectionIcon.setImageDrawable(context.getResources()

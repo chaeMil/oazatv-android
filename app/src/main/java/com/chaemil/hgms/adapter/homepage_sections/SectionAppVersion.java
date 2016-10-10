@@ -38,6 +38,8 @@ public class SectionAppVersion extends StatelessSection {
 
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
+        super.onBindHeaderViewHolder(holder);
+
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
         headerHolder.sectionName.setText(context.getString(R.string.app_name));
         headerHolder.sectionIcon.setImageDrawable(context.getResources()

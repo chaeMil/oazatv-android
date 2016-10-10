@@ -2,6 +2,8 @@ package com.chaemil.hgms.adapter.homepage_sections;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 import com.chaemil.hgms.activity.MainActivity;
@@ -56,5 +58,23 @@ public abstract class BaseSection extends StatelessSection {
 
     public void openAlbum(PhotoAlbum album) {
         mainActivity.getMainFragment().openAlbum(album);
+    }
+
+    public void setFullSpan(RecyclerView.ViewHolder holder) {
+        StaggeredGridLayoutManager.LayoutParams layoutParams =
+                (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
+        layoutParams.setFullSpan(true);
+    }
+
+    @Override
+    public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
+        super.onBindHeaderViewHolder(holder);
+        setFullSpan(holder);
+    }
+
+    @Override
+    public void onBindFooterViewHolder(RecyclerView.ViewHolder holder) {
+        super.onBindFooterViewHolder(holder);
+        setFullSpan(holder);
     }
 }

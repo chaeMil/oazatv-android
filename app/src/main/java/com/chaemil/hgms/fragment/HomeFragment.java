@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     private int initRetry = 2;
     private Homepage homepage;
     private RecyclerView homepageList;
-    private GridLayoutManager gridLayoutManager;
+    private StaggeredGridLayoutManager gridLayoutManager;
     private ArrayList<Video> videosToContinueWatching = new ArrayList<>();
     private SectionedRecyclerViewAdapter adapter;
     private MainActivity mainActivity;
@@ -105,10 +106,10 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
         int sectionCount = 0;
 
-        /*adapter.addSection(new SectionWebView(getContext(),
+        adapter.addSection(new SectionWebView(getContext(),
                 mainActivity,
                 "http://oaza.tv/app-webviews/majesty.html"));
-        sectionCount += 1;*/
+        sectionCount += 1;
 
         if (homepage != null) {
             if (homepage.latestAndroidAppVersion > BuildConfig.VERSION_CODE) {
@@ -180,8 +181,9 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
     private void setupGridManager() {
         final int columns = getResources().getInteger(R.integer.archive_columns);
-        gridLayoutManager = new GridLayoutManager(getActivity(), columns);
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+        gridLayoutManager = new StaggeredGridLayoutManager(columns,
+                StaggeredGridLayoutManager.VERTICAL);
+        /*gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 switch(adapter.getSectionItemViewType(position)){
@@ -193,7 +195,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
                         return 1;
                 }
             }
-        });
+        });*/
 
         homepageList.setLayoutManager(gridLayoutManager);
     }

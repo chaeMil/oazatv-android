@@ -109,6 +109,8 @@ public class SectionPopularVideos extends BaseSection {
 
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
+        super.onBindHeaderViewHolder(holder);
+
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
         headerHolder.sectionName.setText(context.getString(R.string.popular_videos));
         headerHolder.sectionIcon.setImageDrawable(context.getResources()

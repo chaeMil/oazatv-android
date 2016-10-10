@@ -18,7 +18,7 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 /**
  * Created by chaemil on 5.9.16.
  */
-public class SectionWebView extends StatelessSection {
+public class SectionWebView extends BaseSection {
 
     private final Context context;
     private final MainActivity mainActivity;
@@ -47,6 +47,8 @@ public class SectionWebView extends StatelessSection {
 
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
+        super.onBindHeaderViewHolder(holder);
+
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
         headerHolder.sectionName.setText("WebView test");
         headerHolder.sectionIcon.setImageDrawable(context.getResources()
@@ -60,6 +62,8 @@ public class SectionWebView extends StatelessSection {
 
     @Override
     public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
+        setFullSpan(holder);
+
         WebView webView = ((WebViewHolder) holder).webview;
         webView.setWebViewClient(new WebViewClient() {
             @Override

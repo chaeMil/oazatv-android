@@ -141,6 +141,8 @@ public class SectionFeatured extends BaseSection {
 
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder) {
+        super.onBindHeaderViewHolder(holder);
+
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
         headerHolder.sectionName.setText(context.getString(R.string.featured));
         headerHolder.sectionIcon.setImageDrawable(context.getResources()
