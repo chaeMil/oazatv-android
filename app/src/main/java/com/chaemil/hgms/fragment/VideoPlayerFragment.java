@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +82,10 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private boolean dismiss;
     private SpinKitView buffering;
     private RelativeLayout toolbarsWrapper;
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -356,7 +361,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         MainActivity mainActivity = ((MainActivity) getActivity());
         mainActivity.hidePanel();
-        mainActivity.getSupportFragmentManager().beginTransaction().remove(this).commit();
+        mainActivity.getFragmentManager().beginTransaction().remove(this).commit();
         mainActivity.setVideoPlayerFragment(null);
     }
 

@@ -1,6 +1,7 @@
 package com.chaemil.hgms.activity;
 
 import android.app.ActivityManager;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,8 +19,8 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -98,6 +99,10 @@ public class MainActivity extends BaseActivity
     private PhotoAlbumFragment photoAlbumFragment;
     private BroadcastReceiver networkStateReceiver;
     private KeyboardHandler keyboardHandler;
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Override
     protected void onResume() {
@@ -335,7 +340,7 @@ public class MainActivity extends BaseActivity
 
             mainFragment = new MainFragment();
 
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.main_fragment, mainFragment);
             transaction.commit();
         }
@@ -386,7 +391,7 @@ public class MainActivity extends BaseActivity
         }
         videoPlayerFragment = null;
         videoPlayerFragment = new VideoPlayerFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.player_fragment, videoPlayerFragment, VideoPlayerFragment.TAG);
         transaction.commit();
 
@@ -432,7 +437,7 @@ public class MainActivity extends BaseActivity
                 audioPlayerFragment.init(true);
             }
 
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.player_fragment, getAudioPlayerFragment(), AudioPlayerFragment.TAG);
             transaction.commit();
         }
@@ -485,7 +490,7 @@ public class MainActivity extends BaseActivity
 
                 videoPlayerFragment = null;
                 audioPlayerFragment = new AudioPlayerFragment();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.player_fragment, audioPlayerFragment, AudioPlayerFragment.TAG);
                 transaction.commit();
 
@@ -624,14 +629,14 @@ public class MainActivity extends BaseActivity
 
     public MainFragment getMainFragment() {
         if (mainFragment == null) {
-            return (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_fragment);
+            return (MainFragment) getFragmentManager().findFragmentById(R.id.main_fragment);
         }
         return mainFragment;
     }
 
     public VideoPlayerFragment getVideoPlayerFragment() {
         if (videoPlayerFragment == null) {
-            return (VideoPlayerFragment) getSupportFragmentManager()
+            return (VideoPlayerFragment) getFragmentManager()
                     .findFragmentByTag(VideoPlayerFragment.TAG);
         }
         return videoPlayerFragment;
@@ -639,7 +644,7 @@ public class MainActivity extends BaseActivity
 
     public AudioPlayerFragment getAudioPlayerFragment() {
         if (audioPlayerFragment == null) {
-            return (AudioPlayerFragment) getSupportFragmentManager()
+            return (AudioPlayerFragment) getFragmentManager()
                     .findFragmentByTag(AudioPlayerFragment.TAG);
         }
         return audioPlayerFragment;

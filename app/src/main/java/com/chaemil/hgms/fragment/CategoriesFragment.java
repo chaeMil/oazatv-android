@@ -78,7 +78,7 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void setupUI() {
         if (isAdded()) {
-            categoriesAdapter = new CategoriesAdapter(getContext(),
+            categoriesAdapter = new CategoriesAdapter(getActivity(),
                     this,
                     categories,
                     ((MainActivity) getActivity()));
