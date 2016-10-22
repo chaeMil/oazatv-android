@@ -26,7 +26,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 2016102201
-        versionName "2.4.12d"
+        versionName "2.4.12"
 
         multiDexEnabled true
         renderscriptTargetApi 18
