@@ -111,8 +111,14 @@ public class MainActivity extends BaseActivity
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
 
         adjustLayout();
-        reconnectToPlaybackService();
         parseDeepLink();
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+
+        reconnectToPlaybackService();
     }
 
     @Override
