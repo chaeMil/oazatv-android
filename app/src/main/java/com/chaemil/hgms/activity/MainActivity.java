@@ -20,11 +20,9 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -33,7 +31,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.adapter.SearchAdapter;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.fragment.ArchiveFragment;
@@ -50,10 +47,8 @@ import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
-import com.chaemil.hgms.receiver.PlaybackReceiverListener;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.RequestService;
-import com.chaemil.hgms.service.TrackerService;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
@@ -140,31 +135,8 @@ public class MainActivity extends BaseActivity
         createFragments();
         setupNetworkStateReceiver();
 
-        initTracker();
-
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();
-        }
-    }
-
-    private void initTracker() {
-        if (OazaApp.TRACKER) {
-            askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
-                @Override
-                public void permissionGranted() {
-                    startService(new Intent(MainActivity.this, TrackerService.class));
-                }
-
-                @Override
-                public void permissionDenied() {
-
-                }
-
-                @Override
-                public void permissionForeverDenied() {
-
-                }
-            });
         }
     }
 
@@ -185,7 +157,6 @@ public class MainActivity extends BaseActivity
                 if (isConnected) {
                     hideStatusMessage();
                     setupLiveRequestTimer();
-                    initTracker();
                 } else {
                     noConnectionMessage();
                 }
