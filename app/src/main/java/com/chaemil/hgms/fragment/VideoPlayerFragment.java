@@ -299,17 +299,31 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void setHighQuality() {
-        player.setSource(Uri.parse(currentVideo.getVideoFile()));
-        player.seekTo(currentVideo.getCurrentTime());
-        qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_white));
-        isInQualityMode = true;
+        if (currentVideo != null && currentVideo.getVideoFile() != null) {
+            player.setSource(Uri.parse(currentVideo.getVideoFile()));
+            player.seekTo(currentVideo.getCurrentTime());
+            qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_white));
+            isInQualityMode = true;
+        } else {
+            mainActivity.hidePanel();
+            SuperToast.create(getActivity(),
+                    getString(R.string.error_when_playing_video),
+                    SuperToast.Duration.SHORT).show();
+        }
     }
 
     private void setLowQuality() {
-        player.setSource(Uri.parse(currentVideo.getVideoFileLowRes()));
-        player.seekTo(currentVideo.getCurrentTime());
-        qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_alpha));
-        isInQualityMode = false;
+        if (currentVideo != null && currentVideo.getVideoFileLowRes() != null) {
+            player.setSource(Uri.parse(currentVideo.getVideoFileLowRes()));
+            player.seekTo(currentVideo.getCurrentTime());
+            qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_alpha));
+            isInQualityMode = false;
+        } else {
+            mainActivity.hidePanel();
+            SuperToast.create(getActivity(),
+                    getString(R.string.error_when_playing_video),
+                    SuperToast.Duration.SHORT).show();
+        }
     }
 
     private SwipeLayout.OnSwipeListener createSwipeListener() {
