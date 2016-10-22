@@ -1,6 +1,7 @@
 package com.chaemil.hgms.activity;
 
 import android.app.ActivityManager;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,13 +19,11 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.view.KeyEvent;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -33,7 +32,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.adapter.SearchAdapter;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.fragment.ArchiveFragment;
@@ -50,10 +48,8 @@ import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
-import com.chaemil.hgms.receiver.PlaybackReceiverListener;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.RequestService;
-import com.chaemil.hgms.service.TrackerService;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
@@ -104,6 +100,10 @@ public class MainActivity extends BaseActivity
     private BroadcastReceiver networkStateReceiver;
     private KeyboardHandler keyboardHandler;
 
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -111,8 +111,14 @@ public class MainActivity extends BaseActivity
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
 
         adjustLayout();
-        reconnectToPlaybackService();
         parseDeepLink();
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+
+        reconnectToPlaybackService();
     }
 
     @Override
@@ -134,31 +140,8 @@ public class MainActivity extends BaseActivity
         createFragments();
         setupNetworkStateReceiver();
 
-        initTracker();
-
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();
-        }
-    }
-
-    private void initTracker() {
-        if (OazaApp.TRACKER) {
-            askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
-                @Override
-                public void permissionGranted() {
-                    startService(new Intent(MainActivity.this, TrackerService.class));
-                }
-
-                @Override
-                public void permissionDenied() {
-
-                }
-
-                @Override
-                public void permissionForeverDenied() {
-
-                }
-            });
         }
     }
 
@@ -179,7 +162,6 @@ public class MainActivity extends BaseActivity
                 if (isConnected) {
                     hideStatusMessage();
                     setupLiveRequestTimer();
-                    initTracker();
                 } else {
                     noConnectionMessage();
                 }
@@ -358,7 +340,7 @@ public class MainActivity extends BaseActivity
 
             mainFragment = new MainFragment();
 
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.main_fragment, mainFragment);
             transaction.commit();
         }
@@ -409,7 +391,7 @@ public class MainActivity extends BaseActivity
         }
         videoPlayerFragment = null;
         videoPlayerFragment = new VideoPlayerFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.player_fragment, videoPlayerFragment, VideoPlayerFragment.TAG);
         transaction.commit();
 
@@ -455,7 +437,7 @@ public class MainActivity extends BaseActivity
                 audioPlayerFragment.init(true);
             }
 
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.player_fragment, getAudioPlayerFragment(), AudioPlayerFragment.TAG);
             transaction.commit();
         }
@@ -508,7 +490,7 @@ public class MainActivity extends BaseActivity
 
                 videoPlayerFragment = null;
                 audioPlayerFragment = new AudioPlayerFragment();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.player_fragment, audioPlayerFragment, AudioPlayerFragment.TAG);
                 transaction.commit();
 
@@ -647,14 +629,14 @@ public class MainActivity extends BaseActivity
 
     public MainFragment getMainFragment() {
         if (mainFragment == null) {
-            return (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_fragment);
+            return (MainFragment) getFragmentManager().findFragmentById(R.id.main_fragment);
         }
         return mainFragment;
     }
 
     public VideoPlayerFragment getVideoPlayerFragment() {
         if (videoPlayerFragment == null) {
-            return (VideoPlayerFragment) getSupportFragmentManager()
+            return (VideoPlayerFragment) getFragmentManager()
                     .findFragmentByTag(VideoPlayerFragment.TAG);
         }
         return videoPlayerFragment;
@@ -662,7 +644,7 @@ public class MainActivity extends BaseActivity
 
     public AudioPlayerFragment getAudioPlayerFragment() {
         if (audioPlayerFragment == null) {
-            return (AudioPlayerFragment) getSupportFragmentManager()
+            return (AudioPlayerFragment) getFragmentManager()
                     .findFragmentByTag(AudioPlayerFragment.TAG);
         }
         return audioPlayerFragment;

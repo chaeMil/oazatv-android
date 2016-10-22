@@ -1,7 +1,9 @@
 package com.chaemil.hgms.adapter;
 
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentPagerAdapter;
 
 import com.chaemil.hgms.fragment.MainFragment;
 
@@ -17,7 +19,7 @@ public class MainFragmentsAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public android.support.v4.app.Fragment getItem(int position) {
+    public Fragment getItem(int position) {
         switch (position) {
             case 0:
                 return mainFragment.getHomeFragment();

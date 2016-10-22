@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +82,10 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private boolean dismiss;
     private SpinKitView buffering;
     private RelativeLayout toolbarsWrapper;
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -299,17 +304,31 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void setHighQuality() {
-        player.setSource(Uri.parse(currentVideo.getVideoFile()));
-        player.seekTo(currentVideo.getCurrentTime());
-        qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_white));
-        isInQualityMode = true;
+        if (currentVideo != null && currentVideo.getVideoFile() != null) {
+            player.setSource(Uri.parse(currentVideo.getVideoFile()));
+            player.seekTo(currentVideo.getCurrentTime());
+            qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_white));
+            isInQualityMode = true;
+        } else {
+            mainActivity.hidePanel();
+            SuperToast.create(getActivity(),
+                    getString(R.string.error_when_playing_video),
+                    SuperToast.Duration.SHORT).show();
+        }
     }
 
     private void setLowQuality() {
-        player.setSource(Uri.parse(currentVideo.getVideoFileLowRes()));
-        player.seekTo(currentVideo.getCurrentTime());
-        qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_alpha));
-        isInQualityMode = false;
+        if (currentVideo != null && currentVideo.getVideoFileLowRes() != null) {
+            player.setSource(Uri.parse(currentVideo.getVideoFileLowRes()));
+            player.seekTo(currentVideo.getCurrentTime());
+            qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_alpha));
+            isInQualityMode = false;
+        } else {
+            mainActivity.hidePanel();
+            SuperToast.create(getActivity(),
+                    getString(R.string.error_when_playing_video),
+                    SuperToast.Duration.SHORT).show();
+        }
     }
 
     private SwipeLayout.OnSwipeListener createSwipeListener() {
@@ -342,7 +361,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         MainActivity mainActivity = ((MainActivity) getActivity());
         mainActivity.hidePanel();
-        mainActivity.getSupportFragmentManager().beginTransaction().remove(this).commit();
+        mainActivity.getFragmentManager().beginTransaction().remove(this).commit();
         mainActivity.setVideoPlayerFragment(null);
     }
 

@@ -1,9 +1,9 @@
 package com.chaemil.hgms.fragment;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SwitchCompat;
@@ -111,7 +111,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
     }
 
     private void setupAppRate() {
-        AppRate.with(getContext())
+        AppRate.with(getActivity())
                 .setInstallDays(3)
                 .setLaunchTimes(6)
                 .setRemindInterval(1)
@@ -149,10 +149,10 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         settingsCardBg.setOnClickListener(this);
         share.setOnClickListener(this);
 
-        sharedPreferences = SharedPrefUtils.getInstance(getContext());
+        sharedPreferences = SharedPrefUtils.getInstance(getActivity());
 
         if (mainFragmentsAdapter == null) {
-            mainFragmentsAdapter = new MainFragmentsAdapter(this, context.getSupportFragmentManager());
+            mainFragmentsAdapter = new MainFragmentsAdapter(this, context.getFragmentManager());
         }
         if (tabLayoutChangeListener == null) {
             tabLayoutChangeListener = new TabLayout.TabLayoutOnPageChangeListener(tabLayout);

@@ -1,9 +1,9 @@
 package com.chaemil.hgms.adapter;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -62,7 +62,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ho
 
                 categoriesFragment.setCategoryFragment(categoryFragment);
 
-                FragmentTransaction transaction = mainActivity.getSupportFragmentManager().beginTransaction();
+                FragmentTransaction transaction = mainActivity.getFragmentManager().beginTransaction();
                 transaction.replace(R.id.category_fragment, categoryFragment);
                 transaction.addToBackStack(CategoryFragment.TAG);
                 transaction.commit();
