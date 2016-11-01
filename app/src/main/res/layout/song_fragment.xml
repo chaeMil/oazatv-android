@@ -8,8 +8,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <org.sufficientlysecure.htmltextview.HtmlTextView
+        <TextView
             android:id="@+id/body"
+            fontPath="@string/font_mono_regular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

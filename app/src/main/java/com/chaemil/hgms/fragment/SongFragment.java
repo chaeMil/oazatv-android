@@ -1,5 +1,6 @@
 package com.chaemil.hgms.fragment;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Html;
@@ -18,7 +19,6 @@ import com.chaemil.hgms.model.Song;
 import com.chaemil.hgms.service.RequestService;
 
 import org.json.JSONObject;
-import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 /**
  * Created by chaemil on 1.11.16.
@@ -30,7 +30,7 @@ public class SongFragment extends BaseFragment {
     public static final String TAG = "song_fragment";
     private int songId;
     private Song song;
-    private HtmlTextView body;
+    private TextView body;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,11 +61,14 @@ public class SongFragment extends BaseFragment {
     }
 
     private void getUI(ViewGroup rootView) {
-        body = (HtmlTextView) rootView.findViewById(R.id.body);
+        body = (TextView) rootView.findViewById(R.id.body);
     }
 
     private void showSong(Song song) {
-        body.setHtml(Html.fromHtml(song.getBody()).toString());
+        body.setText(Html.fromHtml(Html.fromHtml(song.getBody()).toString()));
+        Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
+                "fonts/" + getString(R.string.font_mono_regular));
+        body.setTypeface(tf);
     }
 
     private void getSong(int songId) {
