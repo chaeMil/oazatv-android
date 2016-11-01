@@ -31,6 +31,9 @@ public class SongFragment extends BaseFragment {
     private int songId;
     private Song song;
     private TextView body;
+    private TextView name;
+    private TextView tag;
+    private TextView author;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,17 +54,14 @@ public class SongFragment extends BaseFragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.song_fragment, container, false);
 
         getUI(rootView);
-        setupUI();
-
         return rootView;
-    }
-
-    private void setupUI() {
-
     }
 
     private void getUI(ViewGroup rootView) {
         body = (TextView) rootView.findViewById(R.id.body);
+        name = (TextView) rootView.findViewById(R.id.name);
+        tag = (TextView) rootView.findViewById(R.id.tag);
+        author = (TextView) rootView.findViewById(R.id.author);
     }
 
     private void showSong(Song song) {
@@ -69,6 +69,10 @@ public class SongFragment extends BaseFragment {
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/" + getString(R.string.font_mono_regular));
         body.setTypeface(tf);
+
+        name.setText(song.getName());
+        tag.setText(song.getTag());
+        author.setText(song.getAuthor());
     }
 
     private void getSong(int songId) {

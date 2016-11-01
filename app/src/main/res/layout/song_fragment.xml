@@ -1,18 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/fragment_bg"
     android:clickable="true"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/body"
-            fontPath="@string/font_mono_regular"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.CardView
+                android:padding="16dp"
+                android:layout_margin="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:padding="16dp"
+                    android:id="@id/main_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/name"
+                        tools:text="Bůh silný můj jsi Ty"
+                        android:textSize="18sp"
+                        fontPath="@string/default_font_bold"
+                        android:textColor="@color/dark_gray"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_toRightOf="@+id/tag"
+                        android:layout_toEndOf="@+id/tag"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginTop="6dp" />
+
+                    <TextView
+                        android:id="@+id/tag"
+                        tools:text="B6"
+                        android:textSize="42sp"
+                        fontPath="@string/slab_font_light"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="false"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentLeft="true" />
+
+                    <TextView
+                        android:id="@+id/author"
+                        android:textSize="15sp"
+                        fontPath="@string/default_font"
+                        android:textColor="@color/md_grey_700"
+                        tools:text="Zpívej a chval II. - Jitka Najvrtová"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/name"
+                        android:layout_alignLeft="@+id/name"
+                        android:layout_alignStart="@+id/name" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:padding="16dp"
+                android:id="@+id/body"
+                fontPath="@string/font_mono_regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
 
     </ScrollView>
 
