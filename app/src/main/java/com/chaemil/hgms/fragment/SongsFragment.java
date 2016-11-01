@@ -1,8 +1,10 @@
 package com.chaemil.hgms.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.adapter.songs_sections.SongsSection;
+import com.chaemil.hgms.adapter.songs_sections.TagsSection;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.RequestType;
@@ -41,7 +44,7 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
     private RecyclerView gridView;
     private SwipeRefreshLayout swipeRefresh;
     private LinearLayout connectionErrorWrapper;
-    private StaggeredGridLayoutManager gridLayoutManager;
+    private GridLayoutManager gridLayoutManager;
     private SectionedRecyclerViewAdapter adapter;
 
     @Override
@@ -80,13 +83,17 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
 
     private void setupSections() {
         if (songGroups != null) {
-            for(SongGroup songGroup : songGroups) {
 
+            adapter.removeAllSections();
+
+            TagsSection tagsSection = new TagsSection(getActivity(), songGroups);
+            adapter.addSection(tagsSection);
+
+            for(SongGroup songGroup : songGroups) {
                 if (songGroup.getSongs() != null && songGroup.getSongs().size() > 0) {
                     SongsSection songsSection = new SongsSection(getActivity(), songGroup);
                     adapter.addSection(songsSection);
                 }
-
             }
 
             adapter.notifyDataSetChanged();
@@ -100,9 +107,37 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
     }
 
     private void setupGridManager() {
-        final int columns = getResources().getInteger(R.integer.archive_columns);
-        gridLayoutManager = new StaggeredGridLayoutManager(columns,
-                StaggeredGridLayoutManager.VERTICAL);
+        final int tagsColumns = 4;
+        final int orientation = getResources().getConfiguration().orientation;
+        final boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
+
+        gridLayoutManager = new GridLayoutManager(getActivity(), tagsColumns);
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (position < songGroups.size()) {
+                    return 1;
+                }
+                switch (adapter.getSectionItemViewType(position)) {
+                    case SectionedRecyclerViewAdapter.VIEW_TYPE_HEADER:
+                        return tagsColumns;
+                    default:
+                        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            if (tabletSize) {
+                                return tagsColumns / 2;
+                            } else {
+                                return tagsColumns;
+                            }
+                        } else {
+                            if (tabletSize) {
+                                return 1;
+                            } else {
+                                return tagsColumns / 2;
+                            }
+                        }
+                }
+            }
+        });
         gridView.setLayoutManager(gridLayoutManager);
     }
 

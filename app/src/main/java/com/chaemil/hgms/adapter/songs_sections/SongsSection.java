@@ -1,6 +1,7 @@
 package com.chaemil.hgms.adapter.songs_sections;
 
 import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
@@ -61,12 +62,5 @@ public class SongsSection extends StatelessSection {
 
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
         headerHolder.sectionName.setText(songGroup.getTag());
-        setFullSpan(headerHolder);
-    }
-
-    public void setFullSpan(RecyclerView.ViewHolder holder) {
-        StaggeredGridLayoutManager.LayoutParams layoutParams =
-                (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
-        layoutParams.setFullSpan(true);
     }
 }
