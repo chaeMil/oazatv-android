@@ -28,6 +28,8 @@ public class MainFragmentsAdapter extends FragmentPagerAdapter {
             case 2:
                 return mainFragment.getArchiveFragment();
             case 3:
+                return mainFragment.getSongsFragment();
+            case 4:
                 return mainFragment.getDownloadedFragment();
         }
         return null;
@@ -35,6 +37,6 @@ public class MainFragmentsAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+        return 5;
     }
 }

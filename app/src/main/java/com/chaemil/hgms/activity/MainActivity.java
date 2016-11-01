@@ -41,6 +41,7 @@ import com.chaemil.hgms.fragment.DownloadedFragment;
 import com.chaemil.hgms.fragment.HomeFragment;
 import com.chaemil.hgms.fragment.MainFragment;
 import com.chaemil.hgms.fragment.PhotoAlbumFragment;
+import com.chaemil.hgms.fragment.SongsFragment;
 import com.chaemil.hgms.fragment.VideoPlayerFragment;
 import com.chaemil.hgms.model.KeyboardHandler;
 import com.chaemil.hgms.model.LiveStream;
@@ -97,6 +98,7 @@ public class MainActivity extends BaseActivity
     private ArchiveFragment archiveFragment;
     private DownloadedFragment downloadedFragment;
     private PhotoAlbumFragment photoAlbumFragment;
+    private SongsFragment songsFragment;
     private BroadcastReceiver networkStateReceiver;
     private KeyboardHandler keyboardHandler;
 
@@ -176,6 +178,7 @@ public class MainActivity extends BaseActivity
         archiveFragment = new ArchiveFragment();
         downloadedFragment = new DownloadedFragment();
         photoAlbumFragment = new PhotoAlbumFragment();
+        songsFragment = new SongsFragment();
     }
 
     public HomeFragment getHomeFragment() {
@@ -196,6 +199,10 @@ public class MainActivity extends BaseActivity
 
     public PhotoAlbumFragment getPhotoAlbumFragment() {
         return photoAlbumFragment;
+    }
+
+    public SongsFragment getSongsFragment() {
+        return songsFragment;
     }
 
     private void parseDeepLink() {

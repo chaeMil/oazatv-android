@@ -159,7 +159,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         }
         pager.setAdapter(mainFragmentsAdapter);
         pager.addOnPageChangeListener(tabLayoutChangeListener);
-        pager.setOffscreenPageLimit(3);
+        pager.setOffscreenPageLimit(4);
         settingsFab.hide(false);
         streamOnlyAudioSwitch.setChecked(sharedPreferences.loadStreamAudio());
         streamOnWifiSwitch.setChecked(sharedPreferences.loadStreamOnWifi());
@@ -199,6 +199,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         tabLayout.addTab(tabLayout.newTab().setIcon(R.color.transparent));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_categories));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_view_list));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_songs_dark));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_downloaded));
         tabLayout.setOnTabSelectedListener(this);
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.white));
@@ -222,6 +223,10 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
 
     public PhotoAlbumFragment getPhotoAlbumFragment() {
         return context.getPhotoAlbumFragment();
+    }
+
+    public SongsFragment getSongsFragment() {
+        return context.getSongsFragment();
     }
 
     public TabLayout getTabLayout() {
@@ -258,7 +263,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
 
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_categories);
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_view_list);
-        tabLayout.getTabAt(3).setIcon(R.drawable.ic_downloaded);
+        tabLayout.getTabAt(3).setIcon(R.drawable.ic_songs_dark);
+        tabLayout.getTabAt(4).setIcon(R.drawable.ic_downloaded);
 
         switch (tab.getPosition()) {
             case 0:
@@ -276,14 +282,19 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                 hideSettings();
                 break;
             case 3:
-                tabLayout.getTabAt(3).setIcon(R.drawable.ic_downloaded_white);
+                tabLayout.getTabAt(3).setIcon(R.drawable.ic_songs_white);
+                settingsFab.hide(true);
+                hideSettings();
+                break;
+            case 4:
+                tabLayout.getTabAt(4).setIcon(R.drawable.ic_downloaded_white);
                 settingsFab.show(true);
                 break;
         }
     }
 
     public void goToDownloaded() {
-        pager.setCurrentItem(3);
+        pager.setCurrentItem(4);
         hideSettings();
     }
 
