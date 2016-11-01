@@ -8,6 +8,7 @@ import com.chaemil.hgms.model.LiveStream;
 import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Song;
+import com.chaemil.hgms.model.SongGroup;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.SmartLog;
@@ -305,8 +306,26 @@ public class ResponseFactory {
         }
     }
 
-    public static ArrayList<Song> parseSongs(JSONObject response) {
+    public static ArrayList<SongGroup> parseSongs(JSONObject response) {
         try {
+            JSONArray jsonArray = response.getJSONArray(Constants.JSON_SONGS);
+            ArrayList<SongGroup> songGroups = new ArrayList<>();
+            for(int i = 0; i < jsonArray.length(); i++) {
+                SongGroup songGroup = parseSongGroup(jsonArray.getJSONObject(i));
+                songGroups.add(songGroup);
+            }
+
+            return songGroups;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private static SongGroup parseSongGroup(JSONObject response) {
+        try {
+            String tag = response.getString(Constants.JSON_TAG);
             JSONArray jsonArray = response.getJSONArray(Constants.JSON_SONGS);
             ArrayList<Song> songs = new ArrayList<>();
             for(int i = 0; i < jsonArray.length(); i++) {
@@ -314,7 +333,7 @@ public class ResponseFactory {
                 songs.add(song);
             }
 
-            return songs;
+            return new SongGroup(tag, songs);
         } catch (JSONException e) {
             e.printStackTrace();
         }

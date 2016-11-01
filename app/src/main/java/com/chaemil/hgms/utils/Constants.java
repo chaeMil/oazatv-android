@@ -105,6 +105,7 @@ public class Constants {
     public static final String JSON_THUMB_1024 = "thumb_1024";
     public static final String JSON_THUMB_2048 = "thumb_2048";
     public static final String JSON_SONGS = "songs";
+    public static final String JSON_TAG = "tag";
 
     public static final String API_VERSION = "apiVersion";
     public static final String SERVER_VERSION = "serverVersion";
