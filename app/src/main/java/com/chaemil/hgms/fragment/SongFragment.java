@@ -2,9 +2,11 @@ package com.chaemil.hgms.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -16,6 +18,7 @@ import com.chaemil.hgms.model.Song;
 import com.chaemil.hgms.service.RequestService;
 
 import org.json.JSONObject;
+import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 /**
  * Created by chaemil on 1.11.16.
@@ -27,6 +30,7 @@ public class SongFragment extends BaseFragment {
     public static final String TAG = "song_fragment";
     private int songId;
     private Song song;
+    private HtmlTextView body;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,7 +61,11 @@ public class SongFragment extends BaseFragment {
     }
 
     private void getUI(ViewGroup rootView) {
+        body = (HtmlTextView) rootView.findViewById(R.id.body);
+    }
 
+    private void showSong(Song song) {
+        body.setHtml(Html.fromHtml(song.getBody()).toString());
     }
 
     private void getSong(int songId) {
@@ -76,6 +84,7 @@ public class SongFragment extends BaseFragment {
                     Song song = ResponseFactory.parseSong(response);
                     if (song != null) {
                         this.song = song;
+                        showSong(this.song);
                     }
                 }
                 hideProgress();
