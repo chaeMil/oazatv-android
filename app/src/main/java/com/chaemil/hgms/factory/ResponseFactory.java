@@ -7,6 +7,7 @@ import com.chaemil.hgms.model.Homepage;
 import com.chaemil.hgms.model.LiveStream;
 import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.model.PhotoAlbum;
+import com.chaemil.hgms.model.Song;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.SmartLog;
@@ -292,6 +293,33 @@ public class ResponseFactory {
         } else {
             return null;
         }
+    }
+
+    public static Song parseSong(JSONObject response) {
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+
+        if (response != null) {
+            return gson.fromJson(response.toString(), Song.class);
+        } else {
+            return null;
+        }
+    }
+
+    public static ArrayList<Song> parseSongs(JSONObject response) {
+        try {
+            JSONArray jsonArray = response.getJSONArray(Constants.JSON_SONGS);
+            ArrayList<Song> songs = new ArrayList<>();
+            for(int i = 0; i < jsonArray.length(); i++) {
+                Song song = parseSong(jsonArray.getJSONObject(i));
+                songs.add(song);
+            }
+
+            return songs;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 }

@@ -28,7 +28,7 @@ public class Constants {
     public static final String API_GET_CATEGORIES = API + "categories/";
     public static final String API_GET_VIDEO = API + "video/";
     public static final String API_GET_ALBUM = API + "album/";
-
+    public static final String API_GET_SONGS = API + "songs/";
 
     public static final String JSON_POST_NICK = "nick";
     public static final String JSON_POST_EMAIL = "email";
@@ -104,6 +104,8 @@ public class Constants {
     public static final String JSON_THUMB_512 = "thumb_512";
     public static final String JSON_THUMB_1024 = "thumb_1024";
     public static final String JSON_THUMB_2048 = "thumb_2048";
+    public static final String JSON_SONGS = "songs";
+
     public static final String API_VERSION = "apiVersion";
     public static final String SERVER_VERSION = "serverVersion";
     public static final String LATEST_ANDROID_APP_VERSION = "latestAndroidAppVersion";
