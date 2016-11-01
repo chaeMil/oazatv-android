@@ -269,26 +269,31 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         switch (tab.getPosition()) {
             case 0:
                 settingsFab.hide(true);
+                searchFab.show(true);
                 hideSettings();
                 break;
             case 1:
                 tabLayout.getTabAt(1).setIcon(R.drawable.ic_categories_white);
                 settingsFab.hide(true);
+                searchFab.show(true);
                 hideSettings();
                 break;
             case 2:
                 tabLayout.getTabAt(2).setIcon(R.drawable.ic_view_list_white);
                 settingsFab.hide(true);
+                searchFab.show(true);
                 hideSettings();
                 break;
             case 3:
                 tabLayout.getTabAt(3).setIcon(R.drawable.ic_songs_white);
                 settingsFab.hide(true);
+                searchFab.hide(true);
                 hideSettings();
                 break;
             case 4:
                 tabLayout.getTabAt(4).setIcon(R.drawable.ic_downloaded_white);
                 settingsFab.show(true);
+                searchFab.hide(true);
                 break;
         }
     }

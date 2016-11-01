@@ -62,6 +62,8 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
     }
 
     private void setupUI() {
+        swipeRefresh.setOnRefreshListener(this);
+
         if (getActivity() != null) {
 
             if (songGroups != null) {
