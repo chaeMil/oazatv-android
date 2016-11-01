@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.songs_sections.SongsSection;
 import com.chaemil.hgms.adapter.songs_sections.TagsSection;
 import com.chaemil.hgms.factory.RequestFactory;
@@ -30,7 +30,6 @@ import com.chaemil.hgms.utils.GAUtils;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
@@ -46,10 +45,14 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
     private LinearLayout connectionErrorWrapper;
     private GridLayoutManager gridLayoutManager;
     private SectionedRecyclerViewAdapter adapter;
+    private SongFragment songFragment;
+    private MainActivity mainActivity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mainActivity = (MainActivity) getActivity();
         getSongs();
     }
 
@@ -91,7 +94,8 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
 
             for(SongGroup songGroup : songGroups) {
                 if (songGroup.getSongs() != null && songGroup.getSongs().size() > 0) {
-                    SongsSection songsSection = new SongsSection(getActivity(), songGroup);
+                    SongsSection songsSection = new SongsSection(getActivity(),
+                            mainActivity, this, songGroup);
                     adapter.addSection(songsSection);
                 }
             }
@@ -196,5 +200,9 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
         songGroups.clear();
         adapter.notifyDataSetChanged();
         getSongs();
+    }
+
+    public void setSongFragment(SongFragment songFragment) {
+        this.songFragment = songFragment;
     }
 }

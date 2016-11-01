@@ -1,14 +1,20 @@
 package com.chaemil.hgms.adapter.songs_sections;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.holder.SongViewHolder;
 import com.chaemil.hgms.adapter.homepage_sections.HeaderViewHolder;
+import com.chaemil.hgms.fragment.CategoryFragment;
+import com.chaemil.hgms.fragment.SongFragment;
+import com.chaemil.hgms.fragment.SongsFragment;
 import com.chaemil.hgms.model.Song;
 import com.chaemil.hgms.model.SongGroup;
 
@@ -21,11 +27,16 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 public class SongsSection extends StatelessSection {
 
     private final Context context;
+    private final SongsFragment songsFragment;
+    private final MainActivity mainActivity;
     private SongGroup songGroup;
 
-    public SongsSection(Context context, SongGroup songGroup) {
+    public SongsSection(Context context, MainActivity mainActivity,
+                        SongsFragment songsFragment, SongGroup songGroup) {
         super(R.layout.songs_section_header,
                 R.layout.song_name);
+        this.mainActivity = mainActivity;
+        this.songsFragment = songsFragment;
         this.context = context;
         this.songGroup = songGroup;
     }
@@ -44,11 +55,28 @@ public class SongsSection extends StatelessSection {
     public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
         SongViewHolder songViewHolder = (SongViewHolder) holder;
 
-        Song song = songGroup.getSongs().get(position);
+        final Song song = songGroup.getSongs().get(position);
 
         songViewHolder.name.setText(song.getName());
         songViewHolder.author.setText(song.getAuthor());
         songViewHolder.tag.setText(song.getTag());
+        songViewHolder.mainView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SongFragment songFragment = new SongFragment();
+                Bundle args = new Bundle();
+                args.putInt(SongFragment.SONG_ID, song.getId());
+                songFragment.setArguments(args);
+
+                songsFragment.setSongFragment(songFragment);
+
+                FragmentTransaction transaction = mainActivity.getFragmentManager().beginTransaction();
+                transaction.replace(R.id.song_fragment, songFragment);
+                transaction.addToBackStack(SongFragment.TAG);
+                transaction.commit();
+            }
+        });
+
     }
 
     @Override

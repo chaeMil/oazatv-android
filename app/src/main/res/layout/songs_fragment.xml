@@ -69,5 +69,11 @@
 
     </RelativeLayout>
 
+    <FrameLayout
+        android:id="@+id/song_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
 
 </RelativeLayout>
