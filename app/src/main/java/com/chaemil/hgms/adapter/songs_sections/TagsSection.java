@@ -22,7 +22,7 @@ public class TagsSection extends StatelessSection {
     private ArrayList<SongGroup> songGroups;
 
     public TagsSection(Context context, ArrayList<SongGroup> songGroups) {
-        super(R.layout.song_name);
+        super(R.layout.tag_name);
         this.context = context;
         this.songGroups = songGroups;
     }
