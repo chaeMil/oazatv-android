@@ -16,12 +16,14 @@ import com.chaemil.hgms.view.VideoThumbImageView;
 public class SongViewHolder extends RecyclerView.ViewHolder {
 
     public RelativeLayout mainView;
+    public TextView tag;
     public TextView name;
     public TextView author;
 
     public SongViewHolder(View itemView) {
         super(itemView);
         this.mainView = (RelativeLayout) itemView.findViewById(R.id.main_view);
+        this.tag = (TextView) itemView.findViewById(R.id.tag);
         this.name = (TextView) itemView.findViewById(R.id.name);
         this.author = (TextView) itemView.findViewById(R.id.author);
     }

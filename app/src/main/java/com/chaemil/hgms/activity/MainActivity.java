@@ -535,6 +535,7 @@ public class MainActivity extends BaseActivity
             getMainFragment().getDownloadedFragment().adjustLayout();
             getMainFragment().getCategoriesFragment().adjustLayout();
             getMainFragment().getHomeFragment().adjustLayout();
+            getMainFragment().getSongsFragment().adjustLayout();
 
             if (getMainFragment().getPhotoAlbumFragment() != null) {
                 getMainFragment().getPhotoAlbumFragment().adjustLayout();

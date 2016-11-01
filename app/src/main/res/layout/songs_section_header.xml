@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:gravity="center_vertical|center_horizontal"
+    android:paddingTop="16dp"
+    android:layout_height="92dp">
 
-    <ImageView
-        android:id="@+id/section_icon"
-        tools:src="@drawable/continue_watching"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="22dp" />
+    <View
+        android:background="@color/colorPrimaryAlpha"
+        android:layout_height="4dp"
+        android:layout_width="32dp" />
 
     <TextView
         android:id="@+id/section_name"
-        tools:text="@string/continue_watching"
-        android:layout_width="match_parent"
+        tools:text="B6"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         fontPath="@string/slab_font_bold"
-        android:textSize="20sp"
+        android:textSize="50sp"
         android:textColor="@color/colorPrimary"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
         android:gravity="center_horizontal" />
+
+    <View
+        android:background="@color/colorPrimaryAlpha"
+        android:layout_height="4dp"
+        android:layout_width="32dp" />
 
 </LinearLayout>

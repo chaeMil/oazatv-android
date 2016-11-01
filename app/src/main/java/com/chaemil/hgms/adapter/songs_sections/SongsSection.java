@@ -6,9 +6,7 @@ import android.view.View;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.adapter.holder.SongViewHolder;
-import com.chaemil.hgms.adapter.holder.VideoViewHolder;
 import com.chaemil.hgms.adapter.homepage_sections.HeaderViewHolder;
-import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.Song;
 import com.chaemil.hgms.model.SongGroup;
 
@@ -25,7 +23,6 @@ public class SongsSection extends StatelessSection {
 
     public SongsSection(Context context, SongGroup songGroup) {
         super(R.layout.songs_section_header,
-                R.layout.songs_section_footer,
                 R.layout.song_name);
         this.context = context;
         this.songGroup = songGroup;
@@ -49,6 +46,7 @@ public class SongsSection extends StatelessSection {
 
         songViewHolder.name.setText(song.getName());
         songViewHolder.author.setText(song.getAuthor());
+        songViewHolder.tag.setText(song.getTag());
     }
 
     @Override
@@ -62,7 +60,5 @@ public class SongsSection extends StatelessSection {
 
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
         headerHolder.sectionName.setText(songGroup.getTag());
-        headerHolder.sectionIcon.setImageDrawable(context.getResources()
-                .getDrawable(R.drawable.ic_songs_dark));
     }
 }
