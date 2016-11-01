@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:gravity="center_vertical|center_horizontal"
     android:paddingTop="16dp"
-    android:layout_height="92dp">
+    android:layout_height="95dp">
 
     <View
         android:background="@color/colorPrimaryAlpha"
