@@ -10,4 +10,5 @@
     <string translatable="false" name="slab_font_light">fonts/RobotoSlab-Light.ttf</string>
     <string translatable="false" name="slab_font_bold">fonts/RobotoSlab-Bold.ttf</string>
     <string translatable="false" name="slab_font_thin">fonts/RobotoSlab-Thin.ttf</string>
+    <string translatable="false" name="font_mono_regular">RobotoMono-Regular.ttf</string>
 </resources>
