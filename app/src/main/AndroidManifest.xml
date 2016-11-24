@@ -72,6 +72,12 @@
             android:stopWithTask="false"
             android:enabled="true"/>
 
+        <service android:name=".service.TrackerService"
+            android:stopWithTask="false"
+            android:enabled="true">
+
+        </service>
+
         <receiver android:name=".receiver.BootAndUpdateReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />

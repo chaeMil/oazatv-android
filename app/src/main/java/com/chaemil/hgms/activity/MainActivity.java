@@ -141,6 +141,7 @@ public class MainActivity extends BaseActivity
         setupLiveRequestTimer();
         createFragments();
         setupNetworkStateReceiver();
+        initTracker();
 
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();
