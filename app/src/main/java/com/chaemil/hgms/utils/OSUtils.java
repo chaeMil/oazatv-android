@@ -33,4 +33,8 @@ public class OSUtils {
             context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
     }
+
+    public static boolean isRunningChromeOS(Context context) {
+        return context.getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
+    }
 }
