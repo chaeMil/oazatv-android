@@ -494,7 +494,9 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
 
                     searchResult.clear();
                     searchResult.addAll(searchItems);
-                    searchAdapter.notifyDataSetChanged();
+                    if (searchAdapter != null) {
+                        searchAdapter.notifyDataSetChanged();
+                    }
                     searchView.showSuggestions();
 
                 }
