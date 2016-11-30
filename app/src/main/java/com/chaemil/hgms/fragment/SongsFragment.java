@@ -1,10 +1,9 @@
 package com.chaemil.hgms.fragment;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,21 +16,20 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
-import com.chaemil.hgms.adapter.songs_sections.SongsSection;
-import com.chaemil.hgms.adapter.songs_sections.TagsSection;
+import com.chaemil.hgms.adapter.SongsAdapter;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.RequestType;
+import com.chaemil.hgms.model.Song;
 import com.chaemil.hgms.model.SongGroup;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.GAUtils;
+import com.futuremind.recyclerviewfastscroll.FastScroller;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
-import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
 /**
  * Created by chaemil on 1.11.16.
@@ -43,10 +41,11 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
     private RecyclerView gridView;
     private SwipeRefreshLayout swipeRefresh;
     private LinearLayout connectionErrorWrapper;
-    private GridLayoutManager gridLayoutManager;
-    private SectionedRecyclerViewAdapter adapter;
+    private SongsAdapter adapter;
     private SongFragment songFragment;
     private MainActivity mainActivity;
+    private FastScroller fastScroller;
+    private ArrayList<Song> songs = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,77 +71,23 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
 
         if (getActivity() != null) {
 
-            if (songGroups != null) {
-                adapter = new SectionedRecyclerViewAdapter();
-                setupSections();
-                setupGridManager();
-                gridView.setAdapter(adapter);
-
+            if (songs != null) {
+                setupAdapter();
             }
 
             adjustLayout();
         }
     }
 
-    private void setupSections() {
-        if (songGroups != null) {
-
-            adapter.removeAllSections();
-
-            TagsSection tagsSection = new TagsSection(getActivity(), songGroups);
-            adapter.addSection(tagsSection);
-
-            for(SongGroup songGroup : songGroups) {
-                if (songGroup.getSongs() != null && songGroup.getSongs().size() > 0) {
-                    SongsSection songsSection = new SongsSection(getActivity(),
-                            mainActivity, this, songGroup);
-                    adapter.addSection(songsSection);
-                }
-            }
-
-            adapter.notifyDataSetChanged();
-        }
-    }
-
     public void adjustLayout() {
-        if (isAdded()) {
-            setupGridManager();
-        }
+
     }
 
-    private void setupGridManager() {
-        final int tagsColumns = 4;
-        final int orientation = getResources().getConfiguration().orientation;
-        final boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
-
-        gridLayoutManager = new GridLayoutManager(getActivity(), tagsColumns);
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                if (position < songGroups.size()) {
-                    return 1;
-                }
-                switch (adapter.getSectionItemViewType(position)) {
-                    case SectionedRecyclerViewAdapter.VIEW_TYPE_HEADER:
-                        return tagsColumns;
-                    default:
-                        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                            if (tabletSize) {
-                                return tagsColumns / 2;
-                            } else {
-                                return tagsColumns;
-                            }
-                        } else {
-                            if (tabletSize) {
-                                return 1;
-                            } else {
-                                return tagsColumns / 2;
-                            }
-                        }
-                }
-            }
-        });
-        gridView.setLayoutManager(gridLayoutManager);
+    private void setupAdapter() {
+        adapter = new SongsAdapter(mainActivity, mainActivity, this, songs);
+        gridView.setAdapter(adapter);
+        gridView.setLayoutManager(new LinearLayoutManager(mainActivity));
+        fastScroller.setRecyclerView(gridView);
     }
 
     @Override
@@ -159,6 +104,7 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
         gridView = (RecyclerView) rootView.findViewById(R.id.grid_view);
         progress = (RelativeLayout) rootView.findViewById(R.id.progress);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
+        fastScroller = (FastScroller) rootView.findViewById(R.id.fastscroll);
         connectionErrorWrapper = (LinearLayout) rootView.findViewById(R.id.connection_error_wrapper);
     }
 
@@ -176,10 +122,12 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
             case GET_SONGS:
                 ArrayList<SongGroup> songGroups = ResponseFactory.parseSongs(response);
                 if (songGroups != null && songGroups.size() > 0) {
-                    this.songGroups.clear();
-                    this.songGroups.addAll(songGroups);
+                    for(SongGroup songGroup : songGroups) {
+                        for(Song song : songGroup.getSongs()) {
+                            songs.add(song);
+                        }
+                    }
                 }
-                setupSections();
                 hideProgress();
                 swipeRefresh.setRefreshing(false);
                 break;
