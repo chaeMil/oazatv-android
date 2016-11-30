@@ -3,7 +3,6 @@ package com.chaemil.hgms.fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +27,6 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.GAUtils;
-import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.OSUtils;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SmartLog;
@@ -82,6 +80,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private boolean dismiss;
     private SpinKitView buffering;
     private RelativeLayout toolbarsWrapper;
+    private boolean qualityToggle = false;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -286,7 +285,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         if (isInQualityMode) {
             if (currentVideo.getVideoFileLowRes() != null) {
-                mainActivity.playVideo(currentVideo, false);
+                setLowQuality();
             } else {
                 SuperToast.create(getActivity(),
                         getString(R.string.quality_mode_not_available),
@@ -294,7 +293,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             }
         } else {
             if (currentVideo.getVideoFile() != null) {
-                mainActivity.playVideo(currentVideo, true);
+                setHighQuality();
             } else {
                 SuperToast.create(getActivity(),
                         getString(R.string.low_quality_mode_not_available),
@@ -305,8 +304,10 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     private void setHighQuality() {
         if (currentVideo != null && currentVideo.getVideoFile() != null) {
+            showBuffering();
+            qualityToggle = true;
+            player.disableControls();
             player.setSource(Uri.parse(currentVideo.getVideoFile()));
-            player.seekTo(currentVideo.getCurrentTime());
             qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_white));
             isInQualityMode = true;
         } else {
@@ -319,8 +320,10 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     private void setLowQuality() {
         if (currentVideo != null && currentVideo.getVideoFileLowRes() != null) {
+            showBuffering();
+            qualityToggle = true;
+            player.disableControls();
             player.setSource(Uri.parse(currentVideo.getVideoFileLowRes()));
-            player.seekTo(currentVideo.getCurrentTime());
             qualitySwitch.setImageDrawable(getResources().getDrawable(R.drawable.ic_quality_alpha));
             isInQualityMode = false;
         } else {
@@ -466,7 +469,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     public void saveCurrentVideoTime() {
         if (isAdded() && !dismiss) {
-            if (player != null && currentVideo != null) {
+            if (player != null && currentVideo != null && !qualityToggle) {
                 try {
                     currentVideo.setCurrentTime(player.getCurrentPosition());
                 } catch (Exception e) {
@@ -554,23 +557,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             setLowQuality();
         }
 
-        /*if (NetworkUtils.isConnectedWithWifi(getActivity())) {
-            if (currentVideo.getVideoFile() != null) {
-                setHighQuality();
-            } else {
-                setLowQuality();
-            }
-        }
-
-        if (NetworkUtils.isConnected(getActivity()) && !NetworkUtils.isConnectedWithWifi(getActivity())) {
-            if (currentVideo.getVideoFileLowRes() != null) {
-                setLowQuality();
-            } else {
-                setHighQuality();
-            }
-        }*/
-
-
         setupPlayer();
         player.start();
 
@@ -626,15 +612,22 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 periodicalSaveTime();
             }
         }, PERIODICAL_SAVE_TIME);
+
+        hideBuffering();
+
+        if (qualityToggle) {
+            player.seekTo(currentVideo.getCurrentTime());
+            qualityToggle = false;
+            player.enableControls(true);
+        }
     }
 
     @Override
     public void onBuffering(int percent) {
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onBuffering");
+        showBuffering();
         if (player.isPlaying()) {
             hideBuffering();
-        } else {
-            showBuffering();
         }
     }
 
