@@ -45,13 +45,14 @@ public class AdapterUtils {
 
         if (!isAudioDownloaded) {
 
-            menu = new String[]{context.getString(R.string.download_audio),
-                    context.getString(R.string.stream_audio),
-                    context.getString(R.string.share_video)};
+            menu = new String[]{context.getString(R.string.download_audio).toUpperCase(),
+                    context.getString(R.string.stream_audio).toUpperCase(),
+                    context.getString(R.string.share_video).toUpperCase()};
 
             builder.title(video.getName())
                     .theme(Theme.LIGHT)
                     .items(menu)
+                    .itemsColorRes(R.color.colorPrimary)
                     .itemsCallback(new MaterialDialog.ListCallback() {
                         @Override
                         public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
@@ -74,12 +75,13 @@ public class AdapterUtils {
 
         if (isAudioDownloaded) {
 
-            menu = new String[] {context.getString(R.string.play_downloaded_audio),
-                    context.getString(R.string.share_video)};
+            menu = new String[] {context.getString(R.string.play_downloaded_audio).toUpperCase(),
+                    context.getString(R.string.share_video).toUpperCase()};
 
             builder.title(video.getName())
                     .theme(Theme.LIGHT)
                     .items(menu)
+                    .itemsColorRes(R.color.colorPrimary)
                     .itemsCallback(new MaterialDialog.ListCallback() {
                         @Override
                         public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
