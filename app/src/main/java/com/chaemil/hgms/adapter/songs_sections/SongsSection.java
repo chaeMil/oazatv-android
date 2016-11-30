@@ -74,6 +74,7 @@ public class SongsSection extends StatelessSection {
                 transaction.replace(R.id.song_fragment, songFragment);
                 transaction.addToBackStack(SongFragment.TAG);
                 transaction.commit();
+                mainActivity.songVisible = true;
             }
         });
 

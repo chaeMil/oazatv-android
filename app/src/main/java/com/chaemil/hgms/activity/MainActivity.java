@@ -102,6 +102,7 @@ public class MainActivity extends BaseActivity
     private BroadcastReceiver networkStateReceiver;
     private KeyboardHandler keyboardHandler;
     public boolean categoryVisible = false;
+    public boolean songVisible = false;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -628,12 +629,17 @@ public class MainActivity extends BaseActivity
 
         switch (getMainFragment().getPager().getCurrentItem()) {
 
-            case 0:
-                break;
             case 1:
                 if (categoryVisible) {
                     categoriesFragment.goBack();
                     categoryVisible = false;
+                    return;
+                }
+                break;
+            case 3:
+                if (songVisible) {
+                    songsFragment.goBack();
+                    songVisible = false;
                     return;
                 }
                 break;
