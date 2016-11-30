@@ -101,6 +101,7 @@ public class MainActivity extends BaseActivity
     private SongsFragment songsFragment;
     private BroadcastReceiver networkStateReceiver;
     private KeyboardHandler keyboardHandler;
+    public boolean categoryVisible = false;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -571,8 +572,6 @@ public class MainActivity extends BaseActivity
     @Override
     public void onBackPressed() {
 
-        int fragmentsCount = getSupportFragmentManager().getBackStackEntryCount();
-
         if (fullscreen) {
             setFullscreen(false);
             if (getVideoPlayerFragment() != null) {
@@ -581,59 +580,66 @@ public class MainActivity extends BaseActivity
             return;
         }
 
-        if (getMainFragment().getPager() != null
-                && getMainFragment().getPager().getCurrentItem() == 1
-                && fragmentsCount != 0) { //categories view
-            getSupportFragmentManager().popBackStack();
-        } else {
-            if (getMainFragment() != null
-                    && getMainFragment().getSearchView() != null
-                    && getMainFragment().getSearchView().isSearchOpen()) {
+        if (getMainFragment() != null
+                && getMainFragment().getSearchView() != null
+                && getMainFragment().getSearchView().isSearchOpen()) {
+            getMainFragment().getSearchView().closeSearch();
+            return;
+        }
 
-                getMainFragment().getSearchView().closeSearch();
-
-            } else if (isPanelExpanded()) {
-
-                if (getVideoPlayerFragment() != null) {
-                    if (getVideoPlayerFragment().isInFullscreenMode) {
-                        getVideoPlayerFragment().cancelFullscreenPlayer();
-                    } else {
-                        collapsePanel();
-                    }
+        if (isPanelExpanded()) {
+            if (getVideoPlayerFragment() != null) {
+                if (getVideoPlayerFragment().isInFullscreenMode) {
+                    getVideoPlayerFragment().cancelFullscreenPlayer();
                 } else {
                     collapsePanel();
                 }
-
-            } else if (getMainFragment() != null
-                    && getMainFragment().getPhotoAlbumFragment() != null
-                    && getMainFragment().getPhotoalbumWrapper().getVisibility() == View.VISIBLE) {
-
-                ViewPager photosViewPager = getMainFragment().getPhotoAlbumFragment().getPhotosViewPager();
-                GridView grid = getMainFragment().getPhotoAlbumFragment().getGrid();
-
-                if (photosViewPager.getVisibility() == View.VISIBLE) {
-                    int currentPhoto = photosViewPager.getCurrentItem();
-                    grid.smoothScrollToPosition(currentPhoto);
-
-                    if (grid.getChildAt(currentPhoto) != null) {
-                        YoYo.with(Techniques.Pulse).duration(500).playOn(grid.getChildAt(currentPhoto));
-                    }
-
-                    getMainFragment().getPhotoAlbumFragment().hidePhotos();
-                } else {
-                    getMainFragment().closeAlbum();
-                }
-
-            } else if (getMainFragment() != null
-                    && getMainFragment().getSettingsCard() != null
-                    && getMainFragment().getSettingsCard().getVisibility() == View.VISIBLE) {
-
-                getMainFragment().hideSettings();
-
             } else {
-                finish();
+                collapsePanel();
             }
+            return;
         }
+
+        if (getMainFragment() != null
+                && getMainFragment().getPhotoAlbumFragment() != null
+                && getMainFragment().getPhotoalbumWrapper().getVisibility() == View.VISIBLE) {
+
+            ViewPager photosViewPager = getMainFragment().getPhotoAlbumFragment().getPhotosViewPager();
+            GridView grid = getMainFragment().getPhotoAlbumFragment().getGrid();
+
+            if (photosViewPager.getVisibility() == View.VISIBLE) {
+                int currentPhoto = photosViewPager.getCurrentItem();
+                grid.smoothScrollToPosition(currentPhoto);
+
+                getMainFragment().getPhotoAlbumFragment().hidePhotos();
+            } else {
+                getMainFragment().closeAlbum();
+            }
+            return;
+        }
+
+        if (getMainFragment() != null
+                && getMainFragment().getSettingsCard() != null
+                && getMainFragment().getSettingsCard().getVisibility() == View.VISIBLE) {
+
+            getMainFragment().hideSettings();
+            return;
+        }
+
+        switch (getMainFragment().getPager().getCurrentItem()) {
+
+            case 0:
+                break;
+            case 1:
+                if (categoryVisible) {
+                    categoriesFragment.goBack();
+                    categoryVisible = false;
+                    return;
+                }
+                break;
+        }
+
+        finish();
     }
 
     public MainFragment getMainFragment() {
