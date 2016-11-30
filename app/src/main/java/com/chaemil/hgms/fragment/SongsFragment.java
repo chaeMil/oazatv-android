@@ -38,7 +38,7 @@ import java.util.ArrayList;
 public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private ArrayList<SongGroup> songGroups = new ArrayList<>();
-    private RecyclerView gridView;
+    private RecyclerView songsList;
     private SwipeRefreshLayout swipeRefresh;
     private LinearLayout connectionErrorWrapper;
     private SongsAdapter adapter;
@@ -85,9 +85,9 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
 
     private void setupAdapter() {
         adapter = new SongsAdapter(mainActivity, mainActivity, this, songs);
-        gridView.setAdapter(adapter);
-        gridView.setLayoutManager(new LinearLayoutManager(mainActivity));
-        fastScroller.setRecyclerView(gridView);
+        songsList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        songsList.setAdapter(adapter);
+        fastScroller.setRecyclerView(songsList);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
     }
 
     private void getUI(ViewGroup rootView) {
-        gridView = (RecyclerView) rootView.findViewById(R.id.grid_view);
+        songsList = (RecyclerView) rootView.findViewById(R.id.grid_view);
         progress = (RelativeLayout) rootView.findViewById(R.id.progress);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
         fastScroller = (FastScroller) rootView.findViewById(R.id.fastscroll);
