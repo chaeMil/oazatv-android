@@ -22,33 +22,6 @@
 
 
         <RelativeLayout
-            android:id="@+id/thumb_wrapper"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_below="@+id/toolbars_wrapper"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="@dimen/video_player_wrapper_bottom_margin">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/audio_thumb"
-                android:scaleType="fitCenter"
-                android:layout_centerInParent="true" />
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/buffer_bar"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:visibility="gone" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxHeight="150dp"
@@ -220,7 +193,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/light_gray"
+                    android:background="@color/white"
                     app:gravity="right">
                 </LinearLayout>
 
@@ -228,7 +201,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/light_gray"
+                    android:background="@color/white"
                     app:gravity="left">
                 </LinearLayout>
 
@@ -236,80 +209,124 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/thumb_wrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_below="@+id/toolbars_wrapper"
+            android:layout_above="@+id/controls_wrapper">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/audio_thumb"
+                android:scaleType="fitCenter"
+                android:layout_centerHorizontal="true" />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/buffer_bar"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
             android:background="@color/transparent_black"
             android:layout_width="match_parent"
-            android:layout_height="68dp"
+            android:layout_height="wrap_content"
             android:id="@+id/controls_wrapper"
             android:layout_alignParentBottom="true"
             android:padding="4dp">
 
-            <TextView
-                android:textColor="@color/white"
-                android:shadowColor="@color/black"
-                android:shadowRadius="5"
-                tools:text="0:57:32"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/total_time"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:gravity="center_vertical"
-                android:layout_marginRight="16dp"
-                android:layout_alignTop="@+id/current_time"
-                android:layout_marginBottom="4dp" />
-
-            <android.support.v7.widget.AppCompatSeekBar
-                style="?android:attr/progressBarStyleHorizontal"
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:id="@+id/seek_bar"
-                tools:progress="14"
-                android:progressTint="@color/transparent_white"
-                android:thumbTint="@color/white"
-                android:layout_alignParentBottom="true"
-                android:layout_toRightOf="@+id/play_pause"
-                android:layout_toEndOf="@+id/play_pause"
-                android:layout_alignTop="@+id/play_pause"
-                android:layout_marginBottom="20dp" />
+                android:layout_height="wrap_content">
 
-            <at.markushi.ui.CircleButton
-                android:id="@+id/play_pause"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/pause"
-                app:cb_color="@color/colorPrimaryDark"
-                app:cb_pressedRingWidth="3dip"
-                android:layout_alignParentTop="false"
-                android:layout_alignParentBottom="false"
-                android:layout_toRightOf="@+id/rew"
-                android:layout_alignBottom="@+id/rew" />
+                <LinearLayout
+                    android:padding="8dp"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            <at.markushi.ui.CircleButton
-                android:id="@+id/rew"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/rew"
-                app:cb_color="@color/colorPrimaryDark"
-                app:cb_pressedRingWidth="3dip"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                    <TextView
+                        android:layout_weight="1"
+                        android:textColor="@color/white"
+                        android:shadowColor="@color/black"
+                        android:shadowRadius="5"
+                        tools:text="0:14:15"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/current_time"/>
 
-            <TextView
-                android:textColor="@color/white"
-                android:shadowColor="@color/black"
-                android:shadowRadius="5"
-                tools:text="0:14:15"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/current_time"
-                android:layout_alignBottom="@+id/play_pause"
-                android:layout_alignLeft="@+id/seek_bar"
-                android:layout_marginLeft="16dp"
-                android:layout_marginBottom="4dp" />
+                    <TextView
+                        android:gravity="right"
+                        android:layout_weight="1"
+                        android:textColor="@color/white"
+                        android:shadowColor="@color/black"
+                        android:shadowRadius="5"
+                        tools:text="0:57:32"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/total_time" />
 
-        </RelativeLayout>
+                </LinearLayout>
+
+                <android.support.v7.widget.AppCompatSeekBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:id="@+id/seek_bar"
+                    tools:progress="14"
+                    android:layout_alignParentTop="true"
+                    android:progressTint="@color/transparent_white"
+                    android:thumbTint="@color/white"
+                    android:layout_marginBottom="16dp"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <at.markushi.ui.CircleButton
+                    android:id="@+id/rew"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/rew"
+                    app:cb_color="@color/colorPrimaryDark"
+                    app:cb_pressedRingWidth="3dip" />
+
+                <at.markushi.ui.CircleButton
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:id="@+id/play_pause"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/pause"
+                    app:cb_color="@color/colorPrimaryDark"
+                    app:cb_pressedRingWidth="3dip" />
+
+                <at.markushi.ui.CircleButton
+                    android:id="@+id/ff"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/ff"
+                    app:cb_color="@color/colorPrimaryDark"
+                    app:cb_pressedRingWidth="3dip" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
 
     </RelativeLayout>
 
