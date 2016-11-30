@@ -80,7 +80,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
 
     @Override
     public String getSectionTitle(int position) {
-        return songs.get(position).getName().substring(0, 1);
+        return songs.get(position).getTag().substring(0, 1);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
