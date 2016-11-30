@@ -23,7 +23,6 @@
             android:scrollbars="vertical"
             android:id="@+id/archive_grid_view"
             android:scrollbarSize="4dp"
-            android:scrollbarThumbVertical="@color/colorPrimaryWashed"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
