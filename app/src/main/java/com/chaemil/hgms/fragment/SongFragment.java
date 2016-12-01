@@ -110,6 +110,8 @@ public class SongFragment extends BaseFragment {
     }
 
     public void adjustLayout() {
-        body.setTextSize(DimensUtils.dpFromPx(getActivity(), getResources().getDimension(R.dimen.song_text_size)));
+        if (isAdded()) {
+            body.setTextSize(DimensUtils.dpFromPx(getActivity(), getResources().getDimension(R.dimen.song_text_size)));
+        }
     }
 }
