@@ -17,6 +17,7 @@ import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Song;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.DimensUtils;
 
 import org.json.JSONObject;
 
@@ -73,6 +74,8 @@ public class SongFragment extends BaseFragment {
         name.setText(song.getName());
         tag.setText(song.getTag());
         author.setText(song.getAuthor());
+
+        adjustLayout();
     }
 
     private void getSong(int songId) {
@@ -104,5 +107,9 @@ public class SongFragment extends BaseFragment {
     public void onErrorResponse(VolleyError exception, RequestType requestType) {
         super.onErrorResponse(exception, requestType);
         hideProgress();
+    }
+
+    public void adjustLayout() {
+        body.setTextSize(DimensUtils.dpFromPx(getActivity(), getResources().getDimension(R.dimen.song_text_size)));
     }
 }

@@ -41,6 +41,7 @@ import com.chaemil.hgms.fragment.DownloadedFragment;
 import com.chaemil.hgms.fragment.HomeFragment;
 import com.chaemil.hgms.fragment.MainFragment;
 import com.chaemil.hgms.fragment.PhotoAlbumFragment;
+import com.chaemil.hgms.fragment.SongFragment;
 import com.chaemil.hgms.fragment.SongsFragment;
 import com.chaemil.hgms.fragment.VideoPlayerFragment;
 import com.chaemil.hgms.model.KeyboardHandler;
@@ -542,6 +543,10 @@ public class MainActivity extends BaseActivity
 
             if (getMainFragment().getPhotoAlbumFragment() != null) {
                 getMainFragment().getPhotoAlbumFragment().adjustLayout();
+            }
+
+            if (getMainFragment().getSongsFragment().getSongFragment() != null) {
+                getMainFragment().getSongsFragment().getSongFragment().adjustLayout();
             }
         }
 

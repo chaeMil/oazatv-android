@@ -73,6 +73,7 @@
             <TextView
                 android:padding="16dp"
                 android:id="@+id/body"
+                android:textSize="@dimen/song_text_size"
                 fontPath="@string/font_mono_regular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

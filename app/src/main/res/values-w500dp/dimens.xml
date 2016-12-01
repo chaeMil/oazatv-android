@@ -1,0 +1,4 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="song_text_size">18dp</dimen>
+</resources>

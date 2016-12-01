@@ -153,4 +153,8 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
     public void setSongFragment(SongFragment songFragment) {
         this.songFragment = songFragment;
     }
+
+    public SongFragment getSongFragment() {
+        return songFragment;
+    }
 }
