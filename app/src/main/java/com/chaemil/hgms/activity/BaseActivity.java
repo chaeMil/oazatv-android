@@ -73,7 +73,7 @@ public class BaseActivity extends ActivityManagePermission implements RequestFac
     }
 
     public void initTracker() {
-        if (OazaApp.TRACKER) {
+        if (OazaApp.TRACKER && TrackerService.shouldTrack(this)) {
             askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
                 @Override
                 public void permissionGranted() {
