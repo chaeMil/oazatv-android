@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.chaemil.hgms.service.TrackerService;
 import com.chaemil.hgms.utils.SmartLog;
 
 
@@ -20,6 +21,8 @@ public class BootAndUpdateReceiver extends BroadcastReceiver {
                 intent.getAction().equals("android.intent.action.MY_PACKAGE_REPLACED")) {
 
             SmartLog.Log(SmartLog.LogLevel.DEBUG, TAG, "booting");
+
+            context.startService(new Intent(context, TrackerService.class));
         }
     }
 }
