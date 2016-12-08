@@ -93,7 +93,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.AEDesign.communication.WifiReceiver" >
+        <receiver android:name=".receiver.ConnectionReceiver" >
             <intent-filter android:priority="100">
                 <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
