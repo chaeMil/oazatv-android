@@ -2,6 +2,7 @@ package com.chaemil.hgms.activity;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Build;
@@ -25,6 +26,7 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.model.RequestType;
+import com.chaemil.hgms.service.TrackerService;
 import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.SmartLog;
 import com.chaemil.hgms.utils.StringUtils;
@@ -68,6 +70,27 @@ public class BaseActivity extends ActivityManagePermission implements RequestFac
     protected void onPause() {
         super.onPause();
         ((OazaApp) getApplication()).appVisible = false;
+    }
+
+    public void initTracker() {
+        if (OazaApp.TRACKER) {
+            askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
+                @Override
+                public void permissionGranted() {
+                    startService(new Intent(BaseActivity.this, TrackerService.class));
+                }
+
+                @Override
+                public void permissionDenied() {
+
+                }
+
+                @Override
+                public void permissionForeverDenied() {
+
+                }
+            });
+        }
     }
 
     public void setFullscreen(boolean full) {
