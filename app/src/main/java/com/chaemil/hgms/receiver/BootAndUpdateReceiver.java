@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.chaemil.hgms.service.TrackerService;
+import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SmartLog;
 
 
@@ -22,7 +23,9 @@ public class BootAndUpdateReceiver extends BroadcastReceiver {
 
             SmartLog.Log(SmartLog.LogLevel.DEBUG, TAG, "booting");
 
-            context.startService(new Intent(context, TrackerService.class));
+            if (TrackerService.shouldTrack(context)) {
+                context.startService(new Intent(context, TrackerService.class));
+            }
         }
     }
 }
