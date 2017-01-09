@@ -384,7 +384,8 @@ public class MainActivity extends BaseActivity
             boolean currentQuality = videoPlayerFragment.isInQualityMode;
             Video currentVideo = videoPlayerFragment.getCurrentVideo();
 
-            if (currentVideo.getServerId() == video.getServerId()
+            if (currentVideo != null
+                    && currentVideo.getServerId() == video.getServerId()
                     && currentQuality == quality) {
                 expandPanel();
                 return;
