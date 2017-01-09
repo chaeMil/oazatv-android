@@ -93,27 +93,6 @@ public class BaseActivity extends ActivityManagePermission implements RequestFac
         ((OazaApp) getApplication()).appVisible = false;
     }
 
-    public void initTracker() {
-        if (OazaApp.TRACKER && TrackerService.shouldTrack(this)) {
-            askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
-                @Override
-                public void permissionGranted() {
-                    startService(new Intent(BaseActivity.this, TrackerService.class));
-                }
-
-                @Override
-                public void permissionDenied() {
-
-                }
-
-                @Override
-                public void permissionForeverDenied() {
-
-                }
-            });
-        }
-    }
-
     public void setFullscreen(boolean full) {
 
         View decorView = getWindow().getDecorView();
