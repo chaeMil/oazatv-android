@@ -657,7 +657,7 @@ public class MainActivity extends BaseActivity
                 break;
         }
 
-        moveTaskToBack(true);
+        finish();
     }
 
     public MainFragment getMainFragment() {
