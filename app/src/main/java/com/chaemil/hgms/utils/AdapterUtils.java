@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,25 +42,24 @@ public class AdapterUtils {
     public static void contextDialog(final Context context, final MainActivity mainActivity,
                                      final Video video, boolean continueWatching) {
 
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(context);
-        final MaterialDialog dialog = builder
+        MaterialDialog dialog = new MaterialDialog.Builder(context)
                 .customView(R.layout.video_context_menu, true)
                 .build();
-
-        boolean isAudioDownloaded = video.isAudioDownloaded(context);
+        mainActivity.setContextDialog(dialog);
+        final boolean isAudioDownloaded = video.isAudioDownloaded(context);
 
         View dialogView = dialog.getCustomView();
         if (dialogView != null) {
             dialogView.setPadding(0, 0, 0, 0);
 
-            ImageView thumb = (ImageView) dialog.findViewById(R.id.thumb);
-            FancyButton downloadAudio = (FancyButton) dialog.findViewById(R.id.download_audio);
-            FancyButton streamAudio = (FancyButton) dialog.findViewById(R.id.stream_audio);
-            FancyButton shareVideo = (FancyButton) dialog.findViewById(R.id.share_video);
-            FancyButton hideVideo = (FancyButton) dialog.findViewById(R.id.hide_video);
-            TextView name = (TextView) dialog.findViewById(R.id.name);
-            TextView date = (TextView) dialog.findViewById(R.id.date);
-            TextView views = (TextView) dialog.findViewById(R.id.views);
+            ImageView thumb = (ImageView) dialogView.findViewById(R.id.thumb);
+            FancyButton downloadAudio = (FancyButton) dialogView.findViewById(R.id.download_audio);
+            FancyButton streamAudio = (FancyButton) dialogView.findViewById(R.id.stream_audio);
+            FancyButton shareVideo = (FancyButton) dialogView.findViewById(R.id.share_video);
+            FancyButton hideVideo = (FancyButton) dialogView.findViewById(R.id.hide_video);
+            TextView name = (TextView) dialogView.findViewById(R.id.name);
+            TextView date = (TextView) dialogView.findViewById(R.id.date);
+            TextView views = (TextView) dialogView.findViewById(R.id.views);
 
             Ion.with(context).load(video.getThumbFile()).intoImageView(thumb);
 
@@ -71,7 +71,7 @@ public class AdapterUtils {
                 @Override
                 public void onClick(View view) {
                     downloadAudio(context, mainActivity, video);
-                    dialog.dismiss();
+                    mainActivity.dismissContextDialog();
                 }
             });
 
@@ -79,7 +79,7 @@ public class AdapterUtils {
                 @Override
                 public void onClick(View view) {
                     mainActivity.playNewAudio(video);
-                    dialog.dismiss();
+                    mainActivity.dismissContextDialog();
                 }
             });
 
@@ -87,7 +87,7 @@ public class AdapterUtils {
                 @Override
                 public void onClick(View view) {
                     ShareUtils.shareVideoLink(mainActivity, video);
-                    dialog.dismiss();
+                    mainActivity.dismissContextDialog();
                 }
             });
 
@@ -96,7 +96,7 @@ public class AdapterUtils {
                 public void onClick(View view) {
                     SharedPrefUtils.getInstance(context).addHiddenVideo(context, video.getHash());
                     mainActivity.getHomeFragment().refreshContinueWatching();
-                    dialog.dismiss();
+                    mainActivity.dismissContextDialog();
                 }
             });
 
@@ -108,9 +108,9 @@ public class AdapterUtils {
                 hideVideo.setVisibility(View.INVISIBLE);
                 hideVideo.setEnabled(false);
             }
-        }
 
-        builder.show();
+            dialog.show();
+        }
     }
 
     public static void downloadAudio(final Context context, final MainActivity mainActivity,

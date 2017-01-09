@@ -27,6 +27,7 @@ import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -108,6 +109,8 @@ public class MainActivity extends BaseActivity
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
+
+    private MaterialDialog contextDialog;
 
     @Override
     protected void onResume() {
@@ -789,5 +792,15 @@ public class MainActivity extends BaseActivity
         ViewPager pager = getMainFragment().getPager();
         int currentItem = pager.getCurrentItem();
         pager.setCurrentItem(currentItem - 1);
+    }
+
+    public void setContextDialog(MaterialDialog contextDialog) {
+        this.contextDialog = contextDialog;
+    }
+
+    public void dismissContextDialog() {
+        if (contextDialog != null)  {
+            contextDialog.dismiss();
+        }
     }
 }

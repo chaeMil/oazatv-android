@@ -9,12 +9,13 @@
 
     <com.chaemil.hgms.view.VideoThumbImageView
         android:id="@id/thumb"
-        android:layout_marginTop="16dp"
         android:background="@color/dark_gray"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <LinearLayout
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -66,6 +67,8 @@
         android:layout_height="1dp" />
 
     <LinearLayout
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
