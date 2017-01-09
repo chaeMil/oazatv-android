@@ -543,6 +543,10 @@ public class MainActivity extends BaseActivity
             } else {
                 getAudioPlayerFragment().switchMiniPlayer(0);
             }
+        } else if (getVideoPlayerFragment() != null) {
+            if (getVideoPlayerFragment().getCurrentVideo() == null) {
+                hidePanel();
+            }
         }
     }
 
