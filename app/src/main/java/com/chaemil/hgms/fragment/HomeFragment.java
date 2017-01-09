@@ -19,6 +19,7 @@ import com.chaemil.hgms.BuildConfig;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.adapter.homepage_sections.BaseSection;
 import com.chaemil.hgms.adapter.homepage_sections.SectionAppVersion;
 import com.chaemil.hgms.adapter.homepage_sections.SectionContinueWatching;
 import com.chaemil.hgms.adapter.homepage_sections.SectionFeatured;
@@ -44,6 +45,8 @@ import com.github.johnpersano.supertoasts.SuperToast;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
@@ -129,8 +132,10 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
         if (homepage != null) {
 
+            ArrayList<BaseSection> sections = new ArrayList<>();
+
             if (homepage.featured.size() != 0) {
-                adapter.addSection(new SectionFeatured(getActivity(),
+                sections.add(new SectionFeatured(getActivity(),
                         mainActivity,
                         homepage.featured));
 
@@ -138,7 +143,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
             }
 
             if (homepage.newestVideos.size() != 0) {
-                adapter.addSection(new SectionNewVideos(getActivity(),
+                sections.add(new SectionNewVideos(getActivity(),
                         mainActivity,
                         homepage.newestVideos));
 
@@ -146,7 +151,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
             }
 
             if (homepage.newestAlbums.size() != 0) {
-                adapter.addSection(new SectionNewAlbums(getActivity(),
+                sections.add(new SectionNewAlbums(getActivity(),
                         mainActivity,
                         homepage.newestAlbums));
 
@@ -154,14 +159,17 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
             }
 
             if (homepage.popularVideos.size() != 0) {
-                adapter.addSection(new SectionPopularVideos(getActivity(),
+                sections.add(new SectionPopularVideos(getActivity(),
                         mainActivity,
                         homepage.popularVideos));
 
                 sectionCount += 1;
             }
 
-
+            Collections.shuffle(sections);
+            for (BaseSection section : sections) {
+                adapter.addSection(section);
+            }
         }
     }
 

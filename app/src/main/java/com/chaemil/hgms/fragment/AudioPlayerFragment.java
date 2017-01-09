@@ -75,6 +75,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private SwipeLayout miniPlayerSwipe;
     private RelativeLayout infoLayout;
     private ImageView info;
+    private CircleButton ff;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -150,6 +151,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         audioThumb = (ImageView) rootView.findViewById(R.id.audio_thumb);
         playPause = (CircleButton) rootView.findViewById(R.id.play_pause);
         rew = (CircleButton) rootView.findViewById(R.id.rew);
+        ff = (CircleButton) rootView.findViewById(R.id.ff);
         currentTime = (TextView) rootView.findViewById(R.id.current_time);
         totalTime = (TextView) rootView.findViewById(R.id.total_time);
         seekBar = (AppCompatSeekBar) rootView.findViewById(R.id.seek_bar);
@@ -169,6 +171,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         back.setOnClickListener(this);
         playPause.setOnClickListener(this);
         rew.setOnClickListener(this);
+        ff.setOnClickListener(this);
         miniPlayerPause.setOnClickListener(this);
         share.setOnClickListener(this);
         miniPlayer.setOnClickListener(this);
@@ -253,6 +256,12 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
             case R.id.rew:
                 if (mainActivity != null) {
                     mainActivity.sendBroadcast(new Intent(AudioPlaybackReceiver.NOTIFY_REW));
+                    updateTime();
+                }
+                break;
+            case R.id.ff:
+                if (mainActivity != null) {
+                    mainActivity.sendBroadcast(new Intent(AudioPlaybackReceiver.NOTIFY_FF));
                     updateTime();
                 }
                 break;

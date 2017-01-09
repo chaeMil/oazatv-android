@@ -105,14 +105,18 @@ public class BitmapUtils {
 
     // Scale and keep aspect ratio
     public static Bitmap scaleToFill(Bitmap b, int width, int height) {
-        if (b != null) {
-            float factorH = height / (float) b.getWidth();
-            float factorW = width / (float) b.getWidth();
-            float factorToUse = (factorH > factorW) ? factorW : factorH;
-            return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factorToUse),
-                    (int) (b.getHeight() * factorToUse), false);
+        try {
+            if (b != null) {
+                float factorH = height / (float) b.getWidth();
+                float factorW = width / (float) b.getWidth();
+                float factorToUse = (factorH > factorW) ? factorW : factorH;
+                return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factorToUse),
+                        (int) (b.getHeight() * factorToUse), false);
+            }
+            System.gc();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        System.gc();
         return null;
     }
 

@@ -53,6 +53,27 @@ public class BaseActivity extends ActivityManagePermission implements RequestFac
     private DownloadManager manager;
     public boolean fullscreen = false;
 
+    public void initTracker() {
+        if (OazaApp.TRACKER) {
+            askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
+                @Override
+                public void permissionGranted() {
+                    startService(new Intent(BaseActivity.this, TrackerService.class));
+                }
+
+                @Override
+                public void permissionDenied() {
+
+                }
+
+                @Override
+                public void permissionForeverDenied() {
+
+                }
+            });
+        }
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

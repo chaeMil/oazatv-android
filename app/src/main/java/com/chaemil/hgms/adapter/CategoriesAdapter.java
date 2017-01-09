@@ -66,6 +66,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ho
                 transaction.replace(R.id.category_fragment, categoryFragment);
                 transaction.addToBackStack(CategoryFragment.TAG);
                 transaction.commit();
+                mainActivity.categoryVisible = true;
             }
         });
 

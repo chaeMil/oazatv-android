@@ -128,7 +128,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
 
         adapter = new PhotosAdapter(getActivity(), thumbWidth, album.getPhotos());
         grid.setAdapter(adapter);
-        photosAdapter = new PhotosViewPagerAdapter(getChildFragmentManager(), album.getPhotos());
+        photosAdapter = new PhotosViewPagerAdapter(getFragmentManager(), album.getPhotos());
         photosViewPager.setAdapter(photosAdapter);
 
         adapter.notifyDataSetChanged();

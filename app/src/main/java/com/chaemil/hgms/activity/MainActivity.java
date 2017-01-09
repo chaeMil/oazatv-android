@@ -41,6 +41,8 @@ import com.chaemil.hgms.fragment.DownloadedFragment;
 import com.chaemil.hgms.fragment.HomeFragment;
 import com.chaemil.hgms.fragment.MainFragment;
 import com.chaemil.hgms.fragment.PhotoAlbumFragment;
+import com.chaemil.hgms.fragment.SongFragment;
+import com.chaemil.hgms.fragment.SongsFragment;
 import com.chaemil.hgms.fragment.VideoPlayerFragment;
 import com.chaemil.hgms.model.KeyboardHandler;
 import com.chaemil.hgms.model.LiveStream;
@@ -97,8 +99,11 @@ public class MainActivity extends BaseActivity
     private ArchiveFragment archiveFragment;
     private DownloadedFragment downloadedFragment;
     private PhotoAlbumFragment photoAlbumFragment;
+    private SongsFragment songsFragment;
     private BroadcastReceiver networkStateReceiver;
     private KeyboardHandler keyboardHandler;
+    public boolean categoryVisible = false;
+    public boolean songVisible = false;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -177,6 +182,7 @@ public class MainActivity extends BaseActivity
         archiveFragment = new ArchiveFragment();
         downloadedFragment = new DownloadedFragment();
         photoAlbumFragment = new PhotoAlbumFragment();
+        songsFragment = new SongsFragment();
     }
 
     public HomeFragment getHomeFragment() {
@@ -197,6 +203,10 @@ public class MainActivity extends BaseActivity
 
     public PhotoAlbumFragment getPhotoAlbumFragment() {
         return photoAlbumFragment;
+    }
+
+    public SongsFragment getSongsFragment() {
+        return songsFragment;
     }
 
     private void parseDeepLink() {
@@ -530,9 +540,14 @@ public class MainActivity extends BaseActivity
             getMainFragment().getDownloadedFragment().adjustLayout();
             getMainFragment().getCategoriesFragment().adjustLayout();
             getMainFragment().getHomeFragment().adjustLayout();
+            getMainFragment().getSongsFragment().adjustLayout();
 
             if (getMainFragment().getPhotoAlbumFragment() != null) {
                 getMainFragment().getPhotoAlbumFragment().adjustLayout();
+            }
+
+            if (getMainFragment().getSongsFragment().getSongFragment() != null) {
+                getMainFragment().getSongsFragment().getSongFragment().adjustLayout();
             }
         }
 
@@ -578,59 +593,71 @@ public class MainActivity extends BaseActivity
             return;
         }
 
-        if (getMainFragment().getPager() != null
-                && getMainFragment().getPager().getCurrentItem() == 1
-                && fragmentsCount != 0) { //categories view
-            getSupportFragmentManager().popBackStack();
-        } else {
-            if (getMainFragment() != null
-                    && getMainFragment().getSearchView() != null
-                    && getMainFragment().getSearchView().isSearchOpen()) {
+        if (getMainFragment() != null
+                && getMainFragment().getSearchView() != null
+                && getMainFragment().getSearchView().isSearchOpen()) {
+            getMainFragment().getSearchView().closeSearch();
+            return;
+        }
 
-                getMainFragment().getSearchView().closeSearch();
-
-            } else if (isPanelExpanded()) {
-
-                if (getVideoPlayerFragment() != null) {
-                    if (getVideoPlayerFragment().isInFullscreenMode) {
-                        getVideoPlayerFragment().cancelFullscreenPlayer();
-                    } else {
-                        collapsePanel();
-                    }
+        if (isPanelExpanded()) {
+            if (getVideoPlayerFragment() != null) {
+                if (getVideoPlayerFragment().isInFullscreenMode) {
+                    getVideoPlayerFragment().cancelFullscreenPlayer();
                 } else {
                     collapsePanel();
                 }
-
-            } else if (getMainFragment() != null
-                    && getMainFragment().getPhotoAlbumFragment() != null
-                    && getMainFragment().getPhotoalbumWrapper().getVisibility() == View.VISIBLE) {
-
-                ViewPager photosViewPager = getMainFragment().getPhotoAlbumFragment().getPhotosViewPager();
-                GridView grid = getMainFragment().getPhotoAlbumFragment().getGrid();
-
-                if (photosViewPager.getVisibility() == View.VISIBLE) {
-                    int currentPhoto = photosViewPager.getCurrentItem();
-                    grid.smoothScrollToPosition(currentPhoto);
-
-                    if (grid.getChildAt(currentPhoto) != null) {
-                        YoYo.with(Techniques.Pulse).duration(500).playOn(grid.getChildAt(currentPhoto));
-                    }
-
-                    getMainFragment().getPhotoAlbumFragment().hidePhotos();
-                } else {
-                    getMainFragment().closeAlbum();
-                }
-
-            } else if (getMainFragment() != null
-                    && getMainFragment().getSettingsCard() != null
-                    && getMainFragment().getSettingsCard().getVisibility() == View.VISIBLE) {
-
-                getMainFragment().hideSettings();
-
             } else {
-                moveTaskToBack(true);
+                collapsePanel();
             }
+            return;
         }
+
+        if (getMainFragment() != null
+                && getMainFragment().getPhotoAlbumFragment() != null
+                && getMainFragment().getPhotoalbumWrapper().getVisibility() == View.VISIBLE) {
+
+            ViewPager photosViewPager = getMainFragment().getPhotoAlbumFragment().getPhotosViewPager();
+            GridView grid = getMainFragment().getPhotoAlbumFragment().getGrid();
+
+            if (photosViewPager.getVisibility() == View.VISIBLE) {
+                int currentPhoto = photosViewPager.getCurrentItem();
+                grid.smoothScrollToPosition(currentPhoto);
+
+                getMainFragment().getPhotoAlbumFragment().hidePhotos();
+            } else {
+                getMainFragment().closeAlbum();
+            }
+            return;
+        }
+
+        if (getMainFragment() != null
+                && getMainFragment().getSettingsCard() != null
+                && getMainFragment().getSettingsCard().getVisibility() == View.VISIBLE) {
+
+            getMainFragment().hideSettings();
+            return;
+        }
+
+        switch (getMainFragment().getPager().getCurrentItem()) {
+
+            case 1:
+                if (categoryVisible) {
+                    categoriesFragment.goBack();
+                    categoryVisible = false;
+                    return;
+                }
+                break;
+            case 3:
+                if (songVisible) {
+                    songsFragment.goBack();
+                    songVisible = false;
+                    return;
+                }
+                break;
+        }
+
+        moveTaskToBack(true);
     }
 
     public MainFragment getMainFragment() {

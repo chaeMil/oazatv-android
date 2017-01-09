@@ -36,6 +36,10 @@ public class OSUtils {
         }
     }
 
+    public static boolean isRunningChromeOS(Context context) {
+        return context.getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
+    }
+
     //fix for NotificationCompat.MediaStyle
     // http://stackoverflow.com/questions/34851943/couldnt-expand-remoteviews-mediasessioncompat-and-notificationcompat-mediastyl
     public static boolean isHuawei() {
