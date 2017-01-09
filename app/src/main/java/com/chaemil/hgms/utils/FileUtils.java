@@ -141,12 +141,16 @@ public class FileUtils {
     public static List<File> getListFiles(File parentDir, String ext) {
         ArrayList<File> inFiles = new ArrayList<File>();
         File[] files = parentDir.listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                inFiles.addAll(getListFiles(file, ext));
-            } else {
-                if(file.getName().endsWith(ext)){
-                    inFiles.add(file);
+        if (files != null) {
+            for (File file : files) {
+                if (file != null) {
+                    if (file.isDirectory()) {
+                        inFiles.addAll(getListFiles(file, ext));
+                    } else {
+                        if (file.getName().endsWith(ext)) {
+                            inFiles.add(file);
+                        }
+                    }
                 }
             }
         }
