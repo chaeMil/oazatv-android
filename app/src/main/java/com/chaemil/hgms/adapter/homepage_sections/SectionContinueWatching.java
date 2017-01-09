@@ -66,7 +66,7 @@ public class SectionContinueWatching extends BaseSection {
         });
         videoViewHolder.name.setText(video.getName());
         videoViewHolder.date.setText(StringUtils.formatDate(video.getDate(), context));
-        videoViewHolder.views.setText(video.getViews() + " " + context.getString(R.string.views));
+        videoViewHolder.views.setVisibility(View.GONE);
         videoViewHolder.viewProgress.setMax(video.getDuration());
         videoViewHolder.viewProgress.setProgress(video.getCurrentTime());
         videoViewHolder.time.setText(StringUtils.getDurationString(video.getDuration()));
