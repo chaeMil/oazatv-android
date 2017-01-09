@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 
+import java.util.Locale;
+
 /**
  * Created by chaemil on 1.10.16.
  */
@@ -32,5 +34,13 @@ public class OSUtils {
         } catch (android.content.ActivityNotFoundException anfe) {
             context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
+    }
+
+    //fix for NotificationCompat.MediaStyle
+    // http://stackoverflow.com/questions/34851943/couldnt-expand-remoteviews-mediasessioncompat-and-notificationcompat-mediastyl
+    public static boolean isHuawei() {
+        return (android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1
+                || android.os.Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP)
+            && Build.MANUFACTURER.toLowerCase(Locale.getDefault()).contains("huawei");
     }
 }

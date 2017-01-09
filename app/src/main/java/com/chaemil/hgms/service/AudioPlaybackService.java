@@ -377,12 +377,15 @@ public class AudioPlaybackService extends Service implements
                     .setContentIntent(intents.get(0))
                     .setDeleteIntent(intents.get(4))
                     .setAutoCancel(true)
+                    .setWhen(0)
                     .addAction(R.drawable.rew, "", intents.get(3))
                     .addAction(R.drawable.pause, "", intents.get(1))
-                    .addAction(R.drawable.ff, "", intents.get(2))
-                    .setStyle(new NotificationCompat.MediaStyle()
-                            .setShowActionsInCompactView(0, 1, 2)
-                    );
+                    .addAction(R.drawable.ff, "", intents.get(2));
+
+            if (!OSUtils.isHuawei()) {
+                notificationBuilder.setStyle(new NotificationCompat.MediaStyle()
+                        .setShowActionsInCompactView(0, 1, 2));
+            }
 
             int sdk = android.os.Build.VERSION.SDK_INT;
             if (sdk >= Build.VERSION_CODES.LOLLIPOP) {
