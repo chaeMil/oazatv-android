@@ -21,7 +21,7 @@
     <string name="added_to_queue">Přidáno do fronty</string>
     <string name="photo_album">Fotoalbum</string>
     <string name="search_hint_oaza">Boží milost, #konference, majestát...</string>
-    <string name="download_audio">Stáhnout audio</string>
+    <string name="download_audio">Stáhnout</string>
     <string name="stream_audio">Streamovat audio</string>
     <string name="play_downloaded_audio">Přehrát stažené audio</string>
     <string name="delete_downloaded_audio">Smazat stažené audio</string>
@@ -81,4 +81,5 @@
     <string name="permission_revoked_phone_state">Aplikace již nebude mít možnost pozastavit přehrávaní při příchozím hovoru</string>
     <string name="update_app">Aktualizovat aplikaci</string>
     <string name="error_when_playing_video">Vyskytla se chyba při přehrávání videa</string>
+    <string name="hide_this_video">Skrýt toto video</string>
 </resources>

@@ -40,6 +40,7 @@ import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
+import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.github.johnpersano.supertoasts.SuperToast;
 
 import org.json.JSONObject;
@@ -48,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
@@ -91,14 +93,29 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
                 "Home");
     }
 
-    private void getData() {
-        showProgress();
+    private void getLocalData() {
+        videosToContinueWatching.clear();
+
         List<Video> notFullyWatchedVideos = Video.getNotFullyWatchedVideos(true);
+        Set<String> hiddenVideos = SharedPrefUtils.getInstance(mainActivity).getHiddenVideos();
+
+        List<Video> filteredVideos = new ArrayList<>();
         for (Video video : notFullyWatchedVideos) {
+            if (!hiddenVideos.contains(video.getHash())) {
+                filteredVideos.add(video);
+            }
+        }
+        for (int i = 0; i < filteredVideos.size() && i < 8; i++) {
+            Video video = filteredVideos.get(i);
             if (video.getCurrentTime() / 1000 > 30 ) { //more than 30 seconds watched
                 videosToContinueWatching.add(video);
             }
         }
+    }
+
+    private void getData() {
+        showProgress();
+        getLocalData();
 
         if (NetworkUtils.isConnected(getActivity())) {
             JsonObjectRequest homepage = RequestFactory.getHomepage(this);
@@ -110,7 +127,6 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
         int sectionCount = 0;
 
-
         if (homepage != null) {
             if (homepage.latestAndroidAppVersion > BuildConfig.VERSION_CODE) {
                 adapter.addSection(new SectionAppVersion(getActivity(), mainActivity));
@@ -120,8 +136,8 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
         }
 
         if (videosToContinueWatching.size() != 0) {
-            adapter.addSection(new SectionContinueWatching(getActivity(), mainActivity,
-                    videosToContinueWatching));
+            adapter.addSection(SectionContinueWatching.TAG, new SectionContinueWatching(getActivity(),
+                    mainActivity, videosToContinueWatching));
 
             sectionCount += 1;
         }
@@ -245,5 +261,13 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
                 RequestService.getRequestQueue().add(request);
             }
         }
+    }
+
+    public void refreshContinueWatching() {
+        getLocalData();
+        if (videosToContinueWatching.size() <= 0) {
+            adapter.removeSection(SectionContinueWatching.TAG);
+        }
+        adapter.notifyDataSetChanged();
     }
 }

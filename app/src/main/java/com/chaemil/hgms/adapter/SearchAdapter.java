@@ -83,7 +83,7 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.contextMenu.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        AdapterUtils.contextDialog(context, mainActivity, video);
+                        AdapterUtils.contextDialog(context, mainActivity, video, false);
                     }
                 });
                 Ion.with(context)

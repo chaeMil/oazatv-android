@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
@@ -13,11 +15,13 @@ import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.github.johnpersano.supertoasts.SuperToast;
+import com.koushikdutta.ion.Ion;
 import com.novoda.downloadmanager.DownloadManagerBuilder;
 import com.novoda.downloadmanager.lib.DownloadManager;
 import com.novoda.downloadmanager.lib.Request;
 import com.novoda.downloadmanager.notifications.NotificationVisibility;
 
+import mehdi.sakout.fancybuttons.FancyButton;
 import permission.auron.com.marshmallowpermissionhelper.PermissionResult;
 import permission.auron.com.marshmallowpermissionhelper.PermissionUtils;
 
@@ -35,66 +39,75 @@ public class AdapterUtils {
     }
 
     public static void contextDialog(final Context context, final MainActivity mainActivity,
-                                     final Video video) {
+                                     final Video video, boolean continueWatching) {
 
         MaterialDialog.Builder builder = new MaterialDialog.Builder(context);
-
-        String[] menu;
+        final MaterialDialog dialog = builder
+                .customView(R.layout.video_context_menu, true)
+                .build();
 
         boolean isAudioDownloaded = video.isAudioDownloaded(context);
 
-        if (!isAudioDownloaded) {
+        View dialogView = dialog.getCustomView();
+        if (dialogView != null) {
+            dialogView.setPadding(0, 0, 0, 0);
 
-            menu = new String[]{context.getString(R.string.download_audio).toUpperCase(),
-                    context.getString(R.string.stream_audio).toUpperCase(),
-                    context.getString(R.string.share_video).toUpperCase()};
+            ImageView thumb = (ImageView) dialog.findViewById(R.id.thumb);
+            FancyButton downloadAudio = (FancyButton) dialog.findViewById(R.id.download_audio);
+            FancyButton streamAudio = (FancyButton) dialog.findViewById(R.id.stream_audio);
+            FancyButton shareVideo = (FancyButton) dialog.findViewById(R.id.share_video);
+            FancyButton hideVideo = (FancyButton) dialog.findViewById(R.id.hide_video);
+            TextView name = (TextView) dialog.findViewById(R.id.name);
+            TextView date = (TextView) dialog.findViewById(R.id.date);
+            TextView views = (TextView) dialog.findViewById(R.id.views);
 
-            builder.title(video.getName())
-                    .theme(Theme.LIGHT)
-                    .items(menu)
-                    .itemsColorRes(R.color.colorPrimary)
-                    .itemsCallback(new MaterialDialog.ListCallback() {
-                        @Override
-                        public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                            switch(which) {
-                                case 0:
-                                    downloadAudio(context, mainActivity, video);
-                                    dialog.dismiss();
-                                    break;
-                                case 1:
-                                    mainActivity.playNewAudio(video);
-                                    dialog.dismiss();
-                                    break;
-                                case 2:
-                                    ShareUtils.shareVideoLink(mainActivity, video);
-                                    break;
-                            }
-                        }
-                    });
-        }
+            Ion.with(context).load(video.getThumbFile()).intoImageView(thumb);
 
-        if (isAudioDownloaded) {
+            name.setText(video.getName());
+            date.setText(StringUtils.formatDate(video.getDate(), context));
+            views.setText(video.getViews() + " " + context.getString(R.string.views));
 
-            menu = new String[] {context.getString(R.string.play_downloaded_audio).toUpperCase(),
-                    context.getString(R.string.share_video).toUpperCase()};
+            downloadAudio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    downloadAudio(context, mainActivity, video);
+                    dialog.dismiss();
+                }
+            });
 
-            builder.title(video.getName())
-                    .theme(Theme.LIGHT)
-                    .items(menu)
-                    .itemsColorRes(R.color.colorPrimary)
-                    .itemsCallback(new MaterialDialog.ListCallback() {
-                        @Override
-                        public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                            switch(which) {
-                                case 0:
-                                    mainActivity.playNewAudio(video);
-                                    dialog.dismiss();
-                                    break;
-                                case 1:
-                                    ShareUtils.shareVideoLink(mainActivity, video);
-                            }
-                        }
-                    });
+            streamAudio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mainActivity.playNewAudio(video);
+                    dialog.dismiss();
+                }
+            });
+
+            shareVideo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ShareUtils.shareVideoLink(mainActivity, video);
+                    dialog.dismiss();
+                }
+            });
+
+            hideVideo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SharedPrefUtils.getInstance(context).addHiddenVideo(context, video.getHash());
+                    mainActivity.getHomeFragment().refreshContinueWatching();
+                    dialog.dismiss();
+                }
+            });
+
+            if (isAudioDownloaded) {
+                downloadAudio.setVisibility(View.INVISIBLE);
+                downloadAudio.setEnabled(false);
+            }
+            if (!continueWatching) {
+                hideVideo.setVisibility(View.INVISIBLE);
+                hideVideo.setEnabled(false);
+            }
         }
 
         builder.show();

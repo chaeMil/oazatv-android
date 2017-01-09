@@ -76,7 +76,7 @@ public class SectionPopularVideos extends BaseSection {
         videoViewHolder.more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdapterUtils.contextDialog(context, mainActivity, video);
+                AdapterUtils.contextDialog(context, mainActivity, video, false);
             }
         });
         videoViewHolder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));

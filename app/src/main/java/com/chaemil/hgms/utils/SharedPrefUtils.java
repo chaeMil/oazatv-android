@@ -3,6 +3,9 @@ package com.chaemil.hgms.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class SharedPrefUtils {
 
     private SharedPreferences sharedPreferences;
@@ -14,6 +17,7 @@ public class SharedPrefUtils {
     public static final String PREFERENCES_STREAM_ON_WIFI = "stream_on_wifi";
     public static final String PREFERENCES_STREAM_AUDIO = "stream_audio";
     public static final String PREFERENCE_USER_ID = "user_id";
+    public static final String HIDDEN_VIDEOS = "hidden_videos";
     public static final String PREFERENCES_FIRST_LAUNCH = "first_launch_2016-06-30";
 
     public static SharedPrefUtils getInstance(Context context) {
@@ -71,6 +75,17 @@ public class SharedPrefUtils {
         editor.remove(PREFERENCES_STREAM_AUDIO);
         editor.remove(PREFERENCES_STREAM_ON_WIFI);
         editor.remove(PREFERENCES_DOWNLOAD_ON_WIFI);
+        editor.commit();
+    }
+
+    public Set<String> getHiddenVideos() {
+        return sharedPreferences.getStringSet(HIDDEN_VIDEOS, new HashSet<String>());
+    }
+
+    public void addHiddenVideo(Context context, String hash) {
+        Set<String> hiddenVideos = getInstance(context).getHiddenVideos();
+        hiddenVideos.add(hash);
+        editor.putStringSet(HIDDEN_VIDEOS, hiddenVideos);
         editor.commit();
     }
 }

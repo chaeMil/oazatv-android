@@ -23,6 +23,7 @@ import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 
+import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 
 /**
@@ -30,6 +31,7 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
  */
 public class SectionContinueWatching extends BaseSection {
 
+    public static final String TAG = "continue_watching";
     private final Context context;
     private final MainActivity mainActivity;
     ArrayList<Video> videosToWatch = new ArrayList<>();
@@ -95,7 +97,7 @@ public class SectionContinueWatching extends BaseSection {
         videoViewHolder.more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdapterUtils.contextDialog(context, mainActivity, video);
+                AdapterUtils.contextDialog(context, mainActivity, video, true);
             }
         });
     }

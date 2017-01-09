@@ -88,6 +88,7 @@ dependencies {
     compile 'com.github.hotchemi:android-rate:1.0.1'
     compile 'com.afollestad:easyvideoplayer:0.3.0'
     compile 'com.futuremind.recyclerfastscroll:fastscroll:0.2.4'
+    compile 'com.github.medyo:fancybuttons:1.8.3'
 }
 
 apply plugin: 'com.google.gms.google-services'

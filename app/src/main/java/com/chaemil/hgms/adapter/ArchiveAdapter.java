@@ -96,7 +96,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                     holder.more.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            AdapterUtils.contextDialog(context, mainActivity, video);
+                            AdapterUtils.contextDialog(context, mainActivity, video, false);
                         }
                     });
                     holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
