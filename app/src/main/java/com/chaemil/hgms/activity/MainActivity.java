@@ -628,7 +628,7 @@ public class MainActivity extends BaseActivity
                 getMainFragment().hideSettings();
 
             } else {
-                finish();
+                moveTaskToBack(true);
             }
         }
     }
