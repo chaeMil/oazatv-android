@@ -128,6 +128,7 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
                         }
                     }
                 }
+                adapter.notifyDataSetChanged();
                 hideProgress();
                 swipeRefresh.setRefreshing(false);
                 break;

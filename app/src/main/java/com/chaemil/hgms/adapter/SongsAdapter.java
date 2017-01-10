@@ -56,21 +56,25 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
         songViewHolder.mainView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SongFragment songFragment = new SongFragment();
-                Bundle args = new Bundle();
-                args.putInt(SongFragment.SONG_ID, song.getId());
-                songFragment.setArguments(args);
-
-                songsFragment.setSongFragment(songFragment);
-
-                FragmentTransaction transaction = mainActivity.getFragmentManager().beginTransaction();
-                transaction.replace(R.id.song_fragment, songFragment);
-                transaction.addToBackStack(SongFragment.TAG);
-                transaction.commit();
-                mainActivity.songVisible = true;
+                openSong(song);
             }
         });
 
+    }
+
+    private void openSong(Song song) {
+        SongFragment songFragment = new SongFragment();
+        Bundle args = new Bundle();
+        args.putInt(SongFragment.SONG_ID, song.getId());
+        songFragment.setArguments(args);
+
+        songsFragment.setSongFragment(songFragment);
+
+        FragmentTransaction transaction = mainActivity.getFragmentManager().beginTransaction();
+        transaction.replace(R.id.song_fragment, songFragment);
+        transaction.addToBackStack(SongFragment.TAG);
+        transaction.commit();
+        mainActivity.songVisible = true;
     }
 
     @Override
