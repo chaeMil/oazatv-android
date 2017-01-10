@@ -424,7 +424,7 @@ public class MainActivity extends BaseActivity {
         stopAudioPlaybackService();
 
         if (wifi.isConnected()) {
-            playVideo(video, false);
+            playVideo(video, true);
         } else {
             if (sharedPreferences.loadStreamOnWifi()) {
                 SuperToast.create(this,
