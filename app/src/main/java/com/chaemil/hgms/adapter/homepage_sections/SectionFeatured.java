@@ -22,6 +22,7 @@ import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -100,11 +101,9 @@ public class SectionFeatured extends BaseSection {
 
                 setupTime(videoViewHolder, video);
 
-                Ion.with(context)
+                Picasso.with(context)
                         .load(video.getThumbFile())
-                        .withBitmap()
-                        .resize(displayWidth, (int) (displayWidth * 0.5625))
-                        .intoImageView(videoViewHolder.thumb);
+                        .into(videoViewHolder.thumb);
 
                 break;
 

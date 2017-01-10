@@ -20,6 +20,7 @@ import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -84,13 +85,9 @@ public class SectionContinueWatching extends BaseSection {
             videoViewHolder.downloaded.setVisibility(View.GONE);
         }
 
-        int thumbWidth = videoViewHolder.thumb.getWidth();
-
-        Ion.with(context)
+        Picasso.with(context)
                 .load(video.getThumbFile())
-                .withBitmap()
-                .resize(thumbWidth, (int) (thumbWidth * 0.5625))
-                .intoImageView(videoViewHolder.thumb);
+                .into(videoViewHolder.thumb);
 
         setupTime(videoViewHolder, video);
 

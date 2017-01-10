@@ -21,6 +21,7 @@ import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -72,15 +73,9 @@ public class SectionNewAlbums extends BaseSection {
         videoViewHolder.more.setVisibility(View.VISIBLE);
         videoViewHolder.more.setVisibility(View.GONE);
 
-        int thumbWidth = videoViewHolder.thumb.getWidth();
-
-        Ion.with(context)
+        Picasso.with(context)
                 .load(photoalbum.getThumbs().getThumb1024())
-                .withBitmap()
-                .resize(thumbWidth, (int) (thumbWidth * 0.5625))
-                .intoImageView(videoViewHolder.thumb);
-
-
+                .into(videoViewHolder.thumb);
     }
 
     @Override

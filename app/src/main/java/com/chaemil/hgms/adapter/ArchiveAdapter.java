@@ -24,6 +24,7 @@ import com.chaemil.hgms.utils.SmartLog;
 import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,13 +116,9 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
 
                     setupTime(holder, video);
 
-                    int thumbWidth = holder.thumb.getWidth();
-
-                    Ion.with(context)
+                    Picasso.with(context)
                             .load(video.getThumbFile())
-                            .withBitmap()
-                            .resize(thumbWidth, (int) (thumbWidth * 0.5625))
-                            .intoImageView(holder.thumb);
+                            .into(holder.thumb);
 
                     break;
 

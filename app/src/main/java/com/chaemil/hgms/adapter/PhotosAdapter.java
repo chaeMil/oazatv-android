@@ -11,6 +11,7 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.view.SquareImageView;
 import com.koushikdutta.ion.Ion;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -51,9 +52,9 @@ public class PhotosAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Ion.with(activity.getApplicationContext())
+        Picasso.with(activity.getApplicationContext())
                 .load(photos.get(position).getThumb512())
-                .intoImageView(holder.image);
+                .into(holder.image);
 
         return convertView;
     }

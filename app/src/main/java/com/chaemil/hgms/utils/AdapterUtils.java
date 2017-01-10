@@ -21,6 +21,7 @@ import com.novoda.downloadmanager.DownloadManagerBuilder;
 import com.novoda.downloadmanager.lib.DownloadManager;
 import com.novoda.downloadmanager.lib.Request;
 import com.novoda.downloadmanager.notifications.NotificationVisibility;
+import com.squareup.picasso.Picasso;
 
 import mehdi.sakout.fancybuttons.FancyButton;
 import permission.auron.com.marshmallowpermissionhelper.PermissionResult;
@@ -61,7 +62,9 @@ public class AdapterUtils {
             TextView date = (TextView) dialogView.findViewById(R.id.date);
             TextView views = (TextView) dialogView.findViewById(R.id.views);
 
-            Ion.with(context).load(video.getThumbFile()).intoImageView(thumb);
+            Picasso.with(context)
+                    .load(video.getThumbFile())
+                    .into(thumb);
 
             name.setText(video.getName());
             date.setText(StringUtils.formatDate(video.getDate(), context));
