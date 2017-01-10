@@ -1,10 +1,7 @@
 package com.chaemil.hgms.fragment;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -26,18 +23,14 @@ import com.chaemil.hgms.adapter.homepage_sections.SectionFeatured;
 import com.chaemil.hgms.adapter.homepage_sections.SectionNewAlbums;
 import com.chaemil.hgms.adapter.homepage_sections.SectionNewVideos;
 import com.chaemil.hgms.adapter.homepage_sections.SectionPopularVideos;
-import com.chaemil.hgms.adapter.homepage_sections.SectionWebView;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.factory.ResponseFactory;
-import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.Homepage;
-import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
-import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
@@ -46,7 +39,6 @@ import com.github.johnpersano.supertoasts.SuperToast;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -56,7 +48,7 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapt
 /**
  * Created by chaemil on 2.12.15.
  */
-public class HomeFragment extends BaseFragment implements RequestFactoryListener {
+public class HomeFragment extends BaseFragment implements RequestFactoryListener, SwipeRefreshLayout.OnRefreshListener {
 
     private boolean init = false;
     private int initRetry = 2;
@@ -67,6 +59,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     private SectionedRecyclerViewAdapter adapter;
     private MainActivity mainActivity;
     private int firstVisiblePosition = 0;
+    private SwipeRefreshLayout swipeRefresh;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -191,7 +184,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
                 setupSections();
                 setupGridManager();
                 homepageList.setAdapter(adapter);
-
+                swipeRefresh.setOnRefreshListener(this);
             }
 
             adjustLayout();
@@ -208,6 +201,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     private void getUI(ViewGroup rootView) {
         homepageList = (RecyclerView) rootView.findViewById(R.id.home_list);
         progress = (RelativeLayout) rootView.findViewById(R.id.progress);
+        swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
     }
 
     public void adjustLayout() {
@@ -228,6 +222,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
                 init = true;
                 initRetry = 2;
                 setupUI();
+                swipeRefresh.setRefreshing(false);
 
                 break;
 
@@ -238,6 +233,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     public void onErrorResponse(VolleyError exception, RequestType requestType) {
         super.onErrorResponse(exception, requestType);
 
+        swipeRefresh.setRefreshing(false);
         hideProgress(500);
 
         if (!init) {
@@ -263,5 +259,13 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
             adapter.removeSection(SectionContinueWatching.TAG);
         }
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRefresh() {
+        if (NetworkUtils.isConnected(mainActivity)) {
+            adapter.removeAllSections();
+            getData();
+        }
     }
 }

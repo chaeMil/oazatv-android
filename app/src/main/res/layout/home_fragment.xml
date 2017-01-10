@@ -4,9 +4,10 @@
     android:background="@color/fragment_bg"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.CoordinatorLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.RecyclerView
             android:scrollbars="vertical"
@@ -15,7 +16,7 @@
             android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>
 
-    </android.support.design.widget.CoordinatorLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <RelativeLayout
         android:id="@+id/progress"

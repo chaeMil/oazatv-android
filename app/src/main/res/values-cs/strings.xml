@@ -81,5 +81,5 @@
     <string name="permission_revoked_phone_state">Aplikace již nebude mít možnost pozastavit přehrávaní při příchozím hovoru</string>
     <string name="update_app">Aktualizovat aplikaci</string>
     <string name="error_when_playing_video">Vyskytla se chyba při přehrávání videa</string>
-    <string name="hide_this_video">Skrýt toto video</string>
+    <string name="hide_this_video">Skrýt video</string>
 </resources>
