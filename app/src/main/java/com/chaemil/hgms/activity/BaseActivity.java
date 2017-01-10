@@ -220,7 +220,7 @@ public class BaseActivity extends ActivityManagePermission implements RequestFac
 
         request = new DownloadManager.Request(Uri.parse(photo.getThumb2048()));
         request.setDescription(getString(R.string.downloading_photo));
-        if (!photo.getDescription().equals("")) {
+        if (photo.getDescription() != null && !photo.getDescription().equals("")) {
             request.setTitle(photo.getDescription());
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

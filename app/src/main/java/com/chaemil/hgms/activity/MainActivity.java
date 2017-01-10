@@ -72,8 +72,7 @@ import permission.auron.com.marshmallowpermissionhelper.PermissionUtils;
 /**
  * Created by chaemil on 2.12.15.
  */
-public class MainActivity extends BaseActivity
-{
+public class MainActivity extends BaseActivity {
 
     public static final String EXPAND_PANEL = "expand_panel";
     private VideoPlayerFragment videoPlayerFragment;
