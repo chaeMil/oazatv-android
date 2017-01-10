@@ -79,7 +79,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
             GAUtils.sendGAScreen(
                     ((OazaApp) getActivity().getApplication()),
                     "Photoalbum",
-                    album.getNameCS());
+                    album.getName());
         }
     }
 

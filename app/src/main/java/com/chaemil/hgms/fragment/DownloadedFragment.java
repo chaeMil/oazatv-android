@@ -53,16 +53,6 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.DOWNLOADED_FRAGMENT);
-
-        GAUtils.sendGAScreen(
-                (OazaApp) getActivity().getApplication(),
-                "Downloaded");
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         getActivity().getContentResolver()

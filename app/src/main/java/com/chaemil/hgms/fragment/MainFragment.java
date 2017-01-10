@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.MainFragmentsAdapter;
@@ -32,8 +33,10 @@ import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.Constants;
+import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
@@ -271,29 +274,54 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                 settingsFab.hide(true);
                 searchFab.show(true);
                 hideSettings();
+
+                AnalyticsService.getInstance().setPage(AnalyticsService.Pages.HOME_FRAGMENT);
+                GAUtils.sendGAScreen(
+                        ((OazaApp) getActivity().getApplication()),
+                        "Home");
                 break;
             case 1:
                 tabLayout.getTabAt(1).setIcon(R.drawable.ic_categories_white);
                 settingsFab.hide(true);
                 searchFab.show(true);
                 hideSettings();
+
+                AnalyticsService.getInstance().setPage(AnalyticsService.Pages.CATEGORIES_FRAGMENT);
+                GAUtils.sendGAScreen(
+                        ((OazaApp) getActivity().getApplication()),
+                        "Categories");
                 break;
             case 2:
                 tabLayout.getTabAt(2).setIcon(R.drawable.ic_view_list_white);
                 settingsFab.hide(true);
                 searchFab.show(true);
                 hideSettings();
+
+                AnalyticsService.getInstance().setPage(AnalyticsService.Pages.ARCHIVE_FRAGMENT);
+                GAUtils.sendGAScreen(
+                        ((OazaApp) getActivity().getApplication()),
+                        "Archive");
                 break;
             case 3:
                 tabLayout.getTabAt(3).setIcon(R.drawable.ic_songs_white);
                 settingsFab.hide(true);
                 searchFab.hide(true);
                 hideSettings();
+
+                AnalyticsService.getInstance().setPage(AnalyticsService.Pages.SONGS_FRAGMENT);
+                GAUtils.sendGAScreen(
+                        ((OazaApp) getActivity().getApplication()),
+                        "Songs");
                 break;
             case 4:
                 tabLayout.getTabAt(4).setIcon(R.drawable.ic_downloaded_white);
                 settingsFab.show(true);
                 searchFab.hide(true);
+
+                AnalyticsService.getInstance().setPage(AnalyticsService.Pages.DOWNLOADED_FRAGMENT);
+                GAUtils.sendGAScreen(
+                        (OazaApp) getActivity().getApplication(),
+                        "Downloaded");
                 break;
         }
     }

@@ -90,16 +90,6 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
         fastScroller.setRecyclerView(songsList);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.SONGS_FRAGMENT);
-
-        GAUtils.sendGAScreen(
-                ((OazaApp) getActivity().getApplication()),
-                "Songs");
-    }
-
     private void getUI(ViewGroup rootView) {
         songsList = (RecyclerView) rootView.findViewById(R.id.grid_view);
         progress = (RelativeLayout) rootView.findViewById(R.id.progress);

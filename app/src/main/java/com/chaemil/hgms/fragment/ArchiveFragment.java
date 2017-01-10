@@ -60,16 +60,6 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.ARCHIVE_FRAGMENT);
-
-        GAUtils.sendGAScreen(
-                ((OazaApp) getActivity().getApplication()),
-                "Archive");
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.archive_fragment, container, false);

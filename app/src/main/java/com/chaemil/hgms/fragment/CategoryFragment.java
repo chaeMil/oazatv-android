@@ -87,18 +87,6 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.CATEGORY_FRAGMENT);
-
-        GAUtils.sendGAScreen(
-                ((OazaApp) getActivity().getApplication()),
-                "Category");
-    }
-
-
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.category_fragment, container, false);

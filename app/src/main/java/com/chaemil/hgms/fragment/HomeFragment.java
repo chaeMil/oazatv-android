@@ -75,17 +75,6 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        AnalyticsService.getInstance().setPage(AnalyticsService.Pages.HOME_FRAGMENT);
-
-        GAUtils.sendGAScreen(
-                ((OazaApp) getActivity().getApplication()),
-                "Home");
-    }
-
     private void getLocalData() {
         videosToContinueWatching.clear();
 

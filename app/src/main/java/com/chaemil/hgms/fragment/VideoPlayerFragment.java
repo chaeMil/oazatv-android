@@ -119,12 +119,19 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         } else {
             if (currentVideo != null) {
                 player.seekTo(currentVideo.getCurrentTime());
+
+                AnalyticsService.getInstance()
+                        .setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT + "audioHash: "
+                                + currentVideo.getHash());
+                GAUtils.sendGAScreen(
+                        ((OazaApp) getActivity().getApplication()),
+                        "VideoPlayer",
+                        currentVideo.getName());
             }
 
             player.showControls();
 
             miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
-            AnalyticsService.getInstance().setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT);
 
             setupTimer();
         }

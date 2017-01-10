@@ -55,15 +55,6 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
         return rootView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        GAUtils.sendGAScreen(
-                ((OazaApp) getActivity().getApplication()),
-                "Categories");
-    }
-
     private void getData() {
         JsonObjectRequest request = RequestFactory.getCategories(this, false, 0, 0, 0);
         RequestService.getRequestQueue().add(request);
