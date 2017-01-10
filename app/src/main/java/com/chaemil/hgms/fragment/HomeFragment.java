@@ -211,18 +211,24 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
     }
 
     @Override
-    public void onSuccessResponse(JSONObject response, RequestType requestType) {
+    public void onSuccessResponse(final JSONObject response, RequestType requestType) {
         super.onSuccessResponse(response, requestType);
 
         switch (requestType) {
             case GET_HOMEPAGE:
 
                 hideProgress(500);
+                swipeRefresh.setRefreshing(false);
                 homepage = ResponseFactory.parseHomepage(response);
                 init = true;
                 initRetry = 2;
-                setupUI();
-                swipeRefresh.setRefreshing(false);
+
+                delay(new Runnable() {
+                    @Override
+                    public void run() {
+                        setupUI();
+                    }
+                }, 500);
 
                 break;
 
