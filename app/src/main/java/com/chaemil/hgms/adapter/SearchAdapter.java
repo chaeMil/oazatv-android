@@ -18,9 +18,6 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.StringUtils;
 import com.koushikdutta.ion.Ion;
-import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -87,9 +84,9 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
                         AdapterUtils.contextDialog(context, mainActivity, video, false);
                     }
                 });
-                Picasso.with(context)
+                Ion.with(context)
                         .load(video.getThumbFile())
-                        .into(holder.thumb);
+                        .intoImageView(holder.thumb);
                 break;
 
             case ArchiveItem.Type.ALBUM:

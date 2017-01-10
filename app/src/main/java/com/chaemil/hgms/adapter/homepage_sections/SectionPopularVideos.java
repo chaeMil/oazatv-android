@@ -2,31 +2,19 @@ package com.chaemil.hgms.adapter.homepage_sections;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.holder.VideoViewHolder;
-import com.chaemil.hgms.model.ArchiveItem;
-import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.StringUtils;
-import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 
 /**
  * Created by chaemil on 27.8.16.
@@ -96,9 +84,11 @@ public class SectionPopularVideos extends BaseSection {
 
         setupTime(videoViewHolder, video);
 
-        Picasso.with(context)
+        Ion.with(context)
                 .load(video.getThumbFile())
-                .into(videoViewHolder.thumb);
+                .withBitmap()
+                .resize(displayWidth, (int) (displayWidth * 0.5625))
+                .intoImageView(videoViewHolder.thumb);
     }
 
     @Override

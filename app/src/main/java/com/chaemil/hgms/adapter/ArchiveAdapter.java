@@ -2,13 +2,11 @@ package com.chaemil.hgms.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -20,14 +18,11 @@ import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
-import com.chaemil.hgms.utils.SmartLog;
 import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
 import com.koushikdutta.ion.Ion;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by chaemil on 20.12.15.
@@ -116,9 +111,13 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
 
                     setupTime(holder, video);
 
-                    Picasso.with(context)
+                    int thumbWidth = holder.thumb.getWidth();
+
+                    Ion.with(context)
                             .load(video.getThumbFile())
-                            .into(holder.thumb);
+                            .withBitmap()
+                            .resize(thumbWidth, (int) (thumbWidth * 0.5625))
+                            .intoImageView(holder.thumb);
 
                     break;
 

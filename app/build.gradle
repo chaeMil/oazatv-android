@@ -26,8 +26,8 @@ android {
         applicationId "com.chaemil.hgms"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 2017011001
-        versionName "2.5.3"
+        versionCode 2017011101
+        versionName "2.5.4"
 
         multiDexEnabled true
         renderscriptTargetApi 18
@@ -89,7 +89,6 @@ dependencies {
     compile 'com.afollestad:easyvideoplayer:0.3.0'
     compile 'com.futuremind.recyclerfastscroll:fastscroll:0.2.4'
     compile 'com.github.medyo:fancybuttons:1.8.3'
-    compile 'com.squareup.picasso:picasso:2.5.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

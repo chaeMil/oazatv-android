@@ -35,7 +35,6 @@ import com.koushikdutta.ion.Ion;
 import com.novoda.downloadmanager.DownloadManagerBuilder;
 import com.novoda.downloadmanager.lib.DownloadManager;
 import com.novoda.downloadmanager.lib.Query;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,9 +159,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         break;
                 }
 
-                Picasso.with(context)
+                Ion.with(context)
                         .load(video.getThumbFile())
-                        .into(downloadItemHolder.thumb);
+                        .intoImageView(downloadItemHolder.thumb);
 
                 downloadItemHolder.root.setOnClickListener(new View.OnClickListener() {
                     @Override
