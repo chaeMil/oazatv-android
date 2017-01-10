@@ -99,15 +99,9 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
         List<Video> notFullyWatchedVideos = Video.getNotFullyWatchedVideos(true);
         Set<String> hiddenVideos = SharedPrefUtils.getInstance(mainActivity).getHiddenVideos();
 
-        List<Video> filteredVideos = new ArrayList<>();
-        for (Video video : notFullyWatchedVideos) {
-            if (!hiddenVideos.contains(video.getHash())) {
-                filteredVideos.add(video);
-            }
-        }
-        for (int i = 0; i < filteredVideos.size() && i < 8; i++) {
-            Video video = filteredVideos.get(i);
-            if (video.getCurrentTime() / 1000 > 30 ) { //more than 30 seconds watched
+        for (int i = 0; i < notFullyWatchedVideos.size() && i < 8; i++) {
+            Video video = notFullyWatchedVideos.get(i);
+            if (video.getCurrentTime() / 1000 > 30 && !hiddenVideos.contains(video.getHash())) { //more than 30 seconds watched
                 videosToContinueWatching.add(video);
             }
         }
