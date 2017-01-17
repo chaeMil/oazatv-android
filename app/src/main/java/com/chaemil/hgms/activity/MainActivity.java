@@ -273,9 +273,10 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         ((OazaApp) getApplication()).setMainActivity(null);
         unregisterReceiver(networkStateReceiver);
+        exit();
+        super.onDestroy();
     }
 
     public void bringToFront() {
@@ -659,6 +660,15 @@ public class MainActivity extends BaseActivity {
                 break;
         }
 
+        exit();
+    }
+
+    private void exit() {
+        audioPlayerFragment = null;
+        videoPlayerFragment = null;
+        archiveFragment = null;
+        downloadedFragment = null;
+        categoriesFragment = null;
         finish();
     }
 

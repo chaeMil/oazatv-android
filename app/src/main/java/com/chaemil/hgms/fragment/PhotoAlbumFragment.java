@@ -61,6 +61,12 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     }
 
     @Override
+    public void onDestroy() {
+        mainActivity = null;
+        super.onDestroy();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "PhotoAlbumFragment", "onCreateView");
 

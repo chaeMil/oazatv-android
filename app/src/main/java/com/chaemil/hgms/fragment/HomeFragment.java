@@ -75,6 +75,12 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
     }
 
+    @Override
+    public void onDestroy() {
+        mainActivity = null;
+        super.onDestroy();
+    }
+
     private void getLocalData() {
         videosToContinueWatching.clear();
 

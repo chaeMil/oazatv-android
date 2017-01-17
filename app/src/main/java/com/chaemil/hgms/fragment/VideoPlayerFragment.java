@@ -176,6 +176,12 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     @Override
+    public void onDestroy() {
+        mainActivity = null;
+        super.onDestroy();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.video_player_fragment, container, false);

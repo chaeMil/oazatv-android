@@ -87,6 +87,12 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
     @Override
+    public void onDestroy() {
+        mainActivity = null;
+        super.onDestroy();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.category_fragment, container, false);
