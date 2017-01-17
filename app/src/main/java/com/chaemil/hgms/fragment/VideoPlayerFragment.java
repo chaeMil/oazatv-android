@@ -1,9 +1,12 @@
 package com.chaemil.hgms.fragment;
 
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatDelegate;
+import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +33,10 @@ import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.OSUtils;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SmartLog;
+import com.chaemil.hgms.utils.subtitles.Caption;
+import com.chaemil.hgms.utils.subtitles.FormatASS;
+import com.chaemil.hgms.utils.subtitles.FormatSRT;
+import com.chaemil.hgms.utils.subtitles.TimedTextObject;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
@@ -38,6 +45,13 @@ import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Collection;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -81,6 +95,29 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private SpinKitView buffering;
     private RelativeLayout toolbarsWrapper;
     private boolean qualityToggle = false;
+    private TextView subtitles;
+    private TimedTextObject srt;
+    private Handler subtitleDisplayHandler = new Handler();
+
+    private Runnable subtitleProcessor = new Runnable() {
+        @Override
+        public void run() {
+            if (player != null && player.isPlaying()) {
+                int currentPos = player.getCurrentPosition();
+                Collection<Caption> subtitles = srt.captions.values();
+                for (Caption caption : subtitles) {
+                    if (currentPos >= caption.start.mseconds
+                            && currentPos <= caption.end.mseconds) {
+                        onTimedText(caption);
+                        break;
+                    } else if (currentPos > caption.end.mseconds) {
+                        onTimedText(null);
+                    }
+                }
+            }
+            subtitleDisplayHandler.postDelayed(this, 100);
+        }
+    };
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -220,6 +257,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         player = (EasyVideoPlayer) rootView.findViewById(R.id.player);
         buffering = (SpinKitView) rootView.findViewById(R.id.buffering);
         toolbarsWrapper = (RelativeLayout) rootView.findViewById(R.id.toolbars_wrapper);
+        subtitles = (TextView) rootView.findViewById(R.id.subtitles);
     }
 
     private void setupUI() {
@@ -629,6 +667,73 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             qualityToggle = false;
             player.enableControls(true);
         }
+
+        if (currentVideo.getSubtitlesFile() != null) {
+            setupSubtitles();
+        }
+    }
+
+    private void setupSubtitles() {
+        new AsyncTask<Void, Void, Void>() {
+            protected Void doInBackground(Void... unused) {
+                try {
+                    downloadSubtitlesFile();
+                    //InputStream stream = getResources().openRawResource(R.raw.subtitles);
+                    InputStream stream = new FileInputStream(getExternalFile());
+                    FormatASS formatASS = new FormatASS();
+                    srt = formatASS.parseFile("subtitles.ass", stream);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "error in downloading subs");
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                if (null != srt) {
+                    subtitles.setText("");
+                    subtitleDisplayHandler.post(subtitleProcessor);
+                }
+                super.onPostExecute(result);
+            }
+        }.execute();
+    }
+
+    private void downloadSubtitlesFile() throws IOException {
+        int count;
+        URL url = new URL(currentVideo.getSubtitlesFile());
+        InputStream is = url.openStream();
+        File f = getExternalFile();
+        FileOutputStream fos = new FileOutputStream(f);
+        byte data[] = new byte[1024];
+        while ((count = is.read(data)) != -1) {
+            fos.write(data, 0, count);
+        }
+        is.close();
+        fos.close();
+    }
+
+    public File getExternalFile() {
+        File srt = null;
+        try {
+            srt = new File(getActivity().getExternalCacheDir().getPath()
+                    + "/" + currentVideo.getHash() + ".srt");
+            srt.createNewFile();
+            return srt;
+        } catch (Exception e) {
+            Log.e(TAG, "exception in file creation");
+        }
+        return null;
+    }
+
+    public void onTimedText(Caption text) {
+        if (text == null) {
+            subtitles.setVisibility(View.INVISIBLE);
+            return;
+        }
+        subtitles.setText(Html.fromHtml(text.content));
+        subtitles.setVisibility(View.VISIBLE);
     }
 
     @Override

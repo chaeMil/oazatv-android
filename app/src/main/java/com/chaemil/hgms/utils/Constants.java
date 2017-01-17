@@ -72,6 +72,7 @@ public class Constants {
     public static final String JSON_MP3_FILE = "mp3_file";
     public static final String THUMB_FILE = "thumb_file";
     public static final String THUMB_FILE_LOW_RES = "thumb_file_lowres";
+    public static final String SUBTITLES_FILE = "subtitles_file";
     public static final String THUMB_COLOR = "thumb_color";
     public static final String JSON_VIEWS = "views";
     public static final String JSON_CATEGORIES = "categories";

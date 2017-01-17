@@ -6,9 +6,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.chaemil.hgms.utils.Constants;
-import com.chaemil.hgms.utils.SmartLog;
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.novoda.downloadmanager.DownloadManagerBuilder;
@@ -17,7 +14,6 @@ import com.novoda.downloadmanager.lib.Query;
 import com.orm.SugarRecord;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -61,6 +57,9 @@ public class Video extends SugarRecord implements Parcelable {
     @SerializedName(Constants.THUMB_COLOR)
     private String thumbColor;
     @Expose
+    @SerializedName(Constants.SUBTITLES_FILE)
+    private String subtitlesFile;
+    @Expose
     @SerializedName(Constants.METADATA_DURATION)
     private int duration;
     @Expose
@@ -80,7 +79,8 @@ public class Video extends SugarRecord implements Parcelable {
 
     public Video(int id, String hash, String date, String nameCS,
                  String nameEN, String tags, String videoFileLowRes, String videoFile, String audioFile,
-                 String thumbFile, String thumbFileLowRes, String thumbColor, int duration,
+                 String thumbFile, String thumbFileLowRes, String thumbColor, String subtitlesFile,
+                 int duration,
                  int views, String categories,
                  String descriptionCS, String descriptionEN) {
         this.serverId = id;
@@ -93,6 +93,7 @@ public class Video extends SugarRecord implements Parcelable {
         this.videoFile = videoFile;
         this.audioFile = audioFile;
         this.thumbFile = thumbFile;
+        this.subtitlesFile = subtitlesFile;
         this.thumbFileLowRes = thumbFileLowRes;
         this.thumbColor = thumbColor;
         this.duration = duration;
@@ -278,6 +279,14 @@ public class Video extends SugarRecord implements Parcelable {
 
     public void setThumbFileLowRes(String thumbFileLowRes) {
         this.thumbFileLowRes = thumbFileLowRes;
+    }
+
+    public String getSubtitlesFile() {
+        return subtitlesFile;
+    }
+
+    public void setSubtitlesFile(String subtitlesFile) {
+        this.subtitlesFile = subtitlesFile;
     }
 
     public int getDuration() {

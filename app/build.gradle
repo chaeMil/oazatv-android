@@ -26,8 +26,8 @@ android {
         applicationId "com.chaemil.hgms"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 2017011101
-        versionName "2.5.4"
+        versionCode 2017011701
+        versionName "2.6d"
 
         multiDexEnabled true
         renderscriptTargetApi 18
