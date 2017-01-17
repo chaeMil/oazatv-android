@@ -664,11 +664,25 @@ public class MainActivity extends BaseActivity {
     }
 
     private void exit() {
-        audioPlayerFragment = null;
-        videoPlayerFragment = null;
-        archiveFragment = null;
-        downloadedFragment = null;
-        categoriesFragment = null;
+        if (audioPlayerFragment != null) {
+            audioPlayerFragment.exit();
+        }
+        if (videoPlayerFragment != null) {
+            videoPlayerFragment.exit();
+        }
+        if (songsFragment != null) {
+            songsFragment.exit();
+        }
+        if (photoAlbumFragment != null) {
+            photoAlbumFragment.exit();
+        }
+        if (homeFragment != null) {
+            homeFragment.exit();
+        }
+        if (categoriesFragment != null) {
+            categoriesFragment.exit();
+        }
+        System.gc();
         finish();
     }
 

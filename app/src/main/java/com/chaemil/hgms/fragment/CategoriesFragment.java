@@ -55,6 +55,11 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
         return rootView;
     }
 
+    public void exit() {
+        categoryFragment.exit();
+        categoryFragment = null;
+    }
+
     private void getData() {
         JsonObjectRequest request = RequestFactory.getCategories(this, false, 0, 0, 0);
         RequestService.getRequestQueue().add(request);

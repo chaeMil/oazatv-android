@@ -85,10 +85,8 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         mainActivity = (MainActivity) getActivity();
     }
 
-    @Override
-    public void onDestroy() {
+    public void exit() {
         mainActivity = null;
-        super.onDestroy();
     }
 
     @Override

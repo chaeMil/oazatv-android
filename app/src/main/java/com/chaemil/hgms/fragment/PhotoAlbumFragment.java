@@ -60,10 +60,8 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
         mainActivity = ((MainActivity) getActivity());
     }
 
-    @Override
-    public void onDestroy() {
+    public void exit() {
         mainActivity = null;
-        super.onDestroy();
     }
 
     @Override

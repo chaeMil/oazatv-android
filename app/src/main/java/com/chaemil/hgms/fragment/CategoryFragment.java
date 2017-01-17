@@ -86,10 +86,8 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
         getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
     }
 
-    @Override
-    public void onDestroy() {
+    public void exit() {
         mainActivity = null;
-        super.onDestroy();
     }
 
     @Override

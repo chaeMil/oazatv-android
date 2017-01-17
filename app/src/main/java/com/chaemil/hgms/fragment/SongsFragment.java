@@ -66,10 +66,8 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
         return rootView;
     }
 
-    @Override
-    public void onDestroy() {
+    public void exit() {
         mainActivity = null;
-        super.onDestroy();
     }
 
     private void setupUI() {

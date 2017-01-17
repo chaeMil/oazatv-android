@@ -175,10 +175,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
-    @Override
-    public void onDestroy() {
+    public void exit() {
         mainActivity = null;
-        super.onDestroy();
     }
 
     @Override

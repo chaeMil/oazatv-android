@@ -101,10 +101,8 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
 
     }
 
-    @Override
-    public void onDestroy() {
+    public void exit() {
         context = null;
-        super.onDestroy();
     }
 
     @Override

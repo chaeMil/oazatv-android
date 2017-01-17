@@ -75,10 +75,8 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
     }
 
-    @Override
-    public void onDestroy() {
+    public void exit() {
         mainActivity = null;
-        super.onDestroy();
     }
 
     private void getLocalData() {
