@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatDelegate;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -33,9 +34,9 @@ import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.OSUtils;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SmartLog;
+import com.chaemil.hgms.utils.ViewUtils;
 import com.chaemil.hgms.utils.subtitles.Caption;
 import com.chaemil.hgms.utils.subtitles.FormatASS;
-import com.chaemil.hgms.utils.subtitles.FormatSRT;
 import com.chaemil.hgms.utils.subtitles.TimedTextObject;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -65,7 +66,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     public static final String TAG = "player_fragment";
     private static final String CURRENT_TIME = "current_time";
-    private static final int PERIODICAL_SAVE_TIME = 1000;
+    private static final int PERIODICAL_SAVE_TIME = 10 * 1000;
     private static final String HIGH_QUALITY = "high_quality";
     private RelativeLayout miniPlayer;
     private ImageView miniPlayerImageView;
@@ -98,7 +99,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private TextView subtitles;
     private TimedTextObject srt;
     private Handler subtitleDisplayHandler = new Handler();
-
     private Runnable subtitleProcessor = new Runnable() {
         @Override
         public void run() {
@@ -116,6 +116,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 }
             }
             subtitleDisplayHandler.postDelayed(this, 100);
+            adjustSubtitlesPosition();
         }
     };
 
@@ -541,6 +542,14 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
+    private void adjustSubtitlesPosition() {
+        if (player.isControlsShown()) {
+            ViewUtils.setMargins(getActivity(), subtitles, 0, 0, 0, 120);
+        } else {
+            ViewUtils.setMargins(getActivity(), subtitles, 0, 0, 0, 0);
+        }
+    }
+
     private void periodicalSaveTime() {
         delay(new Runnable() {
             @Override
@@ -635,6 +644,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     public void onStarted(EasyVideoPlayer player) {
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onStarted");
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause_dark));
+        adjustSubtitlesPosition();
     }
 
     @Override
@@ -642,6 +652,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onPaused");
         saveCurrentVideoTime();
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
+        adjustSubtitlesPosition();
     }
 
     @Override
@@ -678,7 +689,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             protected Void doInBackground(Void... unused) {
                 try {
                     downloadSubtitlesFile();
-                    //InputStream stream = getResources().openRawResource(R.raw.subtitles);
                     InputStream stream = new FileInputStream(getExternalFile());
                     FormatASS formatASS = new FormatASS();
                     srt = formatASS.parseFile("subtitles.ass", stream);

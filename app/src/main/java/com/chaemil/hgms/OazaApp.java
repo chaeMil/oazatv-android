@@ -22,7 +22,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  */
 public class OazaApp extends SugarApp {
 
-    public static final boolean DEVELOPMENT = true;
+    public static final boolean DEVELOPMENT = BuildConfig.DEBUG;
     public static final boolean TRACKER = true;
 
     private MainActivity mainActivity;
