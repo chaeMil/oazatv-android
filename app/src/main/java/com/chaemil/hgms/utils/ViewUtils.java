@@ -13,11 +13,13 @@ public class ViewUtils {
     public static void setMargins (Context c, View v, int l, int t, int r, int b) {
         if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            p.setMargins((int) DimensUtils.pxFromDp(c, l),
-                    (int) DimensUtils.pxFromDp(c, t),
-                    (int) DimensUtils.pxFromDp(c, r),
-                    (int) DimensUtils.pxFromDp(c, b));
-            v.requestLayout();
+            if (p != null) {
+                p.setMargins((int) DimensUtils.pxFromDp(c, l),
+                        (int) DimensUtils.pxFromDp(c, t),
+                        (int) DimensUtils.pxFromDp(c, r),
+                        (int) DimensUtils.pxFromDp(c, b));
+                v.requestLayout();
+            }
         }
     }
 }

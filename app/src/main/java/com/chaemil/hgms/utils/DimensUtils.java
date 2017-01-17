@@ -12,11 +12,19 @@ import android.widget.TextView;
 
 public class DimensUtils {
     public static float dpFromPx(final Context context, final float px) {
-        return px / context.getResources().getDisplayMetrics().density;
+        if (context != null) {
+            return px / context.getResources().getDisplayMetrics().density;
+        } else {
+            return 0;
+        }
     }
 
     public static float pxFromDp(final Context context, final float dp) {
-        return dp * context.getResources().getDisplayMetrics().density;
+        if (context != null) {
+            return dp * context.getResources().getDisplayMetrics().density;
+        } else {
+            return 0;
+        }
     }
 
     public static int getDisplayWidth(Activity activity) {

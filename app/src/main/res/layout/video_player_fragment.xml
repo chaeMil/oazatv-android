@@ -49,20 +49,31 @@
                 android:layout_centerVertical="true"
                 android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/subtitles"
+            <RelativeLayout
+                android:id="@+id/subtitles_wrapper"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
-                android:padding="12dp"
-                android:textSize="24sp"
-                android:textColor="@color/white"
-                android:shadowColor="#000000"
-                android:shadowDx="1.5"
-                android:shadowDy="1.3"
-                android:shadowRadius="1.6"
                 android:layout_width="match_parent"
-                android:textAlignment="center"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/subtitles"
+                    android:layout_centerHorizontal="true"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:textSize="24sp"
+                    android:textColor="@color/white"
+                    android:shadowColor="@color/black"
+                    android:shadowDx="1.5"
+                    android:shadowDy="1.3"
+                    android:shadowRadius="1.6"
+                    android:layout_width="wrap_content"
+                    android:background="@color/transparent_black"
+                    android:textAlignment="center"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
 
         </RelativeLayout>
 

@@ -546,7 +546,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         if (player.isControlsShown()) {
             ViewUtils.setMargins(getActivity(), subtitles, 0, 0, 0, 120);
         } else {
-            ViewUtils.setMargins(getActivity(), subtitles, 0, 0, 0, 0);
+            ViewUtils.setMargins(getActivity(), subtitles, 0, 0, 0, 8);
         }
     }
 
