@@ -62,7 +62,7 @@ public class AdapterUtils {
             TextView views = (TextView) dialogView.findViewById(R.id.views);
             TextView cc = (TextView) dialog.findViewById(R.id.cc);
             TextView language = (TextView) dialog.findViewById(R.id.language);
-            TextView time = (TextView) dialog.findViewById(R.id.time);
+            TextView time = (TextView) dialog.findViewById(R.id.video_time);
             ProgressBar viewProgress = (ProgressBar) dialog.findViewById(R.id.view_progress);
 
             Ion.with(context).load(video.getThumbFile()).intoImageView(thumb);
