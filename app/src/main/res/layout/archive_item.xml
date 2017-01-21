@@ -54,7 +54,40 @@
                 android:textSize="10sp"
                 android:layout_alignRight="@+id/thumb"
                 android:layout_alignBottom="@+id/thumb"
-                android:layout_marginBottom="4dp" />
+                android:layout_marginBottom="4dp"
+                android:layout_marginRight="4dp"/>
+
+            <TextView
+                android:id="@+id/cc"
+                android:textColor="@color/white"
+                android:background="@color/transparent_black"
+                android:padding="2dp"
+                android:text="CC"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignBottom="@+id/thumb"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="4dp"/>
+
+            <TextView
+                android:id="@+id/language"
+                android:textColor="@color/white"
+                android:background="@color/transparent_black"
+                android:padding="2dp"
+                tools:text="česky"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:layout_toRightOf="@+id/cc"
+                android:layout_alignBottom="@+id/thumb"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="4dp"/>
 
         </RelativeLayout>
 
@@ -72,8 +105,7 @@
             android:layout_alignStart="@+id/date"
             android:layout_marginTop="5dp"
             android:layout_toLeftOf="@+id/context_menu"
-            android:layout_toStartOf="@+id/context_menu"
-            tools:ignore="MissingPrefix" />
+            android:layout_toStartOf="@+id/context_menu" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -117,7 +149,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_alignBottom="@+id/thumb_wrapper"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
     </RelativeLayout>
 

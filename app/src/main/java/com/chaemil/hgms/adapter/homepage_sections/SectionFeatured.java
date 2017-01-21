@@ -30,7 +30,7 @@ public class SectionFeatured extends BaseSection {
     public SectionFeatured(Context context, MainActivity mainActivity, ArrayList<ArchiveItem> archive) {
         super(R.layout.homepage_section_header,
                 R.layout.homepage_section_footer,
-                R.layout.featured_item);
+                R.layout.archive_item_big);
         this.context = context;
         this.mainActivity = mainActivity;
         this.archive = archive;
@@ -76,6 +76,9 @@ public class SectionFeatured extends BaseSection {
                 });
                 videoViewHolder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
                 videoViewHolder.time.setText(StringUtils.getDurationString(video.getDuration()));
+                videoViewHolder.cc.setVisibility(video.getSubtitlesFile() != null ? View.VISIBLE : View.GONE);
+                videoViewHolder.language.setVisibility(video.getVideoLanguage(context) != null ? View.VISIBLE : View.GONE);
+                videoViewHolder.language.setText(video.getVideoLanguage(context));
                 if (video.isAudioDownloaded(context)) {
                     videoViewHolder.downloaded.setVisibility(View.VISIBLE);
                     videoViewHolder.downloaded.setOnClickListener(new View.OnClickListener() {

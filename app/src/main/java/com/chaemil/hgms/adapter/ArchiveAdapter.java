@@ -97,6 +97,9 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                     });
                     holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
                     holder.time.setText(StringUtils.getDurationString(video.getDuration()));
+                    holder.cc.setVisibility(video.getSubtitlesFile() != null ? View.VISIBLE : View.GONE);
+                    holder.language.setVisibility(video.getVideoLanguage(context) != null ? View.VISIBLE : View.GONE);
+                    holder.language.setText(video.getVideoLanguage(context));
                     if (video.isAudioDownloaded(context)) {
                         holder.downloaded.setVisibility(View.VISIBLE);
                         holder.downloaded.setOnClickListener(new View.OnClickListener() {
@@ -208,6 +211,8 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
         public ImageButton more;
         public ProgressBar viewProgress;
         public TextView time;
+        public TextView cc;
+        public TextView language;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -220,6 +225,8 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
             this.viewProgress = (ProgressBar) itemView.findViewById(R.id.view_progress);
             this.time = (TextView) itemView.findViewById(R.id.video_time);
             this.downloaded = (ImageButton) itemView.findViewById(R.id.downloaded);
+            this.cc = (TextView) itemView.findViewById(R.id.cc);
+            this.language = (TextView) itemView.findViewById(R.id.language);
         }
     }
 

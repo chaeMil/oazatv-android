@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.chaemil.hgms.R;
 import com.chaemil.hgms.utils.Constants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -151,6 +152,21 @@ public class Video extends SugarRecord implements Parcelable {
         audio.delete();
         thumb.delete();
         save();
+    }
+
+    public String getVideoLanguage(Context context) {
+        boolean czech = false;
+        boolean english = false;
+        czech = tags.contains("czech") || tags.contains("cesky");
+        english = tags.contains("english") || tags.contains("anglicky");
+
+        if (czech && !english) {
+            return context.getString(R.string.czech);
+        } else if (english && !czech) {
+            return context.getString(R.string.english);
+        } else {
+            return null;
+        }
     }
 
     public String getDescription() {

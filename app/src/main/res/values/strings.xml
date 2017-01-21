@@ -86,4 +86,6 @@
     <string name="error_when_playing_video">An error occured when playing video</string>
     <string name="hide_this_video">Hide video</string>
     <string name="problem_occured_when_playing_video">An error occured when trying to play video</string>
+    <string name="czech">czech</string>
+    <string name="english">english</string>
 </resources>

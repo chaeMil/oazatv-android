@@ -70,6 +70,9 @@ public class SectionPopularVideos extends BaseSection {
         });
         videoViewHolder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
         videoViewHolder.time.setText(StringUtils.getDurationString(video.getDuration()));
+        videoViewHolder.cc.setVisibility(video.getSubtitlesFile() != null ? View.VISIBLE : View.GONE);
+        videoViewHolder.language.setVisibility(video.getVideoLanguage(context) != null ? View.VISIBLE : View.GONE);
+        videoViewHolder.language.setText(video.getVideoLanguage(context));
         if (video.isAudioDownloaded(context)) {
             videoViewHolder.downloaded.setVisibility(View.VISIBLE);
             videoViewHolder.downloaded.setOnClickListener(new View.OnClickListener() {
