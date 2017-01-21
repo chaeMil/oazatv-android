@@ -14,7 +14,6 @@
     <string name="tutorial">Tutorial</string>
     <string name="views">views</string>
     <string name="downloaded">Downloaded</string>
-    <string name="resuming_from_saved_time">Resuming from saved time</string>
     <string name="cannot_play_audio_file">Can\'t play audio file</string>
     <string name="audio_focus_not_granted" translatable="false">ERROR: Audio focus not granted!</string>
     <string name="play">play</string>

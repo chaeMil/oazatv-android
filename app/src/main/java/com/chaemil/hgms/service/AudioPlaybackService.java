@@ -331,10 +331,6 @@ public class AudioPlaybackService extends Service implements
 
         if (savedAudio != null) {
             this.currentAudio = savedAudio;
-
-            SuperToast.create(getApplication(),
-                    getString(R.string.resuming_from_saved_time),
-                    SuperToast.Duration.SHORT).show();
         }
 
         try {

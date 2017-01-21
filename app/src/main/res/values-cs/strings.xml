@@ -12,7 +12,6 @@
     <string name="tutorial">Úvod</string>
     <string name="views">zhlednutí</string>
     <string name="downloaded">Staženo</string>
-    <string name="resuming_from_saved_time">Pokračuje se od uloženého času</string>
     <string name="cannot_play_audio_file">Audio soubor nelze přehrát</string>
     <string name="play">přehrát</string>
     <string name="pause">pauza</string>
