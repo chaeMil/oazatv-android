@@ -334,11 +334,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private void contextDialog(final Video video) {
         MaterialDialog.Builder builder = new MaterialDialog.Builder(context);
 
-        String[] menu = new String[] {context.getString(R.string.delete_downloaded_audio)};
+        String[] menu = new String[] {context.getString(R.string.delete_downloaded_audio).toUpperCase()};
 
         builder.title(video.getName())
                 .items(menu)
                 .theme(Theme.LIGHT)
+                .itemsColor(context.getResources().getColor(R.color.colorPrimary))
                 .itemsCallback(new MaterialDialog.ListCallback() {
             @Override
             public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
@@ -363,6 +364,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 .content(context.getString(R.string.delete_downloaded_audio) + "?")
                 .positiveText(context.getString(R.string.yes))
                 .negativeText(context.getString(R.string.no))
+                .positiveColor(context.getResources().getColor(R.color.colorPrimary))
+                .negativeColor(context.getResources().getColor(R.color.colorPrimary))
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
