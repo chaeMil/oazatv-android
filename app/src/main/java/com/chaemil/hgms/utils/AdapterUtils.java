@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -59,12 +60,23 @@ public class AdapterUtils {
             TextView name = (TextView) dialogView.findViewById(R.id.name);
             TextView date = (TextView) dialogView.findViewById(R.id.date);
             TextView views = (TextView) dialogView.findViewById(R.id.views);
+            TextView cc = (TextView) dialog.findViewById(R.id.cc);
+            TextView language = (TextView) dialog.findViewById(R.id.language);
+            TextView time = (TextView) dialog.findViewById(R.id.time);
+            ProgressBar viewProgress = (ProgressBar) dialog.findViewById(R.id.view_progress);
 
             Ion.with(context).load(video.getThumbFile()).intoImageView(thumb);
 
             name.setText(video.getName());
             date.setText(StringUtils.formatDate(video.getDate(), context));
             views.setText(video.getViews() + " " + context.getString(R.string.views));
+
+            time.setText(StringUtils.getDurationString(video.getDuration()));
+            cc.setVisibility(video.getSubtitlesFile() != null ? View.VISIBLE : View.GONE);
+            language.setVisibility(video.getVideoLanguage(context) != null ? View.VISIBLE : View.GONE);
+            language.setText(video.getVideoLanguage(context));
+            viewProgress.setMax(video.getDuration());
+            viewProgress.setProgress(video.getCurrentTime() / 1000);
 
             downloadAudio.setOnClickListener(new View.OnClickListener() {
                 @Override

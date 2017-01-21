@@ -140,6 +140,8 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                     holder.more.setVisibility(View.GONE);
                     holder.viewProgress.setVisibility(View.GONE);
                     holder.time.setVisibility(View.GONE);
+                    holder.cc.setVisibility(View.GONE);
+                    holder.language.setVisibility(View.GONE);
                     holder.downloaded.setVisibility(View.GONE);
 
                     int thumbWidthAlbum = holder.thumb.getWidth();
