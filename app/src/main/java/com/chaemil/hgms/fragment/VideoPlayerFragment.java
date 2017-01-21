@@ -137,7 +137,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     public void onPause() {
         super.onPause();
 
-        if (OSUtils.isRunningNougat() && mainActivity.isInMultiWindowMode()
+        if (OSUtils.isRunningNougat() && mainActivity != null && mainActivity.isInMultiWindowMode()
                 || OSUtils.isRunningChromeOS(mainActivity)) {
             return;
         } else {
@@ -151,7 +151,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     public void onResume() {
         super.onResume();
 
-        if (OSUtils.isRunningNougat() && mainActivity.isInMultiWindowMode()
+        if (OSUtils.isRunningNougat() && mainActivity != null && mainActivity.isInMultiWindowMode()
                 || OSUtils.isRunningChromeOS(mainActivity)) {
             return;
         } else {
