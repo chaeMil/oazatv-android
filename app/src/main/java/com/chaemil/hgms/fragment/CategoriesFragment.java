@@ -56,8 +56,10 @@ public class CategoriesFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     public void exit() {
-        categoryFragment.exit();
-        categoryFragment = null;
+        if (categoryFragment != null) {
+            categoryFragment.exit();
+            categoryFragment = null;
+        }
     }
 
     private void getData() {

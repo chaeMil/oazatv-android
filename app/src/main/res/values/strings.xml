@@ -85,4 +85,5 @@
     <string name="app_is_outdated_text">Please consider updating the app. Old versions are not supported and may not even work!</string>
     <string name="error_when_playing_video">An error occured when playing video</string>
     <string name="hide_this_video">Hide video</string>
+    <string name="problem_occured_when_playing_video">An error occured when trying to play video</string>
 </resources>

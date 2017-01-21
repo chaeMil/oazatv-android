@@ -6,4 +6,5 @@
     <dimen name="video_player_wrapper_bottom_margin">75dp</dimen>
     <dimen name="appbar_tabs_width">-1dp</dimen>
     <dimen name="song_text_size">12dp</dimen>
+    <dimen name="video_player_controls_height">40dp</dimen>
 </resources>

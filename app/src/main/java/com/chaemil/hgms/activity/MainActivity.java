@@ -53,6 +53,7 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
@@ -60,7 +61,12 @@ import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.Response;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Timer;
@@ -420,24 +426,67 @@ public class MainActivity extends BaseActivity {
         }, 600);
     }
 
-    public void playNewVideo(final Video video) {
+    public void playNewVideo(final Video inputVideo) {
 
-        stopAudioPlaybackService();
+        final int videoId = inputVideo.getServerId();
+        String url = Constants.API_GET_VIDEO + inputVideo.getHash();
 
-        if (wifi.isConnected()) {
-            playVideo(video, true);
-        } else {
-            if (sharedPreferences.loadStreamOnWifi()) {
-                SuperToast.create(this,
-                        getString(R.string.cannot_play_without_wifi),
-                        SuperToast.Duration.MEDIUM).show();
-            } else if (sharedPreferences.loadStreamAudio()) {
-                playNewAudio(video);
-            } else {
-                playVideo(video, false);
-            }
-        }
+        Ion.with(this).load(url)
+                .asJsonObject()
+                .withResponse()
+                .setCallback(new FutureCallback<Response<JsonObject>>() {
+                    @Override
+                    public void onCompleted(Exception e, Response<JsonObject> result) {
+                        if (e != null) {
+                            SuperToast.create(MainActivity.this,
+                                    getString(R.string.problem_occured_when_playing_video),
+                                    SuperToast.Duration.MEDIUM).show();
+                            return;
+                        }
 
+                        stopAudioPlaybackService();
+
+                        JSONObject json = null;
+                        Video updatedVideo = null;
+                        Video video = inputVideo;
+                        int savedVideoTime = 0;
+
+                        try {
+                            if (result != null) {
+                                json = new JSONObject(result.getResult()
+                                        .getAsJsonObject(Constants.JSON_VIDEO).toString());
+                            }
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+
+                        if (json != null) {
+                            updatedVideo = ResponseFactory.parseVideo(json);
+                        }
+
+                        if (updatedVideo != null) {
+                            savedVideoTime = video.getCurrentTime();
+                            video = updatedVideo;
+                            video.setCurrentTime(savedVideoTime);
+                            video.update();
+                            video.save();
+                        }
+
+                        if (wifi.isConnected()) {
+                            playVideo(video, true);
+                        } else {
+                            if (sharedPreferences.loadStreamOnWifi()) {
+                                SuperToast.create(MainActivity.this,
+                                        getString(R.string.cannot_play_without_wifi),
+                                        SuperToast.Duration.MEDIUM).show();
+                            } else if (sharedPreferences.loadStreamAudio()) {
+                                playNewAudio(video);
+                            } else {
+                                playVideo(video, false);
+                            }
+                        }
+                    }
+                });
     }
 
     private void reconnectToPlaybackService() {
@@ -682,6 +731,16 @@ public class MainActivity extends BaseActivity {
         if (categoriesFragment != null) {
             categoriesFragment.exit();
         }
+        downloadedFragment = null;
+        homeFragment = null;
+        photoAlbumFragment = null;
+        songsFragment = null;
+        videoPlayerFragment = null;
+        audioPlayerFragment = null;
+        categoriesFragment = null;
+        archiveFragment = null;
+        mainFragment = null;
+        connManager = null;
         System.gc();
         finish();
     }

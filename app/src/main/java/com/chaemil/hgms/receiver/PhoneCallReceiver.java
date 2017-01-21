@@ -20,7 +20,6 @@ public class PhoneCallReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         if (intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_RINGING)) {
-
             Intent incomingCall = new Intent();
             incomingCall.setAction(INCOMING_CALL);
             context.sendBroadcast(incomingCall);
@@ -29,10 +28,6 @@ public class PhoneCallReceiver extends BroadcastReceiver {
                 TelephonyManager.EXTRA_STATE_IDLE)
                 || intent.getStringExtra(TelephonyManager.EXTRA_STATE).equals(
                 TelephonyManager.EXTRA_STATE_OFFHOOK)) {
-            // This code will execute when the call is disconnected
-
-
-
         }
     }
 }

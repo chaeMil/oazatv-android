@@ -82,4 +82,5 @@
     <string name="update_app">Aktualizovat aplikaci</string>
     <string name="error_when_playing_video">Vyskytla se chyba při přehrávání videa</string>
     <string name="hide_this_video">Skrýt video</string>
+    <string name="problem_occured_when_playing_video">Vyskytl se problém při pokusu přehrát video</string>
 </resources>
