@@ -88,7 +88,9 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
         for (int i = 0; i < notFullyWatchedVideos.size() && i < 8; i++) {
             Video video = notFullyWatchedVideos.get(i);
             if (video.getCurrentTime() / 1000 > 30 && !hiddenVideos.contains(video.getHash())) { //more than 30 seconds watched
-                videosToContinueWatching.add(video);
+                if (!videosToContinueWatching.contains(video)) {
+                    videosToContinueWatching.add(video);
+                }
             }
         }
     }

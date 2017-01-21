@@ -136,13 +136,14 @@
     <LinearLayout
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/separator">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -165,8 +166,8 @@
             <mehdi.sakout.fancybuttons.FancyButton
                 android:layout_weight="1"
                 android:maxLines="1"
-                android:id="@+id/share_video"
-                android:text="@string/share_video"
+                android:id="@+id/stream_audio"
+                android:text="@string/stream_audio"
                 android:padding="14dp"
                 fontPath="@string/default_font"
                 android:textAllCaps="true"
@@ -180,15 +181,16 @@
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <mehdi.sakout.fancybuttons.FancyButton
                 android:layout_weight="1"
                 android:maxLines="1"
-                android:id="@+id/stream_audio"
-                android:text="@string/stream_audio"
+                android:id="@+id/share_video"
+                android:text="@string/share_video"
                 android:padding="14dp"
                 fontPath="@string/default_font"
                 android:textAllCaps="true"

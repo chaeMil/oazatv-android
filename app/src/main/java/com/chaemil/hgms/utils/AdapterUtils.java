@@ -122,11 +122,11 @@ public class AdapterUtils {
             });
 
             if (isAudioDownloaded) {
-                downloadAudio.setVisibility(View.INVISIBLE);
+                downloadAudio.setVisibility(View.GONE);
                 downloadAudio.setEnabled(false);
             }
             if (!continueWatching) {
-                hideVideo.setVisibility(View.INVISIBLE);
+                hideVideo.setVisibility(View.GONE);
                 hideVideo.setEnabled(false);
             }
 
