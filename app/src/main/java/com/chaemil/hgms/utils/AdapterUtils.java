@@ -15,6 +15,7 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
+import com.github.clans.fab.FloatingActionButton;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.ion.Ion;
 import com.novoda.downloadmanager.DownloadManagerBuilder;
@@ -64,6 +65,7 @@ public class AdapterUtils {
             TextView language = (TextView) dialog.findViewById(R.id.language);
             TextView time = (TextView) dialog.findViewById(R.id.video_time);
             ProgressBar viewProgress = (ProgressBar) dialog.findViewById(R.id.view_progress);
+            FloatingActionButton playFab = (FloatingActionButton) dialog.findViewById(R.id.play_fab);
 
             Ion.with(context).load(video.getThumbFile()).intoImageView(thumb);
 
@@ -107,6 +109,14 @@ public class AdapterUtils {
                 public void onClick(View view) {
                     SharedPrefUtils.getInstance(context).addHiddenVideo(context, video.getHash());
                     mainActivity.getHomeFragment().refreshContinueWatching();
+                    mainActivity.dismissContextDialog();
+                }
+            });
+
+            playFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mainActivity.playNewVideo(video);
                     mainActivity.dismissContextDialog();
                 }
             });

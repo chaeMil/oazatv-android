@@ -512,5 +512,12 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     public void bufferingEnd() {
         bufferBar.setVisibility(View.GONE);
     }
+
+    public boolean isCurrentlyPlaying() {
+        if (getService() != null && getService().getAudioPlayer() != null) {
+            return getService().getAudioPlayer().isPlaying();
+        }
+        return false;
+    }
 }
 

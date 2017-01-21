@@ -61,7 +61,11 @@ public class SectionFeatured extends BaseSection {
                 videoViewHolder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mainActivity.playNewVideo(video);
+                        if (mainActivity.isSomethingPlaying()) {
+                            AdapterUtils.contextDialog(context, mainActivity, video, false);
+                        } else {
+                            mainActivity.playNewVideo(video);
+                        }
                     }
                 });
                 videoViewHolder.name.setText(video.getName());

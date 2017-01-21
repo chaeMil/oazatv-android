@@ -35,6 +35,7 @@ import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.ShareUtils;
@@ -511,7 +512,11 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                     @Override
                     public void run() {
                         Video video = item.getVideo();
-                        ((MainActivity) getActivity()).playNewVideo(video);
+                        if (((MainActivity) getActivity()).isSomethingPlaying()) {
+                            AdapterUtils.contextDialog(context, ((MainActivity) getActivity()), video, false);
+                        } else {
+                            ((MainActivity) getActivity()).playNewVideo(video);
+                        }
                     }
                 }, 200);
 

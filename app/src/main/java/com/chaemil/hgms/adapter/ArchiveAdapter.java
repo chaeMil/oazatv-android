@@ -82,7 +82,11 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                     holder.mainView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mainActivity.playNewVideo(video);
+                            if (mainActivity.isSomethingPlaying()) {
+                                AdapterUtils.contextDialog(context, mainActivity, video, false);
+                            } else {
+                                mainActivity.playNewVideo(video);
+                            }
                         }
                     });
                     holder.name.setText(video.getName());

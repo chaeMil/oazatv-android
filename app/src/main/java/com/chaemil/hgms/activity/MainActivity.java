@@ -53,6 +53,7 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
@@ -96,7 +97,6 @@ public class MainActivity extends BaseActivity {
     private TextView liveStreamMessageWatch;
     private boolean deepLink;
     public Intent playAudioIntent;
-    private AudioPlaybackReceiver audioPlaybackReceiver;
     private BottomSheetBehavior mBottomSheetBehavior;
     private RelativeLayout mainFragmentWraper;
     private RelativeLayout playerBgBlack;
@@ -107,7 +107,6 @@ public class MainActivity extends BaseActivity {
     private PhotoAlbumFragment photoAlbumFragment;
     private SongsFragment songsFragment;
     private BroadcastReceiver networkStateReceiver;
-    private KeyboardHandler keyboardHandler;
     public boolean categoryVisible = false;
     public boolean songVisible = false;
 
@@ -142,7 +141,6 @@ public class MainActivity extends BaseActivity {
         connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         sharedPreferences = SharedPrefUtils.getInstance(this);
-        keyboardHandler = new KeyboardHandler(this);
 
         ((OazaApp) getApplication()).setMainActivity(this);
 
@@ -427,8 +425,6 @@ public class MainActivity extends BaseActivity {
     }
 
     public void playNewVideo(final Video inputVideo) {
-
-        final int videoId = inputVideo.getServerId();
         String url = Constants.API_GET_VIDEO + inputVideo.getHash();
 
         Ion.with(this).load(url)
@@ -884,5 +880,15 @@ public class MainActivity extends BaseActivity {
         if (contextDialog != null)  {
             contextDialog.dismiss();
         }
+    }
+
+    public boolean isSomethingPlaying() {
+        if (getVideoPlayerFragment() != null) {
+            return getVideoPlayerFragment().isCurrentlyPlaying();
+        }
+        if (getAudioPlayerFragment() != null) {
+            return getAudioPlayerFragment().isCurrentlyPlaying();
+        }
+        return false;
     }
 }

@@ -70,7 +70,11 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mainActivity.playNewVideo(video);
+                        if (mainActivity.isSomethingPlaying()) {
+                            AdapterUtils.contextDialog(context, mainActivity, video, false);
+                        } else {
+                            mainActivity.playNewVideo(video);
+                        }
                     }
                 });
                 holder.name.setText(video.getName());

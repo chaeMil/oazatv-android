@@ -752,6 +752,13 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         subtitles.setVisibility(View.VISIBLE);
     }
 
+    public boolean isCurrentlyPlaying() {
+        if (player != null) {
+            return player.isPlaying();
+        }
+        return false;
+    }
+
     @Override
     public void onBuffering(int percent) {
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onBuffering");
