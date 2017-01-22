@@ -34,8 +34,10 @@ import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.ShareUtils;
+import com.chaemil.hgms.view.VideoThumbImageView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
@@ -56,7 +58,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private TextView miniPlayerText;
     private TextView playerTitle;
     private CircleButton playPause;
-    private CircleButton rew;
+    private ImageView rew;
     private TextView currentTime;
     private TextView totalTime;
     private int currentTimeInt;
@@ -64,7 +66,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private ImageView miniPlayerPause;
     private ProgressBar bufferBar;
     private ViewGroup rootView;
-    private ImageView audioThumb;
+    private VideoThumbImageView audioThumb;
     private MainActivity mainActivity;
     private ImageView back;
     private ImageView share;
@@ -73,9 +75,8 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private boolean isReconnecting = false;
     private int audioDuration;
     private SwipeLayout miniPlayerSwipe;
-    private RelativeLayout infoLayout;
-    private ImageView info;
-    private CircleButton ff;
+    private ImageView ff;
+    private ImageView downloadedView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -152,23 +153,22 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         miniPlayerText = (TextView) rootView.findViewById(R.id.mini_player_text);
         playerToolbar = (RelativeLayout) rootView.findViewById(R.id.toolbar);
         playerTitle = (TextView) rootView.findViewById(R.id.player_title);
-        audioThumb = (ImageView) rootView.findViewById(R.id.audio_thumb);
+        audioThumb = (VideoThumbImageView) rootView.findViewById(R.id.audio_thumb);
         playPause = (CircleButton) rootView.findViewById(R.id.play_pause);
-        rew = (CircleButton) rootView.findViewById(R.id.rew);
-        ff = (CircleButton) rootView.findViewById(R.id.ff);
+        rew = (ImageView) rootView.findViewById(R.id.rew);
+        ff = (ImageView) rootView.findViewById(R.id.ff);
         currentTime = (TextView) rootView.findViewById(R.id.current_time);
         totalTime = (TextView) rootView.findViewById(R.id.total_time);
         seekBar = (AppCompatSeekBar) rootView.findViewById(R.id.seek_bar);
         seekBar.setOnSeekBarChangeListener(this);
         miniPlayerPause = (ImageView) rootView.findViewById(R.id.mini_play_pause);
-        bufferBar = (ProgressBar) rootView.findViewById(R.id.buffer_bar);
+        bufferBar = (SpinKitView) rootView.findViewById(R.id.buffer_bar);
         back = (ImageView) rootView.findViewById(R.id.back);
         share = (ImageView) rootView.findViewById(R.id.share);
         description = (TextView) rootView.findViewById(R.id.description);
         tags = (TextView) rootView.findViewById(R.id.tags);
         miniPlayerSwipe = (SwipeLayout) rootView.findViewById(R.id.mini_player_swipe);
-        info = (ImageView) rootView.findViewById(R.id.info);
-        infoLayout = (RelativeLayout) rootView.findViewById(R.id.info_layout);
+        downloadedView = (ImageView) rootView.findViewById(R.id.downloaded);
     }
 
     private void setupUI() {
@@ -180,7 +180,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         share.setOnClickListener(this);
         miniPlayer.setOnClickListener(this);
         playerToolbar.setOnClickListener(this);
-        info.setOnClickListener(this);
         miniPlayerImageView.setOnClickListener(this);
         miniPlayerText.setOnClickListener(this);
 
@@ -196,31 +195,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                 refreshToolbars();
             }
         }, 750);
-    }
-
-    private void showInfo() {
-        infoLayout.setVisibility(View.VISIBLE);
-        YoYo.with(Techniques.SlideInDown).duration(300).playOn(infoLayout);
-    }
-
-    private void hideInfo() {
-        YoYo.with(Techniques.SlideOutUp).duration(300).playOn(infoLayout);
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                infoLayout.setVisibility(View.GONE);
-            }
-        }, 300);
-    }
-
-
-    private void toggleInfo() {
-        if (infoLayout.getVisibility() == View.VISIBLE) {
-            hideInfo();
-        } else {
-            showInfo();
-        }
     }
 
     private SwipeLayout.OnSwipeListener createSwipeListener() {
@@ -282,9 +256,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.share:
                 ShareUtils.shareAudioLink(getActivity(), getCurrentAudio());
-                break;
-            case R.id.info:
-                toggleInfo();
                 break;
             case R.id.mini_player_image:
             case R.id.mini_player_text:
@@ -429,13 +400,8 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause_dark));
 
-        String downloadedString = "";
-        if (downloaded) {
-            downloadedString = "[" + getString(R.string.downloaded) + "] ";
-        }
-
-        miniPlayerText.setText(downloadedString + audio.getName());
-        playerTitle.setText(downloadedString + audio.getName());
+        miniPlayerText.setText(audio.getName());
+        playerTitle.setText(audio.getName());
         if (!getCurrentAudio().getDescription().equals("")) {
             description.setText(getCurrentAudio().getDescription());
         } else {
@@ -451,7 +417,9 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
             tags.setVisibility(View.GONE);
         }
 
-        currentTime.setText("00:00:00");
+        downloadedView.setVisibility(getCurrentAudio().isAudioDownloaded(getActivity()) ? View.VISIBLE : View.GONE);
+
+        //currentTime.setText("00:00:00");
         //totalTime.setText("???");
     }
 

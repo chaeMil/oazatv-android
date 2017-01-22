@@ -20,58 +20,6 @@
 
         </RelativeLayout>
 
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxHeight="150dp"
-            android:id="@+id/info_layout"
-            android:background="@color/white"
-            android:layout_below="@+id/toolbars_wrapper"
-            android:visibility="gone">
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:visibility="visible">
-
-                    <TextView
-                        tools:text="description text"
-                        android:id="@+id/description"
-                        android:textColor="@color/dark_gray"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp" />
-
-                    <TextView
-                        android:textSize="18sp"
-                        tools:text="#tag #god #grace #another #tag"
-                        android:id="@+id/tags"
-                        android:textColor="@color/dark_gray"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textIsSelectable="false" />
-
-                </LinearLayout>
-
-            </ScrollView>
-
-            <ImageView
-                android:scaleType="fitXY"
-                android:src="@drawable/drop_shadow"
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:alpha="0.3"
-                android:adjustViewBounds="false" />
-
-        </RelativeLayout>
-
         <RelativeLayout
             android:id="@+id/toolbars_wrapper"
             android:layout_width="match_parent"
@@ -114,34 +62,49 @@
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/info"
-                    android:layout_toRightOf="@+id/back_wrapper" />
+                    android:layout_toRightOf="@+id/back_wrapper"
+                    android:layout_toLeftOf="@+id/actions_wrapper"/>
 
-                <ImageView
-                    android:id="@+id/info"
-                    android:background="@drawable/transparent_ripple"
-                    android:src="@drawable/ic_info"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_centerVertical="true"
-                    android:padding="8dp"
-                    android:layout_toLeftOf="@+id/share" />
-
-                <ImageView
-                    android:id="@+id/share"
-                    android:background="@drawable/transparent_ripple"
-                    android:src="@drawable/ic_share"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:padding="8dp"
-                    android:layout_centerVertical="true"
+                <LinearLayout
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true" />
+                    android:layout_marginLeft="12dp"
+                    android:gravity="center_vertical"
+                    android:id="@+id/actions_wrapper"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <com.github.ybq.android.spinkit.SpinKitView
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:id="@+id/buffer_bar"
+                        style="@style/SpinKitView.ThreeBounce"
+                        android:visibility="gone"
+                        tools:visibility="visible"/>
+
+                    <ImageView
+                        android:id="@+id/downloaded"
+                        android:src="@drawable/ic_downloaded_white"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:padding="8dp"
+                        android:visibility="gone"/>
+
+                    <ImageView
+                        android:id="@+id/share"
+                        android:background="@drawable/transparent_ripple"
+                        android:src="@drawable/ic_share"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:padding="8dp" />
+
+                </LinearLayout>
 
             </RelativeLayout>
 
 
             <ru.rambler.libs.swipe_layout.SwipeLayout
+                tools:visibility="gone"
                 android:id="@+id/mini_player_swipe"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -208,30 +171,50 @@
             </ru.rambler.libs.swipe_layout.SwipeLayout>
         </RelativeLayout>
 
-        <RelativeLayout
+        <ScrollView
             android:id="@+id/thumb_wrapper"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_below="@+id/toolbars_wrapper"
-            android:layout_above="@+id/controls_wrapper">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:layout_below="@+id/toolbars_wrapper">
 
-            <ImageView
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/audio_thumb"
-                android:scaleType="fitCenter"
-                android:layout_centerHorizontal="true" />
+                android:layout_height="wrap_content">
 
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/buffer_bar"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:visibility="gone" />
+                <com.chaemil.hgms.view.VideoThumbImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/audio_thumb"
+                    android:scaleType="fitCenter"
+                    android:background="@color/black" />
 
-        </RelativeLayout>
+                <TextView
+                    android:textSize="14sp"
+                    android:layout_marginTop="8dp"
+                    tools:text="#Dita #Spurkova #vyucovani #patek #praha #2016 #cesky #teaching #friday #prague #czech #nadeje #vnitrni #clovek #promena #moc #hope #inner #man #change #power"
+                    android:id="@+id/tags"
+                    fontPath="@string/default_font_bold"
+                    android:textColor="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textIsSelectable="false" />
+
+                <TextView
+                    tools:text="description text"
+                    android:textSize="14sp"
+                    android:layout_marginTop="8dp"
+                    android:id="@+id/description"
+                    android:textColor="@color/white"
+                    fontPath="@string/default_font"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp" />
+
+            </LinearLayout>
+
+        </ScrollView>
 
         <LinearLayout
             android:orientation="vertical"
@@ -239,88 +222,72 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/controls_wrapper"
-            android:layout_alignParentBottom="true"
-            android:padding="4dp">
+            android:clipChildren="false"
+            android:layout_alignParentBottom="true">
 
-            <LinearLayout
-                android:orientation="vertical"
+            <android.support.v7.widget.AppCompatSeekBar
+                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:padding="8dp"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_weight="1"
-                        android:textColor="@color/white"
-                        android:shadowColor="@color/black"
-                        android:shadowRadius="5"
-                        tools:text="0:14:15"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/current_time"/>
-
-                    <TextView
-                        android:gravity="right"
-                        android:layout_weight="1"
-                        android:textColor="@color/white"
-                        android:shadowColor="@color/black"
-                        android:shadowRadius="5"
-                        tools:text="0:57:32"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/total_time" />
-
-                </LinearLayout>
-
-                <android.support.v7.widget.AppCompatSeekBar
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="24dp"
-                    android:id="@+id/seek_bar"
-                    tools:progress="14"
-                    android:layout_alignParentTop="true"
-                    android:progressTint="@color/transparent_white"
-                    android:thumbTint="@color/white"
-                    android:layout_marginBottom="16dp"/>
-
-            </LinearLayout>
-
+                android:layout_height="12dp"
+                android:id="@+id/seek_bar"
+                tools:progress="14"
+                android:layout_alignParentTop="true"
+                android:progressTint="@color/transparent_white"
+                android:thumbTint="@color/white"
+                android:layout_marginTop="-6dp"
+                android:layout_marginBottom="16dp"/>
 
             <LinearLayout
                 android:gravity="center"
+                android:padding="8dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <at.markushi.ui.CircleButton
+                <TextView
+                    android:layout_weight="1"
+                    android:textColor="@color/white"
+                    android:shadowColor="@color/black"
+                    android:shadowRadius="5"
+                    tools:text="0:14:15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/current_time"/>
+
+                <ImageView
+                    android:layout_marginRight="16dp"
                     android:id="@+id/rew"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
                     android:src="@drawable/rew"
-                    app:cb_color="@color/colorPrimaryDark"
-                    app:cb_pressedRingWidth="3dip" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
                 <at.markushi.ui.CircleButton
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:id="@+id/play_pause"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="56dp"
                     android:src="@drawable/pause"
                     app:cb_color="@color/colorPrimaryDark"
-                    app:cb_pressedRingWidth="3dip" />
+                    app:cb_pressedRingWidth="3dip"
+                    android:layout_height="56dp" />
 
-                <at.markushi.ui.CircleButton
+                <ImageView
+                    android:layout_marginLeft="16dp"
                     android:id="@+id/ff"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
                     android:src="@drawable/ff"
-                    app:cb_color="@color/colorPrimaryDark"
-                    app:cb_pressedRingWidth="3dip" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:textColor="@color/white"
+                    android:shadowColor="@color/black"
+                    android:shadowRadius="5"
+                    tools:text="0:57:32"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/total_time" />
 
 
             </LinearLayout>
