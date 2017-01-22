@@ -265,4 +265,10 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
             getData();
         }
     }
+
+    public void notifyAudioDeleted() {
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
 }

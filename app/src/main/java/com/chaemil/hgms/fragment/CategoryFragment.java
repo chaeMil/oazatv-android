@@ -75,6 +75,7 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
         setRetainInstance(true);
 
         mainActivity = (MainActivity) getActivity();
+        mainActivity.setCategoryFragment(this);
 
         Bundle bundle = getArguments();
         category = bundle.getParcelable(CATEGORY);
@@ -87,6 +88,7 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
     public void exit() {
+        mainActivity.setCategoryFragment(null);
         mainActivity = null;
     }
 
@@ -265,6 +267,12 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
             case R.id.back:
                 goBack();
                 break;
+        }
+    }
+
+    public void notifyAudioDeleted() {
+        if (archiveAdapter != null) {
+            archiveAdapter.notifyDataSetChanged();
         }
     }
 }

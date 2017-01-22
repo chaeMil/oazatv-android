@@ -1,5 +1,6 @@
 package com.chaemil.hgms.fragment;
 
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,6 +34,7 @@ import java.util.List;
  */
 public class DownloadedFragment extends BaseFragment implements QueryForDownloadsAsyncTask.Callback {
 
+    public static String DOWNLOAD_MANAGER_ONCHANGE = "download_manager_onchange";
     private final Handler handler = new Handler(Looper.getMainLooper());
     private DownloadManager downloadManager;
     private DownloadsAdapter downloadsAdapter;
@@ -81,6 +83,7 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
         @Override
         public void onChange(boolean selfChange) {
             queryForDownloads();
+            getActivity().sendBroadcast(new Intent(DOWNLOAD_MANAGER_ONCHANGE));
         }
 
     };
@@ -100,8 +103,7 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
                 queryForDownloads();
             }
         };
-        downloadsAdapter = new DownloadsAdapter(getActivity(), ((MainActivity) getActivity()),
-                new ArrayList<Download>(), clickListener);
+        downloadsAdapter = new DownloadsAdapter(getActivity(), new ArrayList<Download>(), clickListener);
         recyclerView.setAdapter(downloadsAdapter);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setHasFixedSize(false);

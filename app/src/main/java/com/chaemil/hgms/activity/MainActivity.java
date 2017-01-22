@@ -38,6 +38,7 @@ import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.fragment.ArchiveFragment;
 import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.fragment.CategoriesFragment;
+import com.chaemil.hgms.fragment.CategoryFragment;
 import com.chaemil.hgms.fragment.DownloadedFragment;
 import com.chaemil.hgms.fragment.HomeFragment;
 import com.chaemil.hgms.fragment.MainFragment;
@@ -101,12 +102,14 @@ public class MainActivity extends BaseActivity {
     private BroadcastReceiver networkStateReceiver;
     public boolean categoryVisible = false;
     public boolean songVisible = false;
+    private MaterialDialog contextDialog;
+    private BroadcastReceiver audioDownloadedDeletedReceiver;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
-    private MaterialDialog contextDialog;
+    private CategoryFragment categoryFragment;
 
     @Override
     protected void onResume() {
@@ -116,6 +119,17 @@ public class MainActivity extends BaseActivity {
 
         adjustLayout();
         parseDeepLink();
+
+        setupNetworkStateReceiver();
+        setupAudioDownloadedDeletedReceiver();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        unregisterAudioDownloadedDeletedReceiver();
+        unregisterNetworkStateReceiver();
     }
 
     @Override
@@ -141,37 +155,11 @@ public class MainActivity extends BaseActivity {
         setupPlaybackReceiver();
         setupLiveRequestTimer();
         createFragments();
-        setupNetworkStateReceiver();
         initTracker();
 
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();
         }
-    }
-
-    private void setupNetworkStateReceiver() {
-        final IntentFilter filters = new IntentFilter();
-        filters.addAction("android.net.wifi.WIFI_STATE_CHANGED");
-        filters.addAction("android.net.wifi.STATE_CHANGE");
-        networkStateReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-                NetworkInfo mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-
-                boolean isConnected = wifi != null && wifi.isConnectedOrConnecting() ||
-                        mobile != null && mobile.isConnectedOrConnecting();
-
-                if (isConnected) {
-                    hideStatusMessage();
-                    setupLiveRequestTimer();
-                } else {
-                    noConnectionMessage();
-                }
-            }
-        };
-        registerReceiver(networkStateReceiver, filters);
     }
 
     private void createFragments() {
@@ -205,6 +193,14 @@ public class MainActivity extends BaseActivity {
 
     public SongsFragment getSongsFragment() {
         return songsFragment;
+    }
+
+    public void setCategoryFragment(CategoryFragment categoryFragment) {
+        this.categoryFragment = categoryFragment;
+    }
+
+    public CategoryFragment getCategoryFragment() {
+        return categoryFragment;
     }
 
     private void parseDeepLink() {
@@ -270,7 +266,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         ((OazaApp) getApplication()).setMainActivity(null);
-        unregisterReceiver(networkStateReceiver);
         exit();
         super.onDestroy();
     }
@@ -882,5 +877,79 @@ public class MainActivity extends BaseActivity {
             return getAudioPlayerFragment().isCurrentlyPlaying();
         }
         return false;
+    }
+
+    public void setupAudioDownloadedDeletedReceiver() {
+        unregisterAudioDownloadedDeletedReceiver();
+
+        audioDownloadedDeletedReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (getArchiveFragment() != null) {
+                    getArchiveFragment().notifyAudioDeleted();
+                }
+                if (getHomeFragment() != null) {
+                    getHomeFragment().notifyAudioDeleted();
+                }
+                if (getCategoryFragment() != null) {
+                    getCategoryFragment().notifyAudioDeleted();
+                }
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(DownloadedFragment.DOWNLOAD_MANAGER_ONCHANGE);
+        intentFilter.addAction(AudioPlaybackReceiver.NOTIFY_DELETE);
+
+        registerReceiver(audioDownloadedDeletedReceiver, intentFilter);
+    }
+
+    private void setupNetworkStateReceiver() {
+        unregisterNetworkStateReceiver();
+
+        final IntentFilter filters = new IntentFilter();
+        filters.addAction("android.net.wifi.WIFI_STATE_CHANGED");
+        filters.addAction("android.net.wifi.STATE_CHANGE");
+        networkStateReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                NetworkInfo mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+                boolean isConnected = wifi != null && wifi.isConnectedOrConnecting() ||
+                        mobile != null && mobile.isConnectedOrConnecting();
+
+                if (isConnected) {
+                    hideStatusMessage();
+                    setupLiveRequestTimer();
+                } else {
+                    noConnectionMessage();
+                }
+            }
+        };
+        registerReceiver(networkStateReceiver, filters);
+    }
+
+    private void unregisterAudioDownloadedDeletedReceiver() {
+        if (audioDownloadedDeletedReceiver != null) {
+            try {
+                unregisterReceiver(audioDownloadedDeletedReceiver);
+                audioDownloadedDeletedReceiver = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void unregisterNetworkStateReceiver() {
+        if (networkStateReceiver != null) {
+            try {
+                unregisterReceiver(networkStateReceiver);
+                networkStateReceiver = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

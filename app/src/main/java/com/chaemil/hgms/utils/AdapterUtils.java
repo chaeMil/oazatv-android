@@ -142,7 +142,7 @@ public class AdapterUtils {
             deleteFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    createDeleteDialog(context, video);
+                    createDeleteDialog(context, video).show();
                 }
             });
 
@@ -212,7 +212,6 @@ public class AdapterUtils {
 
     public static MaterialDialog createDeleteDialog(final Context context, final Video video) {
 
-
         MaterialDialog dialog = new MaterialDialog.Builder(context)
                 .title(video.getName())
                 .theme(Theme.LIGHT)
@@ -242,6 +241,8 @@ public class AdapterUtils {
                         }
 
                         AdapterUtils.deleteAudio(context, video, dialog);
+                        MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
+                        mainActivity.dismissContextDialog();
                     }
                 })
                 .onNegative(new MaterialDialog.SingleButtonCallback() {

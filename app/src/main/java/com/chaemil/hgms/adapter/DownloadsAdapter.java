@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Download;
@@ -48,12 +49,10 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final List<Download> downloads;
     private final Listener listener;
     private final Context context;
-    private final MainActivity mainActivity;
 
-    public DownloadsAdapter(Context context, MainActivity mainActivity, List<Download> downloads,
+    public DownloadsAdapter(Context context, List<Download> downloads,
                             Listener listener) {
         this.downloads = downloads;
-        this.mainActivity = mainActivity;
         this.listener = listener;
         this.context = context;
     }
@@ -167,6 +166,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     @Override
                     public void onClick(View v) {
                         if (download.getDownloadStatusText() == DownloadManager.STATUS_SUCCESSFUL) {
+                            MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
                             mainActivity.playNewAudio(video);
                         } else {
                             SuperToast.create(context,

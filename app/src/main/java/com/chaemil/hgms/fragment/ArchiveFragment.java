@@ -178,4 +178,10 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
         archiveAdapter.notifyDataSetChanged();
         getArchivePage(1);
     }
+
+    public void notifyAudioDeleted() {
+        if (archiveAdapter != null) {
+            archiveAdapter.notifyDataSetChanged();
+        }
+    }
 }
