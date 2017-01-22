@@ -86,37 +86,40 @@
             android:layout_below="@+id/toolbars_wrapper"
             android:visibility="gone">
 
-            <ScrollView
+            <android.support.v4.widget.NestedScrollView
+                android:scrollbars="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="16dp"
                     android:visibility="visible">
 
                     <TextView
-                        tools:text="description text"
-                        android:id="@+id/description"
-                        android:textColor="@color/dark_gray"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp" />
-
-                    <TextView
-                        android:textSize="18sp"
-                        tools:text="#tag #god #grace #another #tag"
+                        android:textSize="14sp"
+                        android:layout_marginTop="8dp"
+                        tools:text="#Dita #Spurkova #vyucovani #patek #praha #2016 #cesky #teaching #friday #prague #czech #nadeje #vnitrni #clovek #promena #moc #hope #inner #man #change #power"
                         android:id="@+id/tags"
-                        android:textColor="@color/dark_gray"
+                        android:maxWidth="600dp"
+                        fontPath="@string/default_font_bold"
+                        android:textColor="@color/black"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textIsSelectable="false" />
 
+                    <WebView
+                        android:id="@+id/description"
+                        android:layout_marginTop="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </WebView>
+
                 </LinearLayout>
 
-            </ScrollView>
+            </android.support.v4.widget.NestedScrollView>
 
             <ImageView
                 android:scaleType="fitXY"

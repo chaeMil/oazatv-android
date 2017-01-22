@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -80,7 +82,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     public boolean isInQualityMode = false;
     private ImageView back;
     private ImageView share;
-    private TextView description;
+    private WebView description;
     private TextView tags;
     private RelativeLayout infoLayout;
     private RelativeLayout playerBgWrapper;
@@ -252,7 +254,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         miniPlayerPause = (ImageView) rootView.findViewById(R.id.mini_play_pause);
         back = (ImageView) rootView.findViewById(R.id.back);
         share = (ImageView) rootView.findViewById(R.id.share);
-        description = (TextView) rootView.findViewById(R.id.description);
+        description = (WebView) rootView.findViewById(R.id.description);
         tags = (TextView) rootView.findViewById(R.id.tags);
         infoLayout = (RelativeLayout) rootView.findViewById(R.id.info_layout);
         playerBgWrapper = (RelativeLayout) rootView.findViewById(R.id.player_bg_wrapper);
@@ -592,7 +594,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         playerTitle.setText(video.getName());
 
         if (!currentVideo.getDescription().equals("")) {
-            description.setText(currentVideo.getDescription());
+            description.loadData(currentVideo.getDescription(), "text/html; charset=utf-8", "UTF-8");
         } else {
             description.setVisibility(View.GONE);
         }

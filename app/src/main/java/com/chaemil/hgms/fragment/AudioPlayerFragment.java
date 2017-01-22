@@ -11,6 +11,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -67,7 +68,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private VideoThumbImageView audioThumb;
     private ImageView back;
     private ImageView share;
-    private TextView description;
+    private WebView description;
     private TextView tags;
     private boolean isReconnecting = false;
     private int audioDuration;
@@ -156,7 +157,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         bufferBar = (SpinKitView) rootView.findViewById(R.id.buffer_bar);
         back = (ImageView) rootView.findViewById(R.id.back);
         share = (ImageView) rootView.findViewById(R.id.share);
-        description = (TextView) rootView.findViewById(R.id.description);
+        description = (WebView) rootView.findViewById(R.id.description);
         tags = (TextView) rootView.findViewById(R.id.tags);
         miniPlayerSwipe = (SwipeLayout) rootView.findViewById(R.id.mini_player_swipe);
         downloadedView = (ImageView) rootView.findViewById(R.id.downloaded);
@@ -392,13 +393,17 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                 .load(getCurrentAudio().getThumbFile())
                 .intoImageView(miniPlayerImageView);
 
-        //playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-        //miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause_dark));
-
         miniPlayerText.setText(audio.getName());
         playerTitle.setText(audio.getName());
         if (!getCurrentAudio().getDescription().equals("")) {
-            description.setText(Html.fromHtml(getCurrentAudio().getDescription()));
+            String descriptionHtml= "<html><head>"
+                    + "<style type=\"text/css\">body{color: #FFFFFF; background: #14294a;}"
+                    + "</style></head>"
+                    + "<body>"
+                    + getCurrentAudio().getDescription()
+                    + "</body></html>";
+
+            description.loadData(descriptionHtml, "text/html; charset=utf-8", "UTF-8");
         } else {
             description.setVisibility(View.GONE);
         }
