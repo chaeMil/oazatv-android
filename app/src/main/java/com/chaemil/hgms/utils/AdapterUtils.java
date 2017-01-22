@@ -97,7 +97,7 @@ public class AdapterUtils {
                 @Override
                 public void onClick(View view) {
                     MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
-                    downloadAudio(context, mainActivity, video);
+                    downloadAudio(context, video);
                     mainActivity.dismissContextDialog();
                 }
             });
@@ -159,8 +159,8 @@ public class AdapterUtils {
         }
     }
 
-    public static void downloadAudio(final Context context, final MainActivity mainActivity,
-                                     final Video audio) {
+    public static void downloadAudio(final Context context, final Video audio) {
+        MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
 
         mainActivity.askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
                 new PermissionResult() {
