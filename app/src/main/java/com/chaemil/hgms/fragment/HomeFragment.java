@@ -184,8 +184,12 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
     private void setupGridManager() {
         final int columns = getResources().getInteger(R.integer.archive_columns);
-        gridLayoutManager = new StaggeredGridLayoutManager(columns,
-                StaggeredGridLayoutManager.VERTICAL);
+        if (gridLayoutManager == null) {
+            gridLayoutManager = new StaggeredGridLayoutManager(columns,
+                    StaggeredGridLayoutManager.VERTICAL);
+        } else {
+            gridLayoutManager.setSpanCount(columns);
+        }
         homepageList.setLayoutManager(gridLayoutManager);
     }
 

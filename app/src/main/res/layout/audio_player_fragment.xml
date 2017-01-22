@@ -171,11 +171,16 @@
             </ru.rambler.libs.swipe_layout.SwipeLayout>
         </RelativeLayout>
 
-        <ScrollView
+        <android.support.v4.widget.NestedScrollView
             android:id="@+id/thumb_wrapper"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="8dp"
+            android:paddingTop="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="80dp"
+            android:clipToPadding="false"
+            android:scrollbars="vertical"
             android:layout_below="@+id/toolbars_wrapper">
 
             <LinearLayout
@@ -184,6 +189,7 @@
                 android:layout_height="wrap_content">
 
                 <com.chaemil.hgms.view.VideoThumbImageView
+                    android:maxWidth="600dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/audio_thumb"
@@ -195,6 +201,7 @@
                     android:layout_marginTop="8dp"
                     tools:text="#Dita #Spurkova #vyucovani #patek #praha #2016 #cesky #teaching #friday #prague #czech #nadeje #vnitrni #clovek #promena #moc #hope #inner #man #change #power"
                     android:id="@+id/tags"
+                    android:maxWidth="600dp"
                     fontPath="@string/default_font_bold"
                     android:textColor="@color/white"
                     android:layout_width="match_parent"
@@ -204,6 +211,7 @@
                 <TextView
                     tools:text="description text"
                     android:textSize="14sp"
+                    android:maxWidth="600dp"
                     android:layout_marginTop="8dp"
                     android:id="@+id/description"
                     android:textColor="@color/white"
@@ -214,28 +222,21 @@
 
             </LinearLayout>
 
-        </ScrollView>
+        </android.support.v4.widget.NestedScrollView>
 
-        <LinearLayout
+        <RelativeLayout
             android:orientation="vertical"
-            android:background="@color/transparent_black"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
             android:id="@+id/controls_wrapper"
             android:clipChildren="false"
             android:layout_alignParentBottom="true">
 
-            <android.support.v7.widget.AppCompatSeekBar
-                style="?android:attr/progressBarStyleHorizontal"
+            <com.github.mmin18.widget.RealtimeBlurView
                 android:layout_width="match_parent"
-                android:layout_height="12dp"
-                android:id="@+id/seek_bar"
-                tools:progress="14"
-                android:layout_alignParentTop="true"
-                android:progressTint="@color/transparent_white"
-                android:thumbTint="@color/white"
-                android:layout_marginTop="-6dp"
-                android:layout_marginBottom="16dp"/>
+                android:layout_height="match_parent"
+                app:realtimeOverlayColor="@color/transparent_black"
+                app:realtimeBlurRadius="12dp"/>
 
             <LinearLayout
                 android:gravity="center"
@@ -255,11 +256,12 @@
                     android:id="@+id/current_time"/>
 
                 <ImageView
-                    android:layout_marginRight="16dp"
                     android:id="@+id/rew"
                     android:src="@drawable/rew"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:background="@drawable/transparent_ripple"
+                    android:scaleType="center"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp" />
 
                 <at.markushi.ui.CircleButton
                     android:layout_marginLeft="12dp"
@@ -272,11 +274,12 @@
                     android:layout_height="56dp" />
 
                 <ImageView
-                    android:layout_marginLeft="16dp"
                     android:id="@+id/ff"
                     android:src="@drawable/ff"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:background="@drawable/transparent_ripple"
+                    android:scaleType="center"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp" />
 
                 <TextView
                     android:gravity="right"
@@ -292,8 +295,20 @@
 
             </LinearLayout>
 
+        </RelativeLayout>
 
-        </LinearLayout>
+        <app.minimize.com.seek_bar_compat.SeekBarCompat
+            android:id="@+id/seek_bar"
+            android:layout_alignTop="@+id/controls_wrapper"
+            android:layout_marginTop="-15dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            tools:progress="14"
+            android:layout_marginLeft="-16dp"
+            android:layout_marginRight="-16dp"
+            app:progressColor="@color/white"
+            app:progressBackgroundColor="@color/transparent_white"
+            app:thumbColor="@color/white"/>
 
     </RelativeLayout>
 

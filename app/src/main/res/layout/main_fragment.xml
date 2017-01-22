@@ -180,10 +180,15 @@
         android:visibility="gone"
         tools:visibility="gone"
         android:id="@+id/settings_card_bg"
-        android:background="@color/colorPrimaryAlpha"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true">
+
+        <com.github.mmin18.widget.RealtimeBlurView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:realtimeOverlayColor="@color/colorPrimaryAlpha"
+            app:realtimeBlurRadius="16dp"/>
 
     </RelativeLayout>
 
@@ -290,9 +295,14 @@
         android:id="@+id/search_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimaryAlpha"
         android:clickable="true"
         android:visibility="gone">
+
+        <com.github.mmin18.widget.RealtimeBlurView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:realtimeOverlayColor="@color/colorPrimaryAlpha"
+            app:realtimeBlurRadius="16dp"/>
 
         <com.miguelcatalan.materialsearchview.MaterialSearchView
             android:id="@+id/search_view"

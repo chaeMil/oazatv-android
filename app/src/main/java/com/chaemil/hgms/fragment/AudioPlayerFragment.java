@@ -7,8 +7,7 @@ package com.chaemil.hgms.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v7.widget.AppCompatSeekBar;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,13 +34,12 @@ import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
 
+import app.minimize.com.seek_bar_compat.SeekBarCompat;
 import at.markushi.ui.CircleButton;
 import ru.rambler.libs.swipe_layout.SwipeLayout;
 
@@ -62,12 +60,11 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private TextView currentTime;
     private TextView totalTime;
     private int currentTimeInt;
-    private AppCompatSeekBar seekBar;
+    private SeekBarCompat seekBar;
     private ImageView miniPlayerPause;
     private ProgressBar bufferBar;
     private ViewGroup rootView;
     private VideoThumbImageView audioThumb;
-    private MainActivity mainActivity;
     private ImageView back;
     private ImageView share;
     private TextView description;
@@ -82,12 +79,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
-        mainActivity = (MainActivity) getActivity();
-    }
-
-    public void exit() {
-        mainActivity = null;
     }
 
     @Override
@@ -115,7 +106,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         setupUI();
 
         if (isReconnecting) {
-            reconnectToService(mainActivity);
+            reconnectToService(getActivity());
         }
 
         refreshPlayButtons();
@@ -159,7 +150,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         ff = (ImageView) rootView.findViewById(R.id.ff);
         currentTime = (TextView) rootView.findViewById(R.id.current_time);
         totalTime = (TextView) rootView.findViewById(R.id.total_time);
-        seekBar = (AppCompatSeekBar) rootView.findViewById(R.id.seek_bar);
+        seekBar = (SeekBarCompat) rootView.findViewById(R.id.seek_bar);
         seekBar.setOnSeekBarChangeListener(this);
         miniPlayerPause = (ImageView) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (SpinKitView) rootView.findViewById(R.id.buffer_bar);
@@ -224,6 +215,8 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
+        MainActivity mainActivity = ((OazaApp) getActivity().getApplicationContext()).getMainActivity();
+
         switch(v.getId()) {
             case R.id.play_pause:
                 if (mainActivity != null) {
@@ -277,10 +270,13 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     public void refreshToolbars() {
-        if (mainActivity.isPanelExpanded()) {
-            switchMiniPlayer(1);
-        } else {
-            switchMiniPlayer(0);
+        MainActivity mainActivity = ((OazaApp) getActivity().getApplicationContext()).getMainActivity();
+        if (mainActivity != null) {
+            if (mainActivity.isPanelExpanded()) {
+                switchMiniPlayer(1);
+            } else {
+                switchMiniPlayer(0);
+            }
         }
     }
 
@@ -383,7 +379,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         }
 
         Video audio = getService().getCurrentAudio();
-        boolean downloaded = getService().getIsPlayingDownloaded();
 
         int displayWidth = DimensUtils.getDisplayWidth(getActivity());
 
@@ -397,13 +392,13 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                 .load(getCurrentAudio().getThumbFile())
                 .intoImageView(miniPlayerImageView);
 
-        playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause_dark));
+        //playPause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+        //miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause_dark));
 
         miniPlayerText.setText(audio.getName());
         playerTitle.setText(audio.getName());
         if (!getCurrentAudio().getDescription().equals("")) {
-            description.setText(getCurrentAudio().getDescription());
+            description.setText(Html.fromHtml(getCurrentAudio().getDescription()));
         } else {
             description.setVisibility(View.GONE);
         }
@@ -418,9 +413,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         }
 
         downloadedView.setVisibility(getCurrentAudio().isAudioDownloaded(getActivity()) ? View.VISIBLE : View.GONE);
-
-        //currentTime.setText("00:00:00");
-        //totalTime.setText("???");
     }
 
     public void playNewAudio(Context context) {
@@ -446,7 +438,14 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     private AudioPlaybackService getService() {
-        return ((OazaApp) mainActivity.getApplication()).playbackService;
+        MainActivity mainActivity = ((OazaApp) getActivity().getApplicationContext()).getMainActivity();
+        if (mainActivity != null) {
+            OazaApp oazaApp = (OazaApp) mainActivity.getApplication();
+            if (oazaApp != null) {
+                return ((OazaApp) mainActivity.getApplication()).playbackService;
+            }
+        }
+        return null;
     }
 
     @Override

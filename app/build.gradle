@@ -30,7 +30,7 @@ android {
         versionName "2.6d"
 
         multiDexEnabled true
-        renderscriptTargetApi 18
+        renderscriptTargetApi 19
         renderscriptSupportModeEnabled true
 
         manifestPlaceholders = [downloadAuthority: "com.chaemil.hgms"]
@@ -89,6 +89,8 @@ dependencies {
     compile 'com.afollestad:easyvideoplayer:0.3.0'
     compile 'com.futuremind.recyclerfastscroll:fastscroll:0.2.4'
     compile 'com.github.medyo:fancybuttons:1.8.3'
+    compile 'com.minimize.library:seekbar-compat:0.2.5'
+    compile 'com.github.mmin18:realtimeblurview:1.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -91,7 +91,7 @@ public class MainActivity extends BaseActivity {
     private boolean deepLink;
     public Intent playAudioIntent;
     private BottomSheetBehavior mBottomSheetBehavior;
-    private RelativeLayout mainFragmentWraper;
+    private RelativeLayout mainFragmentWrapper;
     private RelativeLayout playerBgBlack;
     private HomeFragment homeFragment;
     private CategoriesFragment categoriesFragment;
@@ -278,7 +278,7 @@ public class MainActivity extends BaseActivity {
 
     private void getUI() {
         mainRelativeLayout = (RelativeLayout) findViewById(R.id.main_relative_layout);
-        mainFragmentWraper = (RelativeLayout) findViewById(R.id.main_layout);
+        mainFragmentWrapper = (RelativeLayout) findViewById(R.id.main_layout);
         playerWrapper = (RelativeLayout) findViewById(R.id.player_wrapper);
         statusMessageWrapper = (RelativeLayout) findViewById(R.id.status_message_wrapper);
         statusMessageText = (TextView) findViewById(R.id.status_message_text);
@@ -306,14 +306,14 @@ public class MainActivity extends BaseActivity {
                         }
 
                         layoutParams.bottomMargin = DimensUtils.getActionBarHeight(MainActivity.this);
-                        mainFragmentWraper.setLayoutParams(layoutParams);
+                        mainFragmentWrapper.setLayoutParams(layoutParams);
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
                         adjustLayout();
                         break;
                     case BottomSheetBehavior.STATE_HIDDEN:
                         layoutParams.bottomMargin = 0;
-                        mainFragmentWraper.setLayoutParams(layoutParams);
+                        mainFragmentWrapper.setLayoutParams(layoutParams);
                         break;
                     case BottomSheetBehavior.STATE_DRAGGING:
                         if (fullscreen) {
@@ -487,6 +487,8 @@ public class MainActivity extends BaseActivity {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.player_fragment, getAudioPlayerFragment(), AudioPlayerFragment.TAG);
             transaction.commit();
+
+            adjustLayout();
         }
     }
 
@@ -571,18 +573,28 @@ public class MainActivity extends BaseActivity {
         }
 
         if (getMainFragment() != null) {
-            getMainFragment().getArchiveFragment().adjustLayout();
-            getMainFragment().getDownloadedFragment().adjustLayout();
-            getMainFragment().getCategoriesFragment().adjustLayout();
-            getMainFragment().getHomeFragment().adjustLayout();
-            getMainFragment().getSongsFragment().adjustLayout();
+            if (getArchiveFragment() != null) {
+                getArchiveFragment().adjustLayout();
+            }
+            if (getDownloadedFragment() != null) {
+                getDownloadedFragment().adjustLayout();
+            }
+            if (getCategoriesFragment() != null) {
+                getCategoriesFragment().adjustLayout();
+            }
+            if (getHomeFragment() != null) {
+                getHomeFragment().adjustLayout();
+            }
+            if (getSongsFragment() != null) {
+                getSongsFragment().adjustLayout();
 
-            if (getMainFragment().getPhotoAlbumFragment() != null) {
-                getMainFragment().getPhotoAlbumFragment().adjustLayout();
+                if (getSongsFragment().getSongFragment() != null) {
+                    getSongsFragment().getSongFragment().adjustLayout();
+                }
             }
 
-            if (getMainFragment().getSongsFragment().getSongFragment() != null) {
-                getMainFragment().getSongsFragment().getSongFragment().adjustLayout();
+            if (getPhotoAlbumFragment() != null) {
+                getPhotoAlbumFragment().adjustLayout();
             }
         }
 
@@ -696,9 +708,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void exit() {
-        if (audioPlayerFragment != null) {
-            audioPlayerFragment.exit();
-        }
         if (videoPlayerFragment != null) {
             videoPlayerFragment.exit();
         }

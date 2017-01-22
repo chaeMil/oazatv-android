@@ -176,12 +176,13 @@ public class Video extends SugarRecord implements Parcelable {
         switch (Locale.getDefault().getLanguage()) {
 
             case Constants.SK:
-                return getDescriptionCS();
             case Constants.CS:
                 return getDescriptionCS();
             case Constants.EN:
-                return getDescriptionEN();
             default:
+                if (getDescriptionEN().trim().equals("")) {
+                    return getDescriptionCS();
+                }
                 return getDescriptionEN();
         }
     }
@@ -190,11 +191,9 @@ public class Video extends SugarRecord implements Parcelable {
         switch (Locale.getDefault().getLanguage()) {
 
             case Constants.SK:
-                return getNameCS();
             case Constants.CS:
                 return getNameCS();
             case Constants.EN:
-                return getNameEN();
             default:
                 return getNameEN();
         }
