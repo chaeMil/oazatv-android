@@ -66,6 +66,7 @@ public class AdapterUtils {
             TextView time = (TextView) dialog.findViewById(R.id.video_time);
             ProgressBar viewProgress = (ProgressBar) dialog.findViewById(R.id.view_progress);
             FloatingActionButton playFab = (FloatingActionButton) dialog.findViewById(R.id.play_fab);
+            FloatingActionButton deleteFab = (FloatingActionButton) dialog.findViewById(R.id.delete_fab);
 
             Ion.with(context).load(video.getThumbFile()).intoImageView(thumb);
 
@@ -79,6 +80,7 @@ public class AdapterUtils {
             language.setText(video.getVideoLanguage(context));
             viewProgress.setMax(video.getDuration());
             viewProgress.setProgress(video.getCurrentTime() / 1000);
+            deleteFab.setVisibility(video.isAudioDownloaded(context) ? View.VISIBLE : View.GONE);
 
             downloadAudio.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -117,6 +119,14 @@ public class AdapterUtils {
                 @Override
                 public void onClick(View v) {
                     mainActivity.playNewVideo(video);
+                    mainActivity.dismissContextDialog();
+                }
+            });
+
+            deleteFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    video.deleteDownloadedAudio(context);
                     mainActivity.dismissContextDialog();
                 }
             });
@@ -178,17 +188,7 @@ public class AdapterUtils {
 
     public static void deleteAudio(Context context, MainActivity mainActivity, Video audio,
                                    DialogInterface dialog) {
-        if (mainActivity.getAudioPlayerFragment() != null) {
-            Video currentlyPlayingAudio = mainActivity.getAudioPlayerFragment()
-                    .getCurrentAudio();
-
-            if (currentlyPlayingAudio.equals(audio)) {
-                context.sendBroadcast(new Intent(AudioPlaybackReceiver.NOTIFY_DELETE));
-            }
-        }
-
         audio.deleteDownloadedAudio(context);
-
 
         if (dialog != null) {
             dialog.dismiss();

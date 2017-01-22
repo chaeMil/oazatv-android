@@ -1,11 +1,13 @@
 package com.chaemil.hgms.model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.utils.Constants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -152,6 +154,7 @@ public class Video extends SugarRecord implements Parcelable {
         audio.delete();
         thumb.delete();
         save();
+        context.sendBroadcast(new Intent(AudioPlaybackReceiver.NOTIFY_DELETE));
     }
 
     public String getVideoLanguage(Context context) {
