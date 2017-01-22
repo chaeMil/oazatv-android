@@ -548,11 +548,10 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     private void adjustSubtitlesPosition() {
         if (player.isControlsShown()) {
-            ViewUtils.setMargins(getActivity(), subtitles, 0, 0, 0,
-                    (int) getResources().getDimension(R.dimen.video_player_controls_height));
+            int height = (int) getResources().getDimension(R.dimen.video_player_controls_height);
+            ViewUtils.setMargins(getActivity(), subtitles, 0, 0, 0, height);
         } else {
-            ViewUtils.setMargins(getActivity(), subtitles, 0, 0, 0,
-                    8);
+            ViewUtils.setMargins(getActivity(), subtitles, 0, 0, 0, 8);
         }
     }
 
