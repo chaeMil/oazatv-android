@@ -20,6 +20,7 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
     private final OazaApp app;
 
     public static final String NOTIFY_PLAY_PAUSE = "notify_play_pause";
+    public static final String NOTIFY_PAUSE = "notify_pause";
     public static final String NOTIFY_REW = "notify_rew";
     public static final String NOTIFY_FF = "notify_ff";
     public static final String NOTIFY_OPEN = "notify_open";
@@ -90,8 +91,7 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
                         && app.getMainActivity().getAudioPlayerFragment() != null) {
                     app.getMainActivity().getAudioPlayerFragment().bufferingEnd();
                 }
-                break;
-            case PhoneCallReceiver.INCOMING_CALL:
+            case AudioPlaybackReceiver.NOTIFY_PAUSE:
                 if (listener != null) {
                     listener.playbackPauseAudio();
                 }

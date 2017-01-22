@@ -18,12 +18,12 @@ import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
+import android.telephony.TelephonyManager;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.chaemil.hgms.BuildConfig;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.BaseActivity;
@@ -32,7 +32,7 @@ import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
-import com.chaemil.hgms.receiver.PhoneCallReceiver;
+import com.chaemil.hgms.receiver.PhonecallReceiver;
 import com.chaemil.hgms.receiver.PlaybackReceiverListener;
 import com.chaemil.hgms.utils.OSUtils;
 import com.chaemil.hgms.utils.SmartLog;
@@ -78,7 +78,6 @@ public class AudioPlaybackService extends Service implements
     private NoisyAudioStreamReceiver noisyAudioReceiver;
     private OazaApp app;
     private boolean readPhoneState;
-    private PhoneCallReceiver phoneCallReceiver;
 
     public static AudioPlaybackService getInstance() {
         return instance;
@@ -143,7 +142,10 @@ public class AudioPlaybackService extends Service implements
     }
 
     private void askPhoneStatePermissions() {
-        app.getMainActivity().askCompactPermission(PermissionUtils.Manifest_READ_PHONE_STATE,
+        app.getMainActivity().askCompactPermissions(new String[] {
+                    PermissionUtils.Manifest_READ_PHONE_STATE,
+                    PermissionUtils.Manifest_PROCESS_OUTGOING_CALLS
+                },
                 new PermissionResult() {
                     @Override
                     public void permissionGranted() {
@@ -201,7 +203,7 @@ public class AudioPlaybackService extends Service implements
         filter.addAction(AudioPlaybackReceiver.NOTIFY_FF);
         filter.addAction(AudioPlaybackReceiver.NOTIFY_REW);
         filter.addAction(AudioPlaybackReceiver.NOTIFY_DELETE);
-        filter.addAction(PhoneCallReceiver.INCOMING_CALL);
+        filter.addAction(AudioPlaybackReceiver.NOTIFY_PAUSE);
 
         audioPlaybackReceiver = new AudioPlaybackReceiver(this, ((OazaApp) getApplication()));
         registerReceiver(audioPlaybackReceiver, filter);
