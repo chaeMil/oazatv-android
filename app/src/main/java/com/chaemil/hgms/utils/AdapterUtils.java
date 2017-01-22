@@ -53,6 +53,8 @@ public class AdapterUtils {
 
         MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
 
+        Video savedVideo = Video.findByServerId(video.getServerId());
+
         MaterialDialog dialog = new MaterialDialog.Builder(context)
                 .customView(R.layout.video_context_menu, true)
                 .build();
@@ -90,7 +92,9 @@ public class AdapterUtils {
             language.setVisibility(video.getVideoLanguage(context) != null ? View.VISIBLE : View.GONE);
             language.setText(video.getVideoLanguage(context));
             viewProgress.setMax(video.getDuration());
-            viewProgress.setProgress(video.getCurrentTime() / 1000);
+            if (savedVideo != null) {
+                viewProgress.setProgress(savedVideo.getCurrentTime() / 1000);
+            }
             deleteFab.setVisibility(video.isAudioDownloaded(context) ? View.VISIBLE : View.GONE);
 
             downloadAudio.setOnClickListener(new View.OnClickListener() {
