@@ -18,12 +18,10 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 public class SectionAppVersion extends StatelessSection {
 
     private final Context context;
-    private final MainActivity mainActivity;
 
-    public SectionAppVersion(Context context, MainActivity mainActivity) {
+    public SectionAppVersion(Context context) {
         super(R.layout.section_app_version);
         this.context = context;
-        this.mainActivity = mainActivity;
     }
 
     @Override

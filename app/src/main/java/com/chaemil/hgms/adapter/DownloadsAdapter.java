@@ -345,7 +345,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                 switch (which) {
                     case 0:
-                        createDeleteDialog(context, video).show();
+                        AdapterUtils.createDeleteDialog(context, video).show();
                         break;
                 }
             }
@@ -353,50 +353,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
         builder.show();
-    }
-
-    private MaterialDialog createDeleteDialog(final Context context, final Video video) {
-
-
-        MaterialDialog dialog = new MaterialDialog.Builder(context)
-                .title(video.getName())
-                .theme(Theme.LIGHT)
-                .content(context.getString(R.string.delete_downloaded_audio) + "?")
-                .positiveText(context.getString(R.string.yes))
-                .negativeText(context.getString(R.string.no))
-                .positiveColor(context.getResources().getColor(R.color.colorPrimary))
-                .negativeColor(context.getResources().getColor(R.color.colorPrimary))
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        DownloadManager downloadManager = DownloadManagerBuilder.from(context).build();
-                        Cursor cursor = downloadManager.query(new Query().setFilterByExtraData(String.valueOf(video.getServerId())));
-                        ArrayList<Integer> idsToDelete = new ArrayList<>();
-                        try {
-                            while (cursor.moveToNext()) {
-                                long videoId = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_EXTRA_DATA));
-                                if (videoId == video.getServerId()) {
-                                    idsToDelete.add(cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BATCH_ID)));
-                                }
-                            }
-                        } finally {
-                            cursor.close();
-                            for (Integer integer : idsToDelete) {
-                                downloadManager.removeBatches(integer);
-                            }
-                        }
-
-                        AdapterUtils.deleteAudio(context, mainActivity, video, dialog);
-                    }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                }).build();
-
-        return dialog;
     }
 
 }

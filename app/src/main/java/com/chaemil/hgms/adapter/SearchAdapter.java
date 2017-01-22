@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.ArchiveItem;
@@ -27,14 +28,12 @@ import java.util.ArrayList;
 public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
 
     private final Context context;
-    private final MainActivity mainActivity;
     private ArrayList<ArchiveItem> result;
 
-    public SearchAdapter(Context context, int resource, MainActivity mainActivity, ArrayList<ArchiveItem> result) {
+    public SearchAdapter(Context context, int resource, ArrayList<ArchiveItem> result) {
         super(context, resource);
         this.context = context;
         this.result = result;
-        this.mainActivity = mainActivity;
     }
 
 
@@ -70,8 +69,11 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
+                        MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
+
                         if (mainActivity.isSomethingPlaying()) {
-                            AdapterUtils.contextDialog(context, mainActivity, video, false);
+                            AdapterUtils.contextDialog(context, video, false);
                         } else {
                             mainActivity.playNewVideo(video);
                         }
@@ -85,7 +87,7 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.contextMenu.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        AdapterUtils.contextDialog(context, mainActivity, video, false);
+                        AdapterUtils.contextDialog(context, video, false);
                     }
                 });
                 Ion.with(context)
@@ -100,6 +102,7 @@ public class SearchAdapter extends ArrayAdapter<ArchiveItem> {
                 holder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
                         mainActivity.getMainFragment().openAlbum(photoAlbum);
                     }
                 });

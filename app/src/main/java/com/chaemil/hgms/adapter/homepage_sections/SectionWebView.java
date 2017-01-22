@@ -9,6 +9,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.utils.DimensUtils;
@@ -21,16 +22,15 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 public class SectionWebView extends BaseSection {
 
     private final Context context;
-    private final MainActivity mainActivity;
     private final int displayWidth;
     private final String url;
 
-    public SectionWebView(Context context, MainActivity mainActivity, String url) {
+    public SectionWebView(Context context, String url) {
         super(R.layout.homepage_section_header,
                 R.layout.homepage_section_footer,
                 R.layout.section_webview);
         this.context = context;
-        this.mainActivity = mainActivity;
+        MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
         this.displayWidth = DimensUtils.getDisplayHeight(mainActivity);
         this.url = url;
     }

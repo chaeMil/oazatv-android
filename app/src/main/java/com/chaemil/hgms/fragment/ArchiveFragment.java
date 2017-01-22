@@ -95,7 +95,6 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
         if (archiveAdapter == null) {
             archiveAdapter = new ArchiveAdapter(getActivity(),
                     AdapterUtils.getArchiveLayout(getActivity()),
-                    (MainActivity) getActivity(),
                     archive);
         }
     }

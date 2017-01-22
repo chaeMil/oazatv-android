@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.holder.VideoViewHolder;
@@ -23,17 +24,16 @@ import java.util.ArrayList;
 public class SectionFeatured extends BaseSection {
 
     private final Context context;
-    private final MainActivity mainActivity;
     private final int displayWidth;
     ArrayList<ArchiveItem> archive = new ArrayList<>();
 
-    public SectionFeatured(Context context, MainActivity mainActivity, ArrayList<ArchiveItem> archive) {
+    public SectionFeatured(Context context, ArrayList<ArchiveItem> archive) {
         super(R.layout.homepage_section_header,
                 R.layout.homepage_section_footer,
                 R.layout.archive_item_big);
         this.context = context;
-        this.mainActivity = mainActivity;
         this.archive = archive;
+        MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
         this.displayWidth = DimensUtils.getDisplayHeight(mainActivity);
     }
 
@@ -61,8 +61,9 @@ public class SectionFeatured extends BaseSection {
                 videoViewHolder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
                         if (mainActivity.isSomethingPlaying()) {
-                            AdapterUtils.contextDialog(context, mainActivity, video, false);
+                            AdapterUtils.contextDialog(context, video, false);
                         } else {
                             mainActivity.playNewVideo(video);
                         }
@@ -75,7 +76,7 @@ public class SectionFeatured extends BaseSection {
                 videoViewHolder.more.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AdapterUtils.contextDialog(context, mainActivity, video, false);
+                        AdapterUtils.contextDialog(context, video, false);
                     }
                 });
                 videoViewHolder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
@@ -88,6 +89,7 @@ public class SectionFeatured extends BaseSection {
                     videoViewHolder.downloaded.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
                             mainActivity.playNewAudio(video);
                         }
                     });

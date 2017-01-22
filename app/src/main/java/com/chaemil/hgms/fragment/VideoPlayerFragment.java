@@ -680,6 +680,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         if (currentVideo.getSubtitlesFile() != null) {
             setupSubtitles();
+        } else {
+            subtitles.setVisibility(View.GONE);
         }
     }
 

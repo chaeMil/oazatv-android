@@ -111,7 +111,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
         if (homepage != null) {
             if (homepage.latestAndroidAppVersion > BuildConfig.VERSION_CODE) {
-                adapter.addSection(new SectionAppVersion(getActivity(), mainActivity));
+                adapter.addSection(new SectionAppVersion(getActivity()));
 
                 sectionCount += 1;
             }
@@ -119,7 +119,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
         if (videosToContinueWatching.size() != 0) {
             adapter.addSection(SectionContinueWatching.TAG, new SectionContinueWatching(getActivity(),
-                    mainActivity, videosToContinueWatching));
+                    videosToContinueWatching));
 
             sectionCount += 1;
         }
@@ -134,7 +134,6 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
             if (homepage.featured.size() != 0) {
                 sections.add(new SectionFeatured(getActivity(),
-                        mainActivity,
                         homepage.featured));
 
                 sectionCount += 1;
@@ -142,7 +141,6 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
             if (homepage.newestVideos.size() != 0) {
                 sections.add(new SectionNewVideos(getActivity(),
-                        mainActivity,
                         homepage.newestVideos));
 
                 sectionCount += 1;
@@ -150,7 +148,6 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
             if (homepage.newestAlbums.size() != 0) {
                 sections.add(new SectionNewAlbums(getActivity(),
-                        mainActivity,
                         homepage.newestAlbums));
 
                 sectionCount += 1;
@@ -158,7 +155,6 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
 
             if (homepage.popularVideos.size() != 0) {
                 sections.add(new SectionPopularVideos(getActivity(),
-                        mainActivity,
                         homepage.popularVideos));
 
                 sectionCount += 1;

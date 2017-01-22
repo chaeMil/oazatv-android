@@ -137,9 +137,8 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
     private void setupAdapter() {
         if (archiveAdapter == null) {
             archiveAdapter = new ArchiveAdapter(getActivity(),
-                    mainActivity,
-                    AdapterUtils.getArchiveLayout(getActivity()),
-                    archive);
+                    archive,
+                    AdapterUtils.getArchiveLayout(getActivity()));
 
             archiveGridView.setOnScrollListener(new HidingScrollListener() {
                 @Override

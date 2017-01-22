@@ -42,10 +42,8 @@ import com.chaemil.hgms.fragment.DownloadedFragment;
 import com.chaemil.hgms.fragment.HomeFragment;
 import com.chaemil.hgms.fragment.MainFragment;
 import com.chaemil.hgms.fragment.PhotoAlbumFragment;
-import com.chaemil.hgms.fragment.SongFragment;
 import com.chaemil.hgms.fragment.SongsFragment;
 import com.chaemil.hgms.fragment.VideoPlayerFragment;
-import com.chaemil.hgms.model.KeyboardHandler;
 import com.chaemil.hgms.model.LiveStream;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.model.RequestType;
@@ -53,14 +51,11 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.RequestService;
-import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
@@ -72,9 +67,6 @@ import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import permission.auron.com.marshmallowpermissionhelper.PermissionResult;
-import permission.auron.com.marshmallowpermissionhelper.PermissionUtils;
 
 /**
  * Created by chaemil on 2.12.15.

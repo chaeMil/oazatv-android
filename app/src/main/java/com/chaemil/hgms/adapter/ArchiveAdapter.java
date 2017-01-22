@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.ArchiveItem;
@@ -30,26 +31,21 @@ import java.util.ArrayList;
 public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHolder> {
 
     private final Context context;
-    private final MainActivity mainActivity;
     private final int layout;
     private final ArrayList<Video> videos;
     private ArrayList<ArchiveItem> archive;
 
-    public ArchiveAdapter(Context context, int layout, MainActivity mainActivity,
-                          ArrayList<ArchiveItem> archive) {
+    public ArchiveAdapter(Context context, int layout, ArrayList<ArchiveItem> archive) {
         this.context = context;
         this.archive = archive;
-        this.mainActivity = mainActivity;
         this.layout = layout;
         this.videos = null;
     }
 
-    public ArchiveAdapter(Context context, MainActivity mainActivity, int layout,
-                          ArrayList<Video> videos) {
+    public ArchiveAdapter(Context context, ArrayList<Video> videos, int layout) {
         this.archive = null;
         this.videos = videos;
         this.layout = layout;
-        this.mainActivity = mainActivity;
         this.context = context;
     }
 
@@ -82,8 +78,9 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                     holder.mainView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
                             if (mainActivity.isSomethingPlaying()) {
-                                AdapterUtils.contextDialog(context, mainActivity, video, false);
+                                AdapterUtils.contextDialog(context, video, false);
                             } else {
                                 mainActivity.playNewVideo(video);
                             }
@@ -96,7 +93,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                     holder.more.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            AdapterUtils.contextDialog(context, mainActivity, video, false);
+                            AdapterUtils.contextDialog(context, video, false);
                         }
                     });
                     holder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
@@ -109,6 +106,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
                         holder.downloaded.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
                                 mainActivity.playNewAudio(video);
                             }
                         });
@@ -192,6 +190,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.ViewHold
     }
 
     private void openAlbum(PhotoAlbum album) {
+        MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
         mainActivity.getMainFragment().openAlbum(album);
     }
 

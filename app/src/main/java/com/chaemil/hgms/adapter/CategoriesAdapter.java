@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.fragment.CategoriesFragment;
@@ -28,14 +29,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ho
     private final CategoriesFragment categoriesFragment;
     private Context context;
     private ArrayList<Category> categories;
-    private MainActivity mainActivity;
 
     public CategoriesAdapter(Context context, CategoriesFragment categoriesFragment,
-                             ArrayList<Category> categories, MainActivity mainActivity) {
+                             ArrayList<Category> categories) {
         this.context = context;
         this.categoriesFragment = categoriesFragment;
         this.categories = categories;
-        this.mainActivity = mainActivity;
     }
 
     @Override
@@ -55,6 +54,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ho
         holder.background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
+
                 CategoryFragment categoryFragment = new CategoryFragment();
                 Bundle args = new Bundle();
                 args.putParcelable(CategoryFragment.CATEGORY, category);

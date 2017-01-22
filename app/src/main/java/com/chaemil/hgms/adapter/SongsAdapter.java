@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.fragment.SongFragment;
@@ -28,11 +29,8 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
     private final SongsFragment songsFragment;
     private final ArrayList<Song> songs;
     private final Context context;
-    private MainActivity mainActivity;
 
-    public SongsAdapter(Context context, MainActivity mainActivity,
-                        SongsFragment songsFragment, ArrayList<Song> songs) {
-        this.mainActivity = mainActivity;
+    public SongsAdapter(Context context, SongsFragment songsFragment, ArrayList<Song> songs) {
         this.songsFragment = songsFragment;
         this.context = context;
         this.songs = songs;
@@ -69,6 +67,8 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder>
         songFragment.setArguments(args);
 
         songsFragment.setSongFragment(songFragment);
+
+        MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
 
         FragmentTransaction transaction = mainActivity.getFragmentManager().beginTransaction();
         transaction.replace(R.id.song_fragment, songFragment);

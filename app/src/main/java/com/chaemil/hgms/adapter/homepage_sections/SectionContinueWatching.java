@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.holder.VideoViewHolder;
@@ -21,15 +22,13 @@ public class SectionContinueWatching extends BaseSection {
 
     public static final String TAG = "continue_watching";
     private final Context context;
-    private final MainActivity mainActivity;
     ArrayList<Video> videosToWatch = new ArrayList<>();
 
-    public SectionContinueWatching(Context context, MainActivity mainActivity, ArrayList<Video> videosToWatch) {
+    public SectionContinueWatching(Context context, ArrayList<Video> videosToWatch) {
         super(R.layout.homepage_section_header,
                 R.layout.homepage_section_footer,
                 AdapterUtils.getArchiveLayout(context));
         this.context = context;
-        this.mainActivity = mainActivity;
         this.videosToWatch = videosToWatch;
     }
 
@@ -51,8 +50,10 @@ public class SectionContinueWatching extends BaseSection {
         videoViewHolder.mainView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
+
                 if (mainActivity.isSomethingPlaying()) {
-                    AdapterUtils.contextDialog(context, mainActivity, video, false);
+                    AdapterUtils.contextDialog(context, video, false);
                 } else {
                     mainActivity.playNewVideo(video);
                 }
@@ -72,6 +73,7 @@ public class SectionContinueWatching extends BaseSection {
             videoViewHolder.downloaded.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
                     mainActivity.playNewAudio(video);
                 }
             });
@@ -92,7 +94,7 @@ public class SectionContinueWatching extends BaseSection {
         videoViewHolder.more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdapterUtils.contextDialog(context, mainActivity, video, true);
+                AdapterUtils.contextDialog(context, video, true);
             }
         });
     }

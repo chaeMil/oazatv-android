@@ -3,14 +3,19 @@ package com.chaemil.hgms.utils;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
@@ -20,8 +25,11 @@ import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.ion.Ion;
 import com.novoda.downloadmanager.DownloadManagerBuilder;
 import com.novoda.downloadmanager.lib.DownloadManager;
+import com.novoda.downloadmanager.lib.Query;
 import com.novoda.downloadmanager.lib.Request;
 import com.novoda.downloadmanager.notifications.NotificationVisibility;
+
+import java.util.ArrayList;
 
 import mehdi.sakout.fancybuttons.FancyButton;
 import permission.auron.com.marshmallowpermissionhelper.PermissionResult;
@@ -40,12 +48,15 @@ public class AdapterUtils {
         }
     }
 
-    public static void contextDialog(final Context context, final MainActivity mainActivity,
+    public static void contextDialog(final Context context,
                                      final Video video, boolean continueWatching) {
+
+        MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
 
         MaterialDialog dialog = new MaterialDialog.Builder(context)
                 .customView(R.layout.video_context_menu, true)
                 .build();
+
         mainActivity.setContextDialog(dialog);
         final boolean isAudioDownloaded = video.isAudioDownloaded(context);
 
@@ -85,6 +96,7 @@ public class AdapterUtils {
             downloadAudio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
                     downloadAudio(context, mainActivity, video);
                     mainActivity.dismissContextDialog();
                 }
@@ -93,6 +105,7 @@ public class AdapterUtils {
             streamAudio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
                     mainActivity.playNewAudio(video);
                     mainActivity.dismissContextDialog();
                 }
@@ -101,6 +114,7 @@ public class AdapterUtils {
             shareVideo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
                     ShareUtils.shareVideoLink(mainActivity, video);
                     mainActivity.dismissContextDialog();
                 }
@@ -109,6 +123,7 @@ public class AdapterUtils {
             hideVideo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
                     SharedPrefUtils.getInstance(context).addHiddenVideo(context, video.getHash());
                     mainActivity.getHomeFragment().refreshContinueWatching();
                     mainActivity.dismissContextDialog();
@@ -118,6 +133,7 @@ public class AdapterUtils {
             playFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
                     mainActivity.playNewVideo(video);
                     mainActivity.dismissContextDialog();
                 }
@@ -126,8 +142,7 @@ public class AdapterUtils {
             deleteFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    video.deleteDownloadedAudio(context);
-                    mainActivity.dismissContextDialog();
+                    createDeleteDialog(context, video);
                 }
             });
 
@@ -186,12 +201,56 @@ public class AdapterUtils {
                 });
     }
 
-    public static void deleteAudio(Context context, MainActivity mainActivity, Video audio,
+    public static void deleteAudio(Context context, Video audio,
                                    DialogInterface dialog) {
         audio.deleteDownloadedAudio(context);
 
         if (dialog != null) {
             dialog.dismiss();
         }
+    }
+
+    public static MaterialDialog createDeleteDialog(final Context context, final Video video) {
+
+
+        MaterialDialog dialog = new MaterialDialog.Builder(context)
+                .title(video.getName())
+                .theme(Theme.LIGHT)
+                .content(context.getString(R.string.delete_downloaded_audio) + "?")
+                .positiveText(context.getString(R.string.yes))
+                .negativeText(context.getString(R.string.no))
+                .positiveColor(context.getResources().getColor(R.color.colorPrimary))
+                .negativeColor(context.getResources().getColor(R.color.colorPrimary))
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        DownloadManager downloadManager = DownloadManagerBuilder.from(context).build();
+                        Cursor cursor = downloadManager.query(new Query().setFilterByExtraData(String.valueOf(video.getServerId())));
+                        ArrayList<Integer> idsToDelete = new ArrayList<>();
+                        try {
+                            while (cursor.moveToNext()) {
+                                long videoId = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_EXTRA_DATA));
+                                if (videoId == video.getServerId()) {
+                                    idsToDelete.add(cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BATCH_ID)));
+                                }
+                            }
+                        } finally {
+                            cursor.close();
+                            for (Integer integer : idsToDelete) {
+                                downloadManager.removeBatches(integer);
+                            }
+                        }
+
+                        AdapterUtils.deleteAudio(context, video, dialog);
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                }).build();
+
+        return dialog;
     }
 }

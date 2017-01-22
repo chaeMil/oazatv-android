@@ -94,8 +94,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
 
         if (savedInstanceState == null) {
             SmartLog.Log(SmartLog.LogLevel.DEBUG, TAG + " savedInstanceState", "null");
-            searchAdapter = new SearchAdapter(getActivity(), R.layout.search_item,
-                    ((MainActivity) getActivity()), searchResult);
+            searchAdapter = new SearchAdapter(getActivity(), R.layout.search_item, searchResult);
         }
 
         setupAppRate();
@@ -513,7 +512,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
                     public void run() {
                         Video video = item.getVideo();
                         if (((MainActivity) getActivity()).isSomethingPlaying()) {
-                            AdapterUtils.contextDialog(context, ((MainActivity) getActivity()), video, false);
+                            AdapterUtils.contextDialog(context, video, false);
                         } else {
                             ((MainActivity) getActivity()).playNewVideo(video);
                         }

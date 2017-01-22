@@ -88,7 +88,7 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
     }
 
     private void setupAdapter() {
-        adapter = new SongsAdapter(mainActivity, mainActivity, this, songs);
+        adapter = new SongsAdapter(mainActivity, this, songs);
         songsList.setLayoutManager(new LinearLayoutManager(getActivity()));
         songsList.setAdapter(adapter);
         fastScroller.setRecyclerView(songsList);
