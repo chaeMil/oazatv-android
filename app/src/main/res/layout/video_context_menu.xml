@@ -232,4 +232,15 @@
         android:layout_alignBottom="@+id/thumb_wrapper"
         android:layout_marginBottom="-36dp" />
 
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/delete_fab"
+        android:layout_above="@+id/play_fab"
+        android:src="@drawable/delete_white"
+        fab:fab_colorNormal="@color/colorAccent"
+        fab:fab_colorPressed="@color/colorAccentDarker"
+        fab:fab_colorRipple="@color/colorAccentDarkest"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_alignParentRight="true" />
+
 </RelativeLayout>
