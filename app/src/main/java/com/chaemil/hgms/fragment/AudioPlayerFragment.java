@@ -443,11 +443,13 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     private AudioPlaybackService getService() {
-        MainActivity mainActivity = ((OazaApp) getActivity().getApplicationContext()).getMainActivity();
-        if (mainActivity != null) {
-            OazaApp oazaApp = (OazaApp) mainActivity.getApplication();
-            if (oazaApp != null) {
-                return ((OazaApp) mainActivity.getApplication()).playbackService;
+        if (getActivity() != null) {
+            MainActivity mainActivity = ((OazaApp) getActivity().getApplicationContext()).getMainActivity();
+            if (mainActivity != null) {
+                OazaApp oazaApp = (OazaApp) mainActivity.getApplication();
+                if (oazaApp != null) {
+                    return ((OazaApp) mainActivity.getApplication()).playbackService;
+                }
             }
         }
         return null;
