@@ -431,6 +431,12 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         } else {
             tags.setVisibility(View.GONE);
         }
+
+        downloadedText.setText(getService().getIsPlayingDownloaded()
+                ? getString(R.string.downloaded) : getString(R.string.streaming));
+        downloadedView.setImageDrawable(getService().getIsPlayingDownloaded()
+                ? getResources().getDrawable(R.drawable.ic_downloaded) : getResources().getDrawable(R.drawable.ic_streaming));
+
     }
 
     public void playNewAudio(Context context) {
@@ -441,12 +447,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         AnalyticsService.getInstance()
                 .setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: "
                         + getCurrentAudio().getHash());
-
-        downloadedText.setText(getCurrentAudio().isAudioDownloaded(context)
-                ? getString(R.string.downloaded) : getString(R.string.streaming));
-        downloadedView.setImageDrawable(getCurrentAudio().isAudioDownloaded(context)
-                ? getResources().getDrawable(R.drawable.ic_downloaded) : getResources().getDrawable(R.drawable.ic_streaming));
-
     }
 
     @Override
