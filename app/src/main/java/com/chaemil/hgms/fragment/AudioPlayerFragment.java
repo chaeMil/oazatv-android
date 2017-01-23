@@ -7,12 +7,12 @@ package com.chaemil.hgms.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -34,6 +34,7 @@ import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.ShareUtils;
+import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.view.VideoThumbImageView;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.koushikdutta.ion.Ion;
@@ -67,7 +68,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private ViewGroup rootView;
     private VideoThumbImageView audioThumb;
     private ImageView back;
-    private ImageView share;
+    private LinearLayout shareWrapper;
     private WebView description;
     private TextView tags;
     private boolean isReconnecting = false;
@@ -75,6 +76,9 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private SwipeLayout miniPlayerSwipe;
     private ImageView ff;
     private ImageView downloadedView;
+    private TextView downloadedText;
+    private LinearLayout downloadedWrapper;
+    private TextView dateText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -156,11 +160,14 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         miniPlayerPause = (ImageView) rootView.findViewById(R.id.mini_play_pause);
         bufferBar = (SpinKitView) rootView.findViewById(R.id.buffer_bar);
         back = (ImageView) rootView.findViewById(R.id.back);
-        share = (ImageView) rootView.findViewById(R.id.share);
+        shareWrapper = (LinearLayout) rootView.findViewById(R.id.share_wrapper);
         description = (WebView) rootView.findViewById(R.id.description);
         tags = (TextView) rootView.findViewById(R.id.tags);
         miniPlayerSwipe = (SwipeLayout) rootView.findViewById(R.id.mini_player_swipe);
         downloadedView = (ImageView) rootView.findViewById(R.id.downloaded);
+        downloadedText = (TextView) rootView.findViewById(R.id.downloaded_text);
+        downloadedWrapper = (LinearLayout) rootView.findViewById(R.id.downloaded_wrapper);
+        dateText = (TextView) rootView.findViewById(R.id.date_text);
     }
 
     private void setupUI() {
@@ -169,11 +176,12 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         rew.setOnClickListener(this);
         ff.setOnClickListener(this);
         miniPlayerPause.setOnClickListener(this);
-        share.setOnClickListener(this);
+        shareWrapper.setOnClickListener(this);
         miniPlayer.setOnClickListener(this);
         playerToolbar.setOnClickListener(this);
         miniPlayerImageView.setOnClickListener(this);
         miniPlayerText.setOnClickListener(this);
+        downloadedWrapper.setOnClickListener(this);
 
         seekBar.setMax(getAudioDuration());
         seekBar.postDelayed(onEverySecond, 1000);
@@ -248,7 +256,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
                     mainActivity.collapsePanel();
                 }
                 break;
-            case R.id.share:
+            case R.id.share_wrapper:
                 ShareUtils.shareAudioLink(getActivity(), getCurrentAudio());
                 break;
             case R.id.mini_player_image:
@@ -395,9 +403,10 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
 
         miniPlayerText.setText(audio.getName());
         playerTitle.setText(audio.getName());
+        dateText.setText(StringUtils.formatDate(audio.getDate(), context));
         if (!getCurrentAudio().getDescription().equals("")) {
             String descriptionHtml= "<html><head>"
-                    + "<style type=\"text/css\">body{color: #FFFFFF; background: #14294a;}"
+                    + "<style type=\"text/css\">body{color: #000000; background: #FFFFFF;}"
                     + "</style></head>"
                     + "<body>"
                     + getCurrentAudio().getDescription()
@@ -416,8 +425,6 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         } else {
             tags.setVisibility(View.GONE);
         }
-
-        downloadedView.setVisibility(getCurrentAudio().isAudioDownloaded(getActivity()) ? View.VISIBLE : View.GONE);
     }
 
     public void playNewAudio(Context context) {
@@ -428,6 +435,12 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         AnalyticsService.getInstance()
                 .setPage(AnalyticsService.Pages.AUDIOPLAYER_FRAGMENT + "audioHash: "
                         + getCurrentAudio().getHash());
+
+        downloadedText.setText(getCurrentAudio().isAudioDownloaded(context)
+                ? getString(R.string.downloaded) : getString(R.string.streaming));
+        downloadedView.setImageDrawable(getCurrentAudio().isAudioDownloaded(context)
+                ? getResources().getDrawable(R.drawable.ic_downloaded) : getResources().getDrawable(R.drawable.ic_streaming));
+
     }
 
     @Override
