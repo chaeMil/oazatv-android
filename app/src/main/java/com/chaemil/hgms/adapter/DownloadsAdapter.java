@@ -4,9 +4,7 @@ package com.chaemil.hgms.adapter;
  * Created by chaemil on 30.6.16.
  */
 import android.content.Context;
-import android.database.Cursor;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.support.percent.PercentLayoutHelper;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.chaemil.hgms.OazaApp;
@@ -33,27 +30,19 @@ import com.chaemil.hgms.utils.FileUtils;
 import com.chaemil.hgms.utils.StringUtils;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.ion.Ion;
-import com.novoda.downloadmanager.DownloadManagerBuilder;
 import com.novoda.downloadmanager.lib.DownloadManager;
-import com.novoda.downloadmanager.lib.Query;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
-    private static final int TYPE_FOOTER = 2;
-
 
     private final List<Download> downloads;
-    private final Listener listener;
     private final Context context;
 
-    public DownloadsAdapter(Context context, List<Download> downloads,
-                            Listener listener) {
+    public DownloadsAdapter(Context context, List<Download> downloads) {
         this.downloads = downloads;
-        this.listener = listener;
         this.context = context;
     }
 
@@ -68,9 +57,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if(viewType == TYPE_HEADER) {
             View v = LayoutInflater.from (parent.getContext()).inflate (R.layout.header_item_download, parent, false);
             return new HeaderViewHolder (v);
-        } else if(viewType == TYPE_FOOTER) {
-            View v = LayoutInflater.from (parent.getContext()).inflate (R.layout.footer_item_download, parent, false);
-            return new FooterViewHolder (v);
         } else if(viewType == TYPE_ITEM) {
             View v = LayoutInflater.from (parent.getContext()).inflate (R.layout.list_item_download, parent, false);
             return new DownloadItemHolder (v);
@@ -82,18 +68,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public int getItemViewType (int position) {
         if(isPositionHeader (position)) {
             return TYPE_HEADER;
-        } else if(isPositionFooter (position)) {
-            return TYPE_FOOTER;
         }
         return TYPE_ITEM;
     }
 
     private boolean isPositionHeader (int position) {
         return position == 0;
-    }
-
-    private boolean isPositionFooter (int position) {
-        return position == downloads.size () + 1;
     }
 
     @Override
@@ -131,33 +111,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 downloadItemHolder.name.setText(video.getName());
                 downloadItemHolder.date.setText(StringUtils.formatDate(video.getDate(), context));
 
-                switch (download.getDownloadStatusText()) {
-                    case DownloadManager.STATUS_PENDING:
-                        downloadItemHolder.status.setText(context.getString(R.string.download_pending));
-                        downloadItemHolder.pauseButton.setVisibility(View.VISIBLE);
-                        downloadItemHolder.pauseButton.setImageDrawable(context.getResources()
-                                .getDrawable(R.drawable.pause));
-                        break;
-                    case DownloadManager.STATUS_RUNNING:
-                        downloadItemHolder.status.setText(context.getString(R.string.download_running));
-                        downloadItemHolder.pauseButton.setVisibility(View.VISIBLE);
-                        downloadItemHolder.pauseButton.setImageDrawable(context.getResources()
-                                .getDrawable(R.drawable.pause));
-                        break;
-                    case DownloadManager.STATUS_PAUSED:
-                        downloadItemHolder.status.setText(context.getString(R.string.download_paused));
-                        downloadItemHolder.pauseButton.setVisibility(View.VISIBLE);
-                        downloadItemHolder.pauseButton.setImageDrawable(context.getResources()
-                                .getDrawable(R.drawable.ic_continue_download));
-                        break;
-                    case DownloadManager.STATUS_SUCCESSFUL:
-                        long fileSize = video.getDownloadedAudioSize(context);
-                        String formattedSize = StringUtils.getStringSizeLengthFile(fileSize);
-                        downloadItemHolder.status.setText(formattedSize);
-                        downloadItemHolder.pauseButton.setVisibility(View.GONE);
-                        break;
-                }
-
                 Ion.with(context)
                         .load(video.getThumbFile())
                         .intoImageView(downloadItemHolder.thumb);
@@ -176,13 +129,6 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     }
                 });
 
-                downloadItemHolder.pauseButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        listener.onItemClick(download);
-                    }
-                });
-
                 downloadItemHolder.contextButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -191,6 +137,23 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 });
 
                 setupTime(downloadItemHolder, video);
+
+                switch (download.getDownloadStatusText()) {
+                    case DownloadManager.STATUS_PENDING:
+                        downloadItemHolder.status.setText(context.getString(R.string.download_pending));
+                        break;
+                    case DownloadManager.STATUS_RUNNING:
+                        downloadItemHolder.status.setText(context.getString(R.string.download_running));
+                        break;
+                    case DownloadManager.STATUS_PAUSED:
+                        downloadItemHolder.status.setText(context.getString(R.string.download_paused));
+                        break;
+                    case DownloadManager.STATUS_SUCCESSFUL:
+                        long fileSize = video.getDownloadedAudioSize(context);
+                        String formattedSize = StringUtils.getStringSizeLengthFile(fileSize);
+                        downloadItemHolder.status.setText(formattedSize);
+                        break;
+                }
             }
         }
 
@@ -237,20 +200,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public interface Listener {
-        void onItemClick(Download download);
-    }
-
-    class FooterViewHolder extends RecyclerView.ViewHolder {
-
-
-        public FooterViewHolder (View itemView) {
-            super (itemView);
-
-        }
-    }
-
-    class HeaderViewHolder extends RecyclerView.ViewHolder {
+    private class HeaderViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView usedHeader;
         private final TextView freeSpace;
@@ -303,16 +253,14 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }.execute();
     }
 
-    class DownloadItemHolder extends RecyclerView.ViewHolder {
+    private class DownloadItemHolder extends RecyclerView.ViewHolder {
 
         private final View root;
         private final TextView name;
         private final TextView date;
         private final TextView status;
         private final ImageView thumb;
-        private final ImageView pauseButton;
         private final ImageView contextButton;
-        private final ImageView cancelButton;
         public final ProgressBar viewProgress;
         public final TextView time;
 
@@ -323,9 +271,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             date = (TextView) itemView.findViewById(R.id.date);
             status = (TextView) itemView.findViewById(R.id.status);
             thumb = (ImageView) itemView.findViewById(R.id.thumb);
-            pauseButton = (ImageView) itemView.findViewById(R.id.pause);
             contextButton = (ImageView) itemView.findViewById(R.id.context_menu);
-            cancelButton = (ImageView) itemView.findViewById(R.id.cancel_download);
             viewProgress = (ProgressBar) itemView.findViewById(R.id.view_progress);
             time = (TextView) itemView.findViewById(R.id.video_time);
         }

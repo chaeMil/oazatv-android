@@ -5,22 +5,15 @@ import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.activity.MainActivity;
 import com.chaemil.hgms.adapter.DownloadsAdapter;
 import com.chaemil.hgms.model.Download;
-import com.chaemil.hgms.service.AnalyticsService;
-import com.chaemil.hgms.utils.FileUtils;
-import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.QueryForDownloadsAsyncTask;
 import com.novoda.downloadmanager.DownloadManagerBuilder;
 import com.novoda.downloadmanager.lib.DownloadManager;
@@ -91,19 +84,7 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
     private void setupUI() {
         int columns = getResources().getInteger(R.integer.archive_columns);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(columns, 1));
-
-        DownloadsAdapter.Listener clickListener = new DownloadsAdapter.Listener() {
-            @Override
-            public void onItemClick(Download download) {
-                if (download.isPaused()) {
-                    downloadManager.resumeBatch(download.getBatchId());
-                } else {
-                    downloadManager.pauseBatch(download.getBatchId());
-                }
-                queryForDownloads();
-            }
-        };
-        downloadsAdapter = new DownloadsAdapter(getActivity(), new ArrayList<Download>(), clickListener);
+        downloadsAdapter = new DownloadsAdapter(getActivity(), new ArrayList<Download>());
         recyclerView.setAdapter(downloadsAdapter);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setHasFixedSize(false);

@@ -79,7 +79,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-analytics:9.0.0'
     compile 'com.github.ybq:Android-SpinKit:1.1.0'
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
-    compile 'com.novoda:download-manager:0.2.44'
+    compile 'com.novoda:download-manager:0.2.43'
     compile 'com.auron:permission-manage:1.1.5'
     compile 'com.afollestad.material-dialogs:core:0.9.1.0'
     compile 'com.android.support:percent:25.1.0'
