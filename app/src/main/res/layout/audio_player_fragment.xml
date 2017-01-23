@@ -273,7 +273,7 @@
 
                             <TextView
                                 android:id="@+id/share_text"
-                                android:text="@string/share_video"
+                                android:text="@string/share"
                                 fontPath="@string/default_font_bold"
                                 android:textSize="12sp"
                                 android:lines="1"

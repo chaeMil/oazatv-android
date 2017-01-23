@@ -84,4 +84,6 @@
     <string name="problem_occured_when_playing_video">Vyskytl se problém při pokusu přehrát video</string>
     <string name="english">anglicky</string>
     <string name="czech">česky</string>
+    <string name="share">Sdílet</string>
+    <string name="streaming">Streamuje se</string>
 </resources>
