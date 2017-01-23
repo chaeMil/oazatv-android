@@ -84,7 +84,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private ImageView share;
     private WebView description;
     private TextView tags;
-    private RelativeLayout infoLayout;
     private RelativeLayout playerBgWrapper;
     private TimerTask timerTask;
     private Timer timer;
@@ -256,7 +255,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         share = (ImageView) rootView.findViewById(R.id.share);
         description = (WebView) rootView.findViewById(R.id.description);
         tags = (TextView) rootView.findViewById(R.id.tags);
-        infoLayout = (RelativeLayout) rootView.findViewById(R.id.info_layout);
         playerBgWrapper = (RelativeLayout) rootView.findViewById(R.id.player_bg_wrapper);
         miniPlayerSwipe = (SwipeLayout) rootView.findViewById(R.id.mini_player_swipe);
         info = (ImageView) rootView.findViewById(R.id.info);
@@ -308,30 +306,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 buffering.setVisibility(View.GONE);
             }
         }, 150);
-    }
-
-    private void showInfo() {
-        infoLayout.setVisibility(View.VISIBLE);
-        YoYo.with(Techniques.SlideInDown).duration(300).playOn(infoLayout);
-    }
-
-    private void hideInfo() {
-        YoYo.with(Techniques.SlideOutUp).duration(300).playOn(infoLayout);
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                infoLayout.setVisibility(View.GONE);
-            }
-        }, 300);
-    }
-
-    private void toggleInfo() {
-        if (infoLayout.getVisibility() == View.VISIBLE) {
-            hideInfo();
-        } else {
-            showInfo();
-        }
     }
 
     private void toggleQuality() {
@@ -438,7 +412,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 ShareUtils.shareVideoLink(getActivity(), currentVideo);
                 break;
             case R.id.info:
-                toggleInfo();
+
                 break;
             case R.id.quality_switch:
                 toggleQuality();
@@ -458,7 +432,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         miniPlayer.setVisibility(View.GONE);
         playerToolbar.setVisibility(View.GONE);
-        infoLayout.setVisibility(View.GONE);
+
         toolbarsWrapper.setVisibility(View.GONE);
 
         player.hideControls();
@@ -481,7 +455,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         player.showControls();
         miniPlayer.setVisibility(View.VISIBLE);
         playerToolbar.setVisibility(View.VISIBLE);
-        infoLayout.setVisibility(View.GONE);
+
         toolbarsWrapper.setVisibility(View.VISIBLE);
 
         isInFullscreenMode = false;
