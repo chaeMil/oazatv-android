@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:soulwolf="http://schemas.android.com/apk/res-auto"
     android:background="@color/black"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -169,143 +170,180 @@
                 android:paddingBottom="80dp"
                 android:clipToPadding="false"
                 android:orientation="vertical"
+                android:gravity="center_horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <android.support.v7.widget.CardView
                     android:background="@color/white"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <com.chaemil.hgms.view.VideoThumbImageView
-                        android:maxWidth="600dp"
-                        android:layout_width="match_parent"
+                    <link.fls.BoundLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/audio_thumb"
-                        android:scaleType="fitCenter"
-                        android:background="@color/black" />
+                        android:clipChildren="false"
+                        app:maxWidth="480dp">
+
+                        <net.soulwolf.widget.ratiolayout.widget.RatioImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                soulwolf:datumRatio="datumWidth"
+                                soulwolf:widthRatio="16"
+                                soulwolf:heightRatio="9"
+                                android:id="@+id/audio_thumb"
+                                android:scaleType="centerCrop"
+                                android:background="@color/black" />
+
+                    </link.fls.BoundLayout>
 
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
                     android:layout_marginTop="12dp"
                     android:background="@color/white"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <LinearLayout
-                        android:padding="12dp"
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                    <link.fls.BoundLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clipChildren="false"
+                        app:maxWidth="480dp">
 
                         <LinearLayout
-                            android:id="@+id/downloaded_wrapper"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:layout_width="wrap_content"
+                            android:padding="12dp"
+                            android:orientation="horizontal"
+                            android:minWidth="480dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
-                            <ImageView
-                                android:id="@+id/downloaded"
-                                android:layout_marginBottom="12dp"
-                                tools:src="@drawable/ic_downloaded"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp" />
-
-                            <TextView
-                                android:id="@+id/downloaded_text"
-                                tools:text="@string/downloaded"
-                                fontPath="@string/default_font_bold"
-                                android:textSize="12sp"
-                                android:lines="1"
-                                android:textAllCaps="true"
+                            <LinearLayout
+                                android:id="@+id/downloaded_wrapper"
+                                android:layout_weight="1"
                                 android:gravity="center"
-                                android:textColor="@color/colorPrimaryDarkest"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                                android:orientation="vertical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:id="@+id/downloaded"
+                                    android:layout_marginBottom="12dp"
+                                    tools:src="@drawable/ic_downloaded"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp" />
+
+                                <TextView
+                                    android:id="@+id/downloaded_text"
+                                    tools:text="@string/downloaded"
+                                    fontPath="@string/default_font_bold"
+                                    android:textSize="12sp"
+                                    android:lines="1"
+                                    android:textAllCaps="true"
+                                    android:gravity="center"
+                                    android:textColor="@color/colorPrimaryDarkest"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:id="@+id/date"
+                                    android:layout_marginBottom="12dp"
+                                    android:src="@drawable/ic_date"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp" />
+
+                                <TextView
+                                    android:id="@+id/date_text"
+                                    tools:text="12.5.2016"
+                                    fontPath="@string/default_font_bold"
+                                    android:textSize="12sp"
+                                    android:lines="1"
+                                    android:textAllCaps="true"
+                                    android:gravity="center"
+                                    android:textColor="@color/colorPrimaryDarkest"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/share_wrapper"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:id="@+id/share"
+                                    android:layout_marginBottom="12dp"
+                                    android:src="@drawable/ic_share_dark"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp" />
+
+                                <TextView
+                                    android:id="@+id/share_text"
+                                    android:text="@string/share"
+                                    fontPath="@string/default_font_bold"
+                                    android:textSize="12sp"
+                                    android:lines="1"
+                                    android:textAllCaps="true"
+                                    android:gravity="center"
+                                    android:textColor="@color/colorPrimaryDarkest"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <ImageView
-                                android:id="@+id/date"
-                                android:layout_marginBottom="12dp"
-                                android:src="@drawable/ic_date"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp" />
-
-                            <TextView
-                                android:id="@+id/date_text"
-                                tools:text="12.5.2016"
-                                fontPath="@string/default_font_bold"
-                                android:textSize="12sp"
-                                android:lines="1"
-                                android:textAllCaps="true"
-                                android:gravity="center"
-                                android:textColor="@color/colorPrimaryDarkest"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/share_wrapper"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <ImageView
-                                android:id="@+id/share"
-                                android:layout_marginBottom="12dp"
-                                android:src="@drawable/ic_share_dark"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp" />
-
-                            <TextView
-                                android:id="@+id/share_text"
-                                android:text="@string/share"
-                                fontPath="@string/default_font_bold"
-                                android:textSize="12sp"
-                                android:lines="1"
-                                android:textAllCaps="true"
-                                android:gravity="center"
-                                android:textColor="@color/colorPrimaryDarkest"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
+                    </link.fls.BoundLayout>
 
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
                     android:layout_marginTop="12dp"
                     android:background="@color/white"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:textSize="14sp"
-                        android:layout_margin="12dp"
-                        tools:text="#Dita #Spurkova #vyucovani #patek #praha #2016 #cesky #teaching #friday #prague #czech #nadeje #vnitrni #clovek #promena #moc #hope #inner #man #change #power"
-                        android:id="@+id/tags"
-                        android:maxWidth="600dp"
-                        fontPath="@string/default_font_bold"
-                        android:textColor="@color/dark_gray"
-                        android:layout_width="match_parent"
+                    <link.fls.BoundLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textIsSelectable="false" />
+                        android:clipChildren="false"
+                        app:maxWidth="480dp">
+
+                        <LinearLayout
+                            android:padding="12dp"
+                            android:orientation="vertical"
+                            android:minWidth="480dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:textSize="14sp"
+                                android:layout_margin="12dp"
+                                tools:text="#Dita #Spurkova #vyucovani #patek #praha #2016 #cesky #teaching #friday #prague #czech #nadeje #vnitrni #clovek #promena #moc #hope #inner #man #change #power"
+                                android:id="@+id/tags"
+                                android:maxWidth="600dp"
+                                fontPath="@string/default_font_bold"
+                                android:textColor="@color/dark_gray"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textIsSelectable="false" />
+
+                        </LinearLayout>
+
+                    </link.fls.BoundLayout>
 
                 </android.support.v7.widget.CardView>
 
@@ -313,15 +351,24 @@
                     android:id="@+id/description_card"
                     android:layout_marginTop="12dp"
                     android:background="@color/white"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <WebView
-                        android:layout_margin="2dp"
-                        android:id="@+id/description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                    </WebView>
+                    <link.fls.BoundLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clipChildren="false"
+                        app:maxWidth="480dp">
+
+                        <WebView
+                            android:layout_margin="2dp"
+                            android:id="@+id/description"
+                            android:minWidth="480dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                        </WebView>
+
+                    </link.fls.BoundLayout>
 
                 </android.support.v7.widget.CardView>
 

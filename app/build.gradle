@@ -92,6 +92,8 @@ dependencies {
     compile 'com.minimize.library:seekbar-compat:0.2.5'
     compile 'com.github.mmin18:realtimeblurview:1.1.0'
     compile 'net.soulwolf.widget:ratiolayout:1.0.0'
+    compile 'link.fls:boundlayout:1.0.0'
+    compile 'net.soulwolf.widget:ratiolayout:1.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

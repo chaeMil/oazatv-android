@@ -40,6 +40,8 @@ import com.chaemil.hgms.view.VideoThumbImageView;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.koushikdutta.ion.Ion;
 
+import net.soulwolf.widget.ratiolayout.widget.RatioImageView;
+
 import org.json.JSONObject;
 
 import app.minimize.com.seek_bar_compat.SeekBarCompat;
@@ -67,7 +69,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private ImageView miniPlayerPause;
     private ProgressBar bufferBar;
     private ViewGroup rootView;
-    private VideoThumbImageView audioThumb;
+    private RatioImageView audioThumb;
     private ImageView back;
     private LinearLayout shareWrapper;
     private WebView description;
@@ -151,7 +153,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         miniPlayerText = (TextView) rootView.findViewById(R.id.mini_player_text);
         playerToolbar = (RelativeLayout) rootView.findViewById(R.id.toolbar);
         playerTitle = (TextView) rootView.findViewById(R.id.player_title);
-        audioThumb = (VideoThumbImageView) rootView.findViewById(R.id.audio_thumb);
+        audioThumb = (RatioImageView) rootView.findViewById(R.id.audio_thumb);
         playPause = (CircleButton) rootView.findViewById(R.id.play_pause);
         rew = (ImageView) rootView.findViewById(R.id.rew);
         ff = (ImageView) rootView.findViewById(R.id.ff);
