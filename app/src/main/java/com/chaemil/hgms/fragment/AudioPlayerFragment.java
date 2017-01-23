@@ -7,6 +7,7 @@ package com.chaemil.hgms.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,6 +80,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private TextView downloadedText;
     private LinearLayout downloadedWrapper;
     private TextView dateText;
+    private CardView descriptionCard;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -162,6 +164,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         back = (ImageView) rootView.findViewById(R.id.back);
         shareWrapper = (LinearLayout) rootView.findViewById(R.id.share_wrapper);
         description = (WebView) rootView.findViewById(R.id.description);
+        descriptionCard = (CardView) rootView.findViewById(R.id.description_card);
         tags = (TextView) rootView.findViewById(R.id.tags);
         miniPlayerSwipe = (SwipeLayout) rootView.findViewById(R.id.mini_player_swipe);
         downloadedView = (ImageView) rootView.findViewById(R.id.downloaded);
@@ -415,6 +418,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
             description.loadData(descriptionHtml, "text/html; charset=utf-8", "UTF-8");
         } else {
             description.setVisibility(View.GONE);
+            descriptionCard.setVisibility(View.GONE);
         }
         if (!getCurrentAudio().getTags().equals("")) {
             String tagsString = "";
