@@ -1,6 +1,7 @@
 package com.chaemil.hgms.fragment;
 
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -164,7 +165,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     public void onResume() {
         super.onResume();
 
-        adjustOrientation();
+        adjustOrientation(false);
 
         if (OSUtils.isRunningNougat() && mainActivity != null && mainActivity.isInMultiWindowMode()
                 || OSUtils.isRunningChromeOS(mainActivity)) {
@@ -190,12 +191,43 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
-    private void adjustOrientation() {
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        adjustFullscreen();
+    }
+
+    public void adjustFullscreen() {
+        if (!isTablet(getActivity())) {
+            switch (getScreenOrientation(getActivity())) {
+                case Configuration.ORIENTATION_PORTRAIT:
+                    break;
+                case Configuration.ORIENTATION_LANDSCAPE:
+                    if (mainActivity.isPanelExpanded()) {
+                        requestFullscreenPlayer();
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void adjustOrientation(boolean exitingFullscreen) {
         if (!isTablet(getActivity())) {
             if (isInFullscreenMode) {
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
             } else {
-                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                if (exitingFullscreen) {
+                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    delay(new Runnable() {
+                        @Override
+                        public void run() {
+                            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+                        }
+                    }, 2000);
+                } else {
+                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+                }
             }
         }
     }
@@ -471,7 +503,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         isInFullscreenMode = true;
 
-        adjustOrientation();
+        adjustOrientation(false);
     }
 
     public void cancelFullscreenPlayer() {
@@ -501,7 +533,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         isInFullscreenMode = false;
 
-        adjustOrientation();
+        adjustOrientation(true);
     }
 
     private void playPauseVideo() {
@@ -636,6 +668,13 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         player.start();
 
         mainActivity.expandPanel();
+
+        delay(new Runnable() {
+            @Override
+            public void run() {
+                adjustFullscreen();
+            }
+        }, 750);
 
         AnalyticsService
                 .getInstance()

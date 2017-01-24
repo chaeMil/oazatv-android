@@ -1,12 +1,15 @@
 package com.chaemil.hgms.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.view.Display;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -96,6 +99,21 @@ public class BaseFragment extends Fragment implements RequestFactoryListener {
         return (context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK)
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
+
+    public static int getScreenOrientation(Activity activity) {
+        Display getOrient = activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+
+        getOrient.getSize(size);
+
+        int orientation;
+        if (size.x < size.y) {
+            orientation = Configuration.ORIENTATION_PORTRAIT;
+        } else {
+            orientation = Configuration.ORIENTATION_LANDSCAPE;
+        }
+        return orientation;
     }
 
     @Override

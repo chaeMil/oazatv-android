@@ -310,6 +310,9 @@ public class MainActivity extends BaseActivity {
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
                         adjustLayout();
+                        if (getVideoPlayerFragment() != null) {
+                            getVideoPlayerFragment().adjustFullscreen();
+                        }
                         break;
                     case BottomSheetBehavior.STATE_HIDDEN:
                         layoutParams.bottomMargin = 0;
