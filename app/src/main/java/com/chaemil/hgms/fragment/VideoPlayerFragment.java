@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -99,7 +100,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private EasyVideoPlayer player;
     private Video savedVideo;
     private boolean dismiss;
-    private SpinKitView buffering;
     private RelativeLayout toolbarsWrapper;
     private boolean qualityToggle = false;
     private TextView subtitles;
@@ -108,7 +108,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private NestedScrollView infoWrapper;
     private RelativeLayout videoWrapper;
     private RatioFrameLayout playerRatioWrapper;
-
+    private NestedScrollView tabletRightScroll;
+    private WebView descriptionTablet;
 
     private Handler subtitleDisplayHandler = new Handler();
     private Runnable subtitleProcessor = new Runnable() {
@@ -196,6 +197,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         super.onConfigurationChanged(newConfig);
 
         adjustFullscreen();
+        adjustTabletLayout();
     }
 
     public void adjustFullscreen() {
@@ -315,13 +317,14 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         miniPlayerSwipe = (SwipeLayout) rootView.findViewById(R.id.mini_player_swipe);
         qualitySwitch = (ImageView) rootView.findViewById(R.id.quality_switch);
         player = (EasyVideoPlayer) rootView.findViewById(R.id.player);
-        buffering = (SpinKitView) rootView.findViewById(R.id.buffering);
         toolbarsWrapper = (RelativeLayout) rootView.findViewById(R.id.toolbars_wrapper);
         subtitles = (TextView) rootView.findViewById(R.id.subtitles);
         dateText = (TextView) rootView.findViewById(R.id.date_text);
         infoWrapper = (NestedScrollView) rootView.findViewById(R.id.info_wrapper);
         videoWrapper = (RelativeLayout) rootView.findViewById(R.id.video_wrapper);
         playerRatioWrapper = (RatioFrameLayout) rootView.findViewById(R.id.player_ratio_wrapper);
+        tabletRightScroll = (NestedScrollView) rootView.findViewById(R.id.tablet_right_scroll);
+        descriptionTablet = (WebView) rootView.findViewById(R.id.description_tablet);
     }
 
     private void setupUI() {
@@ -349,23 +352,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         return currentVideo;
     }
 
-    private void showBuffering() {
-        buffering.setVisibility(View.VISIBLE);
-        if (buffering.getVisibility() != View.VISIBLE) {
-            YoYo.with(Techniques.FadeIn).duration(150).playOn(buffering);
-        }
-    }
-
-    private void hideBuffering() {
-        YoYo.with(Techniques.FadeOut).duration(150).playOn(buffering);
-        delay(new Runnable() {
-            @Override
-            public void run() {
-                buffering.setVisibility(View.GONE);
-            }
-        }, 150);
-    }
-
     private void toggleQuality() {
         saveCurrentVideoTime();
 
@@ -390,7 +376,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     private void setHighQuality() {
         if (currentVideo != null && currentVideo.getVideoFile() != null) {
-            showBuffering();
             qualityToggle = true;
             player.disableControls();
             player.setSource(Uri.parse(currentVideo.getVideoFile()));
@@ -406,7 +391,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     private void setLowQuality() {
         if (currentVideo != null && currentVideo.getVideoFileLowRes() != null) {
-            showBuffering();
             qualityToggle = true;
             player.disableControls();
             player.setSource(Uri.parse(currentVideo.getVideoFileLowRes()));
@@ -504,6 +488,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         isInFullscreenMode = true;
 
         adjustOrientation(false);
+        adjustTabletLayout();
     }
 
     public void cancelFullscreenPlayer() {
@@ -534,6 +519,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         isInFullscreenMode = false;
 
         adjustOrientation(true);
+        adjustTabletLayout();
     }
 
     private void playPauseVideo() {
@@ -645,8 +631,10 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         if (!currentVideo.getDescription().equals("")) {
             description.loadData(currentVideo.getDescription(), "text/html; charset=utf-8", "UTF-8");
+            descriptionTablet.loadData(currentVideo.getDescription(), "text/html; charset=utf-8", "UTF-8");
         } else {
             description.setVisibility(View.GONE);
+            descriptionTablet.setVisibility(View.GONE);
         }
         if (!currentVideo.getTags().equals("")) {
             String tagsString = "";
@@ -669,6 +657,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         mainActivity.expandPanel();
 
+        adjustTabletLayout();
+
         delay(new Runnable() {
             @Override
             public void run() {
@@ -682,6 +672,34 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         postVideoView();
 
         postGA();
+    }
+
+    public void adjustTabletLayout() {
+        if (isTablet(getActivity())) {
+            if (isInFullscreenMode) {
+                tabletRightScroll.setVisibility(View.GONE);
+            } else {
+                switch (getScreenOrientation(getActivity())) {
+                    case Configuration.ORIENTATION_LANDSCAPE:
+                        tabletRightScroll.setVisibility(View.VISIBLE);
+                        RelativeLayout.LayoutParams params = new RelativeLayout
+                                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params.addRule(RelativeLayout.LEFT_OF, R.id.tablet_right_scroll);
+                        params.addRule(RelativeLayout.BELOW, R.id.toolbars_wrapper);
+                        videoWrapper.setLayoutParams(params);
+                        description.setVisibility(View.GONE);
+                        break;
+                    case Configuration.ORIENTATION_PORTRAIT:
+                        tabletRightScroll.setVisibility(View.GONE);
+                        description.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+        } else {
+            tabletRightScroll.setVisibility(View.GONE);
+            description.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -728,8 +746,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 periodicalSaveTime();
             }
         }, PERIODICAL_SAVE_TIME);
-
-        hideBuffering();
 
         if (qualityToggle) {
             player.seekTo(currentVideo.getCurrentTime());
@@ -816,9 +832,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onBuffering(int percent) {
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onBuffering");
-        showBuffering();
         if (player.isPlaying()) {
-            hideBuffering();
+
         }
     }
 

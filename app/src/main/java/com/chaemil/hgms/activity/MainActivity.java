@@ -312,6 +312,7 @@ public class MainActivity extends BaseActivity {
                         adjustLayout();
                         if (getVideoPlayerFragment() != null) {
                             getVideoPlayerFragment().adjustFullscreen();
+                            getVideoPlayerFragment().adjustTabletLayout();
                         }
                         break;
                     case BottomSheetBehavior.STATE_HIDDEN:

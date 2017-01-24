@@ -96,9 +96,11 @@ public class BaseFragment extends Fragment implements RequestFactoryListener {
     }
 
     public static boolean isTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
+        boolean isTablet = (context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK)
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+        SmartLog.Log(SmartLog.LogLevel.DEBUG, "isTablet", String.valueOf(isTablet));
+        return isTablet;
     }
 
     public static int getScreenOrientation(Activity activity) {
