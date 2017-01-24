@@ -6,9 +6,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.CardView;
 import android.text.Html;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +39,7 @@ import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.OSUtils;
 import com.chaemil.hgms.utils.ShareUtils;
@@ -65,6 +69,7 @@ import java.util.Collection;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import link.fls.BoundLayout;
 import ru.rambler.libs.swipe_layout.SwipeLayout;
 
 /**
@@ -108,8 +113,11 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private NestedScrollView infoWrapper;
     private RelativeLayout videoWrapper;
     private RatioFrameLayout playerRatioWrapper;
-    private NestedScrollView tabletRightScroll;
     private WebView descriptionTablet;
+    private NestedScrollView tabletRightScroll;
+    private BoundLayout actionsBoundWrapper;
+    private BoundLayout tagsBoundWrapper;
+    private LinearLayout infoLinearLayout;
 
     private Handler subtitleDisplayHandler = new Handler();
     private Runnable subtitleProcessor = new Runnable() {
@@ -325,6 +333,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         playerRatioWrapper = (RatioFrameLayout) rootView.findViewById(R.id.player_ratio_wrapper);
         tabletRightScroll = (NestedScrollView) rootView.findViewById(R.id.tablet_right_scroll);
         descriptionTablet = (WebView) rootView.findViewById(R.id.description_tablet);
+        actionsBoundWrapper = (BoundLayout) rootView.findViewById(R.id.actions_bound_wrapper);
+        tagsBoundWrapper = (BoundLayout) rootView.findViewById(R.id.tags_bound_wrapper);
+        infoLinearLayout = (LinearLayout) rootView.findViewById(R.id.info_linear_layout);
     }
 
     private void setupUI() {
@@ -506,10 +517,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         playerToolbar.setVisibility(View.VISIBLE);
         infoWrapper.setVisibility(View.VISIBLE);
         toolbarsWrapper.setVisibility(View.VISIBLE);
-        RelativeLayout.LayoutParams params = new RelativeLayout
-                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.BELOW, R.id.toolbars_wrapper);
-        videoWrapper.setLayoutParams(params);
+        videoWrapper.setLayoutParams(new RelativeLayout
+                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         videoWrapper.setFitsSystemWindows(true);
         player.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -681,18 +690,10 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             } else {
                 switch (getScreenOrientation(getActivity())) {
                     case Configuration.ORIENTATION_LANDSCAPE:
-                        tabletRightScroll.setVisibility(View.VISIBLE);
-                        RelativeLayout.LayoutParams params = new RelativeLayout
-                                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT);
-                        params.addRule(RelativeLayout.LEFT_OF, R.id.tablet_right_scroll);
-                        params.addRule(RelativeLayout.BELOW, R.id.toolbars_wrapper);
-                        videoWrapper.setLayoutParams(params);
-                        description.setVisibility(View.GONE);
+                        adjustTabletLayoutLandscape();
                         break;
                     case Configuration.ORIENTATION_PORTRAIT:
-                        tabletRightScroll.setVisibility(View.GONE);
-                        description.setVisibility(View.VISIBLE);
+                        adjustTabletLayoutPortrait();
                         break;
                 }
             }
@@ -700,6 +701,22 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             tabletRightScroll.setVisibility(View.GONE);
             description.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void adjustTabletLayoutPortrait() {
+        tabletRightScroll.setVisibility(View.GONE);
+        description.setVisibility(View.VISIBLE);
+    }
+
+    private void adjustTabletLayoutLandscape() {
+        tabletRightScroll.setVisibility(View.VISIBLE);
+        RelativeLayout.LayoutParams params = new RelativeLayout
+                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.LEFT_OF, R.id.tablet_right_scroll);
+        params.addRule(RelativeLayout.BELOW, R.id.toolbars_wrapper);
+        videoWrapper.setLayoutParams(params);
+        description.setVisibility(View.GONE);
     }
 
     @Override

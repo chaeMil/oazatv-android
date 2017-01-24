@@ -57,6 +57,7 @@ import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
 import com.chaemil.hgms.utils.SmartLog;
+import com.chaemil.hgms.view.LockableBottomSheetBehaviour;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
@@ -299,6 +300,9 @@ public class MainActivity extends BaseActivity {
 
                 switch (newState) {
                     case BottomSheetBehavior.STATE_COLLAPSED:
+                        if (mBottomSheetBehavior instanceof LockableBottomSheetBehaviour) {
+                            ((LockableBottomSheetBehaviour) mBottomSheetBehavior).setLocked(false);
+                        }
                         adjustLayout();
                         setFullscreen(false);
                         if (getVideoPlayerFragment() != null) {
@@ -309,6 +313,9 @@ public class MainActivity extends BaseActivity {
                         mainFragmentWrapper.setLayoutParams(layoutParams);
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
+                        if (mBottomSheetBehavior instanceof LockableBottomSheetBehaviour) {
+                            ((LockableBottomSheetBehaviour) mBottomSheetBehavior).setLocked(true);
+                        }
                         adjustLayout();
                         if (getVideoPlayerFragment() != null) {
                             getVideoPlayerFragment().adjustFullscreen();
@@ -320,6 +327,9 @@ public class MainActivity extends BaseActivity {
                         mainFragmentWrapper.setLayoutParams(layoutParams);
                         break;
                     case BottomSheetBehavior.STATE_DRAGGING:
+                        if (mBottomSheetBehavior instanceof LockableBottomSheetBehaviour) {
+                            ((LockableBottomSheetBehaviour) mBottomSheetBehavior).setLocked(false);
+                        }
                         if (fullscreen) {
                             expandPanel();
                         }
@@ -655,13 +665,16 @@ public class MainActivity extends BaseActivity {
             if (getVideoPlayerFragment() != null) {
                 if (getVideoPlayerFragment().isInFullscreenMode) {
                     getVideoPlayerFragment().cancelFullscreenPlayer();
+                    return;
                 } else {
                     collapsePanel();
+                    return;
                 }
             } else {
                 collapsePanel();
+                return;
             }
-            return;
+
         }
 
         if (getMainFragment() != null
