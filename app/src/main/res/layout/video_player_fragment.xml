@@ -34,6 +34,7 @@
                 soulwolf:datumRatio="datumWidth"
                 soulwolf:widthRatio="16"
                 soulwolf:heightRatio="9"
+                android:id="@+id/player_ratio_wrapper"
                 android:background="@color/black"
                 android:layout_alignParentTop="true"
                 android:layout_width="match_parent"
@@ -42,7 +43,7 @@
                 <RelativeLayout
                     android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
                     <com.afollestad.easyvideoplayer.EasyVideoPlayer
                         xmlns:android="http://schemas.android.com/apk/res/android"

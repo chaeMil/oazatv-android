@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -47,6 +48,8 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.koushikdutta.ion.Ion;
+
+import net.soulwolf.widget.ratiolayout.widget.RatioFrameLayout;
 
 import org.json.JSONObject;
 
@@ -103,6 +106,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private TextView dateText;
     private NestedScrollView infoWrapper;
     private RelativeLayout videoWrapper;
+    private RatioFrameLayout playerRatioWrapper;
+
+
     private Handler subtitleDisplayHandler = new Handler();
     private Runnable subtitleProcessor = new Runnable() {
         @Override
@@ -283,6 +289,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         dateText = (TextView) rootView.findViewById(R.id.date_text);
         infoWrapper = (NestedScrollView) rootView.findViewById(R.id.info_wrapper);
         videoWrapper = (RelativeLayout) rootView.findViewById(R.id.video_wrapper);
+        playerRatioWrapper = (RatioFrameLayout) rootView.findViewById(R.id.player_ratio_wrapper);
     }
 
     private void setupUI() {
@@ -455,6 +462,10 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         videoWrapper.setLayoutParams(new RelativeLayout
                 .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         videoWrapper.setFitsSystemWindows(false);
+        player.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        playerRatioWrapper.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
 
         player.hideControls();
 
@@ -483,6 +494,10 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         params.addRule(RelativeLayout.BELOW, R.id.toolbars_wrapper);
         videoWrapper.setLayoutParams(params);
         videoWrapper.setFitsSystemWindows(true);
+        player.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        playerRatioWrapper.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
 
         isInFullscreenMode = false;
 
