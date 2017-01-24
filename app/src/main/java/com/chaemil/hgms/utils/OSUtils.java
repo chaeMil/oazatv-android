@@ -37,7 +37,11 @@ public class OSUtils {
     }
 
     public static boolean isRunningChromeOS(Context context) {
-        return context.getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
+        if (context != null) {
+            return context.getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
+        } else {
+            return false;
+        }
     }
 
     //fix for NotificationCompat.MediaStyle
