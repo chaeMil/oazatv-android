@@ -26,6 +26,7 @@
             android:id="@+id/video_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/black"
             android:layout_below="@+id/toolbars_wrapper"
             android:gravity="center">
 
@@ -95,7 +96,7 @@
         </RelativeLayout>
 
         <android.support.v4.widget.NestedScrollView
-            android:id="@+id/thumb_wrapper"
+            android:id="@+id/info_wrapper"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -344,8 +345,6 @@
 
                 </RelativeLayout>
 
-
-
                 <TextView
                     android:textColor="@color/white"
                     fontPath="@string/default_font_bold"
@@ -357,28 +356,7 @@
                     android:layout_centerVertical="true"
                     android:singleLine="true"
                     android:layout_toRightOf="@+id/back_wrapper"
-                    android:layout_toLeftOf="@+id/info" />
-
-                <ImageView
-                    android:id="@+id/info"
-                    android:background="@drawable/transparent_ripple"
-                    android:src="@drawable/ic_info"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_centerVertical="true"
-                    android:padding="8dp"
-                    android:layout_toLeftOf="@+id/share" />
-
-                <ImageView
-                    android:id="@+id/share"
-                    android:background="@drawable/transparent_ripple"
-                    android:src="@drawable/ic_share"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/quality_switch"
-                    android:layout_toStartOf="@+id/quality_switch"
-                    android:padding="8dp" />
+                    android:layout_toLeftOf="@+id/quality_switch" />
 
                 <ImageView
                     android:layout_width="50dp"
@@ -462,17 +440,6 @@
             </ru.rambler.libs.swipe_layout.SwipeLayout>
 
         </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/shadow"
-            android:scaleType="fitXY"
-            android:src="@drawable/drop_shadow"
-            android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:alpha="0.2"
-            android:adjustViewBounds="false"
-            android:layout_alignParentTop="false"
-            android:layout_below="@+id/toolbars_wrapper" />
 
     </RelativeLayout>
 

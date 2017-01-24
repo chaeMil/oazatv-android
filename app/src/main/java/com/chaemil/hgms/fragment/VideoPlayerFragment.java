@@ -1,19 +1,20 @@
 package com.chaemil.hgms.fragment;
 
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,7 @@ import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.OSUtils;
 import com.chaemil.hgms.utils.ShareUtils;
 import com.chaemil.hgms.utils.SmartLog;
+import com.chaemil.hgms.utils.StringUtils;
 import com.chaemil.hgms.utils.ViewUtils;
 import com.chaemil.hgms.utils.subtitles.Caption;
 import com.chaemil.hgms.utils.subtitles.FormatASS;
@@ -81,7 +83,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     public boolean isInFullscreenMode = false;
     public boolean isInQualityMode = false;
     private ImageView back;
-    private ImageView share;
+    private LinearLayout shareWrapper;
     private WebView description;
     private TextView tags;
     private RelativeLayout playerBgWrapper;
@@ -89,7 +91,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private Timer timer;
     private SwipeLayout miniPlayerSwipe;
     private MainActivity mainActivity;
-    private ImageView info;
     private ImageView qualitySwitch;
     private EasyVideoPlayer player;
     private Video savedVideo;
@@ -99,6 +100,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private boolean qualityToggle = false;
     private TextView subtitles;
     private TimedTextObject srt;
+    private TextView dateText;
+    private NestedScrollView infoWrapper;
+    private RelativeLayout videoWrapper;
     private Handler subtitleDisplayHandler = new Handler();
     private Runnable subtitleProcessor = new Runnable() {
         @Override
@@ -138,6 +142,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     public void onPause() {
         super.onPause();
 
+        saveCurrentVideoTime();
+
         if (OSUtils.isRunningNougat() && mainActivity != null && mainActivity.isInMultiWindowMode()
                 || OSUtils.isRunningChromeOS(mainActivity)) {
             return;
@@ -151,6 +157,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
+
+        adjustOrientation();
 
         if (OSUtils.isRunningNougat() && mainActivity != null && mainActivity.isInMultiWindowMode()
                 || OSUtils.isRunningChromeOS(mainActivity)) {
@@ -173,6 +181,16 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
 
             setupTimer();
+        }
+    }
+
+    private void adjustOrientation() {
+        if (!isTablet(getActivity())) {
+            if (isInFullscreenMode) {
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+            } else {
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
         }
     }
 
@@ -252,27 +270,28 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         playerTitle = (TextView) rootView.findViewById(R.id.player_title);
         miniPlayerPause = (ImageView) rootView.findViewById(R.id.mini_play_pause);
         back = (ImageView) rootView.findViewById(R.id.back);
-        share = (ImageView) rootView.findViewById(R.id.share);
+        shareWrapper = (LinearLayout) rootView.findViewById(R.id.share_wrapper);
         description = (WebView) rootView.findViewById(R.id.description);
         tags = (TextView) rootView.findViewById(R.id.tags);
         playerBgWrapper = (RelativeLayout) rootView.findViewById(R.id.player_bg_wrapper);
         miniPlayerSwipe = (SwipeLayout) rootView.findViewById(R.id.mini_player_swipe);
-        info = (ImageView) rootView.findViewById(R.id.info);
         qualitySwitch = (ImageView) rootView.findViewById(R.id.quality_switch);
         player = (EasyVideoPlayer) rootView.findViewById(R.id.player);
         buffering = (SpinKitView) rootView.findViewById(R.id.buffering);
         toolbarsWrapper = (RelativeLayout) rootView.findViewById(R.id.toolbars_wrapper);
         subtitles = (TextView) rootView.findViewById(R.id.subtitles);
+        dateText = (TextView) rootView.findViewById(R.id.date_text);
+        infoWrapper = (NestedScrollView) rootView.findViewById(R.id.info_wrapper);
+        videoWrapper = (RelativeLayout) rootView.findViewById(R.id.video_wrapper);
     }
 
     private void setupUI() {
         miniPlayerPause.setOnClickListener(this);
         back.setOnClickListener(this);
-        share.setOnClickListener(this);
+        shareWrapper.setOnClickListener(this);
         playerBgWrapper.setOnClickListener(this);
         miniPlayer.setOnClickListener(this);
         playerToolbar.setOnClickListener(this);
-        info.setOnClickListener(this);
         qualitySwitch.setOnClickListener(this);
         miniPlayerImageView.setOnClickListener(this);
         miniPlayerText.setOnClickListener(this);
@@ -408,11 +427,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             case R.id.back:
                 ((MainActivity) getActivity()).collapsePanel();
                 break;
-            case R.id.share:
+            case R.id.share_wrapper:
                 ShareUtils.shareVideoLink(getActivity(), currentVideo);
-                break;
-            case R.id.info:
-
                 break;
             case R.id.quality_switch:
                 toggleQuality();
@@ -430,16 +446,21 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         getActivity().getWindow().getDecorView()
                 .setBackgroundColor(getResources().getColor(R.color.black));
 
+        ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(false);
+
         miniPlayer.setVisibility(View.GONE);
         playerToolbar.setVisibility(View.GONE);
-
+        infoWrapper.setVisibility(View.GONE);
         toolbarsWrapper.setVisibility(View.GONE);
+        videoWrapper.setLayoutParams(new RelativeLayout
+                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        videoWrapper.setFitsSystemWindows(false);
 
         player.hideControls();
 
-        ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(false);
-
         isInFullscreenMode = true;
+
+        adjustOrientation();
     }
 
     public void cancelFullscreenPlayer() {
@@ -447,7 +468,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             ((BaseActivity) getActivity()).setFullscreen(false);
 
             getActivity().getWindow().getDecorView()
-                    .setBackgroundColor(getResources().getColor(R.color.white));
+                    .setBackgroundColor(getResources().getColor(R.color.fragment_bg));
 
             ((MainActivity) getActivity()).getMainRelativeLayout().setFitsSystemWindows(true);
         }
@@ -455,10 +476,17 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         player.showControls();
         miniPlayer.setVisibility(View.VISIBLE);
         playerToolbar.setVisibility(View.VISIBLE);
-
+        infoWrapper.setVisibility(View.VISIBLE);
         toolbarsWrapper.setVisibility(View.VISIBLE);
+        RelativeLayout.LayoutParams params = new RelativeLayout
+                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.BELOW, R.id.toolbars_wrapper);
+        videoWrapper.setLayoutParams(params);
+        videoWrapper.setFitsSystemWindows(true);
 
         isInFullscreenMode = false;
+
+        adjustOrientation();
     }
 
     private void playPauseVideo() {
@@ -566,6 +594,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         miniPlayerText.setText(video.getName());
         playerTitle.setText(video.getName());
+        dateText.setText(StringUtils.formatDate(video.getDate(), mainActivity));
 
         if (!currentVideo.getDescription().equals("")) {
             description.loadData(currentVideo.getDescription(), "text/html; charset=utf-8", "UTF-8");

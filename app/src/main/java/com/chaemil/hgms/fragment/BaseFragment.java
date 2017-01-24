@@ -2,6 +2,8 @@ package com.chaemil.hgms.fragment;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -90,6 +92,11 @@ public class BaseFragment extends Fragment implements RequestFactoryListener {
         handler.postDelayed(runnable, time);
     }
 
+    public static boolean isTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
 
     @Override
     public void onErrorResponse(VolleyError exception, RequestType requestType) {
