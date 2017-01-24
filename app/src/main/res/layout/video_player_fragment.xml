@@ -443,7 +443,6 @@
         </RelativeLayout>
 
         <android.support.v4.widget.NestedScrollView
-            android:fitsSystemWindows="true"
             android:layout_weight="1.5"
             android:id="@+id/tablet_right_scroll"
             android:layout_width="match_parent"
@@ -451,7 +450,6 @@
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_marginBottom="80dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
