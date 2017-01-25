@@ -925,7 +925,7 @@ public class MainActivity extends BaseActivity {
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(DownloadedFragment.DOWNLOAD_MANAGER_ONCHANGE);
-        intentFilter.addAction(AudioPlaybackReceiver.NOTIFY_DELETE);
+        intentFilter.addAction(Video.NOTIFY_AUDIO_DELETE);
 
         registerReceiver(audioDownloadedDeletedReceiver, intentFilter);
     }

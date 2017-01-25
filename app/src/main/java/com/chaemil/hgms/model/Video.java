@@ -25,6 +25,7 @@ import java.util.Locale;
  */
 public class Video extends SugarRecord implements Parcelable {
 
+    public static final String NOTIFY_AUDIO_DELETE = "audio_delete";
     private Long id;
     @Expose
     @SerializedName(Constants.JSON_ID)
@@ -154,7 +155,7 @@ public class Video extends SugarRecord implements Parcelable {
         audio.delete();
         thumb.delete();
         save();
-        context.sendBroadcast(new Intent(AudioPlaybackReceiver.NOTIFY_DELETE));
+        context.sendBroadcast(new Intent(NOTIFY_AUDIO_DELETE));
     }
 
     public String getVideoLanguage(Context context) {

@@ -1,5 +1,9 @@
 package com.chaemil.hgms.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -34,6 +38,7 @@ import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.OSUtils;
 import com.chaemil.hgms.utils.ShareUtils;
@@ -109,6 +114,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private BoundLayout actionsBoundWrapper;
     private BoundLayout tagsBoundWrapper;
     private LinearLayout infoLinearLayout;
+    private ImageView downloadedView;
+    private TextView downloadedText;
+    private LinearLayout downloadedWrapper;
 
     private Handler subtitleDisplayHandler = new Handler();
     private Runnable subtitleProcessor = new Runnable() {
@@ -136,6 +144,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
+    private BroadcastReceiver downloadChangeReceiver;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,10 +161,11 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         saveCurrentVideoTime();
 
-        if (OSUtils.isRunningNougat() && mainActivity != null && mainActivity.isInMultiWindowMode()
-                || OSUtils.isRunningChromeOS(mainActivity)) {
+        if (OSUtils.isRunningNougat() && getActivity().isInMultiWindowMode()
+                || OSUtils.isRunningChromeOS(getActivity())) {
             return;
         } else {
+            unregisterDownloadChangeReceiver();
             cancelFullscreenPlayer();
             player.pause();
             stopTimer();
@@ -167,8 +178,10 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         adjustOrientation(false);
 
-        if (OSUtils.isRunningNougat() && mainActivity != null && mainActivity.isInMultiWindowMode()
-                || OSUtils.isRunningChromeOS(mainActivity)) {
+        createDownloadChangeReceiver();
+
+        if (OSUtils.isRunningNougat() && getActivity().isInMultiWindowMode()
+                || OSUtils.isRunningChromeOS(getActivity())) {
             return;
         } else {
             if (currentVideo != null) {
@@ -188,6 +201,36 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
 
             setupTimer();
+        }
+    }
+
+    private void createDownloadChangeReceiver() {
+        unregisterDownloadChangeReceiver();
+
+        if (downloadChangeReceiver == null) {
+            downloadChangeReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    updateDownloadedButton();
+                }
+            };
+        }
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(DownloadedFragment.DOWNLOAD_MANAGER_ONCHANGE);
+        filter.addAction(Video.NOTIFY_AUDIO_DELETE);
+
+        getActivity().registerReceiver(downloadChangeReceiver, filter);
+    }
+
+    private void unregisterDownloadChangeReceiver() {
+        if (downloadChangeReceiver != null) {
+            try {
+                getActivity().unregisterReceiver(downloadChangeReceiver);
+                downloadChangeReceiver = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -327,6 +370,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         actionsBoundWrapper = (BoundLayout) rootView.findViewById(R.id.actions_bound_wrapper);
         tagsBoundWrapper = (BoundLayout) rootView.findViewById(R.id.tags_bound_wrapper);
         infoLinearLayout = (LinearLayout) rootView.findViewById(R.id.info_linear_layout);
+        downloadedView = (ImageView) rootView.findViewById(R.id.downloaded);
+        downloadedText = (TextView) rootView.findViewById(R.id.downloaded_text);
+        downloadedWrapper = (LinearLayout) rootView.findViewById(R.id.downloaded_wrapper);
     }
 
     private void setupUI() {
@@ -339,6 +385,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         qualitySwitch.setOnClickListener(this);
         miniPlayerImageView.setOnClickListener(this);
         miniPlayerText.setOnClickListener(this);
+        downloadedWrapper.setOnClickListener(this);
 
         miniPlayerSwipe.setOnSwipeListener(createSwipeListener());
 
@@ -457,6 +504,16 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.quality_switch:
                 toggleQuality();
+                break;
+            case R.id.downloaded_wrapper:
+                unregisterDownloadChangeReceiver();
+                AdapterUtils.downloadAudio(getActivity(), getCurrentVideo());
+                delay(new Runnable() {
+                    @Override
+                    public void run() {
+                        createDownloadChangeReceiver();
+                    }
+                }, 2000);
                 break;
             case R.id.mini_player_image:
             case R.id.mini_player_text:
@@ -627,7 +684,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         miniPlayerText.setText(video.getName());
         playerTitle.setText(video.getName());
-        dateText.setText(StringUtils.formatDate(video.getDate(), mainActivity));
+        dateText.setText(StringUtils.formatDate(video.getDate(), getActivity()));
+        updateDownloadedButton();
 
         if (!currentVideo.getDescription().equals("")) {
             description.loadData(currentVideo.getDescription(), "text/html; charset=utf-8", "UTF-8");
@@ -672,6 +730,16 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         postVideoView();
 
         postGA();
+    }
+
+    public void updateDownloadedButton() {
+        if (getCurrentVideo().isAudioDownloaded(getActivity())) {
+            downloadedText.setText(getString(R.string.audio_downloaded));
+            downloadedView.setImageDrawable(getResources().getDrawable(R.drawable.ic_downloaded));
+        } else {
+            downloadedText.setText(getString(R.string.download_audio));
+            downloadedView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_cloud_download));
+        }
     }
 
     public void adjustTabletLayout() {
