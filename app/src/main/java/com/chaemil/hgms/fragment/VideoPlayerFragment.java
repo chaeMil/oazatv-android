@@ -734,7 +734,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     public void updateDownloadedButton() {
         if (getCurrentVideo().isAudioDownloaded(getActivity())) {
-            downloadedText.setText(getString(R.string.audio_downloaded));
+            downloadedText.setText(getString(R.string.downloaded));
             downloadedView.setImageDrawable(getResources().getDrawable(R.drawable.ic_downloaded));
         } else {
             downloadedText.setText(getString(R.string.download_audio));

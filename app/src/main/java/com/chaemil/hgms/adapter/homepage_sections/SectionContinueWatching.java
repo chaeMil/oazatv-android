@@ -53,7 +53,7 @@ public class SectionContinueWatching extends BaseSection {
                 MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
 
                 if (mainActivity.isSomethingPlaying()) {
-                    AdapterUtils.contextDialog(context, video, false);
+                    AdapterUtils.contextDialog(context, video, true);
                 } else {
                     mainActivity.playNewVideo(video);
                 }
