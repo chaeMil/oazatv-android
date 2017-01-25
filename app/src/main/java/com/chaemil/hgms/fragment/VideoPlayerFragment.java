@@ -266,7 +266,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                     delay(new Runnable() {
                         @Override
                         public void run() {
-                            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+                            if (getActivity() != null) {
+                                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+                            }
                         }
                     }, 2000);
                 } else {
