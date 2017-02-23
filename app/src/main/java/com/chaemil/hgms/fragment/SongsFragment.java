@@ -39,7 +39,6 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
 
     private ArrayList<SongGroup> songGroups = new ArrayList<>();
     private RecyclerView songsList;
-    private SwipeRefreshLayout swipeRefresh;
     private LinearLayout connectionErrorWrapper;
     private SongsAdapter adapter;
     private SongFragment songFragment;
@@ -71,8 +70,6 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
     }
 
     private void setupUI() {
-        swipeRefresh.setOnRefreshListener(this);
-
         if (getActivity() != null) {
 
             if (songs != null) {
@@ -97,7 +94,6 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
     private void getUI(ViewGroup rootView) {
         songsList = (RecyclerView) rootView.findViewById(R.id.grid_view);
         progress = (RelativeLayout) rootView.findViewById(R.id.progress);
-        swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
         fastScroller = (FastScroller) rootView.findViewById(R.id.fastscroll);
         connectionErrorWrapper = (LinearLayout) rootView.findViewById(R.id.connection_error_wrapper);
     }
@@ -124,7 +120,6 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
                 }
                 adapter.notifyDataSetChanged();
                 hideProgress();
-                swipeRefresh.setRefreshing(false);
                 break;
 
         }
@@ -133,7 +128,6 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
     @Override
     public void onErrorResponse(VolleyError exception, RequestType requestType) {
         super.onErrorResponse(exception, requestType);
-        swipeRefresh.setRefreshing(false);
         connectionErrorWrapper.setVisibility(View.VISIBLE);
         hideProgress();
     }
