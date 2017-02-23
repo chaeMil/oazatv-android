@@ -810,7 +810,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             }
         } else {
             tabletRightScroll.setVisibility(View.GONE);
-            if (currentVideo.getDescription() != null && currentVideo.getDescription().length() > 0) {
+            if (isDescriptionPresent()) {
                 description.setVisibility(View.VISIBLE);
                 descriptionCard.setVisibility(View.VISIBLE);
             } else {
@@ -820,10 +820,15 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
+    private boolean isDescriptionPresent() {
+        return currentVideo.getDescription() != null
+                && currentVideo.getDescription().trim().length() > 0;
+    }
+
     private void adjustTabletLayoutPortrait() {
         tabletRightScroll.setVisibility(View.GONE);
         similarVideosView.setVisibility(View.VISIBLE);
-        if (currentVideo.getDescription() != null && currentVideo.getDescription().length() > 0) {
+        if (isDescriptionPresent()) {
             description.setVisibility(View.VISIBLE);
             descriptionCard.setVisibility(View.VISIBLE);
         } else {
@@ -841,7 +846,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         params.addRule(RelativeLayout.BELOW, R.id.toolbars_wrapper);
         videoWrapper.setLayoutParams(params);
         description.setVisibility(View.GONE);
-        if (currentVideo.getDescription() != null && currentVideo.getDescription().length() > 0) {
+        if (isDescriptionPresent()) {
             descriptionTablet.setVisibility(View.VISIBLE);
             descriptionTabletCard.setVisibility(View.VISIBLE);
         } else {
