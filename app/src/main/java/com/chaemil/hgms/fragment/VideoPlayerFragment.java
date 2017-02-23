@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -130,6 +131,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private RecyclerView similarVideosTabletView;
     private ArchiveAdapter similarVideosAdapter;
     private ArchiveAdapter similarVideosTabletAdapter;
+    private CardView descriptionCard;
+    private CardView descriptionTabletCard;
     private ArrayList<Video> similarVideos = new ArrayList<>();
     private Handler subtitleDisplayHandler = new Handler();
     private Runnable subtitleProcessor = new Runnable() {
@@ -388,6 +391,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         downloadedWrapper = (LinearLayout) rootView.findViewById(R.id.downloaded_wrapper);
         similarVideosView = (RecyclerView) rootView.findViewById(R.id.similar_videos);
         similarVideosTabletView = (RecyclerView) rootView.findViewById(R.id.similar_videos_tablet);
+        descriptionCard = (CardView) rootView.findViewById(R.id.description_card);
+        descriptionTabletCard = (CardView) rootView.findViewById(R.id.description_tablet_card);
     }
 
     private void setupUI() {
@@ -807,8 +812,10 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             tabletRightScroll.setVisibility(View.GONE);
             if (currentVideo.getDescription() != null && currentVideo.getDescription().length() > 0) {
                 description.setVisibility(View.VISIBLE);
+                descriptionCard.setVisibility(View.VISIBLE);
             } else {
                 description.setVisibility(View.GONE);
+                descriptionCard.setVisibility(View.GONE);
             }
         }
     }
@@ -816,6 +823,13 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private void adjustTabletLayoutPortrait() {
         tabletRightScroll.setVisibility(View.GONE);
         similarVideosView.setVisibility(View.VISIBLE);
+        if (currentVideo.getDescription() != null && currentVideo.getDescription().length() > 0) {
+            description.setVisibility(View.VISIBLE);
+            descriptionCard.setVisibility(View.VISIBLE);
+        } else {
+            description.setVisibility(View.GONE);
+            descriptionCard.setVisibility(View.GONE);
+        }
     }
 
     private void adjustTabletLayoutLandscape() {
@@ -829,8 +843,10 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         description.setVisibility(View.GONE);
         if (currentVideo.getDescription() != null && currentVideo.getDescription().length() > 0) {
             descriptionTablet.setVisibility(View.VISIBLE);
+            descriptionTabletCard.setVisibility(View.VISIBLE);
         } else {
             descriptionTablet.setVisibility(View.GONE);
+            descriptionTabletCard.setVisibility(View.GONE);
         }
         similarVideosView.setVisibility(View.GONE);
     }
