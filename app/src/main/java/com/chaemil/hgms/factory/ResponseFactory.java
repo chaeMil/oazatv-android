@@ -65,6 +65,19 @@ public class ResponseFactory {
         }
     }
 
+    public static ArrayList<Video> parseVideos(JSONArray response) {
+        ArrayList<Video> videos = new ArrayList<>();
+        for (int i = 0; i < response.length(); i++) {
+            try {
+                videos.add(parseVideo(response.getJSONObject(i)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return videos;
+    }
+
     public static Video parseVideoOnly(JSONObject response) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 

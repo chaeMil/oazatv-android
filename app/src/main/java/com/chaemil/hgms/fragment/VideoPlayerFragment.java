@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,19 +28,23 @@ import android.widget.Toast;
 
 import com.afollestad.easyvideoplayer.EasyVideoCallback;
 import com.afollestad.easyvideoplayer.EasyVideoPlayer;
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.adapter.ArchiveAdapter;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
+import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.AdapterUtils;
+import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.OSUtils;
 import com.chaemil.hgms.utils.ShareUtils;
@@ -53,6 +59,7 @@ import com.koushikdutta.ion.Ion;
 
 import net.soulwolf.widget.ratiolayout.widget.RatioFrameLayout;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -61,6 +68,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -117,7 +125,12 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private ImageView downloadedView;
     private TextView downloadedText;
     private LinearLayout downloadedWrapper;
-
+    private BroadcastReceiver downloadChangeReceiver;
+    private RecyclerView similarVideosView;
+    private RecyclerView similarVideosTabletView;
+    private ArchiveAdapter similarVideosAdapter;
+    private ArchiveAdapter similarVideosTabletAdapter;
+    private ArrayList<Video> similarVideos = new ArrayList<>();
     private Handler subtitleDisplayHandler = new Handler();
     private Runnable subtitleProcessor = new Runnable() {
         @Override
@@ -143,8 +156,6 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
-
-    private BroadcastReceiver downloadChangeReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -375,6 +386,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         downloadedView = (ImageView) rootView.findViewById(R.id.downloaded);
         downloadedText = (TextView) rootView.findViewById(R.id.downloaded_text);
         downloadedWrapper = (LinearLayout) rootView.findViewById(R.id.downloaded_wrapper);
+        similarVideosView = (RecyclerView) rootView.findViewById(R.id.similar_videos);
+        similarVideosTabletView = (RecyclerView) rootView.findViewById(R.id.similar_videos_tablet);
     }
 
     private void setupUI() {
@@ -391,12 +404,26 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
         miniPlayerSwipe.setOnSwipeListener(createSwipeListener());
 
+        setupSimilarVideosLayout();
+
         delay(new Runnable() {
             @Override
             public void run() {
                 switchMiniPlayer(1);
             }
         }, 750);
+    }
+
+    private void setupSimilarVideosLayout() {
+        similarVideosAdapter = new ArchiveAdapter(getActivity(), similarVideos, R.layout.archive_item);
+        similarVideosView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        similarVideosView.setNestedScrollingEnabled(false);
+        similarVideosView.setAdapter(similarVideosAdapter);
+
+        similarVideosTabletAdapter = new ArchiveAdapter(getActivity(), similarVideos, R.layout.archive_item);
+        similarVideosTabletView.setAdapter(similarVideosTabletAdapter);
+        similarVideosTabletView.setNestedScrollingEnabled(false);
+        similarVideosTabletView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     public Video getCurrentVideo() {
@@ -682,29 +709,10 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
                 .load(currentVideo.getThumbFile())
                 .intoImageView(miniPlayerImageView);
 
-        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause_dark));
-
-        miniPlayerText.setText(video.getName());
-        playerTitle.setText(video.getName());
-        dateText.setText(StringUtils.formatDate(video.getDate(), getActivity()));
+        setupPlayerUI(video);
         updateDownloadedButton();
-
-        if (!currentVideo.getDescription().equals("")) {
-            description.loadData(currentVideo.getDescription(), "text/html; charset=utf-8", "UTF-8");
-            descriptionTablet.loadData(currentVideo.getDescription(), "text/html; charset=utf-8", "UTF-8");
-        } else {
-            description.setVisibility(View.GONE);
-            descriptionTablet.setVisibility(View.GONE);
-        }
-        if (!currentVideo.getTags().equals("")) {
-            String tagsString = "";
-            for (String tag : currentVideo.getTags().split(",")) {
-                tagsString += "#" + tag.replace(" ","") + " ";
-            }
-            tags.setText(tagsString);
-        } else {
-            tags.setVisibility(View.GONE);
-        }
+        setupDescriptionView();
+        setupTagsView();
 
         if (isInQualityMode) {
             setHighQuality();
@@ -726,12 +734,49 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             }
         }, 750);
 
+        getSimilarVideos(video);
+
         AnalyticsService
                 .getInstance()
                 .setPage(AnalyticsService.Pages.VIDEOPLAYER_FRAGMENT + "videoHash: " + currentVideo.getHash());
         postVideoView();
 
         postGA();
+    }
+
+    private void getSimilarVideos(Video video) {
+        Request getSimilarVideos = RequestFactory.getSimilarVideos(video.getHash(), this);
+        RequestService.getRequestQueue().add(getSimilarVideos);
+    }
+
+    private void setupPlayerUI(Video video) {
+        miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause_dark));
+
+        miniPlayerText.setText(video.getName());
+        playerTitle.setText(video.getName());
+        dateText.setText(StringUtils.formatDate(video.getDate(), getActivity()));
+    }
+
+    private void setupTagsView() {
+        if (!currentVideo.getTags().equals("")) {
+            String tagsString = "";
+            for (String tag : currentVideo.getTags().split(",")) {
+                tagsString += "#" + tag.replace(" ","") + " ";
+            }
+            tags.setText(tagsString);
+        } else {
+            tags.setVisibility(View.GONE);
+        }
+    }
+
+    private void setupDescriptionView() {
+        if (!currentVideo.getDescription().equals("")) {
+            description.loadData(currentVideo.getDescription(), "text/html; charset=utf-8", "UTF-8");
+            descriptionTablet.loadData(currentVideo.getDescription(), "text/html; charset=utf-8", "UTF-8");
+        } else {
+            description.setVisibility(View.GONE);
+            descriptionTablet.setVisibility(View.GONE);
+        }
     }
 
     public void updateDownloadedButton() {
@@ -760,13 +805,17 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             }
         } else {
             tabletRightScroll.setVisibility(View.GONE);
-            description.setVisibility(View.VISIBLE);
+            if (currentVideo.getDescription() != null && currentVideo.getDescription().length() > 0) {
+                description.setVisibility(View.VISIBLE);
+            } else {
+                description.setVisibility(View.GONE);
+            }
         }
     }
 
     private void adjustTabletLayoutPortrait() {
         tabletRightScroll.setVisibility(View.GONE);
-        description.setVisibility(View.VISIBLE);
+        similarVideosView.setVisibility(View.VISIBLE);
     }
 
     private void adjustTabletLayoutLandscape() {
@@ -778,6 +827,12 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         params.addRule(RelativeLayout.BELOW, R.id.toolbars_wrapper);
         videoWrapper.setLayoutParams(params);
         description.setVisibility(View.GONE);
+        if (currentVideo.getDescription() != null && currentVideo.getDescription().length() > 0) {
+            descriptionTablet.setVisibility(View.VISIBLE);
+        } else {
+            descriptionTablet.setVisibility(View.GONE);
+        }
+        similarVideosView.setVisibility(View.GONE);
     }
 
     @Override
@@ -785,6 +840,18 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         switch(requestType) {
             case POST_VIDEO_VIEW:
                 SmartLog.Log(SmartLog.LogLevel.DEBUG, "postedVideoView", "ok");
+                break;
+            case GET_SIMILAR_VIDEOS:
+                if (response != null) {
+                    SmartLog.Log(SmartLog.LogLevel.DEBUG, "getSimilarVideos", response.toString());
+                    try {
+                        similarVideos.addAll(ResponseFactory.parseVideos(response.getJSONArray(Constants.JSON_VIDEOS)));
+                        similarVideosAdapter.notifyDataSetChanged();
+                        similarVideosTabletAdapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
                 break;
         }
     }

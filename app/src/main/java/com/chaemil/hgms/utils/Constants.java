@@ -29,6 +29,7 @@ public class Constants {
     public static final String API_GET_VIDEO = API + "video/";
     public static final String API_GET_ALBUM = API + "album/";
     public static final String API_GET_SONGS = API + "songs/";
+    public static final String SIMILAR = "/similar";
     public static final String VIEW = "/view";
 
     public static final String JSON_POST_NICK = "nick";
