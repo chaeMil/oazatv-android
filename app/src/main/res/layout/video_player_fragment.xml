@@ -296,6 +296,35 @@
                                     </LinearLayout>
 
                                     <LinearLayout
+                                        android:id="@+id/views_wrapper"
+                                        android:layout_weight="1"
+                                        android:gravity="center"
+                                        android:orientation="vertical"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+
+                                        <ImageView
+                                            android:id="@+id/views"
+                                            android:layout_marginBottom="12dp"
+                                            android:src="@drawable/ic_views"
+                                            android:layout_width="24dp"
+                                            android:layout_height="24dp" />
+
+                                        <TextView
+                                            android:id="@+id/views_text"
+                                            tools:text="345 views"
+                                            fontPath="@string/default_font_bold"
+                                            android:textSize="12sp"
+                                            android:lines="1"
+                                            android:textAllCaps="true"
+                                            android:gravity="center"
+                                            android:textColor="@color/colorPrimaryDarkest"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
                                         android:layout_weight="1"
                                         android:gravity="center"
                                         android:orientation="vertical"

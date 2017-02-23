@@ -133,6 +133,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private ArchiveAdapter similarVideosTabletAdapter;
     private CardView descriptionCard;
     private CardView descriptionTabletCard;
+    private TextView viewsText;
     private ArrayList<Video> similarVideos = new ArrayList<>();
     private Handler subtitleDisplayHandler = new Handler();
     private Runnable subtitleProcessor = new Runnable() {
@@ -393,6 +394,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         similarVideosTabletView = (RecyclerView) rootView.findViewById(R.id.similar_videos_tablet);
         descriptionCard = (CardView) rootView.findViewById(R.id.description_card);
         descriptionTabletCard = (CardView) rootView.findViewById(R.id.description_tablet_card);
+        viewsText = (TextView) rootView.findViewById(R.id.views_text);
     }
 
     private void setupUI() {
@@ -760,6 +762,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         miniPlayerText.setText(video.getName());
         playerTitle.setText(video.getName());
         dateText.setText(StringUtils.formatDate(video.getDate(), getActivity()));
+        viewsText.setText(video.getViews() + " " + getActivity().getString(R.string.views));
     }
 
     private void setupTagsView() {
@@ -980,7 +983,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     public void onTimedText(Caption text) {
-        if (text == null) {
+        if (text == null || text.toString().equals("")) {
             subtitles.setVisibility(View.INVISIBLE);
             return;
         }
