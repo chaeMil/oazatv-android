@@ -738,10 +738,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             @Override
             public void run() {
                 adjustFullscreen();
+                getSimilarVideos(video);
             }
         }, 750);
-
-        getSimilarVideos(video);
 
         AnalyticsService
                 .getInstance()

@@ -464,6 +464,7 @@ public class MainActivity extends BaseActivity {
                         if (updatedVideo != null) {
                             savedVideoTime = video.getCurrentTime();
                             video.delete();
+                            video = null;
                             video = updatedVideo;
                             video.setCurrentTime(savedVideoTime);
                             video.save();

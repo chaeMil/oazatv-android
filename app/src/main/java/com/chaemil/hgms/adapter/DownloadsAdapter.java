@@ -46,9 +46,9 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.context = context;
     }
 
-    public void updateDownloads(List<Download> beardDownloads) {
+    public void updateDownloads(List<Download> downloads) {
         this.downloads.clear();
-        this.downloads.addAll(beardDownloads);
+        this.downloads.addAll(downloads);
         notifyDataSetChanged();
     }
 
@@ -107,6 +107,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             DownloadItemHolder downloadItemHolder = (DownloadItemHolder) holder;
             final Video video = Video.findByServerId((int) download.getVideoServerId());
+
             if (video != null) {
                 downloadItemHolder.name.setText(video.getName());
                 downloadItemHolder.date.setText(StringUtils.formatDate(video.getDate(), context));

@@ -20,14 +20,14 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.2'
 
     defaultConfig {
         applicationId "com.chaemil.hgms"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 2017012201
-        versionName "2.6d"
+        versionCode 2017022501
+        versionName "2.7d"
 
         multiDexEnabled true
         renderscriptTargetApi 19
