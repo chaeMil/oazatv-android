@@ -3,6 +3,7 @@ package com.chaemil.hgms.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import com.chaemil.hgms.model.Song;
 import com.chaemil.hgms.model.SongGroup;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.GAUtils;
 import com.futuremind.recyclerviewfastscroll.FastScroller;
 
@@ -45,6 +47,8 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
     private MainActivity mainActivity;
     private FastScroller fastScroller;
     private ArrayList<Song> songs = new ArrayList<>();
+    private RelativeLayout mainLayout;
+    private LinearLayoutManager layoutManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +69,12 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        adjustLayout();
+    }
+
     public void exit() {
         mainActivity = null;
     }
@@ -81,17 +91,23 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
     }
 
     public void adjustLayout() {
-
+        if (isAdded()) {
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
+        }
     }
 
     private void setupAdapter() {
         adapter = new SongsAdapter(mainActivity, this, songs);
-        songsList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        layoutManager = new GridLayoutManager(getActivity(), 1);
+        songsList.setLayoutManager(layoutManager);
         songsList.setAdapter(adapter);
         fastScroller.setRecyclerView(songsList);
     }
 
     private void getUI(ViewGroup rootView) {
+        mainLayout = (RelativeLayout) rootView.findViewById(R.id.main_layout);
         songsList = (RecyclerView) rootView.findViewById(R.id.grid_view);
         progress = (RelativeLayout) rootView.findViewById(R.id.progress);
         fastScroller = (FastScroller) rootView.findViewById(R.id.fastscroll);

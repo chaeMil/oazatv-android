@@ -107,7 +107,7 @@ public class BaseFragment extends Fragment implements RequestFactoryListener {
 
     public int calculateColumns() {
         int width = (int) DimensUtils.dpFromPx(getActivity(), getResources().getDimension(R.dimen.column_width));
-        if (width > 580) {
+        if (width > 650) {
             return 2;
         } else {
             return 1;

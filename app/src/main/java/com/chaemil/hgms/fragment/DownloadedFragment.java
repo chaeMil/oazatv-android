@@ -10,6 +10,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.adapter.DownloadsAdapter;
@@ -35,6 +36,8 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
     private DownloadsAdapter downloadsAdapter;
     private View emptyView;
     private RecyclerView recyclerView;
+    private StaggeredGridLayoutManager layoutManager;
+    private RelativeLayout mainLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,6 +80,7 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
     }
 
     private void getUI(ViewGroup rootView) {
+        mainLayout = (RelativeLayout) rootView.findViewById(R.id.main_layout);
         emptyView = rootView.findViewById(R.id.none_downloaded);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.main_downloads_list);
     }
@@ -96,7 +100,8 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
     };
 
     private void setupUI() {
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(calculateColumns(), 1));
+        layoutManager = new StaggeredGridLayoutManager(calculateColumns(), 1);
+        recyclerView.setLayoutManager(layoutManager);
         downloadsAdapter = new DownloadsAdapter(getActivity(), new ArrayList<Download>());
         recyclerView.setAdapter(downloadsAdapter);
         recyclerView.setNestedScrollingEnabled(false);
@@ -110,7 +115,12 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
 
     public void adjustLayout() {
         if (isAdded()) {
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(calculateColumns(), 1));
+            if (layoutManager != null) {
+                layoutManager.setSpanCount(calculateColumns());
+            }
+            if (downloadsAdapter != null) {
+                downloadsAdapter.notifyDataSetChanged();
+            }
         }
     }
 

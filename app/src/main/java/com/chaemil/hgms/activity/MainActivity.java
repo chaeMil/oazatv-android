@@ -138,6 +138,7 @@ public class MainActivity extends BaseActivity {
         super.onResumeFragments();
 
         reconnectToPlaybackService();
+        adjustLayout();
     }
 
     @Override
