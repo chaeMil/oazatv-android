@@ -99,7 +99,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     public boolean isInQualityMode = false;
     private ImageView back;
     private LinearLayout shareWrapper;
-    private WebView description;
+    private TextView description;
     private TextView tags;
     private RelativeLayout playerBgWrapper;
     private TimerTask timerTask;
@@ -118,7 +118,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private NestedScrollView infoWrapper;
     private RelativeLayout videoWrapper;
     private RatioFrameLayout playerRatioWrapper;
-    private WebView descriptionTablet;
+    private TextView descriptionTablet;
     private NestedScrollView tabletRightScroll;
     private BoundLayout actionsBoundWrapper;
     private BoundLayout tagsBoundWrapper;
@@ -370,7 +370,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         miniPlayerPause = (ImageView) rootView.findViewById(R.id.mini_play_pause);
         back = (ImageView) rootView.findViewById(R.id.back);
         shareWrapper = (LinearLayout) rootView.findViewById(R.id.share_wrapper);
-        description = (WebView) rootView.findViewById(R.id.description);
+        description = (TextView) rootView.findViewById(R.id.description);
         tags = (TextView) rootView.findViewById(R.id.tags);
         playerBgWrapper = (RelativeLayout) rootView.findViewById(R.id.player_bg_wrapper);
         miniPlayerSwipe = (SwipeLayout) rootView.findViewById(R.id.mini_player_swipe);
@@ -383,7 +383,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         videoWrapper = (RelativeLayout) rootView.findViewById(R.id.video_wrapper);
         playerRatioWrapper = (RatioFrameLayout) rootView.findViewById(R.id.player_ratio_wrapper);
         tabletRightScroll = (NestedScrollView) rootView.findViewById(R.id.tablet_right_scroll);
-        descriptionTablet = (WebView) rootView.findViewById(R.id.description_tablet);
+        descriptionTablet = (TextView) rootView.findViewById(R.id.description_tablet);
         actionsBoundWrapper = (BoundLayout) rootView.findViewById(R.id.actions_bound_wrapper);
         tagsBoundWrapper = (BoundLayout) rootView.findViewById(R.id.tags_bound_wrapper);
         infoLinearLayout = (LinearLayout) rootView.findViewById(R.id.info_linear_layout);
@@ -778,8 +778,8 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     private void setupDescriptionView() {
         if (!currentVideo.getDescription().equals("")) {
-            description.loadData(currentVideo.getDescription(), "text/html; charset=utf-8", "UTF-8");
-            descriptionTablet.loadData(currentVideo.getDescription(), "text/html; charset=utf-8", "UTF-8");
+            description.setText(Html.fromHtml(currentVideo.getDescription()));
+            descriptionTablet.setText(Html.fromHtml(currentVideo.getDescription()));
         } else {
             description.setVisibility(View.GONE);
             descriptionTablet.setVisibility(View.GONE);

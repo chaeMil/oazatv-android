@@ -6,8 +6,10 @@ package com.chaemil.hgms.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +74,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
     private RatioImageView audioThumb;
     private ImageView back;
     private LinearLayout shareWrapper;
-    private WebView description;
+    private TextView description;
     private TextView tags;
     private boolean isReconnecting = false;
     private int audioDuration;
@@ -165,7 +167,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         bufferBar = (SpinKitView) rootView.findViewById(R.id.buffer_bar);
         back = (ImageView) rootView.findViewById(R.id.back);
         shareWrapper = (LinearLayout) rootView.findViewById(R.id.share_wrapper);
-        description = (WebView) rootView.findViewById(R.id.description);
+        description = (TextView) rootView.findViewById(R.id.description);
         descriptionCard = (CardView) rootView.findViewById(R.id.description_card);
         tags = (TextView) rootView.findViewById(R.id.tags);
         miniPlayerSwipe = (SwipeLayout) rootView.findViewById(R.id.mini_player_swipe);
@@ -410,14 +412,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         playerTitle.setText(audio.getName());
         dateText.setText(StringUtils.formatDate(audio.getDate(), context));
         if (!getCurrentAudio().getDescription().equals("")) {
-            String descriptionHtml= "<html><head>"
-                    + "<style type=\"text/css\">body{color: #000000; background: #FFFFFF;}"
-                    + "</style></head>"
-                    + "<body>"
-                    + getCurrentAudio().getDescription()
-                    + "</body></html>";
-
-            description.loadData(descriptionHtml, "text/html; charset=utf-8", "UTF-8");
+            description.setText(Html.fromHtml(getCurrentAudio().getDescription()));
         } else {
             description.setVisibility(View.GONE);
             descriptionCard.setVisibility(View.GONE);
