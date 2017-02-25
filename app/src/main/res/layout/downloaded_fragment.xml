@@ -5,10 +5,11 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
+        android:layout_centerInParent="true"
         android:clipToPadding="false"
         android:scrollbars="vertical"
         android:id="@+id/main_downloads_list"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/column_width"
         android:layout_height="match_parent"
         android:paddingBottom="75dp" />
 

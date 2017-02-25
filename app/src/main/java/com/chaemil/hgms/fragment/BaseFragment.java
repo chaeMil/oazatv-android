@@ -14,9 +14,11 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.android.volley.VolleyError;
+import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.BaseActivity;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.RequestType;
+import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -101,6 +103,15 @@ public class BaseFragment extends Fragment implements RequestFactoryListener {
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE;
         SmartLog.Log(SmartLog.LogLevel.DEBUG, "isTablet", String.valueOf(isTablet));
         return isTablet;
+    }
+
+    public int calculateColumns() {
+        int width = (int) DimensUtils.dpFromPx(getActivity(), getResources().getDimension(R.dimen.column_width));
+        if (width > 580) {
+            return 2;
+        } else {
+            return 1;
+        }
     }
 
     public static int getScreenOrientation(Activity activity) {

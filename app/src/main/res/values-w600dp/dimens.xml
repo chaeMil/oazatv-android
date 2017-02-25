@@ -1,4 +1,4 @@
 <resources>
     <dimen name="song_text_size">21dp</dimen>
-    <dimen name="column_width">740dp</dimen>
+    <dimen name="column_width">580dp</dimen>
 </resources>

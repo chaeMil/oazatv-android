@@ -7,4 +7,5 @@
     <dimen name="appbar_tabs_width">-1dp</dimen>
     <dimen name="song_text_size">12dp</dimen>
     <dimen name="video_player_controls_height">55dp</dimen>
+    <dimen name="column_width">-1dp</dimen>
 </resources>

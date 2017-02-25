@@ -14,7 +14,9 @@ import android.view.ViewGroup;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.adapter.DownloadsAdapter;
 import com.chaemil.hgms.model.Download;
+import com.chaemil.hgms.utils.DimensUtils;
 import com.chaemil.hgms.utils.QueryForDownloadsAsyncTask;
+import com.chaemil.hgms.utils.SmartLog;
 import com.novoda.downloadmanager.DownloadManagerBuilder;
 import com.novoda.downloadmanager.lib.DownloadManager;
 import com.novoda.downloadmanager.lib.Query;
@@ -45,6 +47,18 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
         setupUI();
         queryForDownloads();
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adjustLayout();
+    }
+
+    @Override
+    public void onMultiWindowModeChanged(boolean isInMultiWindowMode) {
+        super.onMultiWindowModeChanged(isInMultiWindowMode);
+        adjustLayout();
     }
 
     @Override
@@ -82,8 +96,7 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
     };
 
     private void setupUI() {
-        int columns = getResources().getInteger(R.integer.archive_columns);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(columns, 1));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(calculateColumns(), 1));
         downloadsAdapter = new DownloadsAdapter(getActivity(), new ArrayList<Download>());
         recyclerView.setAdapter(downloadsAdapter);
         recyclerView.setNestedScrollingEnabled(false);
@@ -97,8 +110,7 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
 
     public void adjustLayout() {
         if (isAdded()) {
-            int columns = getResources().getInteger(R.integer.archive_columns);
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(columns, 1));
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(calculateColumns(), 1));
         }
     }
 
