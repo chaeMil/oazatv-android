@@ -83,8 +83,10 @@ public class BaseFragment extends Fragment implements RequestFactoryListener {
     }
 
     public void goBack() {
-        fragmentManager = getActivity().getFragmentManager();
-        fragmentManager.popBackStack();
+        if (getActivity() != null) {
+            fragmentManager = getActivity().getFragmentManager();
+            fragmentManager.popBackStack();
+        }
     }
 
     @Override
