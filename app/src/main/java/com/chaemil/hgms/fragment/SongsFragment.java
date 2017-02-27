@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,24 +15,22 @@ import android.widget.RelativeLayout;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
-import com.chaemil.hgms.adapter.SongsAdapter;
+import com.chaemil.hgms.adapter.sections.SongsSection;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Song;
 import com.chaemil.hgms.model.SongGroup;
-import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.RequestService;
-import com.chaemil.hgms.utils.DimensUtils;
-import com.chaemil.hgms.utils.GAUtils;
 import com.futuremind.recyclerviewfastscroll.FastScroller;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
 /**
  * Created by chaemil on 1.11.16.
@@ -42,13 +41,13 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
     private ArrayList<SongGroup> songGroups = new ArrayList<>();
     private RecyclerView songsList;
     private LinearLayout connectionErrorWrapper;
-    private SongsAdapter adapter;
+    private SectionedRecyclerViewAdapter adapter;
     private SongFragment songFragment;
     private MainActivity mainActivity;
     private FastScroller fastScroller;
     private ArrayList<Song> songs = new ArrayList<>();
     private RelativeLayout mainLayout;
-    private LinearLayoutManager layoutManager;
+    private StaggeredGridLayoutManager layoutManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,13 +93,19 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
         if (isAdded()) {
             if (adapter != null) {
                 adapter.notifyDataSetChanged();
+                layoutManager.setSpanCount(calculateColumns());
             }
         }
     }
 
     private void setupAdapter() {
-        adapter = new SongsAdapter(mainActivity, this, songs);
-        layoutManager = new GridLayoutManager(getActivity(), 1);
+        if (adapter == null) {
+            adapter = new SectionedRecyclerViewAdapter();
+        }
+        if (layoutManager == null) {
+            layoutManager = new StaggeredGridLayoutManager(calculateColumns(),
+                    StaggeredGridLayoutManager.VERTICAL);
+        }
         songsList.setLayoutManager(layoutManager);
         songsList.setAdapter(adapter);
         fastScroller.setRecyclerView(songsList);
@@ -128,10 +133,11 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
             case GET_SONGS:
                 ArrayList<SongGroup> songGroups = ResponseFactory.parseSongs(response);
                 if (songGroups != null && songGroups.size() > 0) {
+                    adapter.removeAllSections();
+
                     for(SongGroup songGroup : songGroups) {
-                        for(Song song : songGroup.getSongs()) {
-                            songs.add(song);
-                        }
+                        SongsSection songsSection = new SongsSection(songGroup);
+                        adapter.addSection(songsSection);
                     }
                 }
                 adapter.notifyDataSetChanged();

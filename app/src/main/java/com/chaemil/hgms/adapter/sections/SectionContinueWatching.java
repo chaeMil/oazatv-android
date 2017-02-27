@@ -1,13 +1,13 @@
-package com.chaemil.hgms.adapter.homepage_sections;
+package com.chaemil.hgms.adapter.sections;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.adapter.holder.HeaderViewHolder;
 import com.chaemil.hgms.adapter.holder.VideoViewHolder;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
@@ -19,22 +19,23 @@ import java.util.ArrayList;
 /**
  * Created by chaemil on 27.8.16.
  */
-public class SectionNewVideos extends BaseSection {
+public class SectionContinueWatching extends BaseSection {
 
+    public static final String TAG = "continue_watching";
     private final Context context;
-    ArrayList<Video> archive = new ArrayList<>();
+    ArrayList<Video> videosToWatch = new ArrayList<>();
 
-    public SectionNewVideos(Context context, ArrayList<Video> archive) {
+    public SectionContinueWatching(Context context, ArrayList<Video> videosToWatch) {
         super(R.layout.homepage_section_header,
                 R.layout.homepage_section_footer,
                 AdapterUtils.getArchiveLayout(context));
         this.context = context;
-        this.archive = archive;
+        this.videosToWatch = videosToWatch;
     }
 
     @Override
     public int getContentItemsTotal() {
-        return archive.size();
+        return videosToWatch.size();
     }
 
     @Override
@@ -45,15 +46,15 @@ public class SectionNewVideos extends BaseSection {
     @Override
     public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
         VideoViewHolder videoViewHolder = (VideoViewHolder) holder;
-
-        final Video video = archive.get(position);
+        final Video video = videosToWatch.get(position);
 
         videoViewHolder.mainView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
+
                 if (mainActivity.isSomethingPlaying()) {
-                    AdapterUtils.contextDialog(context, video, false);
+                    AdapterUtils.contextDialog(context, video, true);
                 } else {
                     mainActivity.playNewVideo(video);
                 }
@@ -61,15 +62,9 @@ public class SectionNewVideos extends BaseSection {
         });
         videoViewHolder.name.setText(video.getName());
         videoViewHolder.date.setText(StringUtils.formatDate(video.getDate(), context));
-        videoViewHolder.views.setText(video.getViews() + " " + context.getString(R.string.views));
-        videoViewHolder.more.setVisibility(View.VISIBLE);
-        videoViewHolder.more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AdapterUtils.contextDialog(context, video, false);
-            }
-        });
-        videoViewHolder.thumb.setBackgroundColor(Color.parseColor(video.getThumbColor()));
+        videoViewHolder.views.setVisibility(View.GONE);
+        videoViewHolder.viewProgress.setMax(video.getDuration());
+        videoViewHolder.viewProgress.setProgress(video.getCurrentTime());
         videoViewHolder.time.setText(StringUtils.getDurationString(video.getDuration()));
         videoViewHolder.cc.setVisibility(video.getSubtitlesFile() != null ? View.VISIBLE : View.GONE);
         videoViewHolder.language.setVisibility(video.getVideoLanguage(context) != null ? View.VISIBLE : View.GONE);
@@ -87,8 +82,6 @@ public class SectionNewVideos extends BaseSection {
             videoViewHolder.downloaded.setVisibility(View.GONE);
         }
 
-        setupTime(videoViewHolder, video);
-
         int thumbWidth = videoViewHolder.thumb.getWidth();
 
         Ion.with(context)
@@ -96,6 +89,15 @@ public class SectionNewVideos extends BaseSection {
                 .withBitmap()
                 .resize(thumbWidth, (int) (thumbWidth * 0.5625))
                 .intoImageView(videoViewHolder.thumb);
+
+        setupTime(videoViewHolder, video);
+
+        videoViewHolder.more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AdapterUtils.contextDialog(context, video, true);
+            }
+        });
     }
 
     @Override
@@ -108,8 +110,8 @@ public class SectionNewVideos extends BaseSection {
         super.onBindHeaderViewHolder(holder);
 
         HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
-        headerHolder.sectionName.setText(context.getString(R.string.newest_videos));
+        headerHolder.sectionName.setText(context.getString(R.string.continue_watching));
         headerHolder.sectionIcon.setImageDrawable(context.getResources()
-                .getDrawable(R.drawable.newest_videos));
+                .getDrawable(R.drawable.continue_watching));
     }
 }

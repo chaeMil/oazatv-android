@@ -1,4 +1,4 @@
-package com.chaemil.hgms.adapter.homepage_sections;
+package com.chaemil.hgms.adapter.sections;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,9 +12,8 @@ import android.webkit.WebViewClient;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.adapter.holder.HeaderViewHolder;
 import com.chaemil.hgms.utils.DimensUtils;
-
-import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
 
 /**
  * Created by chaemil on 5.9.16.

@@ -1,4 +1,4 @@
-package com.chaemil.hgms.adapter.homepage_sections;
+package com.chaemil.hgms.adapter.sections;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -8,6 +8,7 @@ import android.view.View;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.adapter.holder.HeaderViewHolder;
 import com.chaemil.hgms.adapter.holder.VideoViewHolder;
 import com.chaemil.hgms.model.ArchiveItem;
 import com.chaemil.hgms.model.PhotoAlbum;
@@ -114,7 +115,7 @@ public class SectionFeatured extends BaseSection {
                 videoViewHolder.mainView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        openAlbum(photoAlbum);
+                        openAlbum((MainActivity) context, photoAlbum);
                     }
                 });
                 videoViewHolder.name.setText(photoAlbum.getName());

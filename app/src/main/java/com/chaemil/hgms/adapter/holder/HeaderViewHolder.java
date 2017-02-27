@@ -1,4 +1,4 @@
-package com.chaemil.hgms.adapter.homepage_sections;
+package com.chaemil.hgms.adapter.holder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

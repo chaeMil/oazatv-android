@@ -1,4 +1,4 @@
-package com.chaemil.hgms.adapter.homepage_sections;
+package com.chaemil.hgms.adapter.sections;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,7 @@ import android.view.View;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.adapter.holder.HeaderViewHolder;
 import com.chaemil.hgms.adapter.holder.VideoViewHolder;
 import com.chaemil.hgms.model.PhotoAlbum;
 import com.chaemil.hgms.utils.AdapterUtils;

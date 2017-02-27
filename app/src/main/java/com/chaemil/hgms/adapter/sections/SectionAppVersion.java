@@ -1,4 +1,4 @@
-package com.chaemil.hgms.adapter.homepage_sections;
+package com.chaemil.hgms.adapter.sections;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.activity.MainActivity;
+import com.chaemil.hgms.adapter.holder.HeaderViewHolder;
 import com.chaemil.hgms.utils.OSUtils;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;

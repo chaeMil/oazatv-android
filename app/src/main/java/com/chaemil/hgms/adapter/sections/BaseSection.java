@@ -1,5 +1,6 @@
-package com.chaemil.hgms.adapter.homepage_sections;
+package com.chaemil.hgms.adapter.sections;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
@@ -18,9 +19,6 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
  */
 
 public abstract class BaseSection extends StatelessSection {
-
-    private final Context context = null;
-    private final MainActivity mainActivity = null;
 
     public BaseSection(int headerResourceId, int footerResourceId, int itemResourceId) {
         super(headerResourceId, footerResourceId, itemResourceId);
@@ -56,14 +54,20 @@ public abstract class BaseSection extends StatelessSection {
         }.execute();
     }
 
-    public void openAlbum(PhotoAlbum album) {
-        mainActivity.getMainFragment().openAlbum(album);
+    public void openAlbum(MainActivity mainActivity, PhotoAlbum album) {
+        if (mainActivity.getMainFragment() != null) {
+            mainActivity.getMainFragment().openAlbum(album);
+        }
     }
 
     public void setFullSpan(RecyclerView.ViewHolder holder) {
-        StaggeredGridLayoutManager.LayoutParams layoutParams =
-                (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
-        layoutParams.setFullSpan(true);
+        try {
+            StaggeredGridLayoutManager.LayoutParams layoutParams =
+                    (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
+            layoutParams.setFullSpan(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
