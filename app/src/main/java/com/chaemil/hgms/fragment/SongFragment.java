@@ -67,7 +67,7 @@ public class SongFragment extends BaseFragment {
 
     private void showSong(Song song) {
         body.setText(Html.fromHtml(Html.fromHtml(song.getBody()).toString()));
-        Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
+        Typeface tf = Typeface.createFromAsset(getResources().getAssets(),
                 "fonts/" + getString(R.string.font_mono_regular));
         body.setTypeface(tf);
 
