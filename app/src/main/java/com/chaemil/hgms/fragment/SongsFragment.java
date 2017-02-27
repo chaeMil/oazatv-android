@@ -136,7 +136,7 @@ public class SongsFragment extends BaseFragment implements SwipeRefreshLayout.On
                     adapter.removeAllSections();
 
                     for(SongGroup songGroup : songGroups) {
-                        SongsSection songsSection = new SongsSection(songGroup);
+                        SongsSection songsSection = new SongsSection(this, getActivity(), songGroup);
                         adapter.addSection(songsSection);
                     }
                 }
