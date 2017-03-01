@@ -86,4 +86,6 @@
     <string name="czech">česky</string>
     <string name="share">Sdílet</string>
     <string name="streaming">Streamuje se</string>
+    <string name="audio_downloaded">Audio staženo</string>
+    <string name="download">Stáhnout</string>
 </resources>
