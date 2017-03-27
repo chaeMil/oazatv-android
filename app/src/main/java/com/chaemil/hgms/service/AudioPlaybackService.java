@@ -190,7 +190,8 @@ public class AudioPlaybackService extends Service implements
         player.setOnErrorListener(this);
         player.setOnInfoListener(this);
 
-        wifiLock = ((WifiManager) getApplication().getSystemService(Context.WIFI_SERVICE))
+        wifiLock = ((WifiManager) getApplication()
+                .getApplicationContext().getSystemService(Context.WIFI_SERVICE))
                 .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
     }
 
