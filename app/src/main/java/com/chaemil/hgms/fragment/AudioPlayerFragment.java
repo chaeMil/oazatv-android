@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -413,6 +414,7 @@ public class AudioPlayerFragment extends BaseFragment implements View.OnClickLis
         dateText.setText(StringUtils.formatDate(audio.getDate(), context));
         if (!getCurrentAudio().getDescription().equals("")) {
             description.setText(Html.fromHtml(getCurrentAudio().getDescription()));
+            description.setMovementMethod(LinkMovementMethod.getInstance());
         } else {
             description.setVisibility(View.GONE);
             descriptionCard.setVisibility(View.GONE);

@@ -16,6 +16,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -779,7 +780,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     private void setupDescriptionView() {
         if (!currentVideo.getDescription().equals("")) {
             description.setText(Html.fromHtml(currentVideo.getDescription()));
+            description.setMovementMethod(LinkMovementMethod.getInstance());
             descriptionTablet.setText(Html.fromHtml(currentVideo.getDescription()));
+            descriptionTablet.setMovementMethod(LinkMovementMethod.getInstance());
         } else {
             description.setVisibility(View.GONE);
             descriptionTablet.setVisibility(View.GONE);
