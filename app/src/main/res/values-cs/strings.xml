@@ -88,4 +88,8 @@
     <string name="streaming">Streamuje se</string>
     <string name="audio_downloaded">Audio staženo</string>
     <string name="download">Stáhnout</string>
+    <string name="already_done">Již se stalo</string>
+    <string name="later">Později</string>
+    <string name="rating_request_message">Líbí se ti naše aplikace? Ohodnoť ji!</string>
+    <string name="sure">Jasně!</string>
 </resources>

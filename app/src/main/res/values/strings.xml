@@ -91,4 +91,8 @@
     <string name="share">Share</string>
     <string name="audio_downloaded">Audio downloaded</string>
     <string name="download">Download</string>
+    <string name="sure">Sure!</string>
+    <string name="later">Later</string>
+    <string name="already_done">Already done</string>
+    <string name="rating_request_message">Are you enjoying our app? Give us a review/rating!</string>
 </resources>

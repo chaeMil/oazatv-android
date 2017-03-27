@@ -95,6 +95,7 @@ dependencies {
     compile 'link.fls:boundlayout:1.0.0'
     compile 'net.soulwolf.widget:ratiolayout:1.0.0'
     compile 'org.apmem.tools:layouts:1.10'
+    compile 'com.iamhabib:rating-request:1.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

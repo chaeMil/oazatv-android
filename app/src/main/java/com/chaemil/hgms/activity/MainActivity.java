@@ -60,6 +60,7 @@ import com.chaemil.hgms.utils.SmartLog;
 import com.chaemil.hgms.view.LockableBottomSheetBehaviour;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.google.gson.JsonObject;
+import com.iamhabib.ratingrequestlibrary.RatingRequest;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Response;
@@ -157,11 +158,41 @@ public class MainActivity extends BaseActivity {
         setupPlaybackReceiver();
         setupLiveRequestTimer();
         createFragments();
+        ratingRequest();
         initTracker();
 
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();
         }
+    }
+
+    private void ratingRequest() {
+        RatingRequest.with(this)
+                .scheduleAfter(5)
+                .agreeButtonText(getString(R.string.sure))
+                .laterButtonText(getString(R.string.later))
+                .doneButtonText(getString(R.string.already_done))
+                .backgroundResource(R.color.colorPrimary)
+                .message(getString(R.string.rating_request_message))
+                .listener(new RatingRequest.ClickListener() {
+                    @Override
+                    public void onAgreeButtonClick() {
+
+                    }
+
+                    @Override
+                    public void onDoneButtonClick() {
+
+                    }
+
+                    @Override
+                    public void onLaterButtonClick() {
+
+                    }
+                })
+                .cancelable(false)
+                .delay(5 * 1000)
+                .register();
     }
 
     private void createFragments() {
