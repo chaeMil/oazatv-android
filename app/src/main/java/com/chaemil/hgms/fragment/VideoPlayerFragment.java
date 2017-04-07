@@ -828,8 +828,11 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     private boolean isDescriptionPresent() {
-        return currentVideo.getDescription() != null
-                && currentVideo.getDescription().trim().length() > 0;
+        if (currentVideo != null) {
+            return currentVideo.getDescription() != null
+                    && currentVideo.getDescription().trim().length() > 0;
+        }
+        return false;
     }
 
     private void adjustTabletLayoutPortrait() {
