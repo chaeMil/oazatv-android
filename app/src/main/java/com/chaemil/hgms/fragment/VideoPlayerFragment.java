@@ -790,12 +790,14 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     public void updateDownloadedButton() {
-        if (getCurrentVideo().isAudioDownloaded(getActivity())) {
-            downloadedText.setText(getString(R.string.downloaded));
-            downloadedView.setImageDrawable(getResources().getDrawable(R.drawable.ic_downloaded));
-        } else {
-            downloadedText.setText(getString(R.string.download_audio));
-            downloadedView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_cloud_download));
+        if (getCurrentVideo() != null) {
+            if (getCurrentVideo().isAudioDownloaded(getActivity())) {
+                downloadedText.setText(getString(R.string.downloaded));
+                downloadedView.setImageDrawable(getResources().getDrawable(R.drawable.ic_downloaded));
+            } else {
+                downloadedText.setText(getString(R.string.download_audio));
+                downloadedView.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_cloud_download));
+            }
         }
     }
 
