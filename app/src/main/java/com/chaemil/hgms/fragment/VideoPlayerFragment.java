@@ -828,9 +828,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     }
 
     private boolean isDescriptionPresent() {
-        if (currentVideo != null) {
-            return currentVideo.getDescription() != null
-                    && currentVideo.getDescription().trim().length() > 0;
+        if (getCurrentVideo()!= null) {
+            return getCurrentVideo().getDescription() != null
+                    && getCurrentVideo().getDescription().trim().length() > 0;
         }
         return false;
     }
