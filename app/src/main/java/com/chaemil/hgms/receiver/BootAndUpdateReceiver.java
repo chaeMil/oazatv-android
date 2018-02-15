@@ -22,7 +22,7 @@ public class BootAndUpdateReceiver extends BroadcastReceiver {
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED") ||
                 intent.getAction().equals("android.intent.action.MY_PACKAGE_REPLACED")) {
 
-            SmartLog.Log(SmartLog.LogLevel.DEBUG, TAG, "booting");
+            SmartLog.d(TAG, "booting");
 
             context.startService(new Intent(context, TrackerService.class));
         }

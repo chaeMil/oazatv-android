@@ -327,7 +327,7 @@ public class AudioPlaybackService extends Service implements
         try {
             savedAudio = Video.findByServerId(audio.getServerId());
         } catch (Exception e) {
-            SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
+            SmartLog.e("exception", e.toString());
         }
 
         if (savedAudio != null) {
@@ -467,7 +467,7 @@ public class AudioPlaybackService extends Service implements
     public void onSuccessResponse(JSONObject response, RequestType requestType) {
         switch(requestType) {
             case POST_VIDEO_VIEW:
-                SmartLog.Log(SmartLog.LogLevel.DEBUG, "postedVideoView", "ok");
+                SmartLog.d("postedVideoView", "ok");
                 break;
         }
     }

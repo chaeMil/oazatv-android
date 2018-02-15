@@ -71,7 +71,7 @@ public class ArchiveFragment extends BaseFragment implements SwipeRefreshLayout.
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                SmartLog.Log(SmartLog.LogLevel.DEBUG, "getArchivePage", String.valueOf(pageNumber));
+                SmartLog.d("getArchivePage", String.valueOf(pageNumber));
                 JsonObjectRequest getArchivePage = RequestFactory.getArchive(ArchiveFragment.this, pageNumber);
                 RequestService.getRequestQueue().add(getArchivePage);
             }

@@ -103,7 +103,7 @@ public class BaseFragment extends Fragment implements RequestFactoryListener {
         boolean isTablet = (context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK)
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE;
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "isTablet", String.valueOf(isTablet));
+        SmartLog.d("isTablet", String.valueOf(isTablet));
         return isTablet;
     }
 
@@ -133,12 +133,12 @@ public class BaseFragment extends Fragment implements RequestFactoryListener {
 
     @Override
     public void onErrorResponse(VolleyError exception, RequestType requestType) {
-        SmartLog.Log(SmartLog.LogLevel.ERROR,
+        SmartLog.e(
                 "jsonResponse",
                 String.valueOf(BaseActivity.responseError(exception, getActivity())));
 
         JSONObject jsonError = BaseActivity.responseError(exception, getActivity());
 
-        SmartLog.Log(SmartLog.LogLevel.ERROR, "jsonError", String.valueOf(jsonError));
+        SmartLog.e("jsonError", String.valueOf(jsonError));
     }
 }

@@ -115,7 +115,7 @@ public class CategoryFragment extends BaseFragment implements SwipeRefreshLayout
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                SmartLog.Log(SmartLog.LogLevel.DEBUG, "getCategoryPage", String.valueOf(pageNumber));
+                SmartLog.d("getCategoryPage", String.valueOf(pageNumber));
                 JsonObjectRequest getCategoryPage = RequestFactory.getCategories(CategoryFragment.this,
                         true, category.getId(), pageNumber, PER_PAGE);
                 RequestService.getRequestQueue().add(getCategoryPage);

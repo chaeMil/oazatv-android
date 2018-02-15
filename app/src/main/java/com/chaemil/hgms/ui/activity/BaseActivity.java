@@ -142,18 +142,18 @@ public class BaseActivity extends ActivityManagePermission implements RequestFac
 
     @Override
     public void onSuccessResponse(JSONObject response, RequestType requestType) {
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "response", String.valueOf(response));
+        SmartLog.d("response", String.valueOf(response));
     }
 
     @Override
     public void onErrorResponse(VolleyError exception, RequestType requestType) {
-        SmartLog.Log(SmartLog.LogLevel.ERROR,
+        SmartLog.e(
                 "jsonResponse",
                 String.valueOf(responseError(exception, this)));
 
         JSONObject jsonError = responseError(exception, this);
 
-        SmartLog.Log(SmartLog.LogLevel.ERROR, "jsonError", String.valueOf(jsonError));
+        SmartLog.e("jsonError", String.valueOf(jsonError));
 
         String error = null;
 
@@ -186,13 +186,13 @@ public class BaseActivity extends ActivityManagePermission implements RequestFac
             }
 
         } else if (error instanceof AuthFailureError) {
-            SmartLog.Log(SmartLog.LogLevel.ERROR, "AuthFailureError", error.toString());
+            SmartLog.e("AuthFailureError", error.toString());
         } else if (error instanceof ServerError) {
-            SmartLog.Log(SmartLog.LogLevel.ERROR, "ServerError", error.toString());
+            SmartLog.e("ServerError", error.toString());
         } else if (error instanceof NetworkError) {
-            SmartLog.Log(SmartLog.LogLevel.ERROR, "NetworkError", error.toString());
+            SmartLog.e("NetworkError", error.toString());
         } else if (error instanceof ParseError) {
-            SmartLog.Log(SmartLog.LogLevel.ERROR, "ParseError", error.toString());
+            SmartLog.e("ParseError", error.toString());
         }
 
         JSONObject errorResponse = null;
@@ -201,7 +201,7 @@ public class BaseActivity extends ActivityManagePermission implements RequestFac
                 if (error.networkResponse != null) {
                     if (error.networkResponse.data != null) {
 
-                        SmartLog.Log(SmartLog.LogLevel.ERROR,
+                        SmartLog.e(
                                 "error",
                                 new String(error.networkResponse.data));
 

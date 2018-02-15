@@ -242,7 +242,7 @@ public class MainActivity extends BaseActivity {
         deepLink = true;
 
         if (data != null) {
-            SmartLog.Log(SmartLog.LogLevel.DEBUG, "data", data.toString());
+            SmartLog.e("data", data.toString());
             String path = data.getPath();
             String[] pathArray = path.split("/");
 
@@ -891,7 +891,7 @@ public class MainActivity extends BaseActivity {
     public void onErrorResponse(VolleyError exception, RequestType requestType) {
         switch (requestType) {
             case GET_LIVESTREAM:
-                SmartLog.Log(SmartLog.LogLevel.ERROR, "error", exception.toString());
+                SmartLog.e("error", exception.toString());
                 break;
             default:
                 super.onErrorResponse(exception, requestType);

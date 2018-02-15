@@ -32,7 +32,7 @@ public class AudioPlaybackReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "onReceive", intent.getAction());
+        SmartLog.d("onReceive", intent.getAction());
         switch (intent.getAction()) {
 
             case NOTIFY_PLAY_PAUSE:

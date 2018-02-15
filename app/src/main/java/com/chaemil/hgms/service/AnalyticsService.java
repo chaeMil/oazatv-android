@@ -88,15 +88,15 @@ public class AnalyticsService implements RequestFactoryListener {
     @Override
     public void onSuccessResponse(JSONObject response, RequestType requestType) {
         try {
-            SmartLog.Log(SmartLog.LogLevel.DEBUG, TAG, response.toString());
+            SmartLog.d(TAG, response.toString());
         } catch (Exception e) {
-            SmartLog.Log(SmartLog.LogLevel.ERROR, TAG, e.toString());
+            SmartLog.e(TAG, e.toString());
         }
     }
 
     @Override
     public void onErrorResponse(VolleyError exception, RequestType requestType) {
-        SmartLog.Log(SmartLog.LogLevel.ERROR, TAG, exception.toString());
+        SmartLog.e(TAG, exception.toString());
     }
 
     public void setIp(String ip) {

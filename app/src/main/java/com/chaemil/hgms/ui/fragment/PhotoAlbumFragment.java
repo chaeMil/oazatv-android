@@ -53,7 +53,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "PhotoAlbumFragment", "onCreate");
+        SmartLog.d("PhotoAlbumFragment", "onCreate");
         setRetainInstance(true);
 
         mainActivity = ((MainActivity) getActivity());
@@ -65,7 +65,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "PhotoAlbumFragment", "onCreateView");
+        SmartLog.d("PhotoAlbumFragment", "onCreateView");
 
         View view = inflater.inflate(R.layout.photos_fragment, container, false);
         getUI(view);
@@ -99,7 +99,7 @@ public class PhotoAlbumFragment extends BaseFragment implements RequestFactoryLi
         if (progress != null) {
             progress.setVisibility(View.VISIBLE);
         }
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "getData", album.getHash());
+        SmartLog.d("getData", album.getHash());
         JsonObjectRequest getPhotos = RequestFactory.getPhotoAlbum(this, album.getHash());
         RequestService.getRequestQueue().add(getPhotos);
     }

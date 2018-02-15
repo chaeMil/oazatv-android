@@ -93,7 +93,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
         context = (MainActivity) getActivity();
 
         if (savedInstanceState == null) {
-            SmartLog.Log(SmartLog.LogLevel.DEBUG, TAG + " savedInstanceState", "null");
+            SmartLog.d(TAG + " savedInstanceState", "null");
             searchAdapter = new SearchAdapter(getActivity(), R.layout.search_item, searchResult);
         }
 
@@ -542,7 +542,7 @@ public class MainFragment extends BaseFragment implements TabLayout.OnTabSelecte
             case SEARCH:
                 ArrayList<ArchiveItem> searchItems = ResponseFactory.parseSearch(response);
                 if (searchItems != null) {
-                    SmartLog.Log(SmartLog.LogLevel.DEBUG, "searchResultSize", String.valueOf(searchItems.size()));
+                    SmartLog.d("searchResultSize", String.valueOf(searchItems.size()));
 
                     searchResult.clear();
                     searchResult.addAll(searchItems);

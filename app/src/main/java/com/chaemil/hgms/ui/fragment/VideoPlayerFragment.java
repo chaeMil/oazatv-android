@@ -703,7 +703,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
         try {
             savedVideo = Video.findByServerId(video.getServerId());
         } catch (Exception e) {
-            SmartLog.Log(SmartLog.LogLevel.ERROR, "exception", e.toString());
+            SmartLog.e("exception", e.toString());
         }
 
         if (savedVideo != null) {
@@ -869,11 +869,11 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
     public void onSuccessResponse(JSONObject response, RequestType requestType) {
         switch(requestType) {
             case POST_VIDEO_VIEW:
-                SmartLog.Log(SmartLog.LogLevel.DEBUG, "postedVideoView", "ok");
+                SmartLog.d("postedVideoView", "ok");
                 break;
             case GET_SIMILAR_VIDEOS:
                 if (response != null) {
-                    SmartLog.Log(SmartLog.LogLevel.DEBUG, "getSimilarVideos", response.toString());
+                    SmartLog.d("getSimilarVideos", response.toString());
                     try {
                         similarVideos.addAll(ResponseFactory.parseVideos(response.getJSONArray(Constants.JSON_VIDEOS)));
                         similarVideosAdapter.notifyDataSetChanged();
@@ -893,14 +893,14 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onStarted(EasyVideoPlayer player) {
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onStarted");
+        SmartLog.d("player", "onStarted");
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.pause_dark));
         adjustSubtitlesPosition();
     }
 
     @Override
     public void onPaused(EasyVideoPlayer player) {
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onPaused");
+        SmartLog.d("player", "onPaused");
         saveCurrentVideoTime();
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
         adjustSubtitlesPosition();
@@ -908,12 +908,12 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onPreparing(EasyVideoPlayer player) {
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onPreparing");
+        SmartLog.d("player", "onPreparing");
     }
 
     @Override
     public void onPrepared(EasyVideoPlayer player) {
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onPrepared");
+        SmartLog.d("player", "onPrepared");
         delay(new Runnable() {
             @Override
             public void run() {
@@ -1006,7 +1006,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onBuffering(int percent) {
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onBuffering");
+        SmartLog.d("player", "onBuffering");
         if (player.isPlaying()) {
 
         }
@@ -1014,23 +1014,23 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onError(EasyVideoPlayer player, Exception e) {
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onError");
+        SmartLog.d("player", "onError");
     }
 
     @Override
     public void onCompletion(EasyVideoPlayer player) {
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onCompletion");
+        SmartLog.d("player", "onCompletion");
         miniPlayerPause.setImageDrawable(getResources().getDrawable(R.drawable.play_dark));
     }
 
     @Override
     public void onRetry(EasyVideoPlayer player, Uri source) {
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onRetry");
+        SmartLog.d("player", "onRetry");
     }
 
     @Override
     public void onSubmit(EasyVideoPlayer player, Uri source) {
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "player", "onSubmit");
+        SmartLog.d("player", "onSubmit");
         if (isInFullscreenMode) {
             cancelFullscreenPlayer();
         } else {

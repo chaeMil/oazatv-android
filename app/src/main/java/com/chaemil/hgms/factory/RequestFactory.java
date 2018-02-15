@@ -25,8 +25,8 @@ public class RequestFactory {
 
         JSONObject jsonObject = new JSONObject();
 
-        SmartLog.Log(SmartLog.LogLevel.INFO, "search", "get " + url);
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+        SmartLog.i("search", "get " + url);
+        SmartLog.d("json", String.valueOf(jsonObject));
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.SEARCH),
@@ -38,8 +38,8 @@ public class RequestFactory {
 
         JSONObject jsonObject = new JSONObject();
 
-        SmartLog.Log(SmartLog.LogLevel.INFO, "getArchive", "get " + url);
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+        SmartLog.i("getArchive", "get " + url);
+        SmartLog.d("json", String.valueOf(jsonObject));
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.GET_ARCHIVE),
@@ -51,8 +51,8 @@ public class RequestFactory {
 
         JSONObject jsonObject = new JSONObject();
 
-        SmartLog.Log(SmartLog.LogLevel.INFO, "getPhotoAlbum", "get " + url);
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+        SmartLog.i("getPhotoAlbum", "get " + url);
+        SmartLog.d("json", String.valueOf(jsonObject));
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.GET_PHOTO_ALBUM),
@@ -66,8 +66,8 @@ public class RequestFactory {
 
         JSONObject jsonObject = new JSONObject();
 
-        SmartLog.Log(SmartLog.LogLevel.INFO, "getHomePage", "get " + url);
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+        SmartLog.i("getHomePage", "get " + url);
+        SmartLog.d("json", String.valueOf(jsonObject));
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.GET_HOMEPAGE),
@@ -79,8 +79,8 @@ public class RequestFactory {
 
         JSONObject jsonObject = new JSONObject();
 
-        SmartLog.Log(SmartLog.LogLevel.INFO, "getLiveStream", "get " + url);
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+        SmartLog.i("getLiveStream", "get " + url);
+        SmartLog.d("json", String.valueOf(jsonObject));
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.GET_LIVESTREAM),
@@ -102,8 +102,8 @@ public class RequestFactory {
 
         JSONObject jsonObject = new JSONObject();
 
-        SmartLog.Log(SmartLog.LogLevel.INFO, "postAnalyticsAlive", "post " + url);
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+        SmartLog.i("postAnalyticsAlive", "post " + url);
+        SmartLog.d("json", String.valueOf(jsonObject));
 
         return new JsonObjectRequest(Request.Method.POST, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.POST_ANALYTICS_ALIVE),
@@ -118,8 +118,8 @@ public class RequestFactory {
 
         JSONObject jsonObject = new JSONObject();
 
-        SmartLog.Log(SmartLog.LogLevel.INFO, "postVideoView", "post " + url);
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+        SmartLog.i("postVideoView", "post " + url);
+        SmartLog.d("json", String.valueOf(jsonObject));
 
         return new JsonObjectRequest(Request.Method.POST, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.POST_VIDEO_VIEW),
@@ -148,8 +148,8 @@ public class RequestFactory {
 
         JSONObject jsonObject = new JSONObject();
 
-        SmartLog.Log(SmartLog.LogLevel.INFO, "getCategories", "get " + url);
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+        SmartLog.i("getCategories", "get " + url);
+        SmartLog.d("json", String.valueOf(jsonObject));
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.GET_CATEGORIES),
@@ -161,8 +161,8 @@ public class RequestFactory {
 
         JSONObject jsonObject = new JSONObject();
 
-        SmartLog.Log(SmartLog.LogLevel.INFO, "getVideo", "get " + url);
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+        SmartLog.i("getVideo", "get " + url);
+        SmartLog.d("json", String.valueOf(jsonObject));
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.GET_VIDEO),
@@ -174,8 +174,8 @@ public class RequestFactory {
 
         JSONObject jsonObject = new JSONObject();
 
-        SmartLog.Log(SmartLog.LogLevel.INFO, "getSongs", "get " + url);
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+        SmartLog.i("getSongs", "get " + url);
+        SmartLog.d("json", String.valueOf(jsonObject));
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.GET_SONGS),
@@ -187,8 +187,8 @@ public class RequestFactory {
 
         JSONObject jsonObject = new JSONObject();
 
-        SmartLog.Log(SmartLog.LogLevel.INFO, "getSong", "get " + url);
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+        SmartLog.i("getSong", "get " + url);
+        SmartLog.d("json", String.valueOf(jsonObject));
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.GET_SONG),
@@ -200,8 +200,8 @@ public class RequestFactory {
 
         JSONObject jsonObject = new JSONObject();
 
-        SmartLog.Log(SmartLog.LogLevel.INFO, "getSimilarVideos", "get " + url);
-        SmartLog.Log(SmartLog.LogLevel.DEBUG, "json", String.valueOf(jsonObject));
+        SmartLog.i("getSimilarVideos", "get " + url);
+        SmartLog.d("json", String.valueOf(jsonObject));
 
         return new JsonObjectRequest(Request.Method.GET, url, jsonObject,
                 createMyReqSuccessListener(listener, RequestType.GET_SIMILAR_VIDEOS),
