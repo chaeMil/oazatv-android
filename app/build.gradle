@@ -27,7 +27,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 2018021501
-        versionName "2.7.2"
+        versionName "2.7.4"
 
         multiDexEnabled true
         renderscriptTargetApi 19
