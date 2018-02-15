@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.chaemil.hgms.OazaApp;
-import com.chaemil.hgms.ui.activity.MainActivity;
+import com.chaemil.hgms.ui.mobile.activity.MainActivity;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.utils.SmartLog;
 

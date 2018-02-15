@@ -25,7 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.ui.activity.BaseActivity;
+import com.chaemil.hgms.ui.mobile.activity.BaseActivity;
 import com.chaemil.hgms.factory.RequestFactory;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.RequestType;

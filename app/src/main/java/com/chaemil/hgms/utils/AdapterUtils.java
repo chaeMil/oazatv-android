@@ -15,7 +15,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.ui.activity.MainActivity;
+import com.chaemil.hgms.ui.mobile.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.johnpersano.supertoasts.SuperToast;
