@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
@@ -22,6 +23,9 @@
     <uses-feature
         android:name="android.software.leanback"
         android:required="true" />
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false" />
 
     <supports-screens
         android:anyDensity="true"
@@ -30,8 +34,6 @@
         android:resizeable="true"
         android:smallScreens="true"
         android:xlargeScreens="true" />
-
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".OazaApp"
@@ -55,22 +57,14 @@
         </activity>
         <activity
             android:name=".ui.tv.activity.TvMainActivity"
-            android:banner="@drawable/app_icon_your_company"
-            android:icon="@drawable/app_icon_your_company"
-            android:label="@string/title_activity_tv_main"
-            android:logo="@drawable/app_icon_your_company"
             android:screenOrientation="landscape"
-            android:theme="@style/AppThemeNoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:theme="@style/AppThemeNoActionBar" />
 
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".ui.mobile.activity.TutorialActivity"
             android:configChanges="keyboardHidden|screenSize|screenLayout|orientation|smallestScreenSize"
-            android:theme="@style/Theme.Intro"></activity>
+            android:theme="@style/Theme.Intro" />
+
         <activity
             android:name=".ui.mobile.activity.MainActivity"
             android:configChanges="keyboardHidden|screenSize|screenLayout|orientation|smallestScreenSize"
@@ -102,18 +96,20 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.mobile.activity.YoutubePlayer"
-            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|smallestScreenSize"></activity>
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|smallestScreenSize" />
 
         <service
             android:name=".service.AudioPlaybackService"
             android:enabled="true"
             android:stopWithTask="false" />
+
         <service
             android:name=".service.TrackerService"
             android:enabled="true"
-            android:stopWithTask="false"></service>
+            android:stopWithTask="false" />
 
         <receiver android:name=".receiver.BootAndUpdateReceiver">
             <intent-filter>
@@ -154,9 +150,6 @@
             android:name="com.novoda.downloadmanager.MaxConcurrentDownloads"
             android:value="1" />
 
-        <activity android:name=".ui.tv.activity.TvDetailsActivity" />
-        <activity android:name=".PlaybackActivity" />
-        <activity android:name=".BrowseErrorActivity" />
     </application>
 
 </manifest>
