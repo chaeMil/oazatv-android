@@ -17,8 +17,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.NotificationCompat;
-import android.telephony.TelephonyManager;
+import android.support.v4.app.NotificationCompat;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -382,7 +381,7 @@ public class AudioPlaybackService extends Service implements
                     .addAction(R.drawable.ff, "", intents.get(2));
 
             if (!OSUtils.isHuawei()) {
-                notificationBuilder.setStyle(new NotificationCompat.MediaStyle()
+                notificationBuilder.setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
                         .setShowActionsInCompactView(0, 1, 2));
             }
 
