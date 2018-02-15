@@ -41,7 +41,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".activity.SplashActivity"
+            android:name=".ui.activity.SplashActivity"
             android:configChanges="keyboardHidden|screenSize|screenLayout|orientation|smallestScreenSize"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -52,19 +52,19 @@
         </activity>
 
         <activity
-            android:name=".activity.TvActivity"
+            android:name=".ui.activity.TvActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <activity
-            android:name=".activity.TutorialActivity"
+            android:name=".ui.activity.TutorialActivity"
             android:configChanges="keyboardHidden|screenSize|screenLayout|orientation|smallestScreenSize"
             android:theme="@style/Theme.Intro">
 
         </activity>
 
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:configChanges="keyboardHidden|screenSize|screenLayout|orientation|smallestScreenSize"
             android:launchMode="singleTask"
             android:theme="@style/AppThemeNoActionBar">
@@ -100,7 +100,7 @@
         </activity>
 
         <activity
-            android:name=".activity.YoutubePlayer"
+            android:name=".ui.activity.YoutubePlayer"
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|smallestScreenSize">
 
         </activity>

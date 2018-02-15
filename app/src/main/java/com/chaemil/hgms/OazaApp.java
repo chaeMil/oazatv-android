@@ -3,8 +3,8 @@ package com.chaemil.hgms;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
-import com.chaemil.hgms.activity.MainActivity;
-import com.chaemil.hgms.activity.SplashActivity;
+import com.chaemil.hgms.ui.activity.MainActivity;
+import com.chaemil.hgms.ui.activity.SplashActivity;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.RequestService;

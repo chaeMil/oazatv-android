@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/relativeLayout">
 
-            <com.chaemil.hgms.view.VideoThumbImageView
+            <com.chaemil.hgms.ui.view.VideoThumbImageView
                 android:scaleType="centerCrop"
                 android:id="@+id/thumb"
                 android:background="@color/dark_gray"

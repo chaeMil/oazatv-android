@@ -53,7 +53,7 @@
             android:id="@+id/main_layout">
 
             <FrameLayout
-                android:name="com.chaemil.hgms.fragment.MainFragment"
+                android:name="com.chaemil.hgms.ui.fragment.MainFragment"
                 android:tag="main_fragment"
                 android:id="@+id/main_fragment"
                 android:layout_width="match_parent"
@@ -73,7 +73,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            app:layout_behavior="com.chaemil.hgms.view.LockableBottomSheetBehaviour"
+            app:layout_behavior="com.chaemil.hgms.ui.view.LockableBottomSheetBehaviour"
             android:id="@+id/player_wrapper"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

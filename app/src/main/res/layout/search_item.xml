@@ -42,7 +42,7 @@
         android:layout_marginTop="2dp"
         android:layout_alignLeft="@+id/name" />
 
-    <com.chaemil.hgms.view.VideoThumbImageView
+    <com.chaemil.hgms.ui.view.VideoThumbImageView
         android:scaleType="centerCrop"
         android:id="@+id/thumb"
         android:background="@color/dark_gray"

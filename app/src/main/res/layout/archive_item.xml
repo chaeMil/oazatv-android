@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp">
 
-            <com.chaemil.hgms.view.VideoThumbImageView
+            <com.chaemil.hgms.ui.view.VideoThumbImageView
                 android:scaleType="centerCrop"
                 android:id="@+id/thumb"
                 android:background="@color/dark_gray"

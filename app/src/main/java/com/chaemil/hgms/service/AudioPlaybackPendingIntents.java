@@ -4,7 +4,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import com.chaemil.hgms.fragment.AudioPlayerFragment;
 import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 
 import java.util.ArrayList;
