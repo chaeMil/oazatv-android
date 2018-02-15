@@ -4,17 +4,23 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
-    <uses-feature android:name="android.hardware.telephony" android:required="false" />
-    <uses-feature android:name="android.software.leanback" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
 
     <supports-screens
         android:anyDensity="true"
@@ -22,32 +28,43 @@
         android:normalScreens="true"
         android:resizeable="true"
         android:smallScreens="true"
-        android:xlargeScreens="true"/>
+        android:xlargeScreens="true" />
 
-    <application android:allowBackup="true" android:icon="@mipmap/ic_launcher"
+    <application
+        android:name=".OazaApp"
+        android:allowBackup="true"
+        android:banner="@drawable/banner"
         android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:banner="@drawable/banner"
-        android:theme="@style/AppTheme"
-        android:name=".OazaApp">
+        android:theme="@style/AppTheme">
 
-        <activity android:name=".activity.SplashActivity"
-            android:theme="@style/SplashTheme"
-            android:configChanges="keyboardHidden|screenSize|screenLayout|orientation|smallestScreenSize">
+        <activity
+            android:name=".activity.SplashActivity"
+            android:configChanges="keyboardHidden|screenSize|screenLayout|orientation|smallestScreenSize"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.TutorialActivity"
-            android:theme="@style/Theme.Intro"
-            android:configChanges="keyboardHidden|screenSize|screenLayout|orientation|smallestScreenSize">
+        <activity
+            android:name=".activity.TvActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name=".activity.TutorialActivity"
+            android:configChanges="keyboardHidden|screenSize|screenLayout|orientation|smallestScreenSize"
+            android:theme="@style/Theme.Intro">
 
         </activity>
 
-        <activity android:name=".activity.MainActivity"
+        <activity
+            android:name=".activity.MainActivity"
             android:configChanges="keyboardHidden|screenSize|screenLayout|orientation|smallestScreenSize"
             android:launchMode="singleTask"
             android:theme="@style/AppThemeNoActionBar">
@@ -58,46 +75,45 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http"
+
+                <data
                     android:host="oaza.tv"
-                    android:pathPrefix="/video/watch/" />
+                    android:pathPrefix="/video/watch/"
+                    android:scheme="http" />
             </intent-filter>
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http"
+
+                <data
                     android:host="oaza.tv"
-                    android:pathPrefix="/album/view/" />
+                    android:pathPrefix="/album/view/"
+                    android:scheme="http" />
             </intent-filter>
-
-        </activity>
-
-        <activity android:name=".activity.YoutubePlayer"
-            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|smallestScreenSize">
 
         </activity>
 
         <activity
-            android:name=".activity.TvActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Leanback">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-            </intent-filter>
+            android:name=".activity.YoutubePlayer"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|smallestScreenSize">
+
         </activity>
 
-        <service android:name=".service.AudioPlaybackService"
-            android:stopWithTask="false"
-            android:enabled="true"/>
+        <service
+            android:name=".service.AudioPlaybackService"
+            android:enabled="true"
+            android:stopWithTask="false" />
 
-        <service android:name=".service.TrackerService"
-            android:stopWithTask="false"
-            android:enabled="true">
+        <service
+            android:name=".service.TrackerService"
+            android:enabled="true"
+            android:stopWithTask="false">
 
         </service>
 
@@ -108,13 +124,13 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".receiver.ConnectionReceiver" >
+        <receiver android:name=".receiver.ConnectionReceiver">
             <intent-filter android:priority="100">
                 <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".receiver.CallReceiver" >
+        <receiver android:name=".receiver.CallReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
@@ -126,11 +142,21 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="4a9f379c8de34396a9eecacff9b374cdf8cd8083" />
-        <meta-data android:name="DATABASE" android:value="oazatv.db" />
-        <meta-data android:name="VERSION" android:value="12" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.chaemil.hgms" />
-        <meta-data android:name="com.novoda.downloadmanager.MaxConcurrentDownloads" android:value="1" />
+        <meta-data
+            android:name="DATABASE"
+            android:value="oazatv.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="12" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="com.chaemil.hgms" />
+        <meta-data
+            android:name="com.novoda.downloadmanager.MaxConcurrentDownloads"
+            android:value="1" />
 
     </application>
 

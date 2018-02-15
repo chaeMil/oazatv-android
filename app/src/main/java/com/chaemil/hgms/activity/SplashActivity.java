@@ -6,6 +6,7 @@ import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.utils.FileUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
+import com.chaemil.hgms.utils.TVUtils;
 
 /**
  * Created by chaemil on 8.2.16.
@@ -22,12 +23,16 @@ public class SplashActivity extends BaseActivity {
     private void init() {
         changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
 
-        SharedPrefUtils sharedPrefUtils = SharedPrefUtils.getInstance(this);
-        if (sharedPrefUtils.loadFirstLaunch()) {
-            FileUtils.clearApplicationData(getApplicationContext());
-            startTutorial();
+        if (TVUtils.isTV(this)) {
+            startTvActivity();
         } else {
-            startMainActivity();
+            SharedPrefUtils sharedPrefUtils = SharedPrefUtils.getInstance(this);
+            if (sharedPrefUtils.loadFirstLaunch()) {
+                FileUtils.clearApplicationData(getApplicationContext());
+                startTutorial();
+            } else {
+                startMainActivity();
+            }
         }
     }
 
@@ -36,6 +41,18 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void run() {
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                overridePendingTransition(0, 0);
+            }
+        }, 750);
+    }
+
+    public void startTvActivity() {
+        delay(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(SplashActivity.this, TvActivity.class);
                 startActivity(intent);
                 finish();
                 overridePendingTransition(0, 0);
