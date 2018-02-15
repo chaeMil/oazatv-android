@@ -14,6 +14,7 @@
 
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
     <uses-feature android:name="android.hardware.telephony" android:required="false" />
+    <uses-feature android:name="android.software.leanback" android:required="false" />
 
     <supports-screens
         android:anyDensity="true"
@@ -27,6 +28,7 @@
         android:hardwareAccelerated="true"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:banner="@drawable/banner"
         android:theme="@style/AppTheme"
         android:name=".OazaApp">
 
@@ -77,6 +79,16 @@
         <activity android:name=".activity.YoutubePlayer"
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|smallestScreenSize">
 
+        </activity>
+
+        <activity
+            android:name=".activity.TvActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Leanback">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <service android:name=".service.AudioPlaybackService"

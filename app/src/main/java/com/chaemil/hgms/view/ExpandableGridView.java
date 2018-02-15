@@ -91,7 +91,7 @@ public class ExpandableGridView extends ExpandableListView {
             setStretchMode(index);
         }
 
-        int columnWidth = a.getDimensionPixelOffset(R.styleable.ExpandableGridView_columnWidth, -1);
+        int columnWidth = a.getDimensionPixelOffset(R.styleable.ExpandableGridView_gridColumnWidth, -1);
         if (columnWidth > 0) {
             setColumnWidth(columnWidth);
         }
