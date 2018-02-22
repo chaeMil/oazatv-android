@@ -56,7 +56,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.tv.activity.TvMainActivity"
+            android:name=".ui.tv.activity.MainActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppThemeTv" />
 
