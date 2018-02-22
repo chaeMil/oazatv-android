@@ -1,15 +1,12 @@
 package com.chaemil.hgms.ui.tv.fragment;
 
-import android.graphics.Movie;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v17.leanback.app.BrowseFragment;
-import android.support.v17.leanback.app.HeadersFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
-import android.support.v17.leanback.widget.OnItemViewSelectedListener;
+import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
@@ -21,18 +18,16 @@ import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.api.Api;
 import com.chaemil.hgms.service.api.JsonFutureCallback;
+import com.chaemil.hgms.ui.tv.activity.TvMainActivity;
 import com.chaemil.hgms.ui.tv.model.VideoRow;
 import com.chaemil.hgms.ui.tv.presenter.VideoPresenter;
-import com.chaemil.hgms.ui.tv.view.BackgroundManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
-public class TvMainFragment extends BrowseFragment implements OnItemViewSelectedListener {
+public class TvMainFragment extends BrowseFragment implements OnItemViewClickedListener {
     private static final String TAG = TvMainFragment.class.getSimpleName();
-
-    private BackgroundManager mBackgroundManager;
 
     private static final int ARCHIVE = 0;
 
@@ -50,9 +45,6 @@ public class TvMainFragment extends BrowseFragment implements OnItemViewSelected
         Log.i(TAG, "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
         setupUIElements();
-
-        mBackgroundManager = new BackgroundManager(getActivity());
-
         createDataRows();
         createRows();
         prepareEntranceTransition();
@@ -105,8 +97,7 @@ public class TvMainFragment extends BrowseFragment implements OnItemViewSelected
         // Sets this fragments Adapter.
         // The setAdapter method is defined in the BrowseFragment of the Leanback Library
         setAdapter(rowsAdapter);
-
-        setOnItemViewSelectedListener(this);
+        setOnItemViewClickedListener(this);
     }
 
     private void bindMovieResponse(ArrayList<Video> videos, int id) {
@@ -130,20 +121,6 @@ public class TvMainFragment extends BrowseFragment implements OnItemViewSelected
         );
     }
 
-    @Override
-    public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
-        // Check if the item is a movie
-        if (item instanceof Movie) {
-            Video video = (Video) item;
-            // Check if the movie has a backdrop
-            if (video.getThumbFile() != null) {
-                mBackgroundManager.loadImage(video.getThumbFile());
-            } else {
-                mBackgroundManager.setBackground(new ColorDrawable(getResources().getColor(R.color.white)));
-            }
-        }
-    }
-
     private void setupUIElements() {
         // setBadgeDrawable(getActivity().getResources().getDrawable(R.drawable.videos_by_google_banner));
         setTitle(getString(R.string.app_name)); // Badge, when set, takes precedent
@@ -155,5 +132,20 @@ public class TvMainFragment extends BrowseFragment implements OnItemViewSelected
         setBrandColor(getResources().getColor(R.color.colorPrimary));
         // set search icon color
         setSearchAffordanceColor(getResources().getColor(R.color.white));
+    }
+
+    @Override
+    public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
+        if (item != null) {
+            Video video = (Video) item;
+
+            Bundle arguments = new Bundle();
+            arguments.putParcelable("video", video);
+
+            VideoPlaybackFragment videoPlaybackFragment = VideoPlaybackFragment.newInstance();
+            videoPlaybackFragment.setArguments(arguments);
+
+            ((TvMainActivity) getActivity()).addFragment(videoPlaybackFragment);
+        }
     }
 }

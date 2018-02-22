@@ -19,7 +19,14 @@ public class TvMainActivity extends Activity {
 
     public void addFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.tv_frame_content, fragment);
+        fragmentTransaction.replace(R.id.tv_frame_content, fragment).addToBackStack(fragment.getTag());
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0)
+            getFragmentManager().popBackStack();
+        else super.onBackPressed();
     }
 }
