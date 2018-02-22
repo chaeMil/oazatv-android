@@ -92,4 +92,6 @@
     <string name="later">Později</string>
     <string name="rating_request_message">Líbí se ti naše aplikace? Ohodnoť ji!</string>
     <string name="sure">Jasně!</string>
+    <string name="latest">Nejnovější</string>
+    <string name="popular">Populární</string>
 </resources>

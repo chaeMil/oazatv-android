@@ -29,9 +29,11 @@ import java.util.ArrayList;
 public class TvMainFragment extends BrowseFragment implements OnItemViewClickedListener {
     private static final String TAG = TvMainFragment.class.getSimpleName();
 
-    private static final int ARCHIVE = 0;
+    private static final int LATEST = 0;
+    private static final int FEATURED = 1;
+    private static final int POPULAR = 2;
 
-    SparseArray<VideoRow> mRows;
+    SparseArray<VideoRow> rows;
 
     public static TvMainFragment newInstance() {
         Bundle args = new Bundle();
@@ -48,15 +50,33 @@ public class TvMainFragment extends BrowseFragment implements OnItemViewClickedL
         createDataRows();
         createRows();
         prepareEntranceTransition();
-        fetchPopularMovies();
+        loadHomepage();
     }
 
-    private void fetchPopularMovies() {
-        Api.getVideosFromArchive(getActivity(), 1, new JsonFutureCallback() {
+    private void loadHomepage() {
+        Api.getHomePage(getActivity(), new JsonFutureCallback() {
             @Override
             public void onSuccess(int statusCode, JsonObject response) {
-                ArrayList<Video> videos = parseVideosResponse(response);
-                bindMovieResponse(videos, ARCHIVE);
+                if (response != null) {
+                    if (response.has("newestVideos")) {
+                        ArrayList<Video> newestVideos =
+                                parseVideosResponse(response.get("newestVideos").getAsJsonArray());
+                        bindMovieResponse(newestVideos, LATEST);
+                    }
+
+                    if (response.has("popularVideos")) {
+                        ArrayList<Video> popularVideos =
+                                parseVideosResponse(response.get("popularVideos").getAsJsonArray());
+                        bindMovieResponse(popularVideos, POPULAR);
+                    }
+
+                    if (response.has("featured")) {
+                        ArrayList<Video> featured =
+                                parseVideosResponse(response.get("featured").getAsJsonArray());
+                        bindMovieResponse(featured, FEATURED);
+                    }
+                }
+
                 startEntranceTransition();
             }
 
@@ -67,10 +87,9 @@ public class TvMainFragment extends BrowseFragment implements OnItemViewClickedL
         });
     }
 
-    private ArrayList<Video> parseVideosResponse(JsonObject response) {
+    private ArrayList<Video> parseVideosResponse(JsonArray jsonVideosArray) {
         ArrayList<Video> videos = new ArrayList<>();
-        if (response != null) {
-            JsonArray jsonVideosArray = response.get("archive").getAsJsonArray();
+        if (jsonVideosArray != null) {
             for (int i = 0; i < jsonVideosArray.size(); i++) {
                 JsonObject jsonObject = jsonVideosArray.get(i).getAsJsonObject();
                 if (jsonObject.get("type").getAsString().equals("video")) {
@@ -83,54 +102,57 @@ public class TvMainFragment extends BrowseFragment implements OnItemViewClickedL
     }
 
     private void createRows() {
-        // Creates the RowsAdapter for the Fragment
-        // The ListRowPresenter tells to render ListRow objects
         ArrayObjectAdapter rowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
-        for (int i = 0; i < mRows.size(); i++) {
-            VideoRow row = mRows.get(i);
-            // Adds a new ListRow to the adapter. Each row will contain a collection of Movies
-            // That will be rendered using the VideoPresenter
+        for (int i = 0; i < rows.size(); i++) {
+            VideoRow row = rows.get(i);
             HeaderItem headerItem = new HeaderItem(row.getId(), row.getTitle());
             ListRow listRow = new ListRow(headerItem, row.getAdapter());
             rowsAdapter.add(listRow);
         }
-        // Sets this fragments Adapter.
-        // The setAdapter method is defined in the BrowseFragment of the Leanback Library
         setAdapter(rowsAdapter);
         setOnItemViewClickedListener(this);
     }
 
     private void bindMovieResponse(ArrayList<Video> videos, int id) {
-        VideoRow row = mRows.get(id);
+        VideoRow row = rows.get(id);
         row.setPage(row.getPage() + 1);
         for (Video video : videos) {
-            if (video.getThumbFile() != null) { // Avoid showing movie without posters
+            if (video.getThumbFile() != null) {
                 row.getAdapter().add(video);
             }
         }
     }
 
     private void createDataRows() {
-        mRows = new SparseArray<>();
+        rows = new SparseArray<>();
         VideoPresenter moviePresenter = new VideoPresenter();
-        mRows.put(ARCHIVE, new VideoRow()
-                .setId(ARCHIVE)
+        rows.put(LATEST, new VideoRow()
+                .setId(LATEST)
                 .setAdapter(new ArrayObjectAdapter(moviePresenter))
-                .setTitle(getString(R.string.archive))
+                .setTitle(getString(R.string.latest))
+                .setPage(1)
+        );
+
+        rows.put(FEATURED, new VideoRow()
+                .setId(FEATURED)
+                .setAdapter(new ArrayObjectAdapter(moviePresenter))
+                .setTitle(getString(R.string.featured))
+                .setPage(1)
+        );
+
+        rows.put(POPULAR, new VideoRow()
+                .setId(POPULAR)
+                .setAdapter(new ArrayObjectAdapter(moviePresenter))
+                .setTitle(getString(R.string.popular_videos))
                 .setPage(1)
         );
     }
 
     private void setupUIElements() {
-        // setBadgeDrawable(getActivity().getResources().getDrawable(R.drawable.videos_by_google_banner));
-        setTitle(getString(R.string.app_name)); // Badge, when set, takes precedent
-        // over title
+        setTitle(getString(R.string.app_name));
         setHeadersState(HEADERS_ENABLED);
         setHeadersTransitionOnBackEnabled(true);
-
-        // set fastLane (or headers) background color
         setBrandColor(getResources().getColor(R.color.colorPrimary));
-        // set search icon color
         setSearchAffordanceColor(getResources().getColor(R.color.white));
     }
 
