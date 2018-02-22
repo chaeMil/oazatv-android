@@ -165,31 +165,31 @@ public class MainFragment extends BrowseFragment implements OnItemViewClickedLis
 
     private void createDataRows() {
         rows = new SparseArray<>();
-        VideoPresenter moviePresenter = new VideoPresenter();
+        VideoPresenter videoPresenter = new VideoPresenter();
         rows.put(LATEST, new HomeRow()
                 .setId(LATEST)
-                .setAdapter(new ArrayObjectAdapter(moviePresenter))
+                .setAdapter(new ArrayObjectAdapter(videoPresenter))
                 .setTitle(getString(R.string.latest))
                 .setPage(1)
         );
 
         rows.put(FEATURED, new HomeRow()
                 .setId(FEATURED)
-                .setAdapter(new ArrayObjectAdapter(moviePresenter))
+                .setAdapter(new ArrayObjectAdapter(videoPresenter))
                 .setTitle(getString(R.string.featured))
                 .setPage(1)
         );
 
         rows.put(POPULAR, new HomeRow()
                 .setId(POPULAR)
-                .setAdapter(new ArrayObjectAdapter(moviePresenter))
+                .setAdapter(new ArrayObjectAdapter(videoPresenter))
                 .setTitle(getString(R.string.popular))
                 .setPage(1)
         );
 
         rows.put(CATEGORIES, new HomeRow()
                 .setId(CATEGORIES)
-                .setAdapter(new ArrayObjectAdapter(moviePresenter))
+                .setAdapter(new ArrayObjectAdapter(videoPresenter))
                 .setTitle(getString(R.string.categories))
                 .setPage(1)
         );
@@ -206,15 +206,32 @@ public class MainFragment extends BrowseFragment implements OnItemViewClickedLis
     @Override
     public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
         if (item != null) {
-            Video video = (Video) item;
-
-            Bundle arguments = new Bundle();
-            arguments.putParcelable("video", video);
-
-            VideoPlaybackFragment videoPlaybackFragment = VideoPlaybackFragment.newInstance();
-            videoPlaybackFragment.setArguments(arguments);
-
-            ((MainActivity) getActivity()).addFragment(videoPlaybackFragment);
+            if (item instanceof Video) {
+                openVideoPlayer((Video) item);
+            }
+            if (item instanceof Category) {
+                openCategoryView((Category) item);
+            }
         }
+    }
+
+    private void openCategoryView(Category category) {
+        Bundle arguments = new Bundle();
+        arguments.putParcelable("category", category);
+
+        CategoryFragment categoryFragment = CategoryFragment.newInstance();
+        categoryFragment.setArguments(arguments);
+
+        ((MainActivity) getActivity()).addFragment(categoryFragment);
+    }
+
+    private void openVideoPlayer(Video video) {
+        Bundle arguments = new Bundle();
+        arguments.putParcelable("video", video);
+
+        VideoPlaybackFragment videoPlaybackFragment = VideoPlaybackFragment.newInstance();
+        videoPlaybackFragment.setArguments(arguments);
+
+        ((MainActivity) getActivity()).addFragment(videoPlaybackFragment);
     }
 }

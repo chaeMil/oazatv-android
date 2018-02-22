@@ -40,4 +40,12 @@ public class Api {
                 .withResponse()
                 .setCallback(callback);
     }
+
+    public static void getVideosFromCategory(Context context, int id, int page, int perPage, JsonFutureCallback callback) {
+        Ion.with(context)
+                .load(CATEGORIES + "?categoryId=" + id + "&page=" + page + "&perPage=" + perPage)
+                .asJsonObject()
+                .withResponse()
+                .setCallback(callback);
+    }
 }
