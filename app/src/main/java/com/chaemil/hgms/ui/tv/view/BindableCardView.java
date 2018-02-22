@@ -6,6 +6,8 @@ import android.support.v17.leanback.widget.BaseCardView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 
+import com.chaemil.hgms.model.Category;
+
 /**
  * Created by Michal Mlejnek on 22/02/2018.
  */

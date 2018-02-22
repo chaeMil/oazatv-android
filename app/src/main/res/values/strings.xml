@@ -97,4 +97,5 @@
     <string name="rating_request_message">Are you enjoying our app? Give us a review/rating!</string>
     <string name="latest">Latest</string>
     <string name="popular">Popular</string>
+    <string name="categories">Categories</string>
 </resources>

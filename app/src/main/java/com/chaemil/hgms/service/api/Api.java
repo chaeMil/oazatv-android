@@ -1,5 +1,6 @@
 package com.chaemil.hgms.service.api;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.chaemil.hgms.BuildConfig;
@@ -14,6 +15,7 @@ public class Api {
     public static final String API_VERSION = "api/v2/";
     public static final String HOMEPAGE = SERVER + API_VERSION;
     public static final String ARCHIVE = SERVER + API_VERSION + "archive/";
+    public static final String CATEGORIES = SERVER + API_VERSION + "categories/";
 
     public static void getVideosFromArchive(Context context, int page, JsonFutureCallback callback) {
         Ion.with(context)
@@ -26,6 +28,14 @@ public class Api {
     public static void getHomePage(Context context, JsonFutureCallback callback) {
         Ion.with(context)
                 .load(HOMEPAGE + "?appVersionCode=" + BuildConfig.VERSION_CODE)
+                .asJsonObject()
+                .withResponse()
+                .setCallback(callback);
+    }
+
+    public static void getCategories(Context context, JsonFutureCallback callback) {
+        Ion.with(context)
+                .load(CATEGORIES)
                 .asJsonObject()
                 .withResponse()
                 .setCallback(callback);

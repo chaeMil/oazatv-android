@@ -299,7 +299,7 @@ public class ResponseFactory {
         return null;
     }
 
-    public static Category parseCategory(JSONObject response) {
+    public static Category parseCategory(Object response) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
         if (response != null) {
