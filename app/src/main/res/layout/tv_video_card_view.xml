@@ -18,12 +18,12 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/white"
             android:gravity="end|center_vertical"
             android:padding="8dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="16sp" />
 
     </LinearLayout>

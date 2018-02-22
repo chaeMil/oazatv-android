@@ -2,6 +2,7 @@ package com.chaemil.hgms.ui.tv.activity;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 
@@ -26,7 +27,7 @@ public class TvMainActivity extends Activity {
     @Override
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() > 0)
-            getFragmentManager().popBackStack();
+            getFragmentManager().popBackStackImmediate();
         else super.onBackPressed();
     }
 }

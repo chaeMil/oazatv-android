@@ -143,7 +143,7 @@ public class TvMainFragment extends BrowseFragment implements OnItemViewClickedL
         rows.put(POPULAR, new VideoRow()
                 .setId(POPULAR)
                 .setAdapter(new ArrayObjectAdapter(moviePresenter))
-                .setTitle(getString(R.string.popular_videos))
+                .setTitle(getString(R.string.popular))
                 .setPage(1)
         );
     }
