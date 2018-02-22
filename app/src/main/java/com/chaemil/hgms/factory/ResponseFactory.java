@@ -55,7 +55,7 @@ public class ResponseFactory {
 
     }
 
-    public static Video parseVideo(JSONObject response) {
+    public static Video parseVideo(Object response) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
         if (response != null) {

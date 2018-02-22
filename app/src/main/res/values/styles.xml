@@ -31,4 +31,8 @@
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
+    <style name="AppThemeTv" parent="Theme.Leanback">
+
+    </style>
+
 </resources>

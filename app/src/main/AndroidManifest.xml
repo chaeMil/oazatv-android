@@ -45,7 +45,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.mobile.activity.SplashActivity"
+            android:name=".ui.universal.activity.SplashActivity"
             android:configChanges="keyboardHidden|screenSize|screenLayout|orientation|smallestScreenSize"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -58,7 +58,7 @@
         <activity
             android:name=".ui.tv.activity.TvMainActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/AppThemeNoActionBar" />
+            android:theme="@style/AppThemeTv" />
 
         <activity
             android:name=".ui.mobile.activity.TutorialActivity"

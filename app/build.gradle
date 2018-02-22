@@ -56,6 +56,7 @@ android {
 
 dependencies {
     implementation 'com.github.bumptech.glide:glide:3.8.0'
+    implementation 'com.android.support:support-v4:27.0.2'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //support libraries
     implementation 'com.android.support:support-v13:27.0.2'
@@ -74,6 +75,8 @@ dependencies {
     //core libraries
     implementation "android.arch.lifecycle:runtime:1.1.0"
     implementation "android.arch.lifecycle:extensions:1.1.0"
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.orhanobut:logger:2.1.1'
     implementation 'com.android.volley:volley:1.0.0'
@@ -123,6 +126,10 @@ dependencies {
     implementation 'net.soulwolf.widget:ratiolayout:1.0.0'
     implementation 'org.apmem.tools:layouts:1.10'
     implementation 'com.iamhabib:rating-request:1.0.1'
+
+    //butter knife
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     //tests
     testCompile 'junit:junit:4.12'

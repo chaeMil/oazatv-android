@@ -1,9 +1,12 @@
-package com.chaemil.hgms.ui.mobile.activity;
+package com.chaemil.hgms.ui.universal.activity;
 
 import android.content.Intent;
 
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.ui.mobile.activity.BaseActivity;
+import com.chaemil.hgms.ui.mobile.activity.MainActivity;
+import com.chaemil.hgms.ui.mobile.activity.TutorialActivity;
 import com.chaemil.hgms.ui.tv.activity.TvMainActivity;
 import com.chaemil.hgms.utils.FileUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
