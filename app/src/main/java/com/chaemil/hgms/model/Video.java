@@ -49,6 +49,9 @@ public class Video extends SugarRecord implements Parcelable {
     @SerializedName(Constants.JSON_MP4_FILE)
     private String videoFile;
     @Expose
+    @SerializedName(Constants.JSON_WEBM_FILE)
+    private String videoFileWebm;
+    @Expose
     @SerializedName(Constants.JSON_MP3_FILE)
     private String audioFile;
     @Expose
@@ -82,7 +85,8 @@ public class Video extends SugarRecord implements Parcelable {
     }
 
     public Video(int id, String hash, String date, String nameCS,
-                 String nameEN, String tags, String videoFileLowRes, String videoFile, String audioFile,
+                 String nameEN, String tags, String videoFileLowRes, String videoFile, String videoFileWebm,
+                 String audioFile,
                  String thumbFile, String thumbFileLowRes, String thumbColor, String subtitlesFile,
                  int duration,
                  int views, String categories,
@@ -95,6 +99,7 @@ public class Video extends SugarRecord implements Parcelable {
         this.tags = tags;
         this.videoFileLowRes = videoFileLowRes;
         this.videoFile = videoFile;
+        this.videoFileWebm = videoFileWebm;
         this.audioFile = audioFile;
         this.thumbFile = thumbFile;
         this.subtitlesFile = subtitlesFile;
@@ -326,6 +331,7 @@ public class Video extends SugarRecord implements Parcelable {
         tags = in.readString();
         videoFileLowRes = in.readString();
         videoFile = in.readString();
+        videoFileWebm = in.readString();
         audioFile = in.readString();
         thumbFile = in.readString();
         thumbFileLowRes = in.readString();
@@ -359,6 +365,7 @@ public class Video extends SugarRecord implements Parcelable {
         dest.writeString(tags);
         dest.writeString(videoFileLowRes);
         dest.writeString(videoFile);
+        dest.writeString(videoFileWebm);
         dest.writeString(audioFile);
         dest.writeString(thumbFile);
         dest.writeString(thumbFileLowRes);
@@ -383,4 +390,8 @@ public class Video extends SugarRecord implements Parcelable {
             return new Video[size];
         }
     };
+
+    public String getVideoFileWebm() {
+        return videoFileWebm;
+    }
 }
