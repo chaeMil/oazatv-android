@@ -1,5 +1,6 @@
 package com.chaemil.hgms.ui.tv.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v17.leanback.app.VerticalGridFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
@@ -8,6 +9,9 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.VerticalGridPresenter;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.factory.ResponseFactory;
@@ -55,6 +59,15 @@ public class CategoryFragment extends VerticalGridFragment implements OnItemView
         } else {
             ((MainActivity) getActivity()).goBack();
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+         View rootView = super.onCreateView(inflater, container, savedInstanceState);
+         if (category != null) {
+             rootView.setBackgroundColor(Color.parseColor(category.getColor()));
+         }
+         return rootView;
     }
 
     private void loadCategoryVideos(int id) {
