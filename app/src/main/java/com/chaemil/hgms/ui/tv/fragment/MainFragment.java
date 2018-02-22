@@ -18,7 +18,7 @@ import com.chaemil.hgms.factory.ResponseFactory;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.api.Api;
 import com.chaemil.hgms.service.api.JsonFutureCallback;
-import com.chaemil.hgms.ui.tv.activity.TvMainActivity;
+import com.chaemil.hgms.ui.tv.activity.MainActivity;
 import com.chaemil.hgms.ui.tv.model.VideoRow;
 import com.chaemil.hgms.ui.tv.presenter.VideoPresenter;
 import com.google.gson.JsonArray;
@@ -26,8 +26,8 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
-public class TvMainFragment extends BrowseFragment implements OnItemViewClickedListener {
-    private static final String TAG = TvMainFragment.class.getSimpleName();
+public class MainFragment extends BrowseFragment implements OnItemViewClickedListener {
+    private static final String TAG = MainFragment.class.getSimpleName();
 
     private static final int LATEST = 0;
     private static final int FEATURED = 1;
@@ -35,9 +35,9 @@ public class TvMainFragment extends BrowseFragment implements OnItemViewClickedL
 
     SparseArray<VideoRow> rows;
 
-    public static TvMainFragment newInstance() {
+    public static MainFragment newInstance() {
         Bundle args = new Bundle();
-        TvMainFragment fragment = new TvMainFragment();
+        MainFragment fragment = new MainFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -167,7 +167,7 @@ public class TvMainFragment extends BrowseFragment implements OnItemViewClickedL
             VideoPlaybackFragment videoPlaybackFragment = VideoPlaybackFragment.newInstance();
             videoPlaybackFragment.setArguments(arguments);
 
-            ((TvMainActivity) getActivity()).addFragment(videoPlaybackFragment);
+            ((MainActivity) getActivity()).addFragment(videoPlaybackFragment);
         }
     }
 }

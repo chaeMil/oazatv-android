@@ -2,20 +2,19 @@ package com.chaemil.hgms.ui.tv.activity;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.ui.tv.fragment.TvMainFragment;
+import com.chaemil.hgms.ui.tv.fragment.MainFragment;
 
-public class TvMainActivity extends Activity {
+public class MainActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tv_main);
-        addFragment(TvMainFragment.newInstance());
+        addFragment(MainFragment.newInstance());
     }
 
     public void addFragment(Fragment fragment) {
