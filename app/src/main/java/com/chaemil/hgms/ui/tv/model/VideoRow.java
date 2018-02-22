@@ -6,21 +6,21 @@ import android.support.v17.leanback.widget.ArrayObjectAdapter;
  * Created by Michal Mlejnek on 22/02/2018.
  */
 
-public class MovieRow {
+public class VideoRow {
 
     private int page;
     private int id;
     private ArrayObjectAdapter adapter;
     private String title;
 
-    public MovieRow() {
+    public VideoRow() {
     }
 
     public int getPage() {
         return page;
     }
 
-    public MovieRow setPage(int page) {
+    public VideoRow setPage(int page) {
         this.page = page;
         return this;
     }
@@ -29,7 +29,7 @@ public class MovieRow {
         return id;
     }
 
-    public MovieRow setId(int id) {
+    public VideoRow setId(int id) {
         this.id = id;
         return this;
     }
@@ -38,7 +38,7 @@ public class MovieRow {
         return adapter;
     }
 
-    public MovieRow setAdapter(ArrayObjectAdapter adapter) {
+    public VideoRow setAdapter(ArrayObjectAdapter adapter) {
         this.adapter = adapter;
         return this;
     }
@@ -47,7 +47,7 @@ public class MovieRow {
         return title;
     }
 
-    public MovieRow setTitle(String title) {
+    public VideoRow setTitle(String title) {
         this.title = title;
         return this;
     }

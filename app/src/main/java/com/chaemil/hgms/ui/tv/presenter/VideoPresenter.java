@@ -10,7 +10,7 @@ import com.chaemil.hgms.ui.tv.view.VideoCardView;
  * Created by Michal Mlejnek on 22/02/2018.
  */
 
-public class MoviePresenter extends Presenter {
+public class VideoPresenter extends Presenter {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
