@@ -10,7 +10,19 @@ import android.support.v17.leanback.media.MediaPlayerAdapter;
 import android.support.v17.leanback.media.PlaybackGlue;
 import android.support.v17.leanback.media.PlaybackTransportControlGlue;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.chaemil.hgms.OazaApp;
+import com.chaemil.hgms.factory.RequestFactory;
+import com.chaemil.hgms.factory.RequestFactoryListener;
+import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.ui.tv.activity.MainActivity;
+import com.chaemil.hgms.utils.GAUtils;
+import com.chaemil.hgms.utils.SmartLog;
+
+import org.json.JSONObject;
 
 /**
  * Created by Michal Mlejnek on 22/02/2018.
@@ -37,7 +49,25 @@ public class VideoPlaybackFragment extends VideoFragment {
 
         if (video != null) {
             setupPlayer();
+            postVideoView();
+        } else {
+            ((MainActivity) getActivity()).goBack();
         }
+    }
+
+    private void postVideoView() {
+        JsonObjectRequest postView = RequestFactory.postVideoView(new RequestFactoryListener() {
+            @Override
+            public void onSuccessResponse(JSONObject response, RequestType requestType) {
+                SmartLog.d("postVideoView", "ok");
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError exception, RequestType requestType) {
+                SmartLog.d("postVideoView error", exception);
+            }
+        }, video.getHash());
+        RequestService.getRequestQueue().add(postView);
     }
 
     private void setupPlayer() {
@@ -65,6 +95,7 @@ public class VideoPlaybackFragment extends VideoFragment {
             @Override
             public void onPlayCompleted(PlaybackGlue glue) {
                 super.onPlayCompleted(glue);
+                ((MainActivity) getActivity()).goBack();
             }
         });
         playerGlue.setTitle(video.getName());
