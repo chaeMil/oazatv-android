@@ -23,10 +23,14 @@ public class MainActivity extends Activity {
         fragmentTransaction.commit();
     }
 
-    @Override
-    public void onBackPressed() {
+    public void goBack() {
         if (getFragmentManager().getBackStackEntryCount() > 0)
             getFragmentManager().popBackStackImmediate();
         else super.onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        goBack();
     }
 }
