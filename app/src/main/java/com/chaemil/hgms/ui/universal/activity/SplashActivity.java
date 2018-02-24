@@ -26,9 +26,9 @@ public class SplashActivity extends BaseActivity {
     private void init() {
         changeStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
 
-        if (TVUtils.isTV(this)) {
+        /*if (TVUtils.isTV(this)) {
             startTvActivity();
-        } else {
+        } else {*/
             SharedPrefUtils sharedPrefUtils = SharedPrefUtils.getInstance(this);
             if (sharedPrefUtils.loadFirstLaunch()) {
                 FileUtils.clearApplicationData(getApplicationContext());
@@ -36,7 +36,7 @@ public class SplashActivity extends BaseActivity {
             } else {
                 startMainActivity();
             }
-        }
+        //}
     }
 
     public void startMainActivity() {
