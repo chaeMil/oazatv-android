@@ -100,4 +100,5 @@
     <string name="categories">Categories</string>
     <string name="more">More</string>
     <string name="load_more">Load more</string>
+    <string name="no_more_to_load">No more to load</string>
 </resources>

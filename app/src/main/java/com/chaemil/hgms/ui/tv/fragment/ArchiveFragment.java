@@ -3,6 +3,7 @@ package com.chaemil.hgms.ui.tv.fragment;
 import android.os.Bundle;
 import android.support.v17.leanback.app.VerticalGridFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
+import android.support.v17.leanback.widget.FocusHighlight;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
@@ -18,6 +19,7 @@ import com.chaemil.hgms.service.api.JsonFutureCallback;
 import com.chaemil.hgms.ui.tv.activity.MainActivity;
 import com.chaemil.hgms.ui.tv.model.HomeArchiveItem;
 import com.chaemil.hgms.ui.tv.model.LoadMoreItem;
+import com.chaemil.hgms.ui.tv.model.NoMoreToLoadItem;
 import com.chaemil.hgms.ui.tv.presenter.VideoPresenter;
 import com.chaemil.hgms.utils.StringUtils;
 import com.google.gson.JsonArray;
@@ -55,25 +57,18 @@ public class ArchiveFragment extends VerticalGridFragment implements OnItemViewC
         loadArchiveVideos(currentPage);
     }
 
-    private void loadArchiveVideos(int currentPage) {
+    private void loadArchiveVideos(int page) {
         //TODO add pagination
-        Api.getVideosFromArchive(getActivity(), currentPage, new JsonFutureCallback() {
+        Api.getVideosFromArchive(getActivity(), page, new JsonFutureCallback() {
             @Override
             public void onSuccess(int statusCode, JsonObject response) {
                 if (response != null && response.has("archive")) {
-                    ArrayList<Video> videos = parseVideosResponse(response.get("archive").getAsJsonArray());
-                    if (adapter.size() != 0 && adapter.get(adapter.size() - 1) != null) {
-                        adapter.replace(adapter.size() - 1, videos.get(0));
+                    ArrayList<Video> videos = parseVideosResponse(response);
+                    if (videos.size() > 0) {
+                        onVideosLoad(videos);
+                    } else {
+                        showNothingMoreToLoad();
                     }
-                    for (int i = 1; i < videos.size(); i++) {
-                        adapter.add(videos.get(i));
-                    }
-
-                    LoadMoreItem loadMoreItem = new LoadMoreItem(getString(R.string.load_more),
-                            StringUtils.colorToHex(getResources().getColor(R.color.md_blue_grey_800)));
-                    adapter.add(loadMoreItem);
-                    startEntranceTransition();
-                    ArchiveFragment.this.currentPage = currentPage;
                 }
             }
 
@@ -81,11 +76,34 @@ public class ArchiveFragment extends VerticalGridFragment implements OnItemViewC
             public void onError(int statusCode, Exception e, JsonObject response) {
 
             }
+
+            private void onVideosLoad(ArrayList<Video> videos) {
+                if (adapter.size() != 0 && adapter.get(adapter.size() - 1) != null) {
+                    adapter.replace(adapter.size() - 1, videos.get(0));
+                }
+                for (int i = 1; i < videos.size(); i++) {
+                    adapter.add(videos.get(i));
+                }
+                LoadMoreItem loadMoreItem = new LoadMoreItem(getString(R.string.load_more),
+                        StringUtils.colorToHex(getResources().getColor(R.color.md_blue_grey_800)));
+                adapter.add(loadMoreItem);
+                startEntranceTransition();
+                currentPage = page;
+            }
+
+            private void showNothingMoreToLoad() {
+                NoMoreToLoadItem noMoreToLoadItem = new NoMoreToLoadItem(getString(R.string.no_more_to_load),
+                        StringUtils.colorToHex(getResources().getColor(R.color.md_blue_grey_800)));
+                if (adapter.size() != 0 && adapter.get(adapter.size() - 1) != null) {
+                    adapter.replace(adapter.size() - 1, noMoreToLoadItem);
+                }
+            }
         });
     }
 
     private void setupArchiveView() {
-        VerticalGridPresenter gridPresenter = new VerticalGridPresenter();
+        VerticalGridPresenter gridPresenter =
+                new VerticalGridPresenter(FocusHighlight.ZOOM_FACTOR_MEDIUM, false);
         gridPresenter.setNumberOfColumns(NUM_COLUMNS);
         setGridPresenter(gridPresenter);
 
@@ -97,12 +115,15 @@ public class ArchiveFragment extends VerticalGridFragment implements OnItemViewC
         setOnItemViewSelectedListener(this);
     }
 
-    private ArrayList<Video> parseVideosResponse(JsonArray jsonArray) {
+    private ArrayList<Video> parseVideosResponse(JsonObject response) {
         ArrayList<Video> videos = new ArrayList<>();
-        for (JsonElement element : jsonArray) {
-            JsonObject jsonVideo = element.getAsJsonObject();
-            Video video = ResponseFactory.parseVideo(jsonVideo);
-            videos.add(video);
+        if (response.get("archive").isJsonArray()) {
+            JsonArray jsonArray = response.get("archive").getAsJsonArray();
+            for (JsonElement element : jsonArray) {
+                JsonObject jsonVideo = element.getAsJsonObject();
+                Video video = ResponseFactory.parseVideo(jsonVideo);
+                videos.add(video);
+            }
         }
         return videos;
     }
@@ -123,9 +144,10 @@ public class ArchiveFragment extends VerticalGridFragment implements OnItemViewC
         if (item != null) {
             if (item instanceof Video) {
                 openVideoPlayer((Video) item);
-            }
-            if (item instanceof LoadMoreItem) {
+            } else if (item instanceof LoadMoreItem) {
                 loadArchiveVideos(currentPage + 1);
+            } else if (item instanceof NoMoreToLoadItem) {
+                //intentional do nothing
             }
         }
     }
