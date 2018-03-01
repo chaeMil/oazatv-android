@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="bubble">
+    <string-array name="bubble" translatable="false">
         <item>#41ffffff</item>
         <item>#18ffffff</item>
         <item>#1fffffff</item>
         <item>#25ffffff</item>
     </string-array>
 
-    <string-array name="BubbleAnimations">
+    <string-array name="BubbleAnimations" translatable="false">
         <item>com.github.glomadrian.grav.generator.animation.SideToSideAnimator</item>
         <item>com.github.glomadrian.grav.generator.animation.ShakeAnimator</item>
     </string-array>
