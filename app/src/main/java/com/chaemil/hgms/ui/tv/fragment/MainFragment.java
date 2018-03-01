@@ -68,7 +68,7 @@ public class MainFragment extends BrowseFragment implements OnItemViewClickedLis
         row.setPage(row.getPage() + 1);
         HomeArchiveItem homeArchiveItem =
                 new HomeArchiveItem(getString(R.string.archive),
-                        StringUtils.colorToHex(getResources().getColor(R.color.md_blue_grey_800))); //TODO color
+                        StringUtils.colorToHex(getResources().getColor(R.color.md_blue_grey_800)));
         row.getAdapter().add(homeArchiveItem);
     }
 
