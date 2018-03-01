@@ -33,7 +33,7 @@ public class ArchiveFragment extends VerticalGridFragment implements OnItemViewC
     private static final int NUM_COLUMNS = 3;
 
     private Bundle arguments;
-    private int page;
+    private int page = 0;
     private ArrayObjectAdapter adapter;
 
     public static ArchiveFragment newInstance() {
@@ -57,8 +57,8 @@ public class ArchiveFragment extends VerticalGridFragment implements OnItemViewC
         Api.getVideosFromArchive(getActivity(), page, new JsonFutureCallback() {
             @Override
             public void onSuccess(int statusCode, JsonObject response) {
-                if (response != null && response.has("videos")) {
-                    ArrayList<Video> videos = parseVideosResponse(response.get("videos").getAsJsonArray());
+                if (response != null && response.has("archive")) {
+                    ArrayList<Video> videos = parseVideosResponse(response.get("archive").getAsJsonArray());
                     for (Video video : videos) {
                         adapter.add(video);
                     }
