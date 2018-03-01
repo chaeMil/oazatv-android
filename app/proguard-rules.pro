@@ -31,6 +31,8 @@
     static final java.lang.String AUTHORITY;
 }
 
+-keep class com.github.glomadrian.grav.** { *; }
+
 # fixes for Fabric to get crashes
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
