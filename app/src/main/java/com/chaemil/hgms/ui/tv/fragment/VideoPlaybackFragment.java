@@ -9,6 +9,7 @@ import android.support.v17.leanback.app.VideoFragmentGlueHost;
 import android.support.v17.leanback.media.MediaPlayerAdapter;
 import android.support.v17.leanback.media.PlaybackGlue;
 import android.support.v17.leanback.media.PlaybackTransportControlGlue;
+import android.support.v17.leanback.widget.PlaybackSeekDataProvider;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -19,6 +20,7 @@ import com.chaemil.hgms.model.RequestType;
 import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.ui.tv.activity.MainActivity;
+import com.chaemil.hgms.ui.tv.provider.VideoSeekDataProvider;
 import com.chaemil.hgms.utils.GAUtils;
 import com.chaemil.hgms.utils.SmartLog;
 
@@ -98,9 +100,11 @@ public class VideoPlaybackFragment extends VideoFragment {
                 ((MainActivity) getActivity()).goBack();
             }
         });
+        VideoSeekDataProvider provider = new VideoSeekDataProvider(getActivity());
+        playerGlue.setSeekProvider(provider);
         playerGlue.setTitle(video.getName());
         playerGlue.setSubtitle(video.getDescription());
-        String uri = video.getVideoFileWebm();
+        String uri = video.getVideoFile();
         playerGlue.getPlayerAdapter().setDataSource(Uri.parse(uri));
     }
 }
