@@ -72,7 +72,7 @@ public class CategoryFragment extends VerticalGridFragment implements OnItemView
 
     private void loadCategoryVideos(int id) {
         //TODO add pagination
-        Api.getVideosFromCategory(getActivity(), id, 1, 100, new JsonFutureCallback() {
+        Api.getVideosFromCategory(getActivity(), id, 0, 100, new JsonFutureCallback() {
             @Override
             public void onSuccess(int statusCode, JsonObject response) {
                 if (response != null && response.has("categories")
