@@ -120,9 +120,14 @@ public class ArchiveFragment extends VerticalGridFragment implements OnItemViewC
         if (response.get("archive").isJsonArray()) {
             JsonArray jsonArray = response.get("archive").getAsJsonArray();
             for (JsonElement element : jsonArray) {
-                JsonObject jsonVideo = element.getAsJsonObject();
-                Video video = ResponseFactory.parseVideo(jsonVideo);
-                videos.add(video);
+                JsonObject jsonItem = element.getAsJsonObject();
+                if (jsonItem.has("type")) {
+                    String type = jsonItem.get("type").getAsString();
+                    if (type.equals("video")) {
+                        Video video = ResponseFactory.parseVideo(jsonItem);
+                        videos.add(video);
+                    }
+                }
             }
         }
         return videos;

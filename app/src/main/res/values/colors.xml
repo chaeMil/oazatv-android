@@ -15,6 +15,7 @@
     <color name="colorPrimaryAlpha">#ce4285f4</color>
     <color name="home_switcher_bg">#dbffffff</color>
     <color name="ripple_dark">#d5000000</color>
+    <color name="youtube_red">#FF0000</color>
 
     <!-- google's material design colours from
     http://www.google.com/design/spec/style/color.html#color-ui-color-palette -->

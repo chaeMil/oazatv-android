@@ -4,11 +4,11 @@ package com.chaemil.hgms.ui.tv.model;
  * Created by Michal Mlejnek on 01/03/2018.
  */
 
-public class HomeItem {
+public class MenuItem {
     protected String title;
     protected String color;
 
-    public HomeItem(String title, String color) {
+    public MenuItem(String title, String color) {
         this.title = title;
         this.color = color;
     }

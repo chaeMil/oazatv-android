@@ -20,17 +20,17 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.api.Api;
 import com.chaemil.hgms.service.api.JsonFutureCallback;
 import com.chaemil.hgms.ui.tv.activity.MainActivity;
+import com.chaemil.hgms.ui.tv.model.ExternalLinkItem;
 import com.chaemil.hgms.ui.tv.model.HomeArchiveItem;
-import com.chaemil.hgms.ui.tv.model.HomeItem;
 import com.chaemil.hgms.ui.tv.model.HomeRow;
 import com.chaemil.hgms.ui.tv.presenter.VideoPresenter;
+import com.chaemil.hgms.utils.IntentUtils;
 import com.chaemil.hgms.utils.StringUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainFragment extends BrowseFragment implements OnItemViewClickedListener {
     private static final String TAG = MainFragment.class.getSimpleName();
@@ -66,10 +66,15 @@ public class MainFragment extends BrowseFragment implements OnItemViewClickedLis
     private void bindMoreItems() {
         HomeRow row = rows.get(MORE);
         row.setPage(row.getPage() + 1);
-        HomeArchiveItem homeArchiveItem =
-                new HomeArchiveItem(getString(R.string.archive),
+
+        HomeArchiveItem homeArchiveItem = new HomeArchiveItem(getString(R.string.archive),
                         StringUtils.colorToHex(getResources().getColor(R.color.md_blue_grey_800)));
         row.getAdapter().add(homeArchiveItem);
+
+        ExternalLinkItem youtubeLink = new ExternalLinkItem(getString(R.string.oazatv_youtube),
+                        StringUtils.colorToHex(getResources().getColor(R.color.youtube_red)),
+                        getString(R.string.youtube_oazatv_link));
+        row.getAdapter().add(youtubeLink);
     }
 
     private void loadCategories() {
@@ -230,14 +235,18 @@ public class MainFragment extends BrowseFragment implements OnItemViewClickedLis
         if (item != null) {
             if (item instanceof Video) {
                 openVideoPlayer((Video) item);
-            }
-            if (item instanceof Category) {
+            } else if (item instanceof Category) {
                 openCategoryView((Category) item);
-            }
-            if (item instanceof HomeArchiveItem) {
+            } else if (item instanceof HomeArchiveItem) {
                 openArchive();
+            } else if (item instanceof ExternalLinkItem) {
+                openLink(((ExternalLinkItem) item).getLink());
             }
         }
+    }
+
+    private void openLink(String link) {
+        IntentUtils.openBrowser(getActivity(), link);
     }
 
     private void openArchive() {

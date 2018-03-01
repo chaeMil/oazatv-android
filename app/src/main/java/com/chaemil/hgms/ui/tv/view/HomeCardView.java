@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.chaemil.hgms.R;
 import com.chaemil.hgms.model.Category;
 import com.chaemil.hgms.model.Video;
-import com.chaemil.hgms.ui.tv.model.HomeItem;
+import com.chaemil.hgms.ui.tv.model.MenuItem;
 import com.chaemil.hgms.utils.StringUtils;
 import com.koushikdutta.ion.Ion;
 
@@ -64,8 +64,8 @@ public class HomeCardView extends BindableCardView<Object> {
         if (data instanceof Category) {
             bindCategory((Category) data);
         }
-        if (data instanceof HomeItem) {
-            bindHomeItem((HomeItem) data);
+        if (data instanceof MenuItem) {
+            bindHomeItem((MenuItem) data);
         }
     }
 
@@ -91,7 +91,7 @@ public class HomeCardView extends BindableCardView<Object> {
         category.setText(item.getName());
     }
 
-    public void bindHomeItem(HomeItem homeItem) {
+    public void bindHomeItem(MenuItem homeItem) {
         videoWrapper.setVisibility(GONE);
         categoryWrapper.setVisibility(VISIBLE);
 

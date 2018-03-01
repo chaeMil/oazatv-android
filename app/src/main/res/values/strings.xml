@@ -101,4 +101,6 @@
     <string name="more">More</string>
     <string name="load_more">Load more</string>
     <string name="no_more_to_load">No more to load</string>
+    <string name="oazatv_youtube">Oáza.tv Youtube channel</string>
+    <string name="youtube_oazatv_link">https://www.youtube.com/oazatvcz</string>
 </resources>
