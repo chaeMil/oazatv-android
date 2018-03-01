@@ -2,6 +2,7 @@ package com.chaemil.hgms.ui.tv.fragment;
 
 import android.os.Bundle;
 import android.support.v17.leanback.app.BrowseFragment;
+import android.support.v17.leanback.app.SearchFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
@@ -10,6 +11,7 @@ import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
+import android.support.v17.leanback.widget.SearchOrbView;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -149,12 +151,12 @@ public class MainFragment extends BrowseFragment implements OnItemViewClickedLis
         row.setPage(row.getPage() + 1);
 
         HomeArchiveItem homeArchiveItem = new HomeArchiveItem(getString(R.string.archive),
-                        StringUtils.colorToHex(getResources().getColor(R.color.md_blue_grey_800)));
+                StringUtils.colorToHex(getResources().getColor(R.color.md_blue_grey_800)));
         row.getAdapter().add(homeArchiveItem);
 
         ExternalLinkItem youtubeLink = new ExternalLinkItem(getString(R.string.oazatv_youtube),
-                        StringUtils.colorToHex(getResources().getColor(R.color.youtube_red)),
-                        getString(R.string.youtube_oazatv_link));
+                StringUtils.colorToHex(getResources().getColor(R.color.youtube_red)),
+                getString(R.string.youtube_oazatv_link));
         row.getAdapter().add(youtubeLink);
     }
 
@@ -308,7 +310,16 @@ public class MainFragment extends BrowseFragment implements OnItemViewClickedLis
         setHeadersState(HEADERS_ENABLED);
         setHeadersTransitionOnBackEnabled(true);
         setBrandColor(getResources().getColor(R.color.colorPrimary));
-        setSearchAffordanceColor(getResources().getColor(R.color.white));
+        /*setSearchAffordanceColors(new SearchOrbView.Colors(
+                getResources().getColor(R.color.white),
+                getResources().getColor(R.color.white),
+                getResources().getColor(R.color.colorPrimary)));
+        setOnSearchClickedListener(view -> openSearch());*/
+    }
+
+    private void openSearch() {
+        SearchFragment searchFragment = OazaSearchFragment.newInstance("");
+        ((MainActivity) getActivity()).addFragment(searchFragment);
     }
 
     @Override
