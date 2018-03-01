@@ -73,7 +73,7 @@ public class CategoryFragment extends VerticalGridFragment implements OnItemView
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
          View rootView = super.onCreateView(inflater, container, savedInstanceState);
          if (category != null) {
-             rootView.setBackgroundColor(Color.parseColor(category.getColor()));
+             ((MainActivity) getActivity()).setBackgroundColor(Color.parseColor(category.getColor()));
          }
          return rootView;
     }

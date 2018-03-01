@@ -55,6 +55,7 @@ public class ArchiveFragment extends VerticalGridFragment implements OnItemViewC
         setTitle(getString(R.string.archive));
         setupArchiveView();
         loadArchiveVideos(currentPage);
+        ((MainActivity) getActivity()).setBackgroundColor(getResources().getColor(R.color.md_blue_grey_500));
     }
 
     private void loadArchiveVideos(int page) {

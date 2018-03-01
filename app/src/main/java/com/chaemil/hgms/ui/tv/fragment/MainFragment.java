@@ -80,6 +80,7 @@ public class MainFragment extends BrowseFragment implements OnItemViewClickedLis
     public void onResume() {
         super.onResume();
         setupLiveRequestTimer();
+        ((MainActivity) getActivity()).setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
     }
 
     public void setupLiveRequestTimer() {
