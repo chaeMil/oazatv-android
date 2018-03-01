@@ -44,8 +44,12 @@ public class RecursiveFileObserver extends FileObserver {
                 observer.stopWatching();
             }
             observer = new SingleFileObserver(path, mMask);
-            observer.startWatching();
-            mObservers.put(path, observer);
+            try {
+                observer.startWatching();
+                mObservers.put(path, observer);
+            } catch (Exception e) {
+                SmartLog.e("startWatching", e);
+            }
         }
     }
 
