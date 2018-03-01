@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v17.leanback.app.VerticalGridFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
+import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
@@ -31,7 +32,8 @@ import java.util.ArrayList;
  * Created by Michal Mlejnek on 22/02/2018.
  */
 
-public class CategoryFragment extends VerticalGridFragment implements OnItemViewClickedListener {
+public class CategoryFragment extends VerticalGridFragment implements OnItemViewClickedListener,
+        OnItemViewSelectedListener {
     private static final String TAG = VideoPlaybackFragment.class.getSimpleName();
     private static final int NUM_COLUMNS = 3;
 
@@ -113,10 +115,12 @@ public class CategoryFragment extends VerticalGridFragment implements OnItemView
         setAdapter(adapter);
 
         setOnItemViewClickedListener(this);
+        setOnItemViewSelectedListener(this);
     }
 
     @Override
-    public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
+    public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
+                              RowPresenter.ViewHolder rowViewHolder, Row row) {
         if (item != null) {
             openVideoPlayer((Video) item);
         }
@@ -130,5 +134,11 @@ public class CategoryFragment extends VerticalGridFragment implements OnItemView
         videoPlaybackFragment.setArguments(arguments);
 
         ((MainActivity) getActivity()).addFragment(videoPlaybackFragment);
+    }
+
+    @Override
+    public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
+                               RowPresenter.ViewHolder rowViewHolder, Row row) {
+        
     }
 }

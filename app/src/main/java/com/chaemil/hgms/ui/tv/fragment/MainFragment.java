@@ -20,13 +20,17 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.api.Api;
 import com.chaemil.hgms.service.api.JsonFutureCallback;
 import com.chaemil.hgms.ui.tv.activity.MainActivity;
+import com.chaemil.hgms.ui.tv.model.HomeArchiveItem;
+import com.chaemil.hgms.ui.tv.model.HomeItem;
 import com.chaemil.hgms.ui.tv.model.HomeRow;
 import com.chaemil.hgms.ui.tv.presenter.VideoPresenter;
+import com.chaemil.hgms.utils.StringUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainFragment extends BrowseFragment implements OnItemViewClickedListener {
     private static final String TAG = MainFragment.class.getSimpleName();
@@ -35,6 +39,7 @@ public class MainFragment extends BrowseFragment implements OnItemViewClickedLis
     private static final int FEATURED = 1;
     private static final int POPULAR = 2;
     private static final int CATEGORIES = 3;
+    private static final int MORE = 4;
 
     SparseArray<HomeRow> rows;
 
@@ -55,6 +60,16 @@ public class MainFragment extends BrowseFragment implements OnItemViewClickedLis
         prepareEntranceTransition();
         loadHomepage();
         loadCategories();
+        bindMoreItems();
+    }
+
+    private void bindMoreItems() {
+        HomeRow row = rows.get(MORE);
+        row.setPage(row.getPage() + 1);
+        HomeArchiveItem homeArchiveItem =
+                new HomeArchiveItem(getString(R.string.archive),
+                        StringUtils.colorToHex(getResources().getColor(R.color.md_blue_grey_800))); //TODO color
+        row.getAdapter().add(homeArchiveItem);
     }
 
     private void loadCategories() {
@@ -193,6 +208,13 @@ public class MainFragment extends BrowseFragment implements OnItemViewClickedLis
                 .setTitle(getString(R.string.categories))
                 .setPage(1)
         );
+
+        rows.put(MORE, new HomeRow()
+                .setId(MORE)
+                .setAdapter(new ArrayObjectAdapter(videoPresenter))
+                .setTitle(getString(R.string.more))
+                .setPage(1)
+        );
     }
 
     private void setupUIElements() {
@@ -212,7 +234,15 @@ public class MainFragment extends BrowseFragment implements OnItemViewClickedLis
             if (item instanceof Category) {
                 openCategoryView((Category) item);
             }
+            if (item instanceof HomeArchiveItem) {
+                openArchive();
+            }
         }
+    }
+
+    private void openArchive() {
+        ArchiveFragment archiveFragment = ArchiveFragment.newInstance();
+        ((MainActivity) getActivity()).addFragment(archiveFragment);
     }
 
     private void openCategoryView(Category category) {

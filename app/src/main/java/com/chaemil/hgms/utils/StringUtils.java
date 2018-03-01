@@ -23,11 +23,11 @@ public class StringUtils {
         float sizeTerra = sizeGo * sizeKb;
 
 
-        if(size < sizeMo)
-            return df.format(size / sizeKb)+ " Kb";
-        else if(size < sizeGo)
+        if (size < sizeMo)
+            return df.format(size / sizeKb) + " Kb";
+        else if (size < sizeGo)
             return df.format(size / sizeMo) + " Mb";
-        else if(size < sizeTerra)
+        else if (size < sizeTerra)
             return df.format(size / sizeGo) + " Gb";
 
         return "";
@@ -37,8 +37,7 @@ public class StringUtils {
         String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
         Random rng = new Random();
         char[] text = new char[length];
-        for (int i = 0; i < length; i++)
-        {
+        for (int i = 0; i < length; i++) {
             text[i] = characters.charAt(rng.nextInt(characters.length()));
         }
         return new String(text);
@@ -81,4 +80,7 @@ public class StringUtils {
         return String.valueOf(number);
     }
 
+    public static String colorToHex(int color) {
+        return String.format("#%06X", 0xFFFFFF & color);
+    }
 }
