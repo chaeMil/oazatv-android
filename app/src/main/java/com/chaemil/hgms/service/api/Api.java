@@ -16,6 +16,7 @@ public class Api {
     public static final String HOMEPAGE = SERVER + API_VERSION;
     public static final String ARCHIVE = SERVER + API_VERSION + "archive/";
     public static final String CATEGORIES = SERVER + API_VERSION + "categories/";
+    public static final String LIVE_STREAM = SERVER + API_VERSION + "live";
 
     public static void getVideosFromArchive(Context context, int page, JsonFutureCallback callback) {
         Ion.with(context)
@@ -44,6 +45,14 @@ public class Api {
     public static void getVideosFromCategory(Context context, int id, int page, int perPage, JsonFutureCallback callback) {
         Ion.with(context)
                 .load(CATEGORIES + "?categoryId=" + id + "&page=" + page + "&perPage=" + perPage)
+                .asJsonObject()
+                .withResponse()
+                .setCallback(callback);
+    }
+
+    public static void getLiveStream(Context context, JsonFutureCallback callback) {
+        Ion.with(context)
+                .load(LIVE_STREAM)
                 .asJsonObject()
                 .withResponse()
                 .setCallback(callback);

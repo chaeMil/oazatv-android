@@ -25,12 +25,15 @@ import com.chaemil.hgms.ui.tv.model.HomeArchiveItem;
 import com.chaemil.hgms.ui.tv.model.HomeRow;
 import com.chaemil.hgms.ui.tv.presenter.VideoPresenter;
 import com.chaemil.hgms.utils.IntentUtils;
+import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.StringUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainFragment extends BrowseFragment implements OnItemViewClickedListener {
     private static final String TAG = MainFragment.class.getSimpleName();
@@ -40,8 +43,10 @@ public class MainFragment extends BrowseFragment implements OnItemViewClickedLis
     private static final int POPULAR = 2;
     private static final int CATEGORIES = 3;
     private static final int MORE = 4;
+    private static final int YOUTUBE_LIVESTREAM_INDEX = 2;
 
     SparseArray<HomeRow> rows;
+    private Timer liveRequestTimer;
 
     public static MainFragment newInstance() {
         Bundle args = new Bundle();
@@ -61,6 +66,82 @@ public class MainFragment extends BrowseFragment implements OnItemViewClickedLis
         loadHomepage();
         loadCategories();
         bindMoreItems();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        liveRequestTimer.cancel();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupLiveRequestTimer();
+    }
+
+    public void setupLiveRequestTimer() {
+        if (liveRequestTimer != null) {
+            liveRequestTimer.cancel();
+        }
+        if (NetworkUtils.isConnected(getActivity())) {
+            liveRequestTimer = new Timer();
+            liveRequestTimer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    getLiveStream();
+                }
+            }, 0, 30 * 1000);
+        }
+    }
+
+    private void getLiveStream() {
+        Api.getLiveStream(getActivity(), new JsonFutureCallback() {
+            @Override
+            public void onSuccess(int statusCode, JsonObject response) {
+                if (response != null) {
+                    if (response.has("on_air")) {
+                        if (response.get("on_air").getAsString().equals("online")) {
+                            String youtubeId = response.get("youtube_link").getAsString();
+                            showLiveStream(youtubeId);
+                        } else {
+                            hideLiveStream();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onError(int statusCode, Exception e, JsonObject response) {
+                hideLiveStream();
+            }
+        });
+    }
+
+    private void hideLiveStream() {
+        HomeRow row = rows.get(MORE);
+        row.setPage(row.getPage() + 1);
+        ExternalLinkItem youtubeLiveStream = new ExternalLinkItem(getString(R.string.livestream_offline),
+                StringUtils.colorToHex(getResources().getColor(R.color.md_red_A700)),
+                null);
+        if (row.getAdapter().size() > 2) {
+            row.getAdapter().replace(YOUTUBE_LIVESTREAM_INDEX, youtubeLiveStream);
+        } else {
+            row.getAdapter().add(YOUTUBE_LIVESTREAM_INDEX, youtubeLiveStream);
+        }
+    }
+
+    private void showLiveStream(String youtubeId) {
+        HomeRow row = rows.get(MORE);
+        row.setPage(row.getPage() + 1);
+        ExternalLinkItem youtubeLiveStream = new ExternalLinkItem(getString(R.string.now_on_air),
+                StringUtils.colorToHex(getResources().getColor(R.color.md_green_600)),
+                "https://www.youtube.com/watch?v=" + youtubeId);
+        if (row.getAdapter().size() > 2) {
+            row.getAdapter().replace(YOUTUBE_LIVESTREAM_INDEX, youtubeLiveStream);
+        } else {
+            row.getAdapter().add(YOUTUBE_LIVESTREAM_INDEX, youtubeLiveStream);
+        }
     }
 
     private void bindMoreItems() {
@@ -246,7 +327,9 @@ public class MainFragment extends BrowseFragment implements OnItemViewClickedLis
     }
 
     private void openLink(String link) {
-        IntentUtils.openBrowser(getActivity(), link);
+        if (link != null) {
+            IntentUtils.openBrowser(getActivity(), link);
+        }
     }
 
     private void openArchive() {
