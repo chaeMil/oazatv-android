@@ -27,14 +27,6 @@
         android:name="android.hardware.microphone"
         android:required="false" />
 
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:resizeable="true"
-        android:smallScreens="true"
-        android:xlargeScreens="true" />
-
     <application
         android:name=".OazaApp"
         android:allowBackup="true"
