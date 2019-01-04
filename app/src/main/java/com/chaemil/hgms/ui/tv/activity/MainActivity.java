@@ -28,9 +28,9 @@ public class MainActivity extends Activity {
     }
 
     public void goBack() {
-        if (getFragmentManager().getBackStackEntryCount() > 0)
+        if (getFragmentManager().getBackStackEntryCount() > 1)
             getFragmentManager().popBackStackImmediate();
-        else super.onBackPressed();
+        else finish();
     }
 
     @Override
