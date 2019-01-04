@@ -1,6 +1,7 @@
 package com.chaemil.hgms.service;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -115,9 +116,10 @@ public class AudioPlaybackService extends Service implements
         ((OazaApp) getApplication()).playbackService = this;
         initMusicPlayer();
         setupPlaybackReceiver();
+        playNewAudio(currentAudio);
     }
 
-    public void initMusicPlayer(){
+    public void initMusicPlayer() {
         player = new MediaPlayer();
 
         player.setOnPreparedListener(this);
@@ -276,7 +278,8 @@ public class AudioPlaybackService extends Service implements
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 if (downloaded) {
                     player.setDataSource(getApplication()
-                            .getExternalFilesDir(null) + "/" + currentAudio.getHash() + ".mp3");
+                            .getExternalFilesDir(null) +
+                            "/" + currentAudio.getHash() + "/" + currentAudio.getHash() + ".mp3");
                 } else {
                     player.setDataSource(currentAudio.getAudioFile());
                 }
@@ -303,8 +306,13 @@ public class AudioPlaybackService extends Service implements
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(NOTIFICATION_ID);
 
-            notificationBuilder = new NotificationCompat
-                    .Builder(getApplication())
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                NotificationChannel mChannel = new NotificationChannel(
+                        "oaza.tv", "audio player", NotificationManager.IMPORTANCE_HIGH);
+                notificationManager.createNotificationChannel(mChannel);
+            }
+
+            notificationBuilder = new NotificationCompat.Builder(this, "oaza.tv")
                     .setContentTitle(currentAudio.getName())
                     .setContentText(StringUtils.formatDate(currentAudio.getDate(), this))
                     .setSmallIcon(R.drawable.white_logo)
@@ -315,6 +323,7 @@ public class AudioPlaybackService extends Service implements
                     .addAction(R.drawable.rew, "", intents.get(3))
                     .addAction(R.drawable.pause, "", intents.get(1))
                     .addAction(R.drawable.ff, "", intents.get(2));
+
 
             if (!OSUtils.isHuawei()) {
                 notificationBuilder.setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
@@ -399,7 +408,7 @@ public class AudioPlaybackService extends Service implements
 
     @Override
     public void onSuccessResponse(JSONObject response, RequestType requestType) {
-        switch(requestType) {
+        switch (requestType) {
             case POST_VIDEO_VIEW:
                 SmartLog.d("postedVideoView", "ok");
                 break;

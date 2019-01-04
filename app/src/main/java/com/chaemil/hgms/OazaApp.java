@@ -15,6 +15,7 @@ import com.chaemil.hgms.ui.universal.activity.SplashActivity;
 import com.chaemil.hgms.service.AnalyticsService;
 import com.chaemil.hgms.service.AudioPlaybackService;
 import com.chaemil.hgms.service.RequestService;
+import com.chaemil.hgms.utils.FileUtils;
 import com.chaemil.hgms.utils.ServiceUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.crashlytics.android.Crashlytics;
@@ -58,15 +59,27 @@ public class OazaApp extends SugarApp {
         super.onCreate();
 
         Fabric.with(this, new Crashlytics());
-        AnalyticsService.init(this);
         MultiDex.install(this);
+        initPrefs();
+        migrations();
+        AnalyticsService.init(this);
         RequestService.init(this);
         initLogger();
         initIonNetworking();
-        initPrefs();
         initCalligraphy();
         initAudioPlaybackService();
         setupDownloadManager();
+    }
+
+    private void migrations() {
+        migrateTo2019010401();
+    }
+
+    private void migrateTo2019010401() {
+        if (!Prefs.getBoolean("migrate_to_2019010401", false)) {
+            FileUtils.clearApplicationData(this);
+            Prefs.putBoolean("migrate_to_2019010401", true);
+        }
     }
 
     private void setupDownloadManager() {
