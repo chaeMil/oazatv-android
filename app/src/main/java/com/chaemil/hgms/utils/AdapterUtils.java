@@ -1,36 +1,42 @@
 package com.chaemil.hgms.utils;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
+import com.chaemil.hgms.model.Download;
 import com.chaemil.hgms.ui.mobile.activity.MainActivity;
 import com.chaemil.hgms.model.Video;
 import com.github.clans.fab.FloatingActionButton;
-import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.ion.Ion;
+import com.novoda.downloadmanager.Batch;
+import com.novoda.downloadmanager.DownloadBatchIdCreator;
+import com.novoda.downloadmanager.DownloadFileIdCreator;
+import com.novoda.downloadmanager.DownloadManager;
 import com.novoda.downloadmanager.DownloadManagerBuilder;
-import com.novoda.downloadmanager.lib.DownloadManager;
-import com.novoda.downloadmanager.lib.Query;
-import com.novoda.downloadmanager.lib.Request;
-import com.novoda.downloadmanager.notifications.NotificationVisibility;
-
-import java.util.ArrayList;
 
 import mehdi.sakout.fancybuttons.FancyButton;
 import permission.auron.com.marshmallowpermissionhelper.PermissionResult;
 import permission.auron.com.marshmallowpermissionhelper.PermissionUtils;
+
+import static com.chaemil.hgms.ui.mobile.fragment.DownloadedFragment.DOWNLOAD_MANAGER_ONCHANGE;
 
 /**
  * Created by chaemil on 28.3.16.
@@ -161,45 +167,27 @@ public class AdapterUtils {
     }
 
     public static void downloadAudio(final Context context, final Video audio) {
-        MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
+        audio.save();
 
-        mainActivity.askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
-                new PermissionResult() {
-                    @Override
-                    public void permissionGranted() {
+        Toast.makeText(context, context.getString(R.string.added_to_download_queue),
+                Toast.LENGTH_SHORT).show();
 
-                        audio.save();
+        DownloadManager downloadManager = OazaApp.downloadManager;
 
-                        Uri uri = Uri.parse(audio.getAudioFile());
-                        Request request = new Request(uri)
-                                .setExtraData(String.valueOf(audio.getServerId()))
-                                .setTitle(context.getString(R.string.downloading_audio))
-                                .setDescription(audio.getName())
-                                .setBigPictureUrl(audio.getThumbFile())
-                                .setDestinationInExternalFilesDir("", audio.getHash() + ".mp3")
-                                .setNotificationVisibility(NotificationVisibility.ACTIVE_OR_COMPLETE);
+        Download download = new Download(audio.getServerId(), audio.getHash() + ".mp3",
+                android.app.DownloadManager.STATUS_PENDING, DownloadBatchIdCreator.createSanitizedFrom(audio.getHash()).rawId());
+        download.save();
+        context.sendBroadcast(new Intent(DOWNLOAD_MANAGER_ONCHANGE));
 
-                        SuperToast.create(context, context.getString(R.string.added_to_download_queue),
-                                SuperToast.Duration.MEDIUM).show();
+        Batch batch = Batch.with(() -> context.getExternalFilesDir("").getAbsolutePath(),
+                DownloadBatchIdCreator.createSanitizedFrom(audio.getHash()),
+                audio.getName())
+                .downloadFrom(audio.getAudioFile())
+                .saveTo("", audio.getHash() + ".mp3")
+                .withIdentifier(DownloadFileIdCreator.createFrom(audio.getHash())).apply()
+                .build();
 
-                        DownloadManager downloadManager = DownloadManagerBuilder.from(context).build();
-                        downloadManager.enqueue(request);
-
-                    }
-
-                    @Override
-                    public void permissionDenied() {
-                        SuperToast.create(context, context.getString(R.string.permission_revoked),
-                                SuperToast.Duration.MEDIUM).show();
-                    }
-
-                    @Override
-                    public void permissionForeverDenied() {
-                        SuperToast.create(context,
-                                context.getString(R.string.permission_revoked_download_photos_and_audio),
-                                SuperToast.Duration.LONG).show();
-                    }
-                });
+        downloadManager.download(batch);
     }
 
     public static void deleteAudio(Context context, Video audio,
@@ -221,37 +209,15 @@ public class AdapterUtils {
                 .negativeText(context.getString(R.string.no))
                 .positiveColor(context.getResources().getColor(R.color.colorPrimary))
                 .negativeColor(context.getResources().getColor(R.color.colorPrimary))
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        DownloadManager downloadManager = DownloadManagerBuilder.from(context).build();
-                        Cursor cursor = downloadManager.query(new Query().setFilterByExtraData(String.valueOf(video.getServerId())));
-                        ArrayList<Integer> idsToDelete = new ArrayList<>();
-                        try {
-                            while (cursor.moveToNext()) {
-                                long videoId = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_EXTRA_DATA));
-                                if (videoId == video.getServerId()) {
-                                    idsToDelete.add(cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BATCH_ID)));
-                                }
-                            }
-                        } finally {
-                            cursor.close();
-                            for (Integer integer : idsToDelete) {
-                                downloadManager.removeBatches(integer);
-                            }
-                        }
+                .onPositive((dialog1, which) -> {
 
-                        AdapterUtils.deleteAudio(context, video, dialog);
-                        MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
-                        mainActivity.dismissContextDialog();
-                    }
+                    OazaApp.downloadManager.delete(DownloadBatchIdCreator.createSanitizedFrom(video.getHash()));
+
+                    AdapterUtils.deleteAudio(context, video, dialog1);
+                    MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
+                    mainActivity.dismissContextDialog();
                 })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                }).build();
+                .onNegative((dialog12, which) -> dialog12.dismiss()).build();
 
         return dialog;
     }

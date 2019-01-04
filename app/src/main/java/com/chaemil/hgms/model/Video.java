@@ -3,17 +3,21 @@ package com.chaemil.hgms.model;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.receiver.AudioPlaybackReceiver;
 import com.chaemil.hgms.utils.Constants;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.novoda.downloadmanager.DownloadBatchIdCreator;
+import com.novoda.downloadmanager.DownloadFileIdCreator;
+import com.novoda.downloadmanager.DownloadFileStatus;
+import com.novoda.downloadmanager.DownloadManager;
 import com.novoda.downloadmanager.DownloadManagerBuilder;
-import com.novoda.downloadmanager.lib.DownloadManager;
-import com.novoda.downloadmanager.lib.Query;
 import com.orm.SugarRecord;
 
 import java.io.File;
@@ -132,31 +136,24 @@ public class Video extends SugarRecord implements Parcelable {
     }
 
     public boolean isAudioDownloaded(Context context) {
-        DownloadManager downloadManager = DownloadManagerBuilder.from(context).build();
-        Cursor cursor = downloadManager.query(new Query().setFilterByExtraData(String.valueOf(getServerId())));
-
-        boolean downloaded = false;
-
-        try {
-            while (cursor.moveToNext()) {
-                long videoId = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_EXTRA_DATA));
-
-                downloaded = (videoId == getServerId());
-            }
-        } finally {
-            cursor.close();
-        }
-        return downloaded;
+        DownloadManager downloadManager = OazaApp.downloadManager;
+        DownloadFileStatus status = downloadManager.getDownloadFileStatusWithMatching(
+                DownloadBatchIdCreator.createSanitizedFrom(getHash()),
+                DownloadFileIdCreator.createFrom(getHash()));
+        if (status != null)
+            return status.bytesDownloaded() == status.totalBytes();
+        else
+            return false;
     }
 
     public long getDownloadedAudioSize(Context context) {
-        File file = new File(context.getExternalFilesDir(null) + "/" + getHash() + ".mp3");
+        File file = new File(context.getExternalFilesDir(null) + "/" + getHash() + "/" + getHash() + ".mp3");
         return file.length();
     }
 
     public void deleteDownloadedAudio(Context context) {
-        File audio = new File(context.getExternalFilesDir(null) + "/" + getHash() + ".mp3");
-        File thumb = new File(context.getExternalFilesDir(null) + "/" + getHash() + ".jpg");
+        File audio = new File(context.getExternalFilesDir(null) + "/" + getHash() + "/" + getHash() + ".mp3");
+        File thumb = new File(context.getExternalFilesDir(null) + "/" + getHash() + "/" + getHash() + ".jpg");
         audio.delete();
         thumb.delete();
         save();
@@ -274,7 +271,7 @@ public class Video extends SugarRecord implements Parcelable {
         return views;
     }
 
-    public  String getCategories() {
+    public String getCategories() {
         return categories;
     }
 

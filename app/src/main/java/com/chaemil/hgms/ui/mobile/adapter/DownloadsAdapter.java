@@ -3,6 +3,8 @@ package com.chaemil.hgms.ui.mobile.adapter;
 /**
  * Created by chaemil on 30.6.16.
  */
+
+import android.app.DownloadManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.percent.PercentLayoutHelper;
@@ -28,9 +30,7 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.utils.AdapterUtils;
 import com.chaemil.hgms.utils.FileUtils;
 import com.chaemil.hgms.utils.StringUtils;
-import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.ion.Ion;
-import com.novoda.downloadmanager.lib.DownloadManager;
 
 import java.util.List;
 
@@ -54,31 +54,31 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType == TYPE_HEADER) {
-            View v = LayoutInflater.from (parent.getContext()).inflate (R.layout.header_item_download, parent, false);
-            return new HeaderViewHolder (v);
-        } else if(viewType == TYPE_ITEM) {
-            View v = LayoutInflater.from (parent.getContext()).inflate (R.layout.list_item_download, parent, false);
-            return new DownloadItemHolder (v);
+        if (viewType == TYPE_HEADER) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_item_download, parent, false);
+            return new HeaderViewHolder(v);
+        } else if (viewType == TYPE_ITEM) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_download, parent, false);
+            return new DownloadItemHolder(v);
         }
         return null;
     }
 
     @Override
-    public int getItemViewType (int position) {
-        if(isPositionHeader (position)) {
+    public int getItemViewType(int position) {
+        if (isPositionHeader(position)) {
             return TYPE_HEADER;
         }
         return TYPE_ITEM;
     }
 
-    private boolean isPositionHeader (int position) {
+    private boolean isPositionHeader(int position) {
         return position == 0;
     }
 
     @Override
-    public int getItemCount () {
-        return downloads.size () + 1;
+    public int getItemCount() {
+        return downloads.size() + 1;
     }
 
     @Override
@@ -106,7 +106,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             final Download download = downloads.get(position - 1);
 
             DownloadItemHolder downloadItemHolder = (DownloadItemHolder) holder;
-            final Video video = Video.findByServerId((int) download.getVideoServerId());
+            final Video video = Video.findByServerId((int) download.getVideoId());
 
             if (video != null) {
                 downloadItemHolder.name.setText(video.getName());
@@ -116,17 +116,14 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         .load(video.getThumbFile())
                         .intoImageView(downloadItemHolder.thumb);
 
-                downloadItemHolder.root.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (download.getDownloadStatusText() == DownloadManager.STATUS_SUCCESSFUL) {
-                            MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
-                            mainActivity.playNewAudio(video);
-                        } else {
-                            SuperToast.create(context,
-                                    context.getString(R.string.not_downloaded_yet),
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                downloadItemHolder.root.setOnClickListener(v -> {
+                    if (download.getDownloadStatus() == DownloadManager.STATUS_SUCCESSFUL) {
+                        MainActivity mainActivity = ((OazaApp) context.getApplicationContext()).getMainActivity();
+                        mainActivity.playNewAudio(video);
+                    } else {
+                        Toast.makeText(context,
+                                context.getString(R.string.not_downloaded_yet),
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -139,7 +136,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 setupTime(downloadItemHolder, video);
 
-                switch (download.getDownloadStatusText()) {
+                switch (download.getDownloadStatus()) {
                     case DownloadManager.STATUS_PENDING:
                         downloadItemHolder.status.setText(context.getString(R.string.download_pending));
                         break;
@@ -169,7 +166,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             public float otherAppsGraphPercent;
 
             @Override
-            protected Void doInBackground( Void... voids ) {
+            protected Void doInBackground(Void... voids) {
 
                 otherAppsGraphPercent = (100.0f / (float) FileUtils.getTotalExternalMemorySize())
                         * ((float) FileUtils.getTotalExternalMemorySize() - (float) FileUtils.getAvailableExternalMemorySize());
@@ -208,8 +205,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final View otherAppsGraph;
         private final View oazaSpaceGraph;
 
-        public HeaderViewHolder (View itemView) {
-            super (itemView);
+        public HeaderViewHolder(View itemView) {
+            super(itemView);
             usedHeader = (TextView) itemView.findViewById(R.id.oaza_app_size);
             freeSpace = (TextView) itemView.findViewById(R.id.free_space);
             otherAppsGraph = itemView.findViewById(R.id.other_apps_graph);
@@ -232,7 +229,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             public Video savedVideo;
 
             @Override
-            protected Void doInBackground( Void... voids ) {
+            protected Void doInBackground(Void... voids) {
                 savedVideo = Video.findByServerId(video.getServerId());
                 return null;
             }
@@ -281,22 +278,22 @@ public class DownloadsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private void contextDialog(final Video video) {
         MaterialDialog.Builder builder = new MaterialDialog.Builder(context);
 
-        String[] menu = new String[] {context.getString(R.string.delete_downloaded_audio).toUpperCase()};
+        String[] menu = new String[]{context.getString(R.string.delete_downloaded_audio).toUpperCase()};
 
         builder.title(video.getName())
                 .items(menu)
                 .theme(Theme.LIGHT)
                 .itemsColor(context.getResources().getColor(R.color.colorPrimary))
                 .itemsCallback(new MaterialDialog.ListCallback() {
-            @Override
-            public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                switch (which) {
-                    case 0:
-                        AdapterUtils.createDeleteDialog(context, video).show();
-                        break;
-                }
-            }
-        });
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        switch (which) {
+                            case 0:
+                                AdapterUtils.createDeleteDialog(context, video).show();
+                                break;
+                        }
+                    }
+                });
 
 
         builder.show();

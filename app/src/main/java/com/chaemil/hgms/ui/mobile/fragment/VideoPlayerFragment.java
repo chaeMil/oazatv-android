@@ -55,7 +55,6 @@ import com.chaemil.hgms.utils.ViewUtils;
 import com.chaemil.hgms.utils.subtitles.Caption;
 import com.chaemil.hgms.utils.subtitles.FormatASS;
 import com.chaemil.hgms.utils.subtitles.TimedTextObject;
-import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.ion.Ion;
 
 import net.soulwolf.widget.ratiolayout.widget.RatioFrameLayout;
@@ -444,7 +443,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             if (currentVideo.getVideoFileLowRes() != null) {
                 setLowQuality();
             } else {
-                SuperToast.create(getActivity(),
+                Toast.makeText(getActivity(),
                         getString(R.string.quality_mode_not_available),
                         Toast.LENGTH_SHORT).show();
             }
@@ -452,7 +451,7 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             if (currentVideo.getVideoFile() != null) {
                 setHighQuality();
             } else {
-                SuperToast.create(getActivity(),
+                Toast.makeText(getActivity(),
                         getString(R.string.low_quality_mode_not_available),
                         Toast.LENGTH_SHORT).show();
             }
@@ -468,9 +467,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             isInQualityMode = true;
         } else {
             mainActivity.hidePanel();
-            SuperToast.create(getActivity(),
+            Toast.makeText(getActivity(),
                     getString(R.string.error_when_playing_video),
-                    SuperToast.Duration.SHORT).show();
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -483,9 +482,9 @@ public class VideoPlayerFragment extends BaseFragment implements View.OnClickLis
             isInQualityMode = false;
         } else {
             mainActivity.hidePanel();
-            SuperToast.create(getActivity(),
+            Toast.makeText(getActivity(),
                     getString(R.string.error_when_playing_video),
-                    SuperToast.Duration.SHORT).show();
+                    Toast.LENGTH_SHORT).show();
         }
     }
 

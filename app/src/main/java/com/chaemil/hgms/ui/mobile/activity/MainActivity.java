@@ -159,7 +159,6 @@ public class MainActivity extends BaseActivity {
         setupLiveRequestTimer();
         createFragments();
         ratingRequest();
-        initTracker();
 
         if (getIntent().getBooleanExtra(EXPAND_PANEL, false)) {
             expandPanel();

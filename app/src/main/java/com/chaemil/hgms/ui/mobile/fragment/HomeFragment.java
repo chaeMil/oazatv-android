@@ -31,7 +31,6 @@ import com.chaemil.hgms.model.Video;
 import com.chaemil.hgms.service.RequestService;
 import com.chaemil.hgms.utils.NetworkUtils;
 import com.chaemil.hgms.utils.SharedPrefUtils;
-import com.github.johnpersano.supertoasts.SuperToast;
 
 import org.json.JSONObject;
 
@@ -242,7 +241,7 @@ public class HomeFragment extends BaseFragment implements RequestFactoryListener
                         && ((MainActivity) getActivity()).getMainFragment() != null) {
 
                     ((MainActivity) getActivity()).getMainFragment().goToDownloaded();
-                    SuperToast.create(getActivity(), getString(R.string.connection_error), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getString(R.string.connection_error), Toast.LENGTH_LONG).show();
                 }
             } else {
                 JsonObjectRequest request = RequestFactory.getHomepage(this);

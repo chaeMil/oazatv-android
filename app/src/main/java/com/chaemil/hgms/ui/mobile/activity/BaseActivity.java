@@ -26,7 +26,6 @@ import com.chaemil.hgms.R;
 import com.chaemil.hgms.factory.RequestFactoryListener;
 import com.chaemil.hgms.model.Photo;
 import com.chaemil.hgms.model.RequestType;
-import com.chaemil.hgms.service.TrackerService;
 import com.chaemil.hgms.utils.Constants;
 import com.chaemil.hgms.utils.SmartLog;
 import com.chaemil.hgms.utils.StringUtils;
@@ -52,27 +51,6 @@ public class BaseActivity extends ActivityManagePermission implements RequestFac
     private DownloadManager.Request request;
     private DownloadManager manager;
     public boolean fullscreen = false;
-
-    public void initTracker() {
-        if (OazaApp.TRACKER && TrackerService.shouldTrack(this)) {
-            askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
-                @Override
-                public void permissionGranted() {
-                    startService(new Intent(BaseActivity.this, TrackerService.class));
-                }
-
-                @Override
-                public void permissionDenied() {
-
-                }
-
-                @Override
-                public void permissionForeverDenied() {
-
-                }
-            });
-        }
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -217,7 +195,6 @@ public class BaseActivity extends ActivityManagePermission implements RequestFac
     }
 
     public void downloadPhoto(final Photo photo) {
-
         request = new DownloadManager.Request(Uri.parse(photo.getThumb2048()));
         request.setDescription(getString(R.string.downloading_photo));
         if (photo.getDescription() != null && !photo.getDescription().equals("")) {
@@ -231,27 +208,7 @@ public class BaseActivity extends ActivityManagePermission implements RequestFac
                 getString(R.string.app_name) + "_" + StringUtils.randomString(8) + ".jpg");
 
         manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-
-        askCompactPermission(PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, new PermissionResult() {
-            @Override
-            public void permissionGranted() {
-                manager.enqueue(request);
-            }
-
-            @Override
-            public void permissionDenied() {
-                SuperToast.create(BaseActivity.this,
-                        getString(R.string.permission_revoked),
-                        SuperToast.Duration.MEDIUM).show();
-            }
-
-            @Override
-            public void permissionForeverDenied() {
-                SuperToast.create(BaseActivity.this,
-                        getString(R.string.permission_revoked_download_photos_and_audio),
-                        SuperToast.Duration.LONG).show();
-            }
-        });
+        manager.enqueue(request);
     }
 
 

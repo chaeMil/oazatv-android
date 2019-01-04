@@ -1,6 +1,9 @@
 package com.chaemil.hgms.ui.mobile.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,13 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.chaemil.hgms.OazaApp;
 import com.chaemil.hgms.R;
-import com.chaemil.hgms.ui.mobile.adapter.DownloadsAdapter;
 import com.chaemil.hgms.model.Download;
-import com.chaemil.hgms.utils.QueryForDownloadsAsyncTask;
-import com.novoda.downloadmanager.DownloadManagerBuilder;
-import com.novoda.downloadmanager.lib.DownloadManager;
-import com.novoda.downloadmanager.lib.Query;
+import com.chaemil.hgms.model.Video;
+import com.chaemil.hgms.ui.mobile.adapter.DownloadsAdapter;
+import com.novoda.downloadmanager.DownloadManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,16 +28,14 @@ import java.util.List;
 /**
  * Created by chaemil on 2.12.15.
  */
-public class DownloadedFragment extends BaseFragment implements QueryForDownloadsAsyncTask.Callback {
+public class DownloadedFragment extends BaseFragment {
 
     public static String DOWNLOAD_MANAGER_ONCHANGE = "download_manager_onchange";
-    private final Handler handler = new Handler(Looper.getMainLooper());
-    private DownloadManager downloadManager;
     private DownloadsAdapter downloadsAdapter;
     private View emptyView;
     private RecyclerView recyclerView;
     private StaggeredGridLayoutManager layoutManager;
-    private RelativeLayout mainLayout;
+    private BroadcastReceiver downloadChangeReceiver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,8 +44,8 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
                 R.layout.downloaded_fragment, container, false);
 
         getUI(rootView);
-        setup();
         setupUI();
+        createDownloadChangeReceiver();
         queryForDownloads();
         return rootView;
     }
@@ -62,40 +62,44 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
         adjustLayout();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        getActivity().getContentResolver()
-                .registerContentObserver(downloadManager.getDownloadsWithoutProgressUri(),
-                        true,
-                        updateSelf);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        getActivity().getContentResolver().unregisterContentObserver(updateSelf);
-    }
-
     private void getUI(ViewGroup rootView) {
-        mainLayout = (RelativeLayout) rootView.findViewById(R.id.main_layout);
         emptyView = rootView.findViewById(R.id.none_downloaded);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.main_downloads_list);
     }
 
-    private void setup() {
-        downloadManager = DownloadManagerBuilder.from(getActivity()).build();
-    }
+    private void createDownloadChangeReceiver() {
+        unregisterDownloadChangeReceiver();
 
-    private final ContentObserver updateSelf = new ContentObserver(handler) {
-
-        @Override
-        public void onChange(boolean selfChange) {
-            queryForDownloads();
-            getActivity().sendBroadcast(new Intent(DOWNLOAD_MANAGER_ONCHANGE));
+        if (downloadChangeReceiver == null) {
+            downloadChangeReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    queryForDownloads();
+                }
+            };
         }
 
-    };
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(DownloadedFragment.DOWNLOAD_MANAGER_ONCHANGE);
+        filter.addAction(Video.NOTIFY_AUDIO_DELETE);
+
+        getActivity().registerReceiver(downloadChangeReceiver, filter);
+    }
+
+    private void unregisterDownloadChangeReceiver() {
+        if (downloadChangeReceiver != null) {
+            try {
+                getActivity().unregisterReceiver(downloadChangeReceiver);
+                downloadChangeReceiver = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private void setup() {
+    }
 
     private void setupUI() {
         layoutManager = new StaggeredGridLayoutManager(calculateColumns(), 1);
@@ -107,8 +111,8 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
     }
 
     private void queryForDownloads() {
-        Query orderedQuery = new Query().orderByLiveness();
-        QueryForDownloadsAsyncTask.newInstance(downloadManager, this).execute(orderedQuery);
+        List<Download> downloads = Download.listAll(Download.class);
+        onQueryResult(downloads);
     }
 
     public void adjustLayout() {
@@ -122,7 +126,6 @@ public class DownloadedFragment extends BaseFragment implements QueryForDownload
         }
     }
 
-    @Override
     public void onQueryResult(List<Download> downloads) {
         downloadsAdapter.updateDownloads(downloads);
         emptyView.setVisibility(downloads.isEmpty() ? View.VISIBLE : View.GONE);

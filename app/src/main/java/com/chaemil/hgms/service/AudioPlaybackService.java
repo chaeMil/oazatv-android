@@ -35,8 +35,6 @@ import com.chaemil.hgms.receiver.PlaybackReceiverListener;
 import com.chaemil.hgms.utils.OSUtils;
 import com.chaemil.hgms.utils.SmartLog;
 import com.chaemil.hgms.utils.StringUtils;
-import com.github.johnpersano.supertoasts.SuperToast;
-import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import org.json.JSONObject;
@@ -44,7 +42,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import permission.auron.com.marshmallowpermissionhelper.PermissionResult;
 import permission.auron.com.marshmallowpermissionhelper.PermissionUtils;
 
 /**
@@ -116,68 +113,8 @@ public class AudioPlaybackService extends Service implements
     private void init() {
         instance = this;
         ((OazaApp) getApplication()).playbackService = this;
-
-        if (app != null && app.getMainActivity() != null) {
-            if (OSUtils.isRunningMarshmallow()
-                    && OSUtils.hasPhoneFeature(app)
-                    && !readPhoneState) {
-                new MaterialDialog.Builder(app.getMainActivity())
-                        .content(R.string.audioplayer_phonestate_permission)
-                        .cancelable(false)
-                        .positiveText(R.string.ok)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog,
-                                                @NonNull DialogAction which) {
-                                askPhoneStatePermissions();
-                            }
-                        })
-                        .show();
-            } else {
-                phoneStatePermissionGranted();
-            }
-        }
-    }
-
-    private void askPhoneStatePermissions() {
-        app.getMainActivity().askCompactPermissions(new String[] {
-                    PermissionUtils.Manifest_READ_PHONE_STATE,
-                    PermissionUtils.Manifest_PROCESS_OUTGOING_CALLS
-                },
-                new PermissionResult() {
-                    @Override
-                    public void permissionGranted() {
-                        phoneStatePermissionGranted();
-                    }
-
-                    @Override
-                    public void permissionDenied() {
-                        phoneStatePermissionDenied();
-                    }
-
-                    @Override
-                    public void permissionForeverDenied() {
-                        SuperToast.create(app,
-                                getString(R.string.permission_revoked_phone_state),
-                                SuperToast.Duration.LONG).show();
-                    }
-                });
-    }
-
-    private void phoneStatePermissionGranted() {
-        readPhoneState = true;
         initMusicPlayer();
         setupPlaybackReceiver();
-        playNewAudio(currentAudio);
-    }
-
-    private void phoneStatePermissionDenied() {
-        readPhoneState = false;
-        playbackStop();
-        app.getMainActivity().hidePanel();
-        SuperToast.create(app,
-                getString(R.string.permission_revoked),
-                SuperToast.Duration.MEDIUM).show();
     }
 
     public void initMusicPlayer(){
@@ -366,7 +303,7 @@ public class AudioPlaybackService extends Service implements
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(NOTIFICATION_ID);
 
-            notificationBuilder = (NotificationCompat.Builder) new NotificationCompat
+            notificationBuilder = new NotificationCompat
                     .Builder(getApplication())
                     .setContentTitle(currentAudio.getName())
                     .setContentText(StringUtils.formatDate(currentAudio.getDate(), this))
@@ -398,12 +335,9 @@ public class AudioPlaybackService extends Service implements
             Ion.with(getApplication())
                     .load(currentAudio.getThumbFile())
                     .asBitmap()
-                    .setCallback(new FutureCallback<Bitmap>() {
-                        @Override
-                        public void onCompleted(Exception e, Bitmap result) {
-                            notificationBuilder.setLargeIcon(result);
-                            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-                        }
+                    .setCallback((e, result) -> {
+                        notificationBuilder.setLargeIcon(result);
+                        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
                     });
         }
     }
